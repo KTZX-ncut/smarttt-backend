@@ -15,9 +15,8 @@ public class StUsersSeriveImpl implements StUsersSerive {
     public Result login(LoginReq loginReq) {
         StUsers stUsers = stUsersMapper.GetStUsersByUsernameAndPwdAndCatelog(loginReq);
         if(stUsers == null){
-            return Result.error("用户名或密码错误");
+            return Result.error(400,"用户名或密码错误");
         }
-        System.out.println(stUsers);
         return Result.success(stUsers);
     }
 }
