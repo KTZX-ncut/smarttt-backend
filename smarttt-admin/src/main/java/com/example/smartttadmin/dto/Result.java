@@ -1,4 +1,4 @@
-package com.example.smartttadmin.pojo;
+package com.example.smartttadmin.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

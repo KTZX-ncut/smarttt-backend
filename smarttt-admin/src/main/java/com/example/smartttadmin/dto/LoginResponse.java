@@ -1,4 +1,4 @@
-package com.example.smartttadmin.pojo;
+package com.example.smartttadmin.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    private String userid;
-    private String rolename;
-    private String roleid;
+    private String useid;
+    private String catelog;
+    private Integer rolescount;
+    private List<SimpleRole> simpleRoleList;
 }

@@ -1,6 +1,5 @@
 package com.example.smartttadmin.pojo;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,17 +7,17 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StRoles {
+public class StMenus {
 
-  private Integer id;
-  private String rolename;
-  private String rolecode;
-  private String remark;
-  private String homename;
-  private String homeurl;
+  private long id;
+  private String name;
+  private String pid;
+  private String orderno;
+  private String url;
+  private String isused;
   private String createtime;
+  private String levelcode;
+  private String fullpath;
   private String by1;
-  private String by2;
-
 
 }

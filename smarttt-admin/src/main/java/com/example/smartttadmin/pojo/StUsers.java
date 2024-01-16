@@ -1,5 +1,6 @@
 package com.example.smartttadmin.pojo;
 
+import com.example.smartttadmin.dto.SimpleRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,5 @@ public class StUsers {
     private String createtime;
     private String by1;
     private String by2;
+
 }
