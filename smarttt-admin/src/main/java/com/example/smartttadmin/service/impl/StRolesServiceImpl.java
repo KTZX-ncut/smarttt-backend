@@ -9,6 +9,7 @@ import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,11 +18,13 @@ public class StRolesServiceImpl implements StRolesService {
     @Autowired
     private StRolesMapper stRolesMapper;
     public Result getStRolesList(StUsers stUsers){
-       List<SimpleRole> simpleRoleList= stRolesMapper.getRolesByUserID(stUsers.getId());
+        List<SimpleRole> simpleRoleList = new ArrayList<>();
+        if(Objects.equals(stUsers.getCatelog(), "1")){
+            SimpleRole simpleRole = new SimpleRole("学生",null,"homes/studenthome");
+            simpleRoleList.add(simpleRole);
+        }
+        else simpleRoleList= stRolesMapper.getRolesByUserID(stUsers.getId());
        LoginResponse loginResponse =new LoginResponse(stUsers.getId().toString(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
-       if(Objects.equals(stUsers.getCatelog(), "1")){
-           return Result.success(loginResponse);
-       }
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
     }
