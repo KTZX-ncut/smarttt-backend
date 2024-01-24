@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 返回生成侧边栏的菜单列表
+ * （这个后续应该修改为返回层级格式的json）
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

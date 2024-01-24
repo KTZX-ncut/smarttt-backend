@@ -4,6 +4,7 @@ import com.example.smartttadmin.dto.LoginResponse;
 import com.example.smartttadmin.mapper.StRolesMapper;
 import com.example.smartttadmin.dto.SimpleRole;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.pojo.StRoles;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class StRolesServiceImpl implements StRolesService {
     @Autowired
     private StRolesMapper stRolesMapper;
-    public Result getStRolesList(StUsers stUsers){
+    public Result getSimpleRolesList(StUsers stUsers){
         List<SimpleRole> simpleRoleList = new ArrayList<>();
         if(Objects.equals(stUsers.getCatelog(), "1")){
             SimpleRole simpleRole = new SimpleRole("学生",null,"homes/studenthome");
@@ -28,5 +29,8 @@ public class StRolesServiceImpl implements StRolesService {
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
     }
-
+    public Result getStRolesList(){
+        List<StRoles> stRolesList = stRolesMapper.getRoles();
+        return Result.success(stRolesList);
+    }
 }

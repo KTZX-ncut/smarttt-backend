@@ -1,9 +1,13 @@
 package com.example.smartttadmin.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 统一响应格式
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

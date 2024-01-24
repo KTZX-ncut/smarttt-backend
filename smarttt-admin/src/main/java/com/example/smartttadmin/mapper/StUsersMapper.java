@@ -7,7 +7,11 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface StUsersMapper {
-    //用账号密码查找对应的用户
+    /**
+     * 用账号密码查找对应的用户
+     * @param loginReq ...
+     * @return 用户列表（用于判空）
+     */
     @Select("select * from st_users where username=#{username} and pwd = #{pwd} and catelog = #{catelog}")
     StUsers getStUsersByUsernameAndPwdAndCatelog(LoginReq loginReq);
 

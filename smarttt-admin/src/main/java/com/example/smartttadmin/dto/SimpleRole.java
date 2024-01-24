@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 简化版的角色列表，用于登录成功之后返回的角色列表
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
