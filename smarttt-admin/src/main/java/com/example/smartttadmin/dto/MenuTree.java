@@ -1,6 +1,9 @@
 package com.example.smartttadmin.dto;
 
+import com.example.smartttadmin.pojo.EncryptField;
+import com.example.smartttadmin.pojo.EncryptFieldSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MenuTree {
+    @EncryptField
+    @JsonSerialize(using = EncryptFieldSerializer.class)//id进行加密
     private String id;
     private String pid;
     private Integer orderno;

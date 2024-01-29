@@ -3,7 +3,6 @@ package com.example.smartttadmin.mapper;
 import com.example.smartttadmin.dto.MenuTree;
 import com.example.smartttadmin.dto.MenusResponse;
 import com.example.smartttadmin.dto.UpdateMenuReq;
-import com.example.smartttadmin.pojo.StRoleMenu;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -16,7 +15,7 @@ public interface StMenusMapper {
      * @param roleid 角色id (安全考虑后续可能改为rolecode)
      * @return 菜单列表
      */
-    @Select("select * from st_menus where id in (select menuid from st_rolemenu where roleid = #{roleid})")
+    @Select("select * from st_menus where id in (select menuid from st_rolemenu where roleid = #{roleid} and status IN (1, 2))")
     List<MenusResponse> getMenusByRoleID(String roleid);
 
     /**

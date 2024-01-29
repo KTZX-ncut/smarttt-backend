@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.UpdateMenuReq;
+import com.example.smartttadmin.pojo.EncryptionUtil;
 import com.example.smartttadmin.service.StMenusService;
 import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class RolePurviewController {
      */
    @PostMapping
     public Result UpdateMenuList(@RequestBody UpdateMenuReq updateMenuReq) {
+       updateMenuReq.setId(EncryptionUtil.decrypt(updateMenuReq.getId()));
         return stMenusService.updateMenuStatus(updateMenuReq);
    }
 }
