@@ -48,7 +48,6 @@ public class RolePurviewController {
      */
    @PostMapping
     public Result UpdateMenuList(@RequestBody UpdateMenuReq updateMenuReq) {
-       updateMenuReq.setId(EncryptionUtil.decrypt(updateMenuReq.getId()));
         return stMenusService.updateMenuStatus(updateMenuReq);
    }
 }

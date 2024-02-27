@@ -7,11 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StRoleUser {
+public class SmObs {
 
   private String id;
-  private String userid;
-  private String roleid;
+  private String pid;
+  private long orderno;
+  private long obsdeep;
+  private String obsname;
+  private String obspath;
+  private String levelcode;
   private String createtime;
-  private String by1;
+  private String remark;
 }

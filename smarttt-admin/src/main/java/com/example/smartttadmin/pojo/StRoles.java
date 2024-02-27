@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StRoles {
 
-  private Integer id;
+  private String id;
   private String rolecode;
   private String rolename;
   private String remark;
@@ -21,6 +21,5 @@ public class StRoles {
   private String createtime;
   private String by1;
   private String by2;
-
 
 }

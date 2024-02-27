@@ -12,6 +12,7 @@ public class EncryptionUtil {
 
     private static final String SECRET_KEY = "ThisIs16BytesKey";
 
+    //加密算法
     public static String encrypt(String data) {
         try {
             Cipher cipher = Cipher.getInstance("AES");
@@ -24,7 +25,7 @@ public class EncryptionUtil {
             return null;
         }
     }
-
+    //解密算法
     public static String decrypt(String encryptedData) {
         try {
             Cipher cipher = Cipher.getInstance("AES");

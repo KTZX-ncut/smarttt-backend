@@ -7,11 +7,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StRoleUser {
+public class SmTeacher {
 
   private String id;
-  private String userid;
-  private String roleid;
+  private String obsid;
+  private String usersid;
+  private String jobno;
+  private String title;
+  private String oftenclassroomid;
   private String createtime;
-  private String by1;
+
+
 }

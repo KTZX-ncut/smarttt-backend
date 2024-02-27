@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StRoleMenu {
 
-  private long id;
+  private String id;
   private String roleid;
   private String menuid;
   private String status;

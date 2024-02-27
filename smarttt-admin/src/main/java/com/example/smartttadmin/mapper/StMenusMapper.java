@@ -3,6 +3,9 @@ package com.example.smartttadmin.mapper;
 import com.example.smartttadmin.dto.MenuTree;
 import com.example.smartttadmin.dto.MenusResponse;
 import com.example.smartttadmin.dto.UpdateMenuReq;
+import com.example.smartttadmin.pojo.StMenus;
+import com.example.smartttadmin.pojo.StRoles;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -10,6 +13,12 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 @Mapper
 public interface StMenusMapper {
+    /**
+     * 得到全部菜单
+     * @return 菜单列表
+     */
+    @Select("select * from st_menus")
+    List<StMenus> getAllMenus();
     /**
      * 用角色id查找该角色的所有权限（显示在侧边栏）
      * @param roleid 角色id (安全考虑后续可能改为rolecode)
@@ -42,4 +51,5 @@ public interface StMenusMapper {
      */
     @Update("update st_rolemenu set `status` = #{status} WHERE menuid = #{id} AND roleid = (SELECT id from st_roles where rolecode = #{rolecode} )")
     void updateMenuStatus(UpdateMenuReq updateMenuReq);
+
 }

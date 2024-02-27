@@ -18,8 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MenuTree {
-    @EncryptField
-    @JsonSerialize(using = EncryptFieldSerializer.class)//id进行加密
     private String id;
     private String pid;
     private Integer orderno;
