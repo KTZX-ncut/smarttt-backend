@@ -33,4 +33,14 @@ public class StRolesServiceImpl implements StRolesService {
         List<StRoles> stRolesList = stRolesMapper.getRoles();
         return Result.success(stRolesList);
     }
+
+    @Override
+    public Result updateRoles() {
+        return null;
+    }
+
+    @Override
+    public Result deleteRoles() {
+        return null;
+    }
 }

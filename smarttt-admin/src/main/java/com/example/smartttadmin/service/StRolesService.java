@@ -16,4 +16,8 @@ public interface StRolesService {
      * @return 角色列表
      */
     Result getStRolesList();
+
+    Result updateRoles();
+
+    Result deleteRoles();
 }
