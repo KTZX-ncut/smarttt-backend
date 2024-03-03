@@ -1,8 +1,11 @@
 package com.example.smartttadmin.mapper;
 
 import com.example.smartttadmin.dto.LoginReq;
+import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.pojo.StUsers;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -18,4 +21,14 @@ public interface StUsersMapper {
     StUsers getStUsersByUsernameAndPwdAndCatelog(LoginReq loginReq);
     @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid} and obsdeep = 2) ")
     List<StUsers> getStUsersByobsid(String obsid);
+
+    @Insert("insert into st_users(id,username,loginname,pwd,phone,status,catelog,remark,createtime) values " +
+            "(#{id},#{username},#{loginname},#{pwd},#{phone},#{status},#{catelog},#{remark},#{createtime})")
+    void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
+
+    @Insert("insert into sm_teacher(id,obsid,usersid,createtime) values (#{id},#{obsid},#{usersid},#{createtime})")
+    void createOneSmTeacherByID(@Param("id")String id,@Param("obsid")String obsid,@Param("usersid")String usersid,@Param("createtime")String createtime);
+
+    @Insert("insert into sm_student(id,obsid,usersid,createtime) values (#{id},#{obsid},#{usersid},#{createtime})")
+    void createOneSmStudentByID(@Param("id")String id,@Param("obsid")String obsid,@Param("usersid")String usersid,@Param("createtime")String createtime);
 }

@@ -58,7 +58,7 @@ public class SmObsServiceImpl implements SmObsService {
                                         .collect(Collectors.toList())
                         )
                 ));
-        List<SmObsTree> rootObs =  obsMap.get("0"); // 根菜单的pid通常为null
+        List<SmObsTree> rootObs =  obsMap.get("0"); // 根菜单的pid通常为0
         // 递归构建菜单树
         buildObsTree(rootObs,  obsMap);
         return Result.success(rootObs);
@@ -87,6 +87,26 @@ public class SmObsServiceImpl implements SmObsService {
             }
         }
         return Result.success(personnelRosterList);
+    }
+
+    @Override
+    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) {
+        List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
+        if(obsIDList == null)
+            return Result.error("所属院系/班级输入错误");
+        String usersId = generateEnhancedID("st_users");
+        personnelRoster.setId(usersId);
+        personnelRoster.setCreatetime(LocalDateTime.now().toString());
+        stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
+        if(Objects.equals(personnelRoster.getCatelog(), "1")){
+            stUsersMapper.createOneSmStudentByID(generateEnhancedID("sm_student"),
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString());
+        }
+        else {
+            stUsersMapper.createOneSmTeacherByID(generateEnhancedID("sm_teacher"),
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString());
+        }
+        return Result.success();
     }
 
     /**
@@ -123,4 +143,5 @@ public class SmObsServiceImpl implements SmObsService {
         }
         return obsChildren;
     }
+
 }
