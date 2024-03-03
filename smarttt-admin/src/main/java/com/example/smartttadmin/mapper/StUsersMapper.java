@@ -5,6 +5,8 @@ import com.example.smartttadmin.pojo.StUsers;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface StUsersMapper {
     /**
@@ -14,6 +16,6 @@ public interface StUsersMapper {
      */
     @Select("select * from st_users where username=#{username} and pwd = #{pwd} and catelog = #{catelog}")
     StUsers getStUsersByUsernameAndPwdAndCatelog(LoginReq loginReq);
-
-
+    @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid} and obsdeep = 2) ")
+    List<StUsers> getStUsersByobsid(String obsid);
 }

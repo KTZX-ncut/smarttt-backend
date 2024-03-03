@@ -1,6 +1,7 @@
 package com.example.smartttadmin.service;
 
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.pojo.StRoles;
 import com.example.smartttadmin.pojo.StUsers;
 
 public interface StRolesService {
@@ -20,4 +21,10 @@ public interface StRolesService {
     Result updateRoles();
 
     Result deleteRoles();
+    /**
+     * 新建角色
+     * @param stRoles 角色
+     * @return ...
+     */
+    Result createRole(StRoles stRoles);
 }

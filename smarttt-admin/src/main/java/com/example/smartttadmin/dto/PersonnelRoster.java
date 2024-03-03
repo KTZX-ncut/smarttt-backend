@@ -1,6 +1,5 @@
-package com.example.smartttadmin.pojo;
+package com.example.smartttadmin.dto;
 
-import com.example.smartttadmin.dto.SimpleRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,18 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class StUsers {
+public class PersonnelRoster {
     private String id;
+    private String obsid;
     private String username;
     private String loginname;
-    private String pwd;
     private String phone;
     private String status;
     private String catelog;
-    private  String remark;
-    private String  headimage;
-    private String createtime;
-    private String by1;
-    private String by2;
-
+    private String obsname;
 }

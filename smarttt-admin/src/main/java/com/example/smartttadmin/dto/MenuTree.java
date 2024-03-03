@@ -18,7 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MenuTree {
-
     private String id;
     private String pid;
     private Integer orderno;

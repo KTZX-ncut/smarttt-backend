@@ -1,10 +1,12 @@
 package com.example.smartttadmin.mapper;
 
 import com.example.smartttadmin.dto.Termslist;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
+@Mapper
 public interface StTermsMapper {
     /**
      * 获取学期信息
