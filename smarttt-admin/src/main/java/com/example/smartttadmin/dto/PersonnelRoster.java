@@ -14,8 +14,11 @@ public class PersonnelRoster {
     private String obsid;
     private String username;
     private String loginname;
+    private String pwd;
     private String phone;
     private String status;
     private String catelog;
     private String obsname;
+    private String remark;
+    private String createtime;
 }

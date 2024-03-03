@@ -9,6 +9,7 @@ public interface StRolesService {
      * 在登录功能里查找某用户的简化版角色列表
      * @param stUsers 用户
      * @return 该用户的角色的简化版列表
+     * 修改：后续改为带级别的角色列表
      */
     Result getSimpleRolesList(StUsers stUsers);
 
