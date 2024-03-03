@@ -1,7 +1,5 @@
 package com.example.smartttadmin.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.UpdateMenuReq;
 import com.example.smartttadmin.pojo.StRoles;
@@ -29,6 +27,18 @@ public class RoleMangtController {
     public Result getRoleList() {
 
         return stRolesService.getStRolesList();
+    }
+
+    @GetMapping
+    public Result updateRole() {
+
+        return stRolesService.updateRoles();
+    }
+
+    @GetMapping
+    public Result deleteRole() {
+
+        return stRolesService.deleteRoles();
     }
     @PostMapping
     public Result createRole(@RequestBody StRoles stRoles) {
