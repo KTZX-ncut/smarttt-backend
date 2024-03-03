@@ -43,6 +43,14 @@ public class StRolesServiceImpl implements StRolesService {
     }
 
     @Override
+    public Result updateRoles() {
+        return null;
+    }
+
+    @Override
+    public Result deleteRoles() {
+        return null;
+    }
     public Result createRole(StRoles stRoles) {
         stRoles.setId(generateEnhancedID("st_roles"));
         LocalDateTime currentTime = LocalDateTime.now();

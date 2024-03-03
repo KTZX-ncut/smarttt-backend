@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 教学单位管理
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
