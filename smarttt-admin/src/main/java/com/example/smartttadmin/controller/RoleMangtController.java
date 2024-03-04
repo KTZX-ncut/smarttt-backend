@@ -29,13 +29,13 @@ public class RoleMangtController {
         return stRolesService.getStRolesList();
     }
 
-    @GetMapping
+    @GetMapping("/update")
     public Result updateRole() {
 
         return stRolesService.updateRoles();
     }
 
-    @GetMapping
+    @GetMapping("/delete")
     public Result deleteRole() {
 
         return stRolesService.deleteRoles();

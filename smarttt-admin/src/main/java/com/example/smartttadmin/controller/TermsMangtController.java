@@ -22,23 +22,23 @@ public class TermsMangtController {
         return stTermsService.getTermsList();
     }
 
-    @GetMapping
+    @GetMapping("/create")
     public Result createTerms() {
         return stTermsService.createTerms();
     }
 
-    @GetMapping
+    @GetMapping("/delete")
     public Result deleteTerms() {
         return stTermsService.deleteTerms();
     }
 
-    @PostMapping
+    @PostMapping("/update")
     public Result UpdateTermsList(@RequestBody Termslist updateTermsReq) {
         updateTermsReq.setId(EncryptionUtil.decrypt(updateTermsReq.getId()));
         return stTermsService.Termslist(updateTermsReq);
     }
 
-    @GetMapping
+    @GetMapping("/currentterms")
     public Result getCurrentTerms() {
         return stTermsService.getCurrentTerms();
     }

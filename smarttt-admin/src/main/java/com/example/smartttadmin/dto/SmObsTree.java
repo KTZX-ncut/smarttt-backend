@@ -17,9 +17,6 @@ public class SmObsTree {
     private Integer orderno;
     private long obsdeep;
     private String obsname;
-//    private String obspath;
     private String levelcode;
-//    private String createtime;
-//    private String remark;
     private List<SmObsTree> children;
 }

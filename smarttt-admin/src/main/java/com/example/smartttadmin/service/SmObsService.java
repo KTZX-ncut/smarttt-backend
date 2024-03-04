@@ -17,5 +17,4 @@ public interface SmObsService {
     Result deleteObsByID(String id);
     Result getObsTree();
     Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
-
 }
