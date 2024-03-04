@@ -18,7 +18,7 @@ public interface SmObsMapper {
     @Select("select id,obsname,levelcode from sm_obs where obsdeep=2")
     List<CollegeResponse> getAllCollegeList();
 
-    @Update("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
+    @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
             "VALUES (#{id},#{pid},#{orderno},#{obsdeep},#{obsname},#{obspath},#{levelcode},#{createtime},#{remark})")
     void createOneNewCollege(SmObs smObs);
 
@@ -44,4 +44,7 @@ public interface SmObsMapper {
             "JOIN sm_obs o ON t.obsid = o.id\n" +
             "WHERE u.catelog = #{catelog} AND t.obsid = #{obsid} ")
     List<PersonnelRoster> getStudentPRByObsIDAndCatelog(@Param("obsid")String obsid, @Param("catelog")String catelog);
+
+    @Select("select id from sm_obs where obsname = #{obsname}")
+    List<String> getObsIDByObsName(String obsname);
 }

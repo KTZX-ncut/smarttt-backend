@@ -1,5 +1,6 @@
 package com.example.smartttadmin.service;
 
+import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.SmObs;
 
@@ -17,4 +18,6 @@ public interface SmObsService {
     Result deleteObsByID(String id);
     Result getObsTree();
     Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
+    Result createOnePersonnelRoster(PersonnelRoster personnelRoster);
+
 }
