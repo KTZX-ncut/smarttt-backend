@@ -21,7 +21,8 @@ public interface StRolesService {
 
     Result updateRoles();
 
-    Result deleteRoles();
+    Result deleteRoles(String id);
+
     /**
      * 新建角色
      * @param stRoles 角色
