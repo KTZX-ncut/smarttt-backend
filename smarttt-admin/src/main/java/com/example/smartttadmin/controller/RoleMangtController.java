@@ -36,12 +36,14 @@ public class RoleMangtController {
     }
 
     @GetMapping
-    public Result deleteRole() {
+    public Result deleteRole(@RequestParam(name = "id")String id) {
 
-        return stRolesService.deleteRoles();
+        return stRolesService.deleteRoles(id);
     }
+
     @PostMapping
     public Result createRole(@RequestBody StRoles stRoles) {
+
         return stRolesService.createRole(stRoles);
     }
 }

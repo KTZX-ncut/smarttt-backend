@@ -3,6 +3,7 @@ package com.example.smartttadmin.mapper;
 import com.example.smartttadmin.dto.SimpleRole;
 import com.example.smartttadmin.pojo.StRoleMenu;
 import com.example.smartttadmin.pojo.StRoles;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -38,5 +39,11 @@ public interface StRolesMapper {
      * @return 角色的信息列表
      */
     @Select("select rolecode,rolename,remark from st_roles")
-    List<StRoles> getRoles ();
+    List<StRoles> getRoles();
+
+
+    @Delete("delete from st_roles where id = #{id}")
+    void deleteRoles(String id);
+
+
 }
