@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.example.smartttadmin.pojo.EnhancedUniqueID.generateEnhancedID;
 
+/**
+ * 学期管理
+ */
 @Controller
 @RestController
 @RequestMapping("/sysmangt/units")
@@ -26,13 +29,11 @@ public class UnitMangtController {
     Result getObsList(){
         return smObsService.getObsTree();
     }
-    //同级新增
-    @PostMapping("/siblingadd")
-    Result obsSiblingAdd(@RequestBody SmObs smObs){
+    @PostMapping("/create")
+    Result createByTeachingsecretary(@RequestBody SmObs smObs){
         smObs.setId(generateEnhancedID("sm_obs"));
         return smObsService.createOneObs(smObs);
     }
-    //下级新增
 
 
 }
