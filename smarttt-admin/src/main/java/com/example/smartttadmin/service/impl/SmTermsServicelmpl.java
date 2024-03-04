@@ -29,7 +29,7 @@ public class SmTermsServicelmpl implements SmTermsService {
 
     @Override
     public Result createTerms(SmTerms smTerms) {
-        smTerms.setId(generateEnhancedID("sm_Terms"));
+        smTerms.setId(generateEnhancedID("sm_terms"));
         smTerms.setCreatetime(LocalDateTime.now().toString());
         smTermsMapper.createTerms(smTerms);
         return Result.success();
