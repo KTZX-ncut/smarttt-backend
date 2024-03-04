@@ -36,7 +36,7 @@ public class RoleMangtController {
     }
 
 
-    @GetMapping
+    @GetMapping("/delete")
     public Result deleteRole(@RequestParam(name = "id")String id) {
 
         return stRolesService.deleteRoles(id);

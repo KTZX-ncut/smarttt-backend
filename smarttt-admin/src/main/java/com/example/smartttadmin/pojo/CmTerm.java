@@ -13,11 +13,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SmTerms {
+public class CmTerm {
     private String id;//学期的id
-    private String termName;//学期名称
-    private LocalDate startDate;//开始时间
-    private LocalDate endDate;//结束时间
+    private String termname;//学期名称
+    private LocalDate startdate;//开始时间
+    private LocalDate enddate;//结束时间
     private String remark;//备注
-    private boolean isActive;//是否是当前学期
+    private String iscurrentterm;
+    private String createtime;
+
 }

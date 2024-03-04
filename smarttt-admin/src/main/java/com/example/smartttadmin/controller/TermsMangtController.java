@@ -1,9 +1,8 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.dto.TermsResponse;
-import com.example.smartttadmin.pojo.SmTerms;
-import com.example.smartttadmin.service.SmTermsService;
+import com.example.smartttadmin.pojo.CmTerm;
+import com.example.smartttadmin.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sysmangt/terms")
 public class TermsMangtController {
     @Autowired
-    private SmTermsService smTermsService;
+    private CmTermService smTermsService;
 
     /**
      *获取学期信息
@@ -22,18 +21,18 @@ public class TermsMangtController {
         return smTermsService.getTerms();
     }
 
-    @GetMapping
-    public Result createTerms(@RequestBody SmTerms smterms) {
-        return smTermsService.createTerms(smterms);
+    @GetMapping("/create")
+    public Result createTerms(@RequestBody CmTerm cmTerm) {
+        return smTermsService.createTerms(cmTerm);
     }
 
-    @GetMapping
+    @GetMapping("/delete")
     public Result deleteTermsByID(@RequestParam(name = "id")String id) {
         return smTermsService.deleteTermsByID(id);
     }
 
-    @GetMapping
-    public Result getCurrentTerms(@RequestParam(name = "isActive")boolean isActive) {
-        return smTermsService.getCurrentTerms(isActive);
+    @GetMapping("/currentterm")
+    public Result getCurrentTerms(@RequestParam(name = "iscurrentterm")boolean iscurrentterm) {
+        return smTermsService.getCurrentTerms(iscurrentterm);
     }
 }
