@@ -1,22 +1,23 @@
 package com.example.smartttadmin.dto;
 
+import com.example.smartttadmin.pojo.SmObs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SmObsTree {
+public class TreeStructure {
     private String id;
     private String pid;
     private long orderno;
-    private long obsdeep;
-    private String obsname;
-    private String levelcode;
-    private List<SmObsTree> children;
+
+    public TreeStructure(SmObs smObs) {
+        this.id = smObs.getId();
+        this.pid = smObs.getPid();
+        this.orderno = smObs.getOrderno();
+    }
 }

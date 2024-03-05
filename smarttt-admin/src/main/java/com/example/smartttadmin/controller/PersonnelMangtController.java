@@ -23,4 +23,5 @@ public class PersonnelMangtController {
     public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster){
         return smObsService.createOnePersonnelRoster(personnelRoster);
     }
+
 }

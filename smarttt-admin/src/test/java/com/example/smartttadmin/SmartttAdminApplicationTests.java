@@ -2,7 +2,6 @@ package com.example.smartttadmin;
 
 import com.example.smartttadmin.pojo.StMenus;
 import com.example.smartttadmin.pojo.StRoleMenu;
-import com.sun.javaws.IconUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.smartttadmin.pojo.EnhancedUniqueID.generateEnhancedID;
+import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
 import static com.example.smartttadmin.pojo.EncryptionUtil.*;
 @SpringBootTest
 class SmartttAdminApplicationTests {

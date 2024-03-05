@@ -20,15 +20,17 @@ public interface SmObsMapper {
 
     @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
             "VALUES (#{id},#{pid},#{orderno},#{obsdeep},#{obsname},#{obspath},#{levelcode},#{createtime},#{remark})")
-    void createOneNewCollege(SmObs smObs);
+    void createOneNewObs(SmObs smObs);
 
     @Delete("delete from sm_obs where id = #{id}")
-    void deleteCollegeByID(String id);
+    void deleteObsByID(String id);
 
     @Select("select * from sm_obs")
     List<SmObsTree> getAllSmObsTree();
     @Select("select * from sm_obs")
     List<SmObs> getAllSmObsList();
+    @Select("select * from sm_obs where id = #{id}")
+    List<SmObs> getSmObsByID(String id);
 
     @Select("SELECT u.id AS id,u.username AS username,u.loginname AS loginname,u.phone AS phone,u.status AS status," +
             "t.obsid AS obsid,o.obsname AS obsname,u.catelog AS catelog\n" +
@@ -47,4 +49,20 @@ public interface SmObsMapper {
 
     @Select("select id from sm_obs where obsname = #{obsname}")
     List<String> getObsIDByObsName(String obsname);
+
+    @Select("select orderno from sm_obs where pid = #{pid}")
+    List<Long> getSmObsListByPid(String pid);
+
+    @Update("UPDATE sm_obs\n" +
+            "SET orderno = orderno - 1\n" +
+            "WHERE pid = (SELECT pid FROM sm_obs WHERE id = #{id})\n" +
+            "AND orderno > (SELECT orderno FROM sm_obs WHERE id = #{id});")
+    void updateBrotherObsOrderNo(String id);
+
+    @Update("update sm_obs set pid = (select pid from sm_obs where id =(select pid from sm_obs where id = #{id}) ),orderno = #{orderno}")
+    void upgradeOneObsByID(@Param("id")String id,@Param("orderno")Long orderno);
+
+    @Select("select pid from sm_obs where id =#{id}")
+    String getPidByID(String id);
+
 }

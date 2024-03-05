@@ -1,9 +1,6 @@
 package com.example.smartttadmin.service.impl;
 
-import com.example.smartttadmin.dto.CollegeResponse;
-import com.example.smartttadmin.dto.PersonnelRoster;
-import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.dto.SmObsTree;
+import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
 import com.example.smartttadmin.pojo.SmObs;
@@ -15,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.smartttadmin.pojo.EnhancedUniqueID.generateEnhancedID;
+import static com.example.smartttadmin.pojo.CommonFunctions.*;
 
 @Service
 public class SmObsServiceImpl implements SmObsService {
@@ -35,14 +32,27 @@ public class SmObsServiceImpl implements SmObsService {
     @Override
     public Result createOneObs(SmObs smObs) {
         smObs.setId(generateEnhancedID("sm_obs"));
+        //获取兄弟的最大值,然后+1就是orderno
+        long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
+        smObs.setOrderno(orderNoMax+1);
         smObs.setCreatetime(LocalDateTime.now().toString());
-        smObsMapper.createOneNewCollege(smObs);
+        List<SmObs> smObsList = smObsMapper.getAllSmObsList();
+        smObsList.add(smObs);
+        List<TreeStructure> treeStructureList = smObsList.stream()
+                .map(smObs_ex -> new TreeStructure(smObs_ex.getId(), smObs_ex.getPid(), smObs_ex.getOrderno()))
+                .collect(Collectors.toList());
+        smObs.setLevelcode(generateLevelCode(generateTreeStructureList(treeStructureList,smObs.getId())));
+        smObsMapper.createOneNewObs(smObs);
         return Result.success();
     }
 
     @Override
     public Result deleteObsByID(String id) {
-        smObsMapper.deleteCollegeByID(id);
+        List<SmObs> smObsList = smObsMapper.getSmObsByID(id);
+        if(smObsList == null)return Result.error("删除教学单位出错");
+        //把它的兄弟机构比它orderno大的orderno-1
+        smObsMapper.updateBrotherObsOrderNo(id);
+        smObsMapper.deleteObsByID(id);
         return Result.success();
     }
 
@@ -54,7 +64,7 @@ public class SmObsServiceImpl implements SmObsService {
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
                                 list -> list.stream()
-                                        .sorted(Comparator.comparingInt(SmObsTree::getOrderno))
+                                        .sorted(Comparator.comparingLong(SmObsTree::getOrderno))
                                         .collect(Collectors.toList())
                         )
                 ));
@@ -99,13 +109,26 @@ public class SmObsServiceImpl implements SmObsService {
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
         stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){
-            stUsersMapper.createOneSmStudentByID(generateEnhancedID("sm_student"),
-                    obsIDList.get(0),usersId,LocalDateTime.now().toString());
+            stUsersMapper.createOneSmStudent(generateEnhancedID("sm_student"),
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
         }
         else {
-            stUsersMapper.createOneSmTeacherByID(generateEnhancedID("sm_teacher"),
-                    obsIDList.get(0),usersId,LocalDateTime.now().toString());
+            stUsersMapper.createOneSmTeacher(generateEnhancedID("sm_teacher"),
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
         }
+        return Result.success();
+    }
+
+    /**
+     * 教秘-升级
+     * @param id
+     * @return
+     */
+    @Override
+    public Result upgradeOneObsByID(String id) {
+        smObsMapper.updateBrotherObsOrderNo(id);
+        long orderNoMax = smObsMapper.getSmObsListByPid(smObsMapper.getPidByID(id)).stream().mapToLong(Long::valueOf).max().orElse(0);
+        smObsMapper.upgradeOneObsByID(id,orderNoMax);
         return Result.success();
     }
 

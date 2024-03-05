@@ -21,4 +21,5 @@ public class PersonnelRoster {
     private String obsname;
     private String remark;
     private String createtime;
+    private String personnelno;
 }

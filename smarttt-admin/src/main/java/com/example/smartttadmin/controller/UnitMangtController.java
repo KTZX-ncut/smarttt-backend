@@ -1,17 +1,16 @@
 package com.example.smartttadmin.controller;
 
 
+import com.example.smartttadmin.dto.CreateUnitsReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttadmin.service.StUnitService;
-import com.example.smartttadmin.service.impl.StUnitServicelmpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.smartttadmin.pojo.EnhancedUniqueID.generateEnhancedID;
+import java.util.Objects;
 
 /**
  * 学期管理
@@ -30,11 +29,27 @@ public class UnitMangtController {
         return smObsService.getObsTree();
     }
     @PostMapping("/create")
-    Result createByTeachingsecretary(@RequestBody SmObs smObs){
-        smObs.setId(generateEnhancedID("sm_obs"));
+    Result createByTeachingSecretary(@RequestBody CreateUnitsReq createUnitsReq){
+        SmObs smObs = createUnitsReq.getSmObs();
+        //同级新增
+        if(Objects.equals(createUnitsReq.getType(), "1")){
+            smObs.setPid(createUnitsReq.getPid());
+            smObs.setObsdeep(createUnitsReq.getObsdeep());
+        }
+        //下级新增
+        else {
+            smObs.setPid(createUnitsReq.getId());
+            smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
+        }
         return smObsService.createOneObs(smObs);
     }
-
-
+    @GetMapping("/delete")
+    public Result deleteOneObs(@RequestParam(name = "id")String id){
+        return smObsService.deleteObsByID(id);
+    }
+    @GetMapping("/upgrade")
+    public Result upgradeOneObs(@RequestParam(name = "id")String id){
+        return smObsService.upgradeOneObsByID(id);
+    }
 }
 

@@ -20,4 +20,5 @@ public interface SmObsService {
     Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
     Result createOnePersonnelRoster(PersonnelRoster personnelRoster);
 
+    Result upgradeOneObsByID(String id);
 }
