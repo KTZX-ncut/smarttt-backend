@@ -1,13 +1,14 @@
 package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.mapper.CmTermsMapper;
+import com.example.smartttadmin.mapper.CmTermMapper;
 import com.example.smartttadmin.pojo.CmTerm;
 import com.example.smartttadmin.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
 
@@ -15,30 +16,30 @@ import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
 public class CmTermServicelmpl implements CmTermService {
 
     @Autowired
-    private CmTermsMapper cmTermsMapper;
+    private CmTermMapper cmTermMapper;
 
     @Override
     public Result getTerms() {
-        return Result.success(cmTermsMapper.getTerms());
+        return Result.success(cmTermMapper.getTerms());
     }
 
     @Override
     public Result createTerms(CmTerm cmTerm) {
         cmTerm.setId(generateEnhancedID("cm_term"));
         cmTerm.setCreatetime(LocalDateTime.now().toString());
-        cmTermsMapper.createTerms(cmTerm);
+        cmTermMapper.createTerms(cmTerm);
         return Result.success();
     }
 
     @Override
-    public Result deleteTermsByID(String id) {
-        cmTermsMapper.deleteTermsByID(id);
+    public Result deleteTermsByID(List<String> ids) {
+        cmTermMapper.deleteTermsByIDs(ids);
         return Result.success();
     }
 
     @Override
     public Result getCurrentTerms(boolean iscurrentterm) {
-        cmTermsMapper.getCurrentTerms(iscurrentterm);
+        cmTermMapper.getCurrentTerms(iscurrentterm);
         return Result.success();
     }
 }

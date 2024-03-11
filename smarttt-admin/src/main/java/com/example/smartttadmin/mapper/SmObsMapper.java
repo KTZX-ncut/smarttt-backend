@@ -29,6 +29,12 @@ public interface SmObsMapper {
     List<SmObsTree> getAllSmObsTree();
     @Select("select * from sm_obs")
     List<SmObs> getAllSmObsList();
+
+    /**
+     * 这里需要修改为动态sql
+     * @param id
+     * @return
+     */
     @Select("select * from sm_obs where id = #{id}")
     List<SmObs> getSmObsByID(String id);
 
@@ -53,10 +59,10 @@ public interface SmObsMapper {
     @Select("select orderno from sm_obs where pid = #{pid}")
     List<Long> getSmObsListByPid(String pid);
 
-    @Update("UPDATE sm_obs\n" +
-            "SET orderno = orderno - 1\n" +
-            "WHERE pid = (SELECT pid FROM sm_obs WHERE id = #{id})\n" +
-            "AND orderno > (SELECT orderno FROM sm_obs WHERE id = #{id});")
+    @Update("UPDATE sm_obs o1\n" +
+            "JOIN (SELECT pid, orderno FROM sm_obs WHERE id = #{id}) o2 ON o1.pid = o2.pid\n" +
+            "SET o1.orderno = o1.orderno - 1\n" +
+            "WHERE o1.orderno > o2.orderno;\n")
     void updateBrotherObsOrderNo(String id);
 
     @Update("update sm_obs set pid = (select pid from sm_obs where id =(select pid from sm_obs where id = #{id}) ),orderno = #{orderno}")
@@ -65,4 +71,5 @@ public interface SmObsMapper {
     @Select("select pid from sm_obs where id =#{id}")
     String getPidByID(String id);
 
+    List<SmObs> getSmObsByIDs(@Param("ids")List<String> ids);
 }

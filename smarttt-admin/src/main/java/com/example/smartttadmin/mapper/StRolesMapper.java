@@ -3,10 +3,7 @@ package com.example.smartttadmin.mapper;
 import com.example.smartttadmin.dto.SimpleRole;
 import com.example.smartttadmin.pojo.StRoleMenu;
 import com.example.smartttadmin.pojo.StRoles;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 

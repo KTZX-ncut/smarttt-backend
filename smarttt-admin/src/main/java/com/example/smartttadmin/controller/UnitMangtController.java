@@ -10,18 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
- * 学期管理
+ * 教学单位管理
  */
 @Controller
 @RestController
 @RequestMapping("/sysmangt/units")
 public class UnitMangtController {
-
-    @Autowired
-    private StUnitService stUnitService;
     @Autowired
     private SmObsService smObsService;
     @GetMapping
@@ -43,9 +41,16 @@ public class UnitMangtController {
         }
         return smObsService.createOneObs(smObs);
     }
-    @GetMapping("/delete")
-    public Result deleteOneObs(@RequestParam(name = "id")String id){
-        return smObsService.deleteObsByID(id);
+
+    /**
+     * 删除一个组织机构
+     * 需要修改为列表
+     * @param ids
+     * @return
+     */
+    @PostMapping("/delete")
+    public Result deleteOneObs(@RequestBody List<String> ids){
+        return smObsService.deleteObssByIDS(ids);
     }
     @GetMapping("/upgrade")
     public Result upgradeOneObs(@RequestParam(name = "id")String id){

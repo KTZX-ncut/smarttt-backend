@@ -13,7 +13,7 @@ public class StUsersServiceImpl implements StUsersService {
     @Autowired
     private StUsersMapper stUsersMapper;
     public Result login(LoginReq loginReq) {
-        StUsers stUsers = stUsersMapper.getStUsersByUsernameAndPwdAndCatelog(loginReq);
+        StUsers stUsers = stUsersMapper.getStUsersByLoginNameAndPwdAndCatelog(loginReq);
         if(stUsers == null){
             return Result.error(400,"用户名或密码错误");
         }

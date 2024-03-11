@@ -15,10 +15,12 @@ public interface SmObsService {
      * @return ...
      */
     Result createOneObs(SmObs smObs);
-    Result deleteObsByID(String id);
+    Result deleteOneObsByID(String id);
+    Result deleteObssByIDS(List<String> ids);
     Result getObsTree();
     Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
     Result createOnePersonnelRoster(PersonnelRoster personnelRoster);
 
     Result upgradeOneObsByID(String id);
+
 }

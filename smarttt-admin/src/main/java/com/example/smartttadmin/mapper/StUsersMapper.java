@@ -17,8 +17,8 @@ public interface StUsersMapper {
      * @param loginReq ...
      * @return 用户列表（用于判空）
      */
-    @Select("select * from st_users where username=#{username} and pwd = #{pwd} and catelog = #{catelog}")
-    StUsers getStUsersByUsernameAndPwdAndCatelog(LoginReq loginReq);
+    @Select("select * from st_users where loginname=#{loginname} and pwd = #{pwd} and catelog = #{catelog}")
+    StUsers getStUsersByLoginNameAndPwdAndCatelog(LoginReq loginReq);
     @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid} and obsdeep = 2) ")
     List<StUsers> getStUsersByobsid(String obsid);
 
@@ -31,4 +31,6 @@ public interface StUsersMapper {
 
     @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno})")
     void createOneSmStudent(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("stuno")String stuno);
+
+    void deleteUsersByIDs(List<String> ids);
 }

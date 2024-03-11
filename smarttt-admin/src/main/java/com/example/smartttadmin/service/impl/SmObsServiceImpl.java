@@ -47,12 +47,23 @@ public class SmObsServiceImpl implements SmObsService {
     }
 
     @Override
-    public Result deleteObsByID(String id) {
+    public Result deleteOneObsByID(String id) {
         List<SmObs> smObsList = smObsMapper.getSmObsByID(id);
         if(smObsList == null)return Result.error("删除教学单位出错");
         //把它的兄弟机构比它orderno大的orderno-1
         smObsMapper.updateBrotherObsOrderNo(id);
         smObsMapper.deleteObsByID(id);
+        return Result.success();
+    }
+
+    @Override
+    public Result deleteObssByIDS(List<String> ids) {
+        List<SmObs> smObsList = smObsMapper.getSmObsByIDs(ids);
+        if(smObsList.size()<ids.size())return Result.error(404,"批量删除教学单位出错");
+        for(String id:ids){
+            smObsMapper.updateBrotherObsOrderNo(id);
+            smObsMapper.deleteObsByID(id);
+        }
         return Result.success();
     }
 

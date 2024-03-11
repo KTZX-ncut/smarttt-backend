@@ -35,13 +35,22 @@ public class RoleMangtController {
         return stRolesService.updateRoles();
     }
 
-
+    /**
+     * 角色删除有误，应该把相关的表里的数据一起删除（修改）
+     * @param id
+     * @return
+     */
     @GetMapping("/delete")
     public Result deleteRole(@RequestParam(name = "id")String id) {
 
         return stRolesService.deleteRoles(id);
     }
 
+    /**
+     * 新建角色
+     * @param stRoles
+     * @return
+     */
     @PostMapping
     public Result createRole(@RequestBody StRoles stRoles) {
 

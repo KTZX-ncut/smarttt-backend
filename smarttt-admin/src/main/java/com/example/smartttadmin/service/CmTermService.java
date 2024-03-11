@@ -3,6 +3,8 @@ package com.example.smartttadmin.service;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.CmTerm;
 
+import java.util.List;
+
 
 public interface CmTermService {
 
@@ -12,5 +14,5 @@ public interface CmTermService {
 
     Result getCurrentTerms(boolean iscurrentterm);
 
-    Result deleteTermsByID(String id);
+    Result deleteTermsByID(List<String> ids);
 }

@@ -6,6 +6,8 @@ import com.example.smartttadmin.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/sysmangt/collegemangt")
 public class CollageMangtController {
@@ -20,7 +22,7 @@ public class CollageMangtController {
      * 新建一个学院，先调用新建机构方法
      * @param smObs 学院
      * @return ...
-     * 后续需要把每个字段都补全
+     * 后续需要把每个字段都补全（修改）
      */
     @PostMapping
     public Result createNewCollege(@RequestBody SmObs smObs){
@@ -28,8 +30,15 @@ public class CollageMangtController {
         smObs.setPid("237675254");
         return smObsService.createOneObs(smObs);
     }
-    @GetMapping("/college")
-    public Result deleteCollegeByID(@RequestParam(name = "id")String id){
-        return smObsService.deleteObsByID(id);
+
+    /**
+     * 删除学院
+     * @param ids
+     * @return
+     * 需要修改成批量删除
+     */
+    @PostMapping("/delete")
+    public Result deleteCollegeByIDs(@RequestBody List<String> ids){
+        return smObsService.deleteObssByIDS(ids);
     }
 }

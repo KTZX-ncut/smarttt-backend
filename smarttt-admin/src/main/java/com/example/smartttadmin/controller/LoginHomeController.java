@@ -16,13 +16,12 @@ public class LoginHomeController {
     private StMenusService stMenusService;
 
     /**
-     * 超级管理员登录到首页的功能，目前也适用于其他角色。返回侧边栏的信息
+     * 教师类型用户登录到首页
      * @param loginHomeReq ...
      * @return Result
      */
-    @PostMapping("/superadminhome")
-    public Result superAdminHome(@RequestBody LoginHomeReq loginHomeReq){
-
+    @PostMapping("/teacherhome")
+    public Result TeacherHome(@RequestBody LoginHomeReq loginHomeReq){
         return stMenusService.getMenusList(loginHomeReq);
     }
 

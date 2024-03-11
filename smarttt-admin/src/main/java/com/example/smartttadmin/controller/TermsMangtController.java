@@ -6,6 +6,11 @@ import com.example.smartttadmin.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * 学期管理
+ */
 @RestController
 @RequestMapping("/sysmangt/terms")
 public class TermsMangtController {
@@ -21,14 +26,25 @@ public class TermsMangtController {
         return smTermsService.getTerms();
     }
 
+    /**
+     * 新建学期
+     * 修改（待定）因为有文件导入功能
+     * @param cmTerm
+     * @return
+     */
     @GetMapping("/create")
     public Result createTerms(@RequestBody CmTerm cmTerm) {
         return smTermsService.createTerms(cmTerm);
     }
 
-    @GetMapping("/delete")
-    public Result deleteTermsByID(@RequestParam(name = "id")String id) {
-        return smTermsService.deleteTermsByID(id);
+    /**
+     * 删除学期
+     * @param ids
+     * @return
+     */
+    @PostMapping("/delete")
+    public Result deleteTermsByID(@RequestBody List<String> ids) {
+        return smTermsService.deleteTermsByID(ids);
     }
 
     @GetMapping("/currentterm")
