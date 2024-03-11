@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class LoginResponse {
     private String userid;
+    private String username;
     private String catelog;
     private Integer rolescount;//角色列表的计数
     private List<SimpleRole> simpleRoleList;//角色列表

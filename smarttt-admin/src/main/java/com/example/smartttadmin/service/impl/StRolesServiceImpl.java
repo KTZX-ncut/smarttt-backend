@@ -33,7 +33,7 @@ public class StRolesServiceImpl implements StRolesService {
             simpleRoleList.add(simpleRole);
         }
         else simpleRoleList= stRolesMapper.getRolesByUserID(stUsers.getId());
-       LoginResponse loginResponse =new LoginResponse(stUsers.getId().toString(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
+       LoginResponse loginResponse =new LoginResponse(stUsers.getId(),stUsers.getUsername(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
     }

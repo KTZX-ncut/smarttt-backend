@@ -5,7 +5,6 @@ import com.example.smartttadmin.dto.CreateUnitsReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
-import com.example.smartttadmin.service.StUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +48,7 @@ public class UnitMangtController {
      * @return
      */
     @PostMapping("/delete")
-    public Result deleteOneObs(@RequestBody List<String> ids){
+    public Result deleteObsByIDs(@RequestBody List<String> ids){
         return smObsService.deleteObssByIDS(ids);
     }
     @GetMapping("/upgrade")

@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 public class LoginHomeReq
 {
     private String userid;
-
     private String roleid;
-
     private String catelog;
 }
