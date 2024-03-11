@@ -8,6 +8,8 @@ import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StUsersServiceImpl implements StUsersService {
     @Autowired
@@ -18,5 +20,11 @@ public class StUsersServiceImpl implements StUsersService {
             return Result.error(400,"用户名或密码错误");
         }
         return Result.success(stUsers);
+    }
+
+    @Override
+    public Result deleteUsersByIDs(List<String> ids) {
+        stUsersMapper.deleteUsersByIDs(ids);
+        return Result.success();
     }
 }

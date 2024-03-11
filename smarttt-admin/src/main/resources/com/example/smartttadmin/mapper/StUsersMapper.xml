@@ -5,6 +5,9 @@
 <mapper namespace="com.example.smartttadmin.mapper.StUsersMapper">
 
     <delete id="deleteUsersByIDs">
-
+        delete from st_users where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
 </mapper>

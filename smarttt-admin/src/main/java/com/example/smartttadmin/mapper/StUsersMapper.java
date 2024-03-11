@@ -32,5 +32,5 @@ public interface StUsersMapper {
     @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno})")
     void createOneSmStudent(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("stuno")String stuno);
 
-    void deleteUsersByIDs(List<String> ids);
+    void deleteUsersByIDs(@Param("ids") List<String> ids);
 }

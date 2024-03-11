@@ -2,15 +2,21 @@ package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.mapper.StUsersMapper;
 import com.example.smartttadmin.service.SmObsService;
+
+import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 @RestController
 @RequestMapping("/sysmangt/personnelmangt")
 public class PersonnelMangtController {
     @Autowired
     private SmObsService smObsService;
+    @Autowired
+    private StUsersService stUsersService;
     @GetMapping
     public Result getSmObsTree(){
         return smObsService.getObsTree();
@@ -23,7 +29,7 @@ public class PersonnelMangtController {
      * @return
      */
     @GetMapping("/person")
-    public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid,@RequestParam(name = "catelog")String catelog){
+    public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid, @RequestParam(name = "catelog")String catelog){
         return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,catelog);
     }
 
@@ -38,4 +44,8 @@ public class PersonnelMangtController {
         return smObsService.createOnePersonnelRoster(personnelRoster);
     }
 
+    @PostMapping("/delete")
+    public Result deletePersonnelRosteByIDs(@RequestBody List<String> ids) {
+        return stUsersService.deleteUsersByIDs(ids);
+    }
 }

@@ -33,9 +33,8 @@ public class CollageMangtController {
 
     /**
      * 删除学院
-     * @param ids
-     * @return
-     * 需要修改成批量删除
+     * @param ids id列表
+     * @return Result
      */
     @PostMapping("/delete")
     public Result deleteCollegeByIDs(@RequestBody List<String> ids){

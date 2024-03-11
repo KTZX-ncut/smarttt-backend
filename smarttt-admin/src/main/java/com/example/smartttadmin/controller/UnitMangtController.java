@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-
 /**
  * 教学单位管理
  */
@@ -43,7 +42,6 @@ public class UnitMangtController {
 
     /**
      * 删除一个组织机构
-     * 需要修改为列表
      * @param ids
      * @return
      */
