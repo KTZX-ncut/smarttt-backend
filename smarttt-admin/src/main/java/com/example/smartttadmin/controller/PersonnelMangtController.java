@@ -8,8 +8,14 @@ import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+
+/**
+ * 人员管理
+ */
 @RestController
 @RequestMapping("/sysmangt/personnelmangt")
 public class PersonnelMangtController {
@@ -47,5 +53,24 @@ public class PersonnelMangtController {
     @PostMapping("/delete")
     public Result deletePersonnelRosteByIDs(@RequestBody List<String> ids) {
         return stUsersService.deleteUsersByIDs(ids);
+    }
+
+    /**
+     * excel表格导入教师
+     * @param file
+     * @return
+     */
+    @PostMapping("/import")
+    public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file){
+        try{
+            List<PersonnelRoster> personnelRosterList = stUsersService.importTeacherAndStudentExcel(file);
+            for(PersonnelRoster personnelRoster :personnelRosterList){
+                smObsService.createOnePersonnelRoster(personnelRoster);
+            }
+            return Result.success();
+
+        } catch (IOException e){
+            return Result.error(400,"文件导入失败");
+        }
     }
 }
