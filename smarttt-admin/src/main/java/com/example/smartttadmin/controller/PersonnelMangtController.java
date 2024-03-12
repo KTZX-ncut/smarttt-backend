@@ -2,7 +2,6 @@ package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.mapper.StUsersMapper;
 import com.example.smartttadmin.service.SmObsService;
 
 import com.example.smartttadmin.service.StUsersService;
