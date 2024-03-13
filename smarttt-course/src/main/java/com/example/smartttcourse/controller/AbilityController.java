@@ -31,7 +31,7 @@ public class AbilityController {
         }
 
     @PostMapping("/create")
-   Result createByTeachingSecretary(@RequestBody CreateAbilityReq createAbilityReq){
+   Result createByAbilitySecretary(@RequestBody CreateAbilityReq createAbilityReq){
         CmAbility cmAbility = createAbilityReq.getCmAbility();
         //同级新增
         if(Objects.equals(createAbilityReq.getType(), "1")){
