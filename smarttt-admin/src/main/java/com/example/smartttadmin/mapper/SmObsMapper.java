@@ -1,6 +1,6 @@
 package com.example.smartttadmin.mapper;
 
-import com.example.smartttadmin.dto.CollegeResponse;
+import com.example.smartttadmin.dto.ObsResponse;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.SmObsTree;
 import com.example.smartttadmin.pojo.SmObs;
@@ -16,7 +16,7 @@ public interface SmObsMapper {
      * @return ...
      */
     @Select("select id,obsname,levelcode from sm_obs where obsdeep=2")
-    List<CollegeResponse> getAllCollegeList();
+    List<ObsResponse> getAllCollegeList();
 
     @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
             "VALUES (#{id},#{pid},#{orderno},#{obsdeep},#{obsname},#{obspath},#{levelcode},#{createtime},#{remark})")
@@ -72,4 +72,6 @@ public interface SmObsMapper {
     String getPidByID(String id);
 
     List<SmObs> getSmObsByIDs(@Param("ids")List<String> ids);
+    @Select("select id,obsname,levelcode from sm_obs where pid = #{pid}")
+    List<ObsResponse> getSmObsByPid(@Param("pid") String pid);
 }

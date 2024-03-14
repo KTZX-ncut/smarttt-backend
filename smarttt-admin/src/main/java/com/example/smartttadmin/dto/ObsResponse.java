@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollegeResponse {
+public class ObsResponse {
     String id;
     String levelcode;
     String obsname;

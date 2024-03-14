@@ -22,11 +22,11 @@ public class SmObsServiceImpl implements SmObsService {
     private StUsersMapper stUsersMapper;
     @Override
     public Result getAllCollageList() {
-        List<CollegeResponse> collegeResponseList= smObsMapper.getAllCollegeList();
-        for( CollegeResponse collegeResponse : collegeResponseList){
-            collegeResponse.setStUsersList(stUsersMapper.getStUsersByobsid(collegeResponse.getId()));
+        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList();
+        for( ObsResponse obsResponse : obsResponseList){
+            obsResponse.setStUsersList(stUsersMapper.getStUsersByobsid(obsResponse.getId()));
         }
-        return Result.success(collegeResponseList);
+        return Result.success(obsResponseList);
     }
 
     @Override
@@ -141,6 +141,17 @@ public class SmObsServiceImpl implements SmObsService {
         long orderNoMax = smObsMapper.getSmObsListByPid(smObsMapper.getPidByID(id)).stream().mapToLong(Long::valueOf).max().orElse(0);
         smObsMapper.upgradeOneObsByID(id,orderNoMax);
         return Result.success();
+    }
+
+    @Override
+    public Result getAllDepartmentList(LoginHomeReq loginHomeReq) {
+        //先获取操作范围obsid,然后查找下一层的儿子
+        String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
+        List<ObsResponse> obsResponseList = smObsMapper.getSmObsByPid(ObsID);
+        for( ObsResponse obsResponse : obsResponseList){
+            obsResponse.setStUsersList(stUsersMapper.getStUsersByobsid(obsResponse.getId()));
+        }
+        return Result.success(obsResponseList);
     }
 
     /**

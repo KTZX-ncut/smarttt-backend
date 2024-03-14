@@ -43,7 +43,7 @@ public class StRolesServiceImpl implements StRolesService {
     }
 
     @Override
-    public Result updateRoles() {
+    public Result updateRoles(StRoles stRoles) {
         return null;
     }
 

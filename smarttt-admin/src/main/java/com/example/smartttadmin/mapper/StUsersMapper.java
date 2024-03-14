@@ -1,5 +1,6 @@
 package com.example.smartttadmin.mapper;
 
+import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.LoginReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.pojo.StUsers;
@@ -33,4 +34,7 @@ public interface StUsersMapper {
     void createOneSmStudent(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("stuno")String stuno);
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
+
+    @Select("select obsid from st_roleuser where userid = #{userid} and roleid = #{roleid}")
+    String getAdminObsID(LoginHomeReq loginHomeReq);
 }

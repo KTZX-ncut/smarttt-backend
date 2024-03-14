@@ -30,9 +30,9 @@ public class RoleMangtController {
     }
 
     @GetMapping("/update")
-    public Result updateRole() {
+    public Result updateRole(@RequestBody StRoles stRoles) {
 
-        return stRolesService.updateRoles();
+        return stRolesService.updateRoles(stRoles);
     }
 
     /**

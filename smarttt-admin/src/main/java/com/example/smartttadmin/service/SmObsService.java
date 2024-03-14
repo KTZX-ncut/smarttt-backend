@@ -1,5 +1,6 @@
 package com.example.smartttadmin.service;
 
+import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.SmObs;
@@ -16,6 +17,12 @@ public interface SmObsService {
      */
     Result createOneObs(SmObs smObs);
     Result deleteOneObsByID(String id);
+
+    /**
+     * 只能删叶子结点
+     * @param ids
+     * @return
+     */
     Result deleteObssByIDS(List<String> ids);
     Result getObsTree();
     Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
@@ -23,4 +30,5 @@ public interface SmObsService {
 
     Result upgradeOneObsByID(String id);
 
+    Result getAllDepartmentList(LoginHomeReq loginHomeReq);
 }

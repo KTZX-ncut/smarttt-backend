@@ -19,7 +19,7 @@ public interface StRolesService {
      */
     Result getStRolesList();
 
-    Result updateRoles();
+    Result updateRoles(StRoles stRoles);
 
     Result deleteRoles(String id);
 
