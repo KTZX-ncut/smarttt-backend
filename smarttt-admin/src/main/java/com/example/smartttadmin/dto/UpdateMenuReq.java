@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateMenuReq {
     private String id;//菜单的id
-    private String rolecode;//角色代码
+    private String roleid;//角色代码
     private String status;
 }

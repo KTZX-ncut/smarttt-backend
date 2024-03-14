@@ -37,7 +37,7 @@ public class StRolesServiceImpl implements StRolesService {
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
     }
-    public Result getStRolesList(){
+    public Result getStRoleMangtList(){
         List<StRoles> stRolesList = stRolesMapper.getRoles();
         return Result.success(stRolesList);
     }
@@ -69,5 +69,11 @@ public class StRolesServiceImpl implements StRolesService {
             stRolesMapper.createRoleMenus(stRoleMenu);
         }
         return Result.success();
+    }
+
+    @Override
+    public Result getRolePurviewList() {
+        List<StRoles> stRolesList = stRolesMapper.getSimpleRoles();
+        return Result.success(stRolesList);
     }
 }

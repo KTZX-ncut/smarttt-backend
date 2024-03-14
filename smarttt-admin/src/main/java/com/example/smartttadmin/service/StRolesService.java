@@ -19,7 +19,7 @@ public interface StRolesService {
      * 超级管理员的角色授权功能里查找角色的全部信息
      * @return 角色列表
      */
-    Result getStRolesList();
+    Result getStRoleMangtList();
 
     Result updateRoles(StRoles stRoles);
 
@@ -31,4 +31,6 @@ public interface StRolesService {
      * @return ...
      */
     Result createRole(StRoles stRoles);
+
+    Result getRolePurviewList();
 }

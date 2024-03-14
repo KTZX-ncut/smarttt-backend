@@ -13,10 +13,10 @@ public interface StMenusService {
     Result getMenusList(LoginHomeReq loginHomeReq);
     /**
      * 超级管理员的角色授权功能里，为某角色配置权限，返回层级菜单，并带上该角色的状态码
-     * @param rolecode 角色代码
+     * @param id 角色代码
      * @return 层级菜单
      */
-    Result getMenuTree(String rolecode);
+    Result getMenuTree(String id);
     /**
      * 超级管理员的角色授权功能里，修改权限状态，更新某角色的权限菜单状态，不用返回数据
      * @param updateMenuReq 更新菜单

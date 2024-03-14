@@ -1,10 +1,7 @@
 package com.example.smartttadmin.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.UpdateMenuReq;
-import com.example.smartttadmin.pojo.EncryptionUtil;
 import com.example.smartttadmin.service.StMenusService;
 import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +25,17 @@ public class RolePurviewController {
     @GetMapping
     public Result getRoleList() {
 
-       return stRolesService.getStRolesList();
+       return stRolesService.getRolePurviewList();
    }
 
     /**
      * 获取相应角色（用rolecode）的层级列表
-     * @param rolecode rolecode
+     * @param id rolecode
      * @return Result
      */
    @GetMapping("/menus")
-    public Result getMenuList(@RequestParam(name = "rolecode")String rolecode) {
-        return stMenusService.getMenuTree(rolecode);
+    public Result getMenuList(@RequestParam(name = "id")String id) {
+        return stMenusService.getMenuTree(id);
    }
 
     /**

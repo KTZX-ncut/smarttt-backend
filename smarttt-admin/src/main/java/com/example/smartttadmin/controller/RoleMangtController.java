@@ -1,7 +1,6 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.dto.UpdateMenuReq;
 import com.example.smartttadmin.pojo.StRoles;
 import com.example.smartttadmin.service.StMenusService;
 import com.example.smartttadmin.service.StRolesService;
@@ -28,7 +27,7 @@ public class RoleMangtController {
     @GetMapping
     public Result getRoleList() {
 
-        return stRolesService.getStRolesList();
+        return stRolesService.getStRoleMangtList();
     }
 
     @PostMapping("/update")

@@ -23,6 +23,6 @@
                 remark=#{remark},
             </if>
         </set>
-        where rolecode=#{rolecode}
+        where id=#{id}
     </update>
 </mapper>

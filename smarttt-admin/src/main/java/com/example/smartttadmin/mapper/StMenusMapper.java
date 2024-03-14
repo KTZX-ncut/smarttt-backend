@@ -4,8 +4,6 @@ import com.example.smartttadmin.dto.MenuTree;
 import com.example.smartttadmin.dto.MenusResponse;
 import com.example.smartttadmin.dto.UpdateMenuReq;
 import com.example.smartttadmin.pojo.StMenus;
-import com.example.smartttadmin.pojo.StRoles;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -29,14 +27,14 @@ public interface StMenusMapper {
 
     /**
      * 用角色代码查到层级菜单列表（全部），并包括该角色的状态
-     * @param rolecode 角色代码
+     * @param id 角色代码
      * @return 层级菜单列表（配置权限）
      */
     @Select("SELECT st_menus.id,st_menus.pid,st_menus.orderno,st_menus.name,st_rolemenu.status AS status\n" +
             "FROM st_menus\n" +
-            "LEFT JOIN st_rolemenu ON st_menus.id = st_rolemenu.menuid AND st_rolemenu.roleid = (select id FROM st_roles WHERE rolecode = #{rolecode})\n" +
+            "LEFT JOIN st_rolemenu ON st_menus.id = st_rolemenu.menuid AND st_rolemenu.roleid = #{id}\n" +
             "ORDER BY st_menus.id;")
-    List<MenuTree> getMenuByRoleCode(String rolecode);
+    List<MenuTree> getMenuByRoleID(String id);
 
     /*
     查找角色的权限状态
@@ -49,7 +47,7 @@ public interface StMenusMapper {
      * 更新角色的权限状态
      * @param updateMenuReq 用于角色更新的返回参数
      */
-    @Update("update st_rolemenu set `status` = #{status} WHERE menuid = #{id} AND roleid = (SELECT id from st_roles where rolecode = #{rolecode} )")
+    @Update("update st_rolemenu set `status` = #{status} WHERE menuid = #{id} AND roleid = #{roleid}")
     void updateMenuStatus(UpdateMenuReq updateMenuReq);
 
 }
