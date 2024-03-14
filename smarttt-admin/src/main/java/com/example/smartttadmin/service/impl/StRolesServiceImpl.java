@@ -44,13 +44,16 @@ public class StRolesServiceImpl implements StRolesService {
 
     @Override
     public Result updateRoles(StRoles stRoles) {
-        return null;
+        stRolesMapper.updateRoles(stRoles);
+        return Result.success();
     }
 
 
     @Override
-    public Result deleteRoles(String id) {
-        stRolesMapper.deleteRoles(id);
+    public Result deleteRoles(List<String> ids) {
+        for(String id : ids){
+            stRolesMapper.deleteRoles(id);
+        }
         return Result.success();
     }
 
