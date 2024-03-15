@@ -27,6 +27,7 @@ public class CmTermServicelmpl implements CmTermService {
     public Result createTerms(CmTerm cmTerm) {
         cmTerm.setId(generateEnhancedID("cm_term"));
         cmTerm.setCreatetime(LocalDateTime.now().toString());
+        cmTerm.setIscurrentterm("0");
         cmTermMapper.createTerms(cmTerm);
         return Result.success();
     }
@@ -38,8 +39,15 @@ public class CmTermServicelmpl implements CmTermService {
     }
 
     @Override
-    public Result getCurrentTerms(boolean iscurrentterm) {
-        cmTermMapper.getCurrentTerms(iscurrentterm);
+    public Result updateTermByID(CmTerm cmTerm) {
+        cmTermMapper.updateTermByID(cmTerm);
+        return Result.success();
+    }
+
+    @Override
+    public Result setCurrentTerms(String id) {
+        cmTermMapper.setCurrentTerms(id);
+        cmTermMapper.setOtherTerms(id);
         return Result.success();
     }
 }

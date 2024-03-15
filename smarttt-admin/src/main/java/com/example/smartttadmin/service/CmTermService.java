@@ -12,7 +12,9 @@ public interface CmTermService {
 
     Result createTerms(CmTerm cmTerm);
 
-    Result getCurrentTerms(boolean iscurrentterm);
+    Result setCurrentTerms(String id);
 
     Result deleteTermsByID(List<String> ids);
+
+    Result updateTermByID(CmTerm cmTerm);
 }
