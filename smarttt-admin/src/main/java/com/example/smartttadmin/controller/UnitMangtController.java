@@ -49,9 +49,24 @@ public class UnitMangtController {
     public Result deleteObsByIDs(@RequestBody List<String> ids){
         return smObsService.deleteObssByIDS(ids);
     }
+
+    /**
+     * 采用拖拽方式，不需要升级，需修改
+     * @param id
+     * @return
+     */
     @GetMapping("/upgrade")
     public Result upgradeOneObs(@RequestParam(name = "id")String id){
         return smObsService.upgradeOneObsByID(id);
+    }
+
+    /**
+     * 教学单位的编辑功能,修改
+     * @return
+     */
+    @PostMapping("/update")
+    public Result updateOneObs(@RequestBody SmObs smObs){
+        return null;
     }
 }
 

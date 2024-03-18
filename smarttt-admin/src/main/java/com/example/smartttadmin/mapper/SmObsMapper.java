@@ -1,8 +1,8 @@
 package com.example.smartttadmin.mapper;
 
-import com.example.smartttadmin.dto.ObsResponse;
-import com.example.smartttadmin.dto.PersonnelRoster;
-import com.example.smartttadmin.dto.SmObsTree;
+import com.example.smartttadmin.dto.*;
+import com.example.smartttadmin.pojo.CmClass;
+import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
 import org.apache.ibatis.annotations.*;
 
@@ -74,4 +74,26 @@ public interface SmObsMapper {
     List<SmObs> getSmObsByIDs(@Param("ids")List<String> ids);
     @Select("select id,obsname,levelcode from sm_obs where pid = #{pid}")
     List<ObsResponse> getSmObsByPid(@Param("pid") String pid);
+
+    List<ProfessionResponse> getProfessionByIDs(@Param("ids") List<String> ids);
+
+    @Insert("insert into cm_profession (id, obsid, proname, procode, reachpercent, remark, createtime) " +
+            "values ( #{id}, #{obsid}, #{proname}, #{procode}, #{reachpercent}, #{remark}, #{createtime})")
+    void createOneProfession(CmProfession cmProfession);
+
+    @Select("select id,obsname from sm_obs where pid = #{pid} order by orderno")
+    List<ClassResponse> getProfessionByPid(@Param("pid")String pid);
+
+//    @Select("select obsid as id ,classname,grade from cm_class where obsid in (select id from sm_obs where pid = #{id})")
+    @Select("SELECT o.id AS id, c.classname AS classname ,grade " +
+            "FROM sm_obs o JOIN cm_class c ON o.id = c.obsid\n" +
+            "WHERE o.pid = #{id} ORDER BY o.orderno;\n")
+    List<CmClass> getClassByProfessionID(@Param("id") String id);
+
+    @Insert("insert into cm_class (id, obsid, classname, grade,remark) values (#{id}, #{obsid}, #{classname}, #{grade},#{remark})")
+    void createOneClass(CmClass cmClass);
+
+    void updateClass(CmClass cmClass);
+
+    void updateObs(SmObs smObs);
 }

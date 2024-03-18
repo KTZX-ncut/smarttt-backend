@@ -3,6 +3,8 @@ package com.example.smartttadmin.service;
 import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.pojo.CmClass;
+import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
 
 import java.util.List;
@@ -30,5 +32,15 @@ public interface SmObsService {
 
     Result upgradeOneObsByID(String id);
 
-    Result getAllDepartmentList(LoginHomeReq loginHomeReq);
+    Result getAllObsList(LoginHomeReq loginHomeReq);
+
+    Result getAllProfessionList(LoginHomeReq loginHomeReq);
+
+    Result createOneProfession(CmProfession cmProfession);
+
+    Result getClassList(LoginHomeReq loginHomeReq);
+
+    Result createOneClass(CmClass cmClass);
+
+    Result updateClass(CmClass cmClass);
 }

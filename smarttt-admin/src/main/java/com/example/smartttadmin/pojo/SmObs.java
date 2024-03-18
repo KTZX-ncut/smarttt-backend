@@ -22,4 +22,17 @@ public class SmObs {
   private String createtime;
   private String remark;
 
+  public SmObs(String id, String pid, long obsdeep, String obsname, String remark) {
+    this.id = id;
+    this.pid = pid;
+    this.obsdeep = obsdeep;
+    this.obsname = obsname;
+    this.remark = remark;
+  }
+
+    public SmObs(CmClass cmClass) {
+      this.id = cmClass.getId();
+      this.obsname = cmClass.getClassname();
+      this.remark = cmClass.getRemark();
+    }
 }

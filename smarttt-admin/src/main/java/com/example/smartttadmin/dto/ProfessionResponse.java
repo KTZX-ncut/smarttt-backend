@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * 返回的学院列表
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ObsResponse {
-    private String id;
-    private String levelcode;
-    private String obsname;
+public class ProfessionResponse {
+    private String id;//专业对应的obsid
+    private String proname;
+    private String procode;
+    private String reachpercent;
+    private String remark;
     private List<StUsers> stUsersList;
 }

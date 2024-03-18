@@ -20,7 +20,7 @@ public interface StUsersMapper {
      */
     @Select("select * from st_users where loginname=#{loginname} and pwd = #{pwd} and catelog = #{catelog}")
     StUsers getStUsersByLoginNameAndPwdAndCatelog(LoginReq loginReq);
-    @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid} and obsdeep = 2) ")
+    @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid}) ")
     List<StUsers> getStUsersByobsid(String obsid);
 
     @Insert("insert into st_users(id,username,loginname,pwd,phone,status,catelog,remark,createtime) values " +
@@ -37,4 +37,7 @@ public interface StUsersMapper {
 
     @Select("select obsid from st_roleuser where userid = #{userid} and roleid = #{roleid}")
     String getAdminObsID(LoginHomeReq loginHomeReq);
+
+    @Select("")
+    void getTeachersByobsid(String obsid);
 }

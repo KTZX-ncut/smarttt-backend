@@ -26,4 +26,6 @@ public interface StUsersService {
     Result deleteUsersByIDs(List<String> ids);
 
     List<PersonnelRoster>importTeacherAndStudentExcel(MultipartFile file) throws IOException;
+
+    Result getObsRP(String id);
 }

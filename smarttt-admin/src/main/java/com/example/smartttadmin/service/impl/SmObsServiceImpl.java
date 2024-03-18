@@ -3,6 +3,8 @@ package com.example.smartttadmin.service.impl;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
+import com.example.smartttadmin.pojo.CmClass;
+import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class SmObsServiceImpl implements SmObsService {
 
     @Override
     public Result createOneObs(SmObs smObs) {
-        smObs.setId(generateEnhancedID("sm_obs"));
+        if(smObs.getId() == null|| smObs.getId().isEmpty())smObs.setId(generateEnhancedID("sm_obs"));
         //获取兄弟的最大值,然后+1就是orderno
         long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
         smObs.setOrderno(orderNoMax+1);
@@ -144,7 +146,7 @@ public class SmObsServiceImpl implements SmObsService {
     }
 
     @Override
-    public Result getAllDepartmentList(LoginHomeReq loginHomeReq) {
+    public Result getAllObsList(LoginHomeReq loginHomeReq) {
         //先获取操作范围obsid,然后查找下一层的儿子
         String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
         List<ObsResponse> obsResponseList = smObsMapper.getSmObsByPid(ObsID);
@@ -152,6 +154,55 @@ public class SmObsServiceImpl implements SmObsService {
             obsResponse.setStUsersList(stUsersMapper.getStUsersByobsid(obsResponse.getId()));
         }
         return Result.success(obsResponseList);
+    }
+
+    @Override
+    public Result getAllProfessionList(LoginHomeReq loginHomeReq) {
+        String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
+
+        List<ObsResponse> obsResponseList = smObsMapper.getSmObsByPid(ObsID);
+        List<String> ids = obsResponseList.stream()
+                .map(ObsResponse::getId)
+                .collect(Collectors.toList());
+        List<ProfessionResponse> professionResponseList = smObsMapper.getProfessionByIDs(ids);
+        for(ProfessionResponse professionResponse:professionResponseList){
+            professionResponse.setStUsersList(stUsersMapper.getStUsersByobsid(professionResponse.getId()));
+        }
+        return Result.success(professionResponseList);
+    }
+
+    @Override
+    public Result createOneProfession(CmProfession cmProfession) {
+        cmProfession.setId(generateEnhancedID("cm_profession"));
+        cmProfession.setCreatetime(LocalDateTime.now().toString());
+        smObsMapper.createOneProfession(cmProfession);
+        return Result.success();
+    }
+
+    @Override
+    public Result getClassList(LoginHomeReq loginHomeReq) {
+        String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
+        List<ClassResponse> classResponseList = smObsMapper.getProfessionByPid(ObsID);
+        for(ClassResponse classResponse:classResponseList){
+            classResponse.setCmClassList(smObsMapper.getClassByProfessionID(classResponse.getId()));
+        }
+        return Result.success(classResponseList);
+    }
+
+    @Override
+    public Result createOneClass(CmClass cmClass) {
+        cmClass.setId(generateEnhancedID("cm_profession"));
+        smObsMapper.createOneClass(cmClass);
+        return Result.success();
+    }
+
+    @Override
+    public Result updateClass(CmClass cmClass) {
+        smObsMapper.updateClass(cmClass);
+        SmObs smObs = new SmObs(cmClass);
+        System.out.println("???????"+smObs);
+        smObsMapper.updateObs(smObs);
+        return Result.success();
     }
 
     /**

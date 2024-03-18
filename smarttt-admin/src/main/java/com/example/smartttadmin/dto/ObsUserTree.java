@@ -8,16 +8,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * 返回的学院列表
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ObsResponse {
+public class ObsUserTree {
     private String id;
-    private String levelcode;
+    private String pid;
+    private long orderno;
     private String obsname;
     private List<StUsers> stUsersList;
+    private List<ObsUserTree> children;
 }
