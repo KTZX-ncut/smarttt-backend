@@ -1,7 +1,7 @@
-package com.example.smartttcourse.service;
+package com.example.smartttevaluation.service;
 
-import com.example.smartttcourse.dto.Result;
-import com.example.smartttcourse.pojo.CmAbility;
+import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.pojo.CmAbility;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.smartttcourse.pojo;
+package com.example.smartttevaluation.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

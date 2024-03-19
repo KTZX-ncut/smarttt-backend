@@ -1,15 +1,15 @@
-package com.example.smartttcourse.controller;
+package com.example.smartttevaluation.controller;
 
-import com.example.smartttcourse.dto.CreateAbilityReq;
-import com.example.smartttcourse.pojo.CmAbility;
+import com.example.smartttevaluation.dto.CreateAbilityReq;
+import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
-import com.example.smartttcourse.dto.Result;
-import com.example.smartttcourse.service.CmAbilityService;
+import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.service.CmAbilityService;
 
 @RestController
 @RequestMapping("/coursemangt/ability")
