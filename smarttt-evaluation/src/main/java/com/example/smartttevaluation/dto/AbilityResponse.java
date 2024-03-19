@@ -1,4 +1,4 @@
-package com.example.smartttcourse.dto;
+package com.example.smartttevaluation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

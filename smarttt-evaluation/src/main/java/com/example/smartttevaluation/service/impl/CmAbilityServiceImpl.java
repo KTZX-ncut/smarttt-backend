@@ -1,14 +1,17 @@
-package com.example.smartttcourse.service.impl;
+package com.example.smartttevaluation.service.impl;
 
-import com.example.smartttcourse.service.CmAbilityService;
+import com.example.smartttevaluation.pojo.CommonFunctions;
+import com.example.smartttevaluation.service.CmAbilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
-import com.example.smartttcourse.dto.*;
-import com.example.smartttcourse.mapper.CmAbilityMapper;
-import com.example.smartttcourse.pojo.CmAbility;
+import com.example.smartttevaluation.dto.*;
+import com.example.smartttevaluation.mapper.CmAbilityMapper;
+import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.stereotype.Service;
-import static com.example.smartttcourse.pojo.CommonFunctions.*;
+
+import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
+
 import java.util.*;
 
 @Service
@@ -31,7 +34,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      */
     @Override
     public Result createOneAbility(CmAbility cmAbility) {
-        cmAbility.setId(generateEnhancedID("cm_ability"));
+        cmAbility.setId(CommonFunctions.generateEnhancedID("cm_ability"));
         //获取兄弟的最大值,然后+1就是orderno
         long orderNoMax = cmAbilityMapper.getCmAbilityListByPid(cmAbility.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
         cmAbility.setOrderno(orderNoMax+1);
@@ -41,7 +44,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
         List<TreeStructure> treeStructureList = cmAbilityList.stream()
                 .map(cmAbility_ex -> new TreeStructure(cmAbility_ex.getId(), cmAbility_ex.getPid(), cmAbility_ex.getOrderno()))
                 .collect(Collectors.toList());
-        cmAbility.setLevelcode(generateLevelCode(generateTreeStructureList(treeStructureList,cmAbility.getId())));
+        cmAbility.setLevelcode(CommonFunctions.generateLevelCode(CommonFunctions.generateTreeStructureList(treeStructureList,cmAbility.getId())));
         cmAbilityMapper.createOneNewAbility(cmAbility);
         return Result.success();
     }

@@ -1,6 +1,6 @@
-package com.example.smartttcourse.dto;
+package com.example.smartttevaluation.dto;
 
-import com.example.smartttcourse.pojo.SmObs;
+import com.example.smartttevaluation.pojo.SmObs;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;

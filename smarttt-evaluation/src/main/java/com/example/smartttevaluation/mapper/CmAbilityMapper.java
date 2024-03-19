@@ -1,11 +1,11 @@
-package com.example.smartttcourse.mapper;
+package com.example.smartttevaluation.mapper;
 
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import com.example.smartttcourse.dto.AbilityResponse;
-import com.example.smartttcourse.dto.CmAbilityTree;
-import com.example.smartttcourse.pojo.CmAbility;
+import com.example.smartttevaluation.dto.AbilityResponse;
+import com.example.smartttevaluation.dto.CmAbilityTree;
+import com.example.smartttevaluation.pojo.CmAbility;
 
 @Mapper
 public interface CmAbilityMapper {
