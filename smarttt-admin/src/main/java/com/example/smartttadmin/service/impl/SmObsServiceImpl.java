@@ -200,7 +200,12 @@ public class SmObsServiceImpl implements SmObsService {
     public Result updateClass(CmClass cmClass) {
         smObsMapper.updateClass(cmClass);
         SmObs smObs = new SmObs(cmClass);
-        System.out.println("???????"+smObs);
+        smObsMapper.updateObs(smObs);
+        return Result.success();
+    }
+
+    @Override
+    public Result updateOneObsByID(SmObs smObs) {
         smObsMapper.updateObs(smObs);
         return Result.success();
     }

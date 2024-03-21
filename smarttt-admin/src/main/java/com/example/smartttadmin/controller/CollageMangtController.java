@@ -3,6 +3,7 @@ package com.example.smartttadmin.controller;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,9 @@ public class CollageMangtController {
     @PostMapping("/delete")
     public Result deleteCollegeByIDs(@RequestBody List<String> ids){
         return smObsService.deleteObssByIDS(ids);
+    }
+    @PostMapping("/update")
+    public Result updateCollege(@RequestBody SmObs smObs) {
+        return smObsService.updateOneObsByID(smObs);
     }
 }

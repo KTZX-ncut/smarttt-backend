@@ -43,4 +43,6 @@ public interface SmObsService {
     Result createOneClass(CmClass cmClass);
 
     Result updateClass(CmClass cmClass);
+
+    Result updateOneObsByID(SmObs smObs);
 }

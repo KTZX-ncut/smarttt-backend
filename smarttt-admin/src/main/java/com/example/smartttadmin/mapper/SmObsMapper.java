@@ -15,7 +15,7 @@ public interface SmObsMapper {
      * 查找学院列表用于教务处的展示（无负责人列表）
      * @return ...
      */
-    @Select("select id,obsname,levelcode from sm_obs where obsdeep=2")
+    @Select("select id,obsname,levelcode,remark from sm_obs where obsdeep=2")
     List<ObsResponse> getAllCollegeList();
 
     @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
@@ -72,7 +72,7 @@ public interface SmObsMapper {
     String getPidByID(String id);
 
     List<SmObs> getSmObsByIDs(@Param("ids")List<String> ids);
-    @Select("select id,obsname,levelcode from sm_obs where pid = #{pid}")
+    @Select("select id,obsname,levelcode,remark from sm_obs where pid = #{pid}")
     List<ObsResponse> getSmObsByPid(@Param("pid") String pid);
 
     List<ProfessionResponse> getProfessionByIDs(@Param("ids") List<String> ids);

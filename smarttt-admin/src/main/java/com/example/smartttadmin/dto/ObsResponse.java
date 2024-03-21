@@ -19,5 +19,6 @@ public class ObsResponse {
     private String id;
     private String levelcode;
     private String obsname;
+    private String remark;
     private List<StUsers> stUsersList;
 }
