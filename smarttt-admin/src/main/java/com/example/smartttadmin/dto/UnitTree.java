@@ -1,7 +1,7 @@
 package com.example.smartttadmin.dto;
 
-import com.example.smartttadmin.pojo.EncryptField;
-import com.example.smartttadmin.pojo.EncryptFieldSerializer;
+import com.example.smartttadmin.Utils.EncryptField;
+import com.example.smartttadmin.Utils.EncryptFieldSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;

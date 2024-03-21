@@ -1,6 +1,5 @@
 package com.example.smartttadmin.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.CmClass;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @RestController
 @RequestMapping("/sysmangt/classmangt")

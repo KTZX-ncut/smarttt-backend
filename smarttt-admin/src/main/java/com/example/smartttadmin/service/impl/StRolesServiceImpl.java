@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @Service
 public class StRolesServiceImpl implements StRolesService {

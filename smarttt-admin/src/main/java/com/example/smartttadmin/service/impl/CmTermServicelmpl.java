@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @Service
 public class CmTermServicelmpl implements CmTermService {

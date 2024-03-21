@@ -1,4 +1,4 @@
-package com.example.smartttadmin.pojo;
+package com.example.smartttadmin.Utils;
 
 import com.example.smartttadmin.dto.TreeStructure;
 

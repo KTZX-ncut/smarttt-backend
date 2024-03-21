@@ -1,4 +1,4 @@
-package com.example.smartttadmin.pojo;
+package com.example.smartttadmin.Utils;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

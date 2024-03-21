@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @RestController
 @RequestMapping("/sysmangt/professionmangt")

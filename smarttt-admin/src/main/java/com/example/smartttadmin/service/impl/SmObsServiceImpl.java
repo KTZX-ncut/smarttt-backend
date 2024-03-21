@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.*;
+import static com.example.smartttadmin.Utils.CommonFunctions.*;
 
 @Service
 public class SmObsServiceImpl implements SmObsService {
