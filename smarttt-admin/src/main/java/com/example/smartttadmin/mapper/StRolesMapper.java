@@ -35,12 +35,15 @@ public interface StRolesMapper {
      * 全部角色的信息
      * @return 角色的信息列表
      */
-    @Select("select rolecode,rolename,remark from st_roles")
+    @Select("select id,rolecode,rolename,homename,homeurl,remark from st_roles")
     List<StRoles> getRoles();
+
+    @Select("select id,rolecode,rolename,remark from st_roles")
+    List<StRoles> getSimpleRoles();
 
 
     @Delete("delete from st_roles where id = #{id}")
     void deleteRoles(String id);
 
-
+    void updateRoles(StRoles stRoles);
 }

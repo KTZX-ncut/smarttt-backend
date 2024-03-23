@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @Service
 public class StRolesServiceImpl implements StRolesService {
@@ -37,20 +37,23 @@ public class StRolesServiceImpl implements StRolesService {
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
     }
-    public Result getStRolesList(){
+    public Result getStRoleMangtList(){
         List<StRoles> stRolesList = stRolesMapper.getRoles();
         return Result.success(stRolesList);
     }
 
     @Override
-    public Result updateRoles() {
-        return null;
+    public Result updateRoles(StRoles stRoles) {
+        stRolesMapper.updateRoles(stRoles);
+        return Result.success();
     }
 
 
     @Override
-    public Result deleteRoles(String id) {
-        stRolesMapper.deleteRoles(id);
+    public Result deleteRoles(List<String> ids) {
+        for(String id : ids){
+            stRolesMapper.deleteRoles(id);
+        }
         return Result.success();
     }
 
@@ -66,5 +69,11 @@ public class StRolesServiceImpl implements StRolesService {
             stRolesMapper.createRoleMenus(stRoleMenu);
         }
         return Result.success();
+    }
+
+    @Override
+    public Result getRolePurviewList() {
+        List<StRoles> stRolesList = stRolesMapper.getSimpleRoles();
+        return Result.success(stRolesList);
     }
 }

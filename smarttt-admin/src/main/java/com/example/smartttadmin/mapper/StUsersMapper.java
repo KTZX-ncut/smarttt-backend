@@ -1,5 +1,6 @@
 package com.example.smartttadmin.mapper;
 
+import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.LoginReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.pojo.StUsers;
@@ -19,7 +20,7 @@ public interface StUsersMapper {
      */
     @Select("select * from st_users where loginname=#{loginname} and pwd = #{pwd} and catelog = #{catelog}")
     StUsers getStUsersByLoginNameAndPwdAndCatelog(LoginReq loginReq);
-    @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid} and obsdeep = 2) ")
+    @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid}) ")
     List<StUsers> getStUsersByobsid(String obsid);
 
     @Insert("insert into st_users(id,username,loginname,pwd,phone,status,catelog,remark,createtime) values " +
@@ -33,4 +34,10 @@ public interface StUsersMapper {
     void createOneSmStudent(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("stuno")String stuno);
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
+
+    @Select("select obsid from st_roleuser where userid = #{userid} and roleid = #{roleid}")
+    String getAdminObsID(LoginHomeReq loginHomeReq);
+
+    @Select("")
+    void getTeachersByobsid(String obsid);
 }

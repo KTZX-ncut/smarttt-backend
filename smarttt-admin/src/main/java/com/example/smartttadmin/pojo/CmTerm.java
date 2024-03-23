@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class CmTerm {
     private String id;//学期的id
     private String termname;//学期名称
-    private LocalDate startdate;//开始时间
+    private LocalDate begindate;//开始时间
     private LocalDate enddate;//结束时间
     private String remark;//备注
     private String iscurrentterm;

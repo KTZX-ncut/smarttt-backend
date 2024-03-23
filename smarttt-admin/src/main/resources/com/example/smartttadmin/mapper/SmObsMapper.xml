@@ -3,10 +3,60 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttadmin.mapper.SmObsMapper">
+    <update id="updateObs">
+        update sm_obs
+        <!-- 使用set标签，代替update语句中的set关键字 -->
+        <set>
+            <if test="pid != null">
+                pid=#{pid},
+            </if>
+            <if test="orderno != 0">
+                orderno=#{orderno},
+            </if>
+            <if test="obsdeep != 0">
+                obsdeep=#{obsdeep},
+            </if>
+            <if test="obsname != null">
+                obsname=#{obsname},
+            </if>
+            <if test="levelcode != null">
+                levelcode=#{levelcode},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+
+        </set>
+        where id=#{id}
+    </update>
+    <update id="updateClass">
+        update cm_class
+        <set>
+            <if test="obsid != null">
+                obsid = #{obsid},
+            </if>
+            <if test="classname != null">
+                classname = #{classname},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </set>
+        where obsid = #{id}
+    </update>
     <!--    id: 方法名 resultType：单条记录所封装的类型，全类名-->
 
     <select id="getSmObsByIDs" resultType="com.example.smartttadmin.pojo.SmObs">
         select * from sm_obs where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getProfessionByIDs" resultType="com.example.smartttadmin.dto.ProfessionResponse">
+        select obsid as id,proname,procode,reachpercent,remark from cm_profession where obsid in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>

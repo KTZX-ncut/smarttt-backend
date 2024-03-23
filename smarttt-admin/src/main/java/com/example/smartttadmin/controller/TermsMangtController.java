@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/sysmangt/terms")
 public class TermsMangtController {
     @Autowired
-    private CmTermService smTermsService;
+    private CmTermService cmTermService;
 
     /**
      *获取学期信息
@@ -23,7 +23,7 @@ public class TermsMangtController {
      */
     @GetMapping
     public Result getTerms() {
-        return smTermsService.getTerms();
+        return cmTermService.getTerms();
     }
 
     /**
@@ -32,9 +32,9 @@ public class TermsMangtController {
      * @param cmTerm
      * @return
      */
-    @GetMapping("/create")
+    @PostMapping ("/create")
     public Result createTerms(@RequestBody CmTerm cmTerm) {
-        return smTermsService.createTerms(cmTerm);
+        return cmTermService.createTerms(cmTerm);
     }
 
     /**
@@ -44,11 +44,16 @@ public class TermsMangtController {
      */
     @PostMapping("/delete")
     public Result deleteTermsByID(@RequestBody List<String> ids) {
-        return smTermsService.deleteTermsByID(ids);
+        return cmTermService.deleteTermsByID(ids);
+    }
+
+    @PostMapping
+    public Result updateTerm(@RequestBody CmTerm cmTerm){
+        return cmTermService.updateTermByID(cmTerm);
     }
 
     @GetMapping("/currentterm")
-    public Result getCurrentTerms(@RequestParam(name = "iscurrentterm")boolean iscurrentterm) {
-        return smTermsService.getCurrentTerms(iscurrentterm);
+    public Result setCurrentTerms(@RequestParam(name = "id")String id) {
+        return cmTermService.setCurrentTerms(id);
     }
 }

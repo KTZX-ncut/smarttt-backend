@@ -4,6 +4,8 @@ import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StRoles;
 import com.example.smartttadmin.pojo.StUsers;
 
+import java.util.List;
+
 public interface StRolesService {
     /**
      * 在登录功能里查找某用户的简化版角色列表
@@ -17,11 +19,11 @@ public interface StRolesService {
      * 超级管理员的角色授权功能里查找角色的全部信息
      * @return 角色列表
      */
-    Result getStRolesList();
+    Result getStRoleMangtList();
 
-    Result updateRoles();
+    Result updateRoles(StRoles stRoles);
 
-    Result deleteRoles(String id);
+    Result deleteRoles(List<String> ids);
 
     /**
      * 新建角色
@@ -29,4 +31,6 @@ public interface StRolesService {
      * @return ...
      */
     Result createRole(StRoles stRoles);
+
+    Result getRolePurviewList();
 }

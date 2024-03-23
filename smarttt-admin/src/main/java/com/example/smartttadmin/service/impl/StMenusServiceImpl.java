@@ -2,7 +2,6 @@ package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.StMenusMapper;
-import com.example.smartttadmin.pojo.StRoleMenu;
 import com.example.smartttadmin.service.StMenusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,8 @@ public class StMenusServiceImpl implements StMenusService {
         return Result.success(menusResponseList);
     }
     @Override
-    public Result getMenuTree(String rolecode) {
-        List<MenuTree> allMenuTree = stMenusMapper.getMenuByRoleCode(rolecode);
+    public Result getMenuTree(String id) {
+        List<MenuTree> allMenuTree = stMenusMapper.getMenuByRoleID(id);
        //Map<String, List<MenuTree>> menuMap = allMenuTree.stream().collect(Collectors.groupingBy(MenuTree::getPid));
         Map<String, List<MenuTree>> menuMap = allMenuTree.stream()
                 .collect(Collectors.groupingBy(MenuTree::getPid,
@@ -74,7 +73,7 @@ public class StMenusServiceImpl implements StMenusService {
     }
 
     @Override
-    public Result updateMenuStatus(UpdateMenuReq updateMenuReq) {
+    public Result  updateMenuStatus(UpdateMenuReq updateMenuReq) {
        stMenusMapper.updateMenuStatus(updateMenuReq);
        return Result.success();
     }

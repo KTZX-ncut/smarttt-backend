@@ -1,12 +1,13 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.dto.UpdateMenuReq;
 import com.example.smartttadmin.pojo.StRoles;
 import com.example.smartttadmin.service.StMenusService;
 import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 超级管理员-角色管理
@@ -26,24 +27,24 @@ public class RoleMangtController {
     @GetMapping
     public Result getRoleList() {
 
-        return stRolesService.getStRolesList();
+        return stRolesService.getStRoleMangtList();
     }
 
-    @GetMapping("/update")
-    public Result updateRole() {
+    @PostMapping("/update")
+    public Result updateRole(@RequestBody StRoles stRoles) {
 
-        return stRolesService.updateRoles();
+        return stRolesService.updateRoles(stRoles);
     }
 
     /**
      * 角色删除有误，应该把相关的表里的数据一起删除（修改）
-     * @param id
+     * @param ids
      * @return
      */
-    @GetMapping("/delete")
-    public Result deleteRole(@RequestParam(name = "id")String id) {
+    @PostMapping("/delete")
+    public Result deleteRole(@RequestBody List<String> ids) {
 
-        return stRolesService.deleteRoles(id);
+        return stRolesService.deleteRoles(ids);
     }
 
     /**

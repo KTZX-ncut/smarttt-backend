@@ -70,4 +70,11 @@ public class StUsersServiceImpl implements StUsersService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Result getObsRP(String obsid) {
+        //获取该obsid的全部教师
+        stUsersMapper.getTeachersByobsid(obsid);
+        return null;
+    }
 }

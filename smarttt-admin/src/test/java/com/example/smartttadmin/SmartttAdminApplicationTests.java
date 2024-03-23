@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.smartttadmin.pojo.CommonFunctions.generateEnhancedID;
-import static com.example.smartttadmin.pojo.EncryptionUtil.*;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.EncryptionUtil.*;
 @SpringBootTest
 class SmartttAdminApplicationTests {
     @Autowired
