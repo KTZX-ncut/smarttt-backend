@@ -15,7 +15,6 @@ public class CmGetability {
      * 能力信息列表
      */
     private String id;//课程能力id
-    private String abilityid;//能力id
     private long orderno;//顺序号
     private long abilitydeep;//深度
     private String levelcode;//层级码
