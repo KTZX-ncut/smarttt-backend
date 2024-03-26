@@ -1,9 +1,7 @@
 package com.example.smartttadmin.service.impl;
 
-import com.example.smartttadmin.dto.PersonnelRoster;
+import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.StUsersMapper;
-import com.example.smartttadmin.dto.LoginReq;
-import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
 import org.apache.poi.ss.usermodel.*;
@@ -17,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
 public class StUsersServiceImpl implements StUsersService {
@@ -76,5 +76,11 @@ public class StUsersServiceImpl implements StUsersService {
         //获取该obsid的全部教师
         stUsersMapper.getTeachersByobsid(obsid);
         return null;
+    }
+
+    @Override
+    public Result getLoginToken(StUsers stUsers, LoginToken loginToken) {
+       Token token = new Token(stUsers.getId(),stUsers.getUsername(),loginToken.getRoleid(),loginToken.getObsid(),loginToken.getObsdeep());
+       return Result.success(getToken(token,"123456"));
     }
 }

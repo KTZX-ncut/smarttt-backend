@@ -1,7 +1,9 @@
 package com.example.smartttadmin.controller;
 
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @RestController
@@ -31,10 +35,11 @@ public class ProfessionMangtController {
      * @return
      */
     @PostMapping("/create")
-    public Result createOneProfession(@RequestBody CmProfession cmProfession){
-
+    @AuthRequired(type = "admin",roleid = "516761049-bac1cf5a-5360-4caa-b062-3e2800bdfd58")
+    public Result createOneProfession(@RequestBody CmProfession cmProfession, HttpServletRequest request){
         String ID = generateEnhancedID("sm_obs");
-        SmObs smObs = new SmObs(ID,"4355323",4,cmProfession.getProname(),cmProfession.getRemark());
+        Token token = getTokenFromContext();
+        SmObs smObs = new SmObs(ID, token.getObsid(), token.getObsdeep()+1,cmProfession.getProname(),cmProfession.getRemark());
         Result result = smObsService.createOneObs(smObs);
         if(result.getCode() != 200)return result;
         cmProfession.setObsid(ID);

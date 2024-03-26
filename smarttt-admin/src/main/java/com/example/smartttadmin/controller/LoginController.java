@@ -1,16 +1,15 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.LoginReq;
+import com.example.smartttadmin.dto.LoginToken;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StRolesService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 public class LoginController {
     @Autowired
@@ -30,5 +29,11 @@ public class LoginController {
            return result;
        }
        return stRoleUserService.getSimpleRolesList((StUsers) result.getData());
+    }
+    @PostMapping("/loginhome")
+    public Result loginHome(@RequestBody LoginToken loginToken){
+        LoginReq loginReq = new LoginReq(loginToken);
+        Result result = stUsersService.login(loginReq);
+        return stUsersService.getLoginToken((StUsers)result.getData(),loginToken);
     }
 }

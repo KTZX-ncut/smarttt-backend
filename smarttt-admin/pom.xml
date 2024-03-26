@@ -44,11 +44,26 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.2.20</version>
         </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.7</version> <!-- 或者你希望使用的版本 -->
+        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.3.7</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -68,6 +83,10 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.0</version> <!-- 或者是您项目中使用的其他版本 -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>

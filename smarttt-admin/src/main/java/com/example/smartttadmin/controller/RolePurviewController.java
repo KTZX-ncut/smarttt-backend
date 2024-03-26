@@ -1,5 +1,6 @@
 package com.example.smartttadmin.controller;
 
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.UpdateMenuReq;
 import com.example.smartttadmin.service.StMenusService;

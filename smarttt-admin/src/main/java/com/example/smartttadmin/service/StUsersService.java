@@ -1,8 +1,10 @@
 package com.example.smartttadmin.service;
 
 import com.example.smartttadmin.dto.LoginReq;
+import com.example.smartttadmin.dto.LoginToken;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.pojo.StUsers;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,4 +30,6 @@ public interface StUsersService {
     List<PersonnelRoster>importTeacherAndStudentExcel(MultipartFile file) throws IOException;
 
     Result getObsRP(String id);
+
+    Result getLoginToken(StUsers data, LoginToken loginToken);
 }
