@@ -16,6 +16,9 @@ public class CommonFunctions {
         UUID uuid = UUID.randomUUID();
         return nameHash+"-"+uuid;
     }
+    public static String dealName(String name){
+        return null;
+    }
 
     /**
      * 生成一棵树路径

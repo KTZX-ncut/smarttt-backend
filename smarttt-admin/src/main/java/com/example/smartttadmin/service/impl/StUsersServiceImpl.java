@@ -80,7 +80,7 @@ public class StUsersServiceImpl implements StUsersService {
 
     @Override
     public Result getLoginToken(StUsers stUsers, LoginToken loginToken) {
-       Token token = new Token(stUsers.getId(),stUsers.getUsername(),loginToken.getRoleid(),loginToken.getObsid(),loginToken.getObsdeep());
+       Token token = new Token(stUsers.getId(),loginToken.getRoleid(),loginToken.getObsid(),loginToken.getObsdeep());
        return Result.success(getToken(token,"123456"));
     }
 }

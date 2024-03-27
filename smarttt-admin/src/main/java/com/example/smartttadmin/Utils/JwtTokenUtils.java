@@ -19,7 +19,6 @@ public class JwtTokenUtils {
     public static String getToken(Token token, String secretKey) {
         return JWT.create()
                 .withClaim("id", token.getId())
-                .withClaim("username", token.getUsername())
                 .withClaim("roleid", token.getRoleid())
                 .withClaim("obsid", token.getObsid())
                 .withClaim("obsdeep", token.getObsdeep())
@@ -34,7 +33,6 @@ public class JwtTokenUtils {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secretKey)).build().verify(jwtToken);
         Token token = new Token();
         token.setId(decodedJWT.getClaim("id").asString());
-        token.setUsername(decodedJWT.getClaim("username").asString());
         token.setRoleid(decodedJWT.getClaim("roleid").asString());
         token.setObsid(decodedJWT.getClaim("obsid").asString());
         token.setObsdeep(decodedJWT.getClaim("obsdeep").asLong());

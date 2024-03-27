@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Token {
-    private String id;
-    private String roleid;
-    private String obsid;
-    private long obsdeep;
+public class User {
+    private String catelog;
+    private String currentterm;
+    private String username;
+    private String rolename;
+    private String homeurl;
+    private String token;
 }

@@ -96,4 +96,6 @@ public interface SmObsMapper {
     void updateClass(CmClass cmClass);
 
     void updateObs(SmObs smObs);
+    @Select("select obsname from sm_obs where id = #{obsid} and obsdeep!=1")
+    String getObsName(SimpleRole simpleRole);
 }
