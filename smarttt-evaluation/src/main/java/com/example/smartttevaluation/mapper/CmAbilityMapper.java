@@ -3,7 +3,6 @@ package com.example.smartttevaluation.mapper;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import com.example.smartttevaluation.dto.AbilityResponse;
 import com.example.smartttevaluation.dto.CmAbilityTree;
 import com.example.smartttevaluation.pojo.CmAbility;
 
@@ -12,13 +11,9 @@ public interface CmAbilityMapper {
 
     /**
      * 查找能力列表
-     * @return ...
      */
-    @Select("select id,name,levelcode from cm_ability where abilitydeep=2")
-    List<AbilityResponse> getAllAbilityList();
-
-    @Insert("INSERT INTO cm_ability (id, pid, orderno, abilitydeep, name, datavalue, remark, levelcode) " +
-            "VALUES (#{id},#{pid},#{orderno},#{abilitydeep},#{name},#{databalue},#{remark},#{levelcode})")
+    @Insert("INSERT INTO cm_ability (id, pid, orderno, abilitydeep, name, datavalue,importantlevel, remark, levelcode) " +
+            "VALUES (#{id},#{pid},#{orderno},#{abilitydeep},#{name},#{databalue},#{importantlevel}, #{remark},#{levelcode})")
     void createOneNewAbility(CmAbility cmAbility);
 
     @Delete("delete from cm_ability where id = #{id}")
