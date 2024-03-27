@@ -42,7 +42,7 @@ public class AbilityController {
 
    @PostMapping("/delete")
    public Result deleteAbilityByIDs(@RequestBody List<String> ids){
-       return cmAbilityService.deleteAbilityByIDS(ids);
+       return cmAbilityService.deleteAbilityByIDs(ids);
    }
 
    @GetMapping("/upgrade")

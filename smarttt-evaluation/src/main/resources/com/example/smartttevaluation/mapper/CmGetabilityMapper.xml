@@ -8,13 +8,13 @@
         <!-- 使用set标签，代替update语句中的set关键字 -->
         <set>
             <if test="name != null">
-                termname=#{termname},
+                name=#{name},
             </if>
             <if test="datavalue != null">
-                begindate=#{begindate},
+                datavalue=#{datavalue},
             </if>
             <if test="importantlevel != null">
-                enddate=#{enddate},
+                importantlevel=#{importantlevel},
             </if>
             <if test="remark != null">
                 remark=#{remark},

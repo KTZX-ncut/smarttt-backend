@@ -19,6 +19,8 @@ public interface CmAbilityMapper {
     @Delete("delete from cm_ability where id = #{id}")
     void deleteAbilityByID(String id);
 
+    void deleteAbilityByIDs(@Param("ids") List<String> ids);
+
     @Select("select * from cm_ability")
     List<CmAbilityTree> getAllCmAbilityTree();
 
