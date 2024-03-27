@@ -9,4 +9,10 @@
             #{id}
         </foreach>
     </select>
+    <delete id="deleteAbilityByIDs">
+        delete from cm_getability where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
