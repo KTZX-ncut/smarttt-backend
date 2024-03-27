@@ -18,12 +18,6 @@ public class AbilityController {
     @Autowired
     private CmAbilityService cmAbilityService;
 
-    @PostMapping
-    public Result createNewAbility(@RequestBody CmAbility cmAbility){
-        cmAbility.setAbilitydeep(2);
-        cmAbility.setPid("237675254");
-        return cmAbilityService.createOneAbility(cmAbility);
-    }
 
     @GetMapping
     Result getAbilityList(){

@@ -1,0 +1,16 @@
+package com.example.smartttevaluation.service;
+
+import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.pojo.CmKeywords;
+
+import java.util.List;
+
+public interface CmKeywordsService {
+    Result getKeywords();
+
+    Result createKeywords(CmKeywords cmKeywords);
+
+    Result deleteKeywordsByID(List<String> ids);
+
+    Result updateKeywords(CmKeywords cmKeywords);
+}
