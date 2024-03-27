@@ -44,7 +44,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 批量删除
      */
     @Override
-    public Result deleteAbilityByIDS(List<String> ids) {
+    public Result deleteAbilityByIDs(List<String> ids) {
         List<CmAbility> cmAbilityList = cmAbilityMapper.getCmAbilityByIDs(ids);
         if(cmAbilityList.size()<ids.size())return Result.error(404,"批量删除能力出错");
         for(String id:ids){
@@ -56,7 +56,6 @@ public class CmAbilityServiceImpl implements CmAbilityService {
 
     /**
      * 能力树
-     * @return
      */
     @Override
     public Result getAbilityTree() {
@@ -79,8 +78,6 @@ public class CmAbilityServiceImpl implements CmAbilityService {
 
     /**
      * 能力-升级
-     * @param id
-     * @return
      */
     @Override
     public Result upgradeOneAbilityByID(String id) {
@@ -108,9 +105,6 @@ public class CmAbilityServiceImpl implements CmAbilityService {
 
     /**
      * 递归输出某能力的所有children
-     * @param parentCmAbility
-     * @param AbilityMap
-     * @return
      */
     public static List<String> getAbilityChildren(List<CmAbility> parentCmAbility, Map<String, List<CmAbility>>  AbilityMap){
         List<String> abilityChildren = parentCmAbility.stream()

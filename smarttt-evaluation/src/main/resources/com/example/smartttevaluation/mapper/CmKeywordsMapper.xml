@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.CmKeywordsMapper">
+    <update id="updateKeywordsByID">
+        update cm_keywords
+        <!-- 使用set标签，代替update语句中的set关键字 -->
+        <set>
+            <if test="name != null">
+                termname=#{termname},
+            </if>
+            <if test="datavalue != null">
+                begindate=#{begindate},
+            </if>
+            <if test="importantlevelid != null">
+                enddate=#{enddate},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteKeywordsByIDs">
+        delete from cm_keywords where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

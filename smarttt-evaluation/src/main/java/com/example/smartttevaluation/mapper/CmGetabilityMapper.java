@@ -9,8 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface CmGetabilityMapper {
-    @Select("select id, remark from cm_ability")
+    @Select("select id, datavalue, remark from cm_ability")
     List<CmAbility> getGetability ();
+
     void deleteGetabilityByIDs(@Param("ids") List<String> ids);
 
     void updateGetabilityByID(CmAbility cmAbility);
