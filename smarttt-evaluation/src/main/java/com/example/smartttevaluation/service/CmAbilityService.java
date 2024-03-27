@@ -7,10 +7,6 @@ import java.util.List;
 
 public interface CmAbilityService {
 
-//    Result getAllAbilityList();
-
-    Result getAllAbilityList();
-
     Result createOneAbility(CmAbility cmAbility);
 
     Result getAbilityTree();

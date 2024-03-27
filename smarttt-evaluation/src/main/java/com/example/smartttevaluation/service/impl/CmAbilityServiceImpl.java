@@ -19,15 +19,6 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     @Autowired
     private CmAbilityMapper cmAbilityMapper;
 
-    /**
-     * 能力列表
-     *
-     */
-    @Override
-    public Result getAllAbilityList() {
-        List<AbilityResponse> abilityResponseList= cmAbilityMapper.getAllAbilityList();
-        return Result.success(abilityResponseList);
-    }
 
     /**
      * 创建能力

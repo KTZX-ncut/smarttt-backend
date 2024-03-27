@@ -30,12 +30,6 @@ public interface CmAbilityMapper {
     @Select("select * from cm_ability")
     List<CmAbility> getAllCmAbilityList();
 
-//    @Select("select * from cm_ability where id = #{id}")
-//    List<CmAbility> getCmAbilityByID(String id);
-//
-//    @Select("select id from cm_ability where name = #{name}")
-//    List<String> getAbilityIDByAbilityName(String name);
-
     @Select("select orderno from cm_ability where pid = #{pid}")
     List<Long> getCmAbilityListByPid(String pid);
 

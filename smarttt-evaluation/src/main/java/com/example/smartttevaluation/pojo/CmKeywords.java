@@ -9,18 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CmAbility {
-
+public class CmKeywords {
     /**
-     * 能力字典信息列表
+     * 关键字信息列表
      */
     private String id;//能力id
-    private String pid;//父节点
-    private long orderno;//顺序号
-    private long abilitydeep;//深度
-    private String levelcode;//层级码
     private String name;//名称
     private String datavalue;//数值
+    private String importantlevelid;//重要程度
     private String remark;//备注
-    private String proid;//专业id
+    private String courseid;//课程id
+
 }
