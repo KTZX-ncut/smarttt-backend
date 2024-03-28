@@ -2,36 +2,45 @@ package com.example.smartttadmin.Utils;
 
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
+import com.example.smartttadmin.mapper.StMenusMapper;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import java.util.Objects;
 
+import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.parseToken;
 
 @Aspect
 @Component
 public class AuthorizationAspect {
+    @Autowired
+    private StMenusMapper stMenusMapper;
 
     private static final ThreadLocal<Token> tokenThreadLocal = new ThreadLocal<>();
 
     @Before("@annotation(authRequired) && args(.., request)")
     public Result beforeMethodWithAuthRequired(AuthRequired authRequired, HttpServletRequest request) {
-        String token = extractTokenFromRequest(request);
-        Token token1 = parseToken(token,"123456");
-        // 存储 token 到上下文中
-        tokenThreadLocal.set(token1);
+        String stringToken = extractTokenFromRequest(request);
+        Token token = parseToken(stringToken,TokenSK);
+        // 存储 stringToken 到上下文中
+        tokenThreadLocal.set(token);
         // 在这里可以执行其他鉴权逻辑
-        String value = authRequired.type();
-        if ("admin".equals(value)) {
+        String type = authRequired.type();
+        if ("admin".equals(type)) {
             // 执行管理员鉴权逻辑
-            String roleid = authRequired.roleid();
-            if(!Objects.equals(roleid, token1.getRoleid()))return Result.error("用户访问错误");
-            return null;
-        } else if ("user".equals(value)) {
+            List<String> statueList = stMenusMapper.getStatueInRoleUser(token.getRoleid(),authRequired.menu());
+            if(statueList.size()!=1)return Result.error("用户信息错误");
+            String statue = statueList.get(0);
+            if(Objects.equals(statue, "1"))return null;
+            if(Objects.equals(statue, "2") && authRequired.isReadOnly())return null;
+            return Result.error("无请求权限");
+        } else if ("user".equals(type)) {
             // 执行普通用户鉴权逻辑
             System.out.println("Performing user authorization");
         } else {

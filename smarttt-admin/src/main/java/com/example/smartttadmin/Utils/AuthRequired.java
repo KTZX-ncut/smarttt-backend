@@ -8,6 +8,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthRequired {
-    String type() default "";
-    String roleid() default "";
+    String type() default "error";
+    String menu() default "error";
+    //标记这个接口是否是只展示数据，不是编辑的
+    //默认是不是只读的
+    boolean isReadOnly() default false;
 }

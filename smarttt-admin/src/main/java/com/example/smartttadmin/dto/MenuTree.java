@@ -19,6 +19,7 @@ public class MenuTree {
     private String pid;
     private Integer orderno;
     private String name;
+    private String url;
     private String status;//该角色在这个权限菜单的状态
     private List<MenuTree> children;//子菜单
 
@@ -26,6 +27,12 @@ public class MenuTree {
         this.id = id;
         this.name = name;
         this.status = status;
+        this.children = menuTrees;
+    }
+    public MenuTree(String id,String name, List<MenuTree> menuTrees ,String url){
+        this.id = id;
+        this.name = name;
+        this.url = url;
         this.children = menuTrees;
     }
 }

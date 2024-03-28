@@ -7,17 +7,17 @@ import com.example.smartttadmin.mapper.StRolesMapper;
 import com.example.smartttadmin.dto.SimpleRole;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.*;
-import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.Utils.CommonFunctions.dealName;
+import static com.example.smartttadmin.Utils.CommonFunctions.StuRoleID;
 import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @Service
@@ -31,24 +31,35 @@ public class StRolesServiceImpl implements StRolesService {
     public Result getSimpleRolesList(StUsers stUsers){
         List<SimpleRole> simpleRoleList = new ArrayList<>();
         if(Objects.equals(stUsers.getCatelog(), "1")){
-            SimpleRole simpleRole = new SimpleRole("学生","homes/studenthome");
+
+            SmObs smObs = smObsMapper.getObsByStuID(stUsers.getId());
+            SimpleRole simpleRole = new SimpleRole(StuRoleID,"学生",smObs.getId(),smObs.getObsdeep());
             simpleRoleList.add(simpleRole);
         }
         else {
             simpleRoleList= stRolesMapper.getRolesByUserID(stUsers.getId());
             for(SimpleRole simpleRole : simpleRoleList){
-                String obsName = smObsMapper.getObsName(simpleRole);
-                if(obsName!=null && !obsName.isEmpty())
-                    obsName+=simpleRole.getRolename();
-                simpleRole.setRolename(dealName(obsName));
-
+                simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
             }
         }
 
-       LoginResponse loginResponse =new LoginResponse(stUsers.getId(),stUsers.getUsername(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
+       LoginResponse loginResponse =new LoginResponse(stUsers.getId(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
     }
+
+    private String dealName(String obsName, String roleName) {
+        if(obsName ==null || obsName.isEmpty())return roleName;
+        List<String> ObsList = Arrays.asList("专业", "学院", "系");
+        for(String name : ObsList ){
+            int position1 = obsName.lastIndexOf(name);
+            int position2 = roleName.indexOf(name);
+            if(position1!=-1 && position2 ==0 && position1+name.length() == obsName.length())//保证一个首一个尾
+                roleName = roleName.replaceAll(name,"");
+        }
+        return obsName+roleName;
+    }
+
     public Result getStRoleMangtList(){
         List<StRoles> stRolesList = stRolesMapper.getRoles();
         return Result.success(stRolesList);

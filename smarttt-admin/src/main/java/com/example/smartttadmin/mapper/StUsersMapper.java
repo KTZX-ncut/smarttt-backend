@@ -1,8 +1,6 @@
 package com.example.smartttadmin.mapper;
 
-import com.example.smartttadmin.dto.LoginHomeReq;
-import com.example.smartttadmin.dto.LoginReq;
-import com.example.smartttadmin.dto.PersonnelRoster;
+import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.pojo.StUsers;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -40,4 +38,8 @@ public interface StUsersMapper {
 
     @Select("")
     void getTeachersByobsid(String obsid);
+
+    @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
+            "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
+    TeaUser getAllUserInfor(TeaInforReq teaInforReq);
 }

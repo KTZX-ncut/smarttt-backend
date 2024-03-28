@@ -14,15 +14,41 @@ public class StMenusServiceImpl implements StMenusService {
     @Autowired
     private StMenusMapper stMenusMapper;
 
+    public Result getMenusList(String roleid){
+        List<MenuTree> allMenuTree = stMenusMapper.getMenusByRoleID(roleid);
+        List<MenuTree> rootMenus = getAllMenuTree(allMenuTree,"0");
+        List<MenuTree> finalMenus = new ArrayList<>();
+        for(MenuTree menuTree : rootMenus){
+            if(menuTree.getChildren()!=null)
+                finalMenus.addAll(menuTree.getChildren());
+        }
+        List<MenuTree> simplifiedMenus = finalMenus.stream()
+                .map(menu -> new MenuTree(menu.getId(),menu.getName(), simplifyChildren(menu.getChildren()),menu.getUrl()))
+                .collect(Collectors.toList());
 
-    public Result getMenusList(LoginHomeReq loginHomeReq){
-        List<MenusResponse> menusResponseList = stMenusMapper.getMenusByRoleID(loginHomeReq.getRoleid());
-        return Result.success(menusResponseList);
+        return Result.success(simplifiedMenus);
     }
+
+    private List<MenuTree> simplifyChildren(List<MenuTree> children) {
+        if (children == null) {
+            return null;
+        }
+        return children.stream()
+                .map(menu -> new MenuTree(menu.getId(),menu.getName(), simplifyChildren(menu.getChildren()),menu.getUrl()))
+                .collect(Collectors.toList());
+    }
+
     @Override
     public Result getMenuTree(String id) {
-        List<MenuTree> allMenuTree = stMenusMapper.getMenuByRoleID(id);
-       //Map<String, List<MenuTree>> menuMap = allMenuTree.stream().collect(Collectors.groupingBy(MenuTree::getPid));
+        List<MenuTree> allMenuTree = stMenusMapper.getAllMenuByRoleID(id);
+        List<MenuTree> rootMenus = getAllMenuTree(allMenuTree,"0");
+        List<MenuTree> simplifiedMenus = rootMenus.stream()
+                .map(menu -> new MenuTree(menu.getId(),menu.getName(), menu.getStatus(), simplifyChildrenForRP(menu.getChildren())))
+                .collect(Collectors.toList());
+        return Result.success(simplifiedMenus);
+    }
+    private List<MenuTree> getAllMenuTree(List<MenuTree> allMenuTree,String rootID){
+        //Map<String, List<MenuTree>> menuMap = allMenuTree.stream().collect(Collectors.groupingBy(MenuTree::getPid));
         Map<String, List<MenuTree>> menuMap = allMenuTree.stream()
                 .collect(Collectors.groupingBy(MenuTree::getPid,
                         Collectors.collectingAndThen(
@@ -32,13 +58,10 @@ public class StMenusServiceImpl implements StMenusService {
                                         .collect(Collectors.toList())
                         )
                 ));
-        List<MenuTree> rootMenus = menuMap.get("0"); // 根菜单的pid通常为null
+        List<MenuTree> rootMenus = menuMap.get(rootID); // 根菜单的pid通常为null
         // 递归构建菜单树
         buildMenuTree(rootMenus, menuMap);
-        List<MenuTree> simplifiedMenus = rootMenus.stream()
-                .map(menu -> new MenuTree(menu.getId(),menu.getName(), menu.getStatus(), simplifyChildren(menu.getChildren())))
-                .collect(Collectors.toList());
-        return Result.success(simplifiedMenus);
+        return rootMenus;
     }
 
     /**
@@ -62,13 +85,12 @@ public class StMenusServiceImpl implements StMenusService {
      * @param children 子菜单
      * @return 子菜单简单化之后的列表
      */
-    private List<MenuTree> simplifyChildren(List<MenuTree> children) {
+    private List<MenuTree> simplifyChildrenForRP(List<MenuTree> children) {
         if (children == null) {
             return null;
         }
-
         return children.stream()
-                .map(menu -> new MenuTree(menu.getId(),menu.getName(), menu.getStatus(), simplifyChildren(menu.getChildren())))
+                .map(menu -> new MenuTree(menu.getId(),menu.getName(), menu.getStatus(), simplifyChildrenForRP(menu.getChildren())))
                 .collect(Collectors.toList());
     }
 
@@ -77,6 +99,4 @@ public class StMenusServiceImpl implements StMenusService {
        stMenusMapper.updateMenuStatus(updateMenuReq);
        return Result.success();
     }
-
-
 }

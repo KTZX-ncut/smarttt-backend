@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
@@ -79,8 +80,16 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public Result getLoginToken(StUsers stUsers, LoginToken loginToken) {
-       Token token = new Token(stUsers.getId(),loginToken.getRoleid(),loginToken.getObsid(),loginToken.getObsdeep());
-       return Result.success(getToken(token,"123456"));
+    public Result getUserInfor(TeaInforReq teaInforReq) {
+        Token token = new Token(teaInforReq.getId(), teaInforReq.getRoleid(), teaInforReq.getObsid(), teaInforReq.getObsdeep());
+        TeaUser teaUser = stUsersMapper.getAllUserInfor(teaInforReq);
+        try{
+                teaUser.setCatelog(teaInforReq.getCatelog());
+        }catch (NullPointerException e){
+            return Result.error("发生什么事情了");
+        }
+
+        teaUser.setToken(getToken(token,TokenSK));
+       return Result.success(teaUser);
     }
 }

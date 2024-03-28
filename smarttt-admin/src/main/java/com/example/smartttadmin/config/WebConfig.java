@@ -12,8 +12,4 @@ public class WebConfig implements  WebMvcConfigurer {
         // 指定controller统一的接口前缀，可以改名,相当于在url上拼了一个/api/xxx
         configurer.addPathPrefix("/api", clazz -> clazz.isAnnotationPresent(RestController.class));
     }
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//
-//    }
 }
