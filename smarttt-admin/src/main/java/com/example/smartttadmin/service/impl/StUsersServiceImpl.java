@@ -79,6 +79,11 @@ public class StUsersServiceImpl implements StUsersService {
         return null;
     }
 
+    /**
+     * 这里应该对用户传进来的信息进行校验真实性（修改
+     * @param teaInforReq
+     * @return
+     */
     @Override
     public Result getUserInfor(TeaInforReq teaInforReq) {
         Token token = new Token(teaInforReq.getId(), teaInforReq.getRoleid(), teaInforReq.getObsid(), teaInforReq.getObsdeep());
@@ -86,9 +91,8 @@ public class StUsersServiceImpl implements StUsersService {
         try{
                 teaUser.setCatelog(teaInforReq.getCatelog());
         }catch (NullPointerException e){
-            return Result.error("发生什么事情了");
+            return Result.error("无可用用户");
         }
-
         teaUser.setToken(getToken(token,TokenSK));
        return Result.success(teaUser);
     }
