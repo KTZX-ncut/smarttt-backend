@@ -13,14 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SimpleRole {
-    private String rolename;
     private String roleid;
-    private String homeurl;
+    private String rolename;
     private String obsid;
-    private String obsdeep;
+    private long obsdeep;
 
-    public SimpleRole(String rolename, String homeurl) {
-        this.homeurl = homeurl;
+    public SimpleRole(String roleid,String rolename) {
         this.rolename = rolename;
+        this.roleid = roleid;
     }
 }

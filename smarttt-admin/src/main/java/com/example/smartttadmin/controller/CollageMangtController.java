@@ -1,9 +1,11 @@
 package com.example.smartttadmin.controller;
 
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.SmObs;
+import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.service.SmObsService;
-import org.apache.ibatis.annotations.Param;
+import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public class CollageMangtController {
     @Autowired
     private SmObsService smObsService;
+    @Autowired
+    private StUsersService stUsersService;
     @GetMapping
     public Result getCollegeList(){
         return smObsService.getAllCollageList();
@@ -44,5 +48,22 @@ public class CollageMangtController {
     @PostMapping("/update")
     public Result updateCollege(@RequestBody SmObs smObs) {
         return smObsService.updateOneObsByID(smObs);
+    }
+
+    /**
+     * 删除负责人,角色写死，需修改
+     * @param stRoleUser ...
+     * @return ...
+     */
+    @PostMapping ("/collageRP/delete")
+    public Result deleteCollageRP(@RequestBody StRoleUser stRoleUser){
+        stRoleUser.setRoleid("516761049-de9ae949-6bfb-4314-be59-8b1f3c2626e4");
+        return stUsersService.deleteRP(stRoleUser);
+    }
+
+    @PostMapping("/collageRP")
+    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
+    public Result CollegeRPList(){
+        return null;
     }
 }

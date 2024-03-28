@@ -2,6 +2,7 @@ package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.StUsersMapper;
+import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
 import org.apache.poi.ss.usermodel.*;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
@@ -78,9 +80,27 @@ public class StUsersServiceImpl implements StUsersService {
         return null;
     }
 
+    /**
+     * 这里应该对用户传进来的信息进行校验真实性（修改
+     * @param teaInforReq
+     * @return
+     */
     @Override
-    public Result getLoginToken(StUsers stUsers, LoginToken loginToken) {
-       Token token = new Token(stUsers.getId(),loginToken.getRoleid(),loginToken.getObsid(),loginToken.getObsdeep());
-       return Result.success(getToken(token,"123456"));
+    public Result getUserInfor(TeaInforReq teaInforReq) {
+        Token token = new Token(teaInforReq.getId(), teaInforReq.getRoleid(), teaInforReq.getObsid(), teaInforReq.getObsdeep());
+        TeaUser teaUser = stUsersMapper.getAllUserInfor(teaInforReq);
+        try{
+                teaUser.setCatelog(teaInforReq.getCatelog());
+        }catch (NullPointerException e){
+            return Result.error("用户信息错误");
+        }
+        teaUser.setToken(getToken(token,TokenSK));
+       return Result.success(teaUser);
+    }
+
+    @Override
+    public Result deleteRP(StRoleUser stRoleUser) {
+        stUsersMapper.deletePRByObsIDAndUserID(stRoleUser);
+        return Result.success();
     }
 }

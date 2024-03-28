@@ -146,9 +146,8 @@ public class SmObsServiceImpl implements SmObsService {
     }
 
     @Override
-    public Result getAllObsList(LoginHomeReq loginHomeReq) {
+    public Result getAllObsList(String ObsID) {
         //先获取操作范围obsid,然后查找下一层的儿子
-        String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
         List<ObsResponse> obsResponseList = smObsMapper.getSmObsByPid(ObsID);
         for( ObsResponse obsResponse : obsResponseList){
             obsResponse.setStUsersList(stUsersMapper.getStUsersByobsid(obsResponse.getId()));
@@ -157,9 +156,7 @@ public class SmObsServiceImpl implements SmObsService {
     }
 
     @Override
-    public Result getAllProfessionList(LoginHomeReq loginHomeReq) {
-        String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
-
+    public Result getAllProfessionList(String ObsID) {
         List<ObsResponse> obsResponseList = smObsMapper.getSmObsByPid(ObsID);
         List<String> ids = obsResponseList.stream()
                 .map(ObsResponse::getId)
@@ -180,8 +177,7 @@ public class SmObsServiceImpl implements SmObsService {
     }
 
     @Override
-    public Result getClassList(LoginHomeReq loginHomeReq) {
-        String ObsID = stUsersMapper.getAdminObsID(loginHomeReq);
+    public Result getClassList(String ObsID) {
         List<ClassResponse> classResponseList = smObsMapper.getProfessionByPid(ObsID);
         for(ClassResponse classResponse:classResponseList){
             classResponse.setCmClassList(smObsMapper.getClassByProfessionID(classResponse.getId()));

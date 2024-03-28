@@ -96,6 +96,9 @@ public interface SmObsMapper {
     void updateClass(CmClass cmClass);
 
     void updateObs(SmObs smObs);
-    @Select("select obsname from sm_obs where id = #{obsid} and obsdeep!=1")
+    @Select("select obsname from sm_obs where id = #{obsid} and obsdeep !=1 and (select isRP from st_roles where id = #{roleid}) !=0")
     String getObsName(SimpleRole simpleRole);
+
+    @Select("select id,obsdeep from sm_obs where id in (select obsid from sm_student where usersid = #{id})")
+    SmObs getObsByStuID(String id);
 }

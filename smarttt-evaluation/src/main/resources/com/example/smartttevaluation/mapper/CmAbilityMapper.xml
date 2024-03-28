@@ -4,13 +4,13 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttevaluation.mapper.CmAbilityMapper">
     <select id="getCmAbilityByIDs" resultType="com.example.smartttevaluation.pojo.CmAbility">
-        select * from sm_obs where id in
+        select * from cm_ability where id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>
     </select>
     <delete id="deleteAbilityByIDs">
-        delete from cm_getability where id in
+        delete from cm_ability where id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>

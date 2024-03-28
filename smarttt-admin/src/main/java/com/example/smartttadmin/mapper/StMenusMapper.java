@@ -5,6 +5,7 @@ import com.example.smartttadmin.dto.MenusResponse;
 import com.example.smartttadmin.dto.UpdateMenuReq;
 import com.example.smartttadmin.pojo.StMenus;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -23,7 +24,7 @@ public interface StMenusMapper {
      * @return 菜单列表
      */
     @Select("select * from st_menus where id in (select menuid from st_rolemenu where roleid = #{roleid} and status IN (1, 2))")
-    List<MenusResponse> getMenusByRoleID(String roleid);
+    List<MenuTree> getMenusByRoleID(String roleid);
 
     /**
      * 用角色代码查到层级菜单列表（全部），并包括该角色的状态
@@ -34,7 +35,7 @@ public interface StMenusMapper {
             "FROM st_menus\n" +
             "LEFT JOIN st_rolemenu ON st_menus.id = st_rolemenu.menuid AND st_rolemenu.roleid = #{id}\n" +
             "ORDER BY st_menus.id;")
-    List<MenuTree> getMenuByRoleID(String id);
+    List<MenuTree> getAllMenuByRoleID(String id);
 
     /*
     查找角色的权限状态
@@ -50,4 +51,7 @@ public interface StMenusMapper {
     @Update("update st_rolemenu set `status` = #{status} WHERE menuid = #{id} AND roleid = #{roleid}")
     void updateMenuStatus(UpdateMenuReq updateMenuReq);
 
+
+    @Select("select status from st_rolemenu where roleid = #{roleid} and menuid = #{menuid}")
+    List<String> getStatueInRoleUser(@Param("roleid") String roleid, @Param("menuid") String menu);
 }

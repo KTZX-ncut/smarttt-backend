@@ -7,13 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginToken {
-    private String loginname;
-    private String pwd;
-    private String loginway;
-    private String catelog;
-    //或者传加密过的id
+public class TeaInforReq {
+    private String id;
     private String roleid;
     private String obsid;
     private long obsdeep;
+    private String catelog;
 }

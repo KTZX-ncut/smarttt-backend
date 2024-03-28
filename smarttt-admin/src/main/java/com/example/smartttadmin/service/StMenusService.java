@@ -1,16 +1,17 @@
 package com.example.smartttadmin.service;
 
-import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.UpdateMenuReq;
 
 public interface StMenusService {
     /**
      * 登录到首页后，返回角色的全部侧边栏信息
-     * @param loginHomeReq ...
+     *
+     * @param roleid ...
+     * @param roleid
      * @return 侧边栏
      */
-    Result getMenusList(LoginHomeReq loginHomeReq);
+    Result getMenusList(String roleid);
     /**
      * 超级管理员的角色授权功能里，为某角色配置权限，返回层级菜单，并带上该角色的状态码
      * @param id 角色代码

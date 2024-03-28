@@ -14,10 +14,4 @@ public class LoginReq {
     private String loginway;
     private String catelog;
 
-    public LoginReq(LoginToken loginToken) {
-        this.loginname = loginToken.getLoginname();
-        this.pwd = loginToken.getPwd();
-        this.loginway = loginToken.getLoginway();
-        this.catelog = loginToken.getCatelog();
-    }
 }

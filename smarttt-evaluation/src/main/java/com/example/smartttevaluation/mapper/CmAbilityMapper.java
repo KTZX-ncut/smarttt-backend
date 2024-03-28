@@ -13,7 +13,7 @@ public interface CmAbilityMapper {
      * 查找能力列表
      */
     @Insert("INSERT INTO cm_ability (id, pid, orderno, abilitydeep, name, datavalue,importantlevel, remark, levelcode) " +
-            "VALUES (#{id},#{pid},#{orderno},#{abilitydeep},#{name},#{databalue},#{importantlevel}, #{remark},#{levelcode})")
+            "VALUES (#{id},#{pid},#{orderno},#{abilitydeep},#{name},#{datavalue},#{importantlevel}, #{remark},#{levelcode})")
     void createOneNewAbility(CmAbility cmAbility);
 
     @Delete("delete from cm_ability where id = #{id}")
