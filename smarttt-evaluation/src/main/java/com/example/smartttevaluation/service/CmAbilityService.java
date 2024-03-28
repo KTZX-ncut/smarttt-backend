@@ -11,8 +11,8 @@ public interface CmAbilityService {
 
     Result getAbilityTree();
 
-    Result deleteAbilityByIDS(List<String> ids);
 
     Result upgradeOneAbilityByID(String id);
 
+    Result deleteAbilityByIDs(List<String> ids);
 }
