@@ -4,6 +4,7 @@ import com.example.smartttadmin.dto.LoginReq;
 import com.example.smartttadmin.dto.TeaInforReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.pojo.StRoleUser;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,4 +32,6 @@ public interface StUsersService {
     Result getObsRP(String id);
 
     Result getUserInfor(TeaInforReq teaInforReq);
+
+    Result deleteRP(StRoleUser stRoleUser);
 }

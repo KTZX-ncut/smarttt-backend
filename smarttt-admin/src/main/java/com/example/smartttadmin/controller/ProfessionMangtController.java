@@ -1,17 +1,13 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.Utils.AuthRequired;
-import com.example.smartttadmin.dto.LoginHomeReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -24,9 +20,11 @@ import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 public class ProfessionMangtController {
     @Autowired
     private SmObsService smObsService;
-    @PostMapping("")
-    public Result getProfessionList(@RequestBody LoginHomeReq loginHomeReq){
-        return smObsService.getAllProfessionList(loginHomeReq);
+    @GetMapping("")
+    @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
+    public Result getProfessionList(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return smObsService.getAllProfessionList(token.getObsid());
     }
 
     /**

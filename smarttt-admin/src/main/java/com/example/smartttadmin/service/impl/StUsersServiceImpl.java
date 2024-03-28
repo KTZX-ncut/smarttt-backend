@@ -2,6 +2,7 @@ package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.StUsersMapper;
+import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
 import org.apache.poi.ss.usermodel.*;
@@ -91,9 +92,15 @@ public class StUsersServiceImpl implements StUsersService {
         try{
                 teaUser.setCatelog(teaInforReq.getCatelog());
         }catch (NullPointerException e){
-            return Result.error("无可用用户");
+            return Result.error("用户信息错误");
         }
         teaUser.setToken(getToken(token,TokenSK));
        return Result.success(teaUser);
+    }
+
+    @Override
+    public Result deleteRP(StRoleUser stRoleUser) {
+        stUsersMapper.deletePRByObsIDAndUserID(stRoleUser);
+        return Result.success();
     }
 }

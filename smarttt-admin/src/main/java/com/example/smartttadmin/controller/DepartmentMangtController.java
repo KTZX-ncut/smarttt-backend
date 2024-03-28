@@ -1,14 +1,18 @@
 package com.example.smartttadmin.controller;
 
-import com.example.smartttadmin.dto.LoginHomeReq;
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 
 @RestController
 @RequestMapping("/sysmangt/department")
@@ -17,10 +21,11 @@ public class DepartmentMangtController {
     private SmObsService smObsService;
     @Autowired
     private StUsersService stUsersService;
-    @PostMapping("")
-    public Result getDepartmentList(@RequestBody LoginHomeReq loginHomeReq){
-
-        return smObsService.getAllObsList(loginHomeReq);
+    @GetMapping("")
+    @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479",isReadOnly = true)
+    public Result getDepartmentList(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return smObsService.getAllObsList(token.getObsid());
     }
 
     /**

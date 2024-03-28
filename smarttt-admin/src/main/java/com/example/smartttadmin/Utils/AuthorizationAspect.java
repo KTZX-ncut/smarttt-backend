@@ -25,7 +25,7 @@ public class AuthorizationAspect {
     private static final ThreadLocal<Token> tokenThreadLocal = new ThreadLocal<>();
 
     @Before("@annotation(authRequired) && args(.., request)")
-    public Result beforeMethodWithAuthRequired(AuthRequired authRequired, HttpServletRequest request) {
+    public void beforeMethodWithAuthRequired(AuthRequired authRequired, HttpServletRequest request) {
         String stringToken = extractTokenFromRequest(request);
         Token token = parseToken(stringToken,TokenSK);
         // 存储 stringToken 到上下文中
@@ -35,11 +35,10 @@ public class AuthorizationAspect {
         if ("admin".equals(type)) {
             // 执行管理员鉴权逻辑
             List<String> statueList = stMenusMapper.getStatueInRoleUser(token.getRoleid(),authRequired.menu());
-            if(statueList.size()!=1)return Result.error("用户信息错误");
+            if(statueList.size()!=1)throw new RuntimeException("无访问权限");
             String statue = statueList.get(0);
-            if(Objects.equals(statue, "1"))return null;
-            if(Objects.equals(statue, "2") && authRequired.isReadOnly())return null;
-            return Result.error("无请求权限");
+            if(Objects.equals(statue, "3") || Objects.equals(statue, "2") && !authRequired.isReadOnly())
+                throw new RuntimeException("无访问权限");
         } else if ("user".equals(type)) {
             // 执行普通用户鉴权逻辑
             System.out.println("Performing user authorization");
@@ -47,7 +46,6 @@ public class AuthorizationAspect {
             // 默认鉴权逻辑
             System.out.println("Performing default authorization");
         }
-        return null;
     }
 
     // 从 HTTP 请求中提取出 token
