@@ -33,7 +33,7 @@ public class ProfessionMangtController {
      * @return
      */
     @PostMapping("/create")
-    @AuthRequired(type = "admin", menu = "")
+    @AuthRequired(type = "admin", menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90")
     public Result createOneProfession(@RequestBody CmProfession cmProfession, HttpServletRequest request){
         String ID = generateEnhancedID("sm_obs");
         Token token = getTokenFromContext();

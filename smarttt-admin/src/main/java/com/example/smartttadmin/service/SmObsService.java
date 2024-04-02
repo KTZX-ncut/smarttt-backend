@@ -44,4 +44,6 @@ public interface SmObsService {
     Result updateClass(CmClass cmClass);
 
     Result updateOneObsByID(SmObs smObs);
+
+    Result getObsRPList(String obsid);
 }

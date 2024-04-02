@@ -16,12 +16,17 @@ public interface StUsersMapper {
      */
     @Select("select * from st_users where loginname=#{loginname} and pwd = #{pwd} and catelog = #{catelog}")
     StUsers getStUsersByLoginNameAndPwdAndCatelog(LoginReq loginReq);
-    @Select("select id,username,loginname from st_users where id in (select userid from st_roleuser where obsid = #{obsid}) ")
-    List<StUsers> getStUsersByobsid(String obsid);
+    @Select("SELECT u.id, u.username, o.obsname\n" +
+            "FROM st_roleuser ru\n" +
+            "JOIN st_users u ON ru.userid = u.id\n" +
+            "JOIN sm_teacher t ON u.id = t.usersid\n" +
+            "JOIN sm_obs o ON t.obsid = o.id\n" +
+            "WHERE ru.obsid = #{obsid};\n")
+    List<ResponsiblePerson> getRPByObsID(String obsid);
 
     @Insert("insert into st_users(id,username,loginname,pwd,phone,status,catelog,remark,createtime) values " +
             "(#{id},#{username},#{loginname},#{pwd},#{phone},#{status},#{catelog},#{remark},#{createtime})")
-    void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
+    void createOneStUsersByPersonnelRoster(com.example.smartttadmin.dto.PersonnelRoster personnelRoster);
 
     @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno})")
     void createOneSmTeacher(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("jobno")String jobno);
@@ -41,4 +46,14 @@ public interface StUsersMapper {
 
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
     void deletePRByObsIDAndUserID(StRoleUser stRoleUser);
+
+    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime})")
+    void createOneRoleUser(StRoleUser stRoleUser);
+
+    @Select("SELECT u.id, u.username, o.obsname, t.obsid\n" +
+            "FROM sm_teacher t\n" +
+            "JOIN st_users u ON t.usersid = u.id\n" +
+            "JOIN sm_obs o ON t.obsid = o.id\n" +
+            "WHERE t.obsid = #{obsid}\n")
+    List<ResponsiblePerson> getAllTeacherByObsID(String obsid);
 }

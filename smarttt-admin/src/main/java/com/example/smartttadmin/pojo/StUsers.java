@@ -1,6 +1,5 @@
 package com.example.smartttadmin.pojo;
 
-import com.example.smartttadmin.dto.SimpleRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;

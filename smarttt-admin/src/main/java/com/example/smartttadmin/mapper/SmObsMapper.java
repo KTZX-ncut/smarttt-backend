@@ -29,6 +29,8 @@ public interface SmObsMapper {
     List<SmObsTree> getAllSmObsTree();
     @Select("select * from sm_obs")
     List<SmObs> getAllSmObsList();
+    @Select("select * from sm_obs where obsdeep<=3")
+    List<ObsRPTree>getRPTree();
 
     /**
      * 这里需要修改为动态sql
@@ -101,4 +103,7 @@ public interface SmObsMapper {
 
     @Select("select id,obsdeep from sm_obs where id in (select obsid from sm_student where usersid = #{id})")
     SmObs getObsByStuID(String id);
+
+    @Select("select obsdeep from sm_obs where id = #{obsid}")
+    String getObsdeepByObsid(String obsid);
 }

@@ -26,7 +26,7 @@ public class SmObsServiceImpl implements SmObsService {
     public Result getAllCollageList() {
         List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList();
         for( ObsResponse obsResponse : obsResponseList){
-            obsResponse.setStUsersList(stUsersMapper.getStUsersByobsid(obsResponse.getId()));
+            obsResponse.setResponsiblePersonList(stUsersMapper.getRPByObsID(obsResponse.getId()));
         }
         return Result.success(obsResponseList);
     }
@@ -72,6 +72,9 @@ public class SmObsServiceImpl implements SmObsService {
     @Override
     public Result getObsTree() {
         List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree();
+        return Result.success(buildObsTreeByPid(allObsTree,"0"));
+    }
+    private List<SmObsTree> buildObsTreeByPid(List<SmObsTree> allObsTree,String pid){
         Map<String, List<SmObsTree>> obsMap = allObsTree.stream()
                 .collect(Collectors.groupingBy(SmObsTree::getPid,
                         Collectors.collectingAndThen(
@@ -81,10 +84,10 @@ public class SmObsServiceImpl implements SmObsService {
                                         .collect(Collectors.toList())
                         )
                 ));
-        List<SmObsTree> rootObs =  obsMap.get("0"); // 根菜单的pid通常为0
+        List<SmObsTree> rootObs =  obsMap.get(pid); // 根菜单的pid通常为0
         // 递归构建菜单树
         buildObsTree(rootObs,  obsMap);
-        return Result.success(rootObs);
+        return rootObs;
     }
 
     @Override
@@ -150,7 +153,7 @@ public class SmObsServiceImpl implements SmObsService {
         //先获取操作范围obsid,然后查找下一层的儿子
         List<ObsResponse> obsResponseList = smObsMapper.getSmObsByPid(ObsID);
         for( ObsResponse obsResponse : obsResponseList){
-            obsResponse.setStUsersList(stUsersMapper.getStUsersByobsid(obsResponse.getId()));
+            obsResponse.setResponsiblePersonList(stUsersMapper.getRPByObsID(obsResponse.getId()));
         }
         return Result.success(obsResponseList);
     }
@@ -163,7 +166,7 @@ public class SmObsServiceImpl implements SmObsService {
                 .collect(Collectors.toList());
         List<ProfessionResponse> professionResponseList = smObsMapper.getProfessionByIDs(ids);
         for(ProfessionResponse professionResponse:professionResponseList){
-            professionResponse.setStUsersList(stUsersMapper.getStUsersByobsid(professionResponse.getId()));
+            professionResponse.setResponsiblePersonList(stUsersMapper.getRPByObsID(professionResponse.getId()));
         }
         return Result.success(professionResponseList);
     }
@@ -206,18 +209,49 @@ public class SmObsServiceImpl implements SmObsService {
         return Result.success();
     }
 
+    @Override
+    public Result getObsRPList(String obsid) {
+        List<ObsRPTree> allObsTree = smObsMapper.getRPTree();
+        Map<String, List<ObsRPTree>> obsMap = allObsTree.stream()
+                .collect(Collectors.groupingBy(ObsRPTree::getPid,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.stream()
+                                        .sorted(Comparator.comparingLong(ObsRPTree::getOrderno))
+                                        .collect(Collectors.toList())
+                        )
+                ));
+        List<ObsRPTree> rootObs =  obsMap.get(obsid); // 根菜单的pid通常为0
+        // 递归构建菜单树
+        buildObsRPTree(rootObs,  obsMap);
+        return Result.success(rootObs);
+    }
+
+    private void buildObsRPTree(List<ObsRPTree> parentSmObs, Map<String, List<ObsRPTree>> obsMap) {
+        for (ObsRPTree parentObs : parentSmObs) {
+            parentObs.setResponsiblePerson(stUsersMapper.getAllTeacherByObsID(parentObs.getId()));
+            //找出pid为父菜单的孩子
+            List<ObsRPTree> childObs =  obsMap.get(parentObs.getId());
+            if (childObs != null) {
+                parentObs.setChildren(childObs);
+                buildObsRPTree(childObs, obsMap);
+            }
+        }
+    }
+
+
     /**
      *
      * @param parentSmObs
-     * @param ObsMap
+     * @param obsMap
      */
-    private void buildObsTree(List<SmObsTree> parentSmObs, Map<String, List<SmObsTree>>  ObsMap) {
+    private void buildObsTree(List<SmObsTree> parentSmObs, Map<String, List<SmObsTree>>  obsMap) {
         for (SmObsTree parentObs : parentSmObs) {
             //找出pid为父菜单的孩子
-            List<SmObsTree> childObs =  ObsMap.get(parentObs.getId());
+            List<SmObsTree> childObs =  obsMap.get(parentObs.getId());
             if (childObs != null) {
                 parentObs.setChildren(childObs);
-                buildObsTree(childObs, ObsMap);
+                buildObsTree(childObs, obsMap);
             }
         }
     }
