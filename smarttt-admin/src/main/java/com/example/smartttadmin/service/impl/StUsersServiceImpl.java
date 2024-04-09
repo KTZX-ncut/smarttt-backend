@@ -1,6 +1,7 @@
 package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.*;
+import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
@@ -12,18 +13,38 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
 public class StUsersServiceImpl implements StUsersService {
     @Autowired
     private StUsersMapper stUsersMapper;
+    @Autowired
+    private SmObsMapper smObsMapper;
+
+    @Override
+    public Result createOneRP(StRoleUser stRoleUser) {
+        try {
+            stRoleUser.setId(generateEnhancedID("st_roleuser"));
+            stRoleUser.setObsdeep(smObsMapper.getObsdeepByObsid(stRoleUser.getObsid()));
+            stRoleUser.setCreatetime(LocalDate.now().toString());
+            stUsersMapper.createOneRoleUser(stRoleUser);
+        }catch (NullPointerException e)
+        {
+            return Result.error(404,"新建失败");
+        }
+
+        return Result.success();
+    }
+
     public Result login(LoginReq loginReq) {
         StUsers stUsers = stUsersMapper.getStUsersByLoginNameAndPwdAndCatelog(loginReq);
         if(stUsers == null){
@@ -39,7 +60,7 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public List<PersonnelRoster> importTeacherAndStudentExcel(MultipartFile file) {
+    public List<com.example.smartttadmin.dto.PersonnelRoster> importTeacherAndStudentExcel(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 假设 Excel 文件中只有一个工作表
@@ -47,7 +68,7 @@ public class StUsersServiceImpl implements StUsersService {
             Iterator<Row> rowIterator = sheet.iterator();
             rowIterator.next(); // 跳过标题行
 
-            List<PersonnelRoster> personnelRosterList = new ArrayList<>();
+            List<com.example.smartttadmin.dto.PersonnelRoster> personnelRosterList = new ArrayList<>();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 String username = dataFormatter.formatCellValue(row.getCell(1));
@@ -62,7 +83,7 @@ public class StUsersServiceImpl implements StUsersService {
                 if(Objects.equals(catelog, "教师")) catelog ="2";
                 else catelog = "1";
 
-                PersonnelRoster personnelRoster = new PersonnelRoster(null,null,username,loginname,pwd,phone,status,catelog,obsname,remark,null,personnelno);
+                com.example.smartttadmin.dto.PersonnelRoster personnelRoster = new com.example.smartttadmin.dto.PersonnelRoster(null,null,username,loginname,pwd,phone,status,catelog,obsname,remark,null,personnelno);
 
                 personnelRosterList.add(personnelRoster);
 
