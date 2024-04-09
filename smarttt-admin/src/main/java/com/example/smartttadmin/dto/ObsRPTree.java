@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * 返回的学院列表
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ObsResponse {
+public class ObsRPTree {
     private String id;
-    private String levelcode;
+    private String pid;
+    private long orderno;
+    private long obsdeep;
     private String obsname;
-    private String remark;
-    private List<ResponsiblePerson> responsiblePersonList;
+    private String levelcode;
+    private List<ResponsiblePerson> responsiblePerson;
+    private List<ObsRPTree> children;
 }

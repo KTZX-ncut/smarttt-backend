@@ -18,5 +18,5 @@ public class ProfessionResponse {
     private String procode;
     private String reachpercent;
     private String remark;
-    private List<StUsers> stUsersList;
+    private List<ResponsiblePerson> responsiblePersonList;
 }

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.List;
 
 public interface StUsersService {
+    Result createOneRP(StRoleUser stRoleUser);
+
     /**
      * 登录
      *
