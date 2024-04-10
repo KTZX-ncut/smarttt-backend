@@ -2,31 +2,38 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.smartttevaluation.mapper.CmKeywordsMapper">
-    <update id="updateKeywordsByID">
-        update cm_keywords
+<mapper namespace="com.example.smartttevaluation.mapper.CmKwadictMapper">
+    <update id="updateKwadictByID">
+        update cm_kwadict
         <!-- 使用set标签，代替update语句中的set关键字 -->
         <set>
             <if test="name != null">
                 name=#{name},
             </if>
+            <if test="keywordname != null">
+                keywordname=#{keywordname},
+            </if>
+            <if test="abilityname != null">
+                abilityname=#{abilityname},
+            </if>
             <if test="datavalue != null">
                 datavalue=#{datavalue},
             </if>
-            <if test="importantlevelid != null">
-                importantlevelid=#{importantlevelid},
+            <if test="keywordid != null">
+                keywordid=#{keywordid},
             </if>
-            <if test="remark != null">
-                remark=#{remark},
+            <if test="abilityid != null">
+                abilityid=#{abilityid},
             </if>
         </set>
         where id=#{id}
     </update>
 
-    <delete id="deleteKeywordsByIDs">
-        delete from cm_keywords where id in
+    <delete id="deleteKwadictByIDs">
+        delete from cm_kwadict where id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
 </mapper>
