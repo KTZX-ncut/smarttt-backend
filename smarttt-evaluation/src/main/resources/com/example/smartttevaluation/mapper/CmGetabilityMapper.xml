@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.CmGetabilityMapper">
+    <!-- <update id="updateGetabilityByID">
+        update cm_getability
+        <set>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+        </set>
+        where id=#{id} and courseid=#{courseid}
+    </update>
+        -->
+    <insert id="insertGetability">
+        INSERT INTO cm_getability (id,orderno,abilitydeep,levelcode,name,datavalue,importantlevel,remark,courseid)
+        SELECT id,orderno,abilitydeep,levelcode,name,datavalue, importantlevel,remark,#{courseid} FROM cm_ability WHERE id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </insert>
+    <delete id="deleteGetabilityByIDs">
+        delete from cm_getability where courseid=#{courseid} and id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
