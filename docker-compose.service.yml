@@ -1,0 +1,46 @@
+version: '3.8'
+
+networks:
+  mynetwork:
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: smarttt-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sigsit
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./.mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    networks:
+      - mynetwork
+
+  smarttt-admin:
+    build: ./smarttt-admin
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - mysql
+
+  smarttt-course:
+    build: ./smarttt-course
+    ports:
+      - "8082:8082"
+    networks:
+      - mynetwork
+    depends_on:
+      - mysql
+
+  smarttt-evaluation:
+    build: ./smarttt-evaluation
+    ports:
+      - "8083:8083"
+    networks:
+      - mynetwork
+    depends_on:
+      - mysql

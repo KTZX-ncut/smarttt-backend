@@ -151,7 +151,8 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.example.smartttevaluation.SmartttEvaluationApplication</mainClass>
-                    <skip>true</skip>
+<!--                    <skip>true</skip>-->
+                    <includeSystemScope>true</includeSystemScope>
                 </configuration>
                 <executions>
                     <execution>

@@ -23,6 +23,7 @@ public class ProfessionMangtController {
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getProfessionList(HttpServletRequest request){
+        System.out.println("啊这");
         Token token = getTokenFromContext();
         return smObsService.getAllProfessionList(token.getObsid());
     }
