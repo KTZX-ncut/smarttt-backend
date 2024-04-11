@@ -20,4 +20,5 @@ public class CmKwadict {
     private String abilityname;//能力名称
     private String courseid;//课程
     private String datavalue;//数值
+    private String status;//完成状态
 }
