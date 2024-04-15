@@ -47,6 +47,24 @@
         </set>
         where obsid = #{id}
     </update>
+    <update id="updateProfession">
+        update cm_profession
+        <set>
+            <if test="proname != null">
+                proname = #{proname},
+            </if>
+            <if test="procode != null">
+                procode = # {procode},
+            </if>
+            <if test="reachpercent != null">
+                reachpercent = #{reachpercent},
+            </if>
+            <if test="remark != null">
+                remark = #{remark}
+            </if>
+        </set>
+        where obsid = #{id}
+    </update>
     <!--    id: 方法名 resultType：单条记录所封装的类型，全类名-->
 
     <select id="getSmObsByIDs" resultType="com.example.smartttadmin.pojo.SmObs">

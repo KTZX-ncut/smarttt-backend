@@ -37,8 +37,6 @@ public interface StUsersMapper {
     void deleteUsersByIDs(@Param("ids") List<String> ids);
 
 
-    @Select("")
-    void getTeachersByobsid(String obsid);
 
     @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
             "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
@@ -56,4 +54,13 @@ public interface StUsersMapper {
             "JOIN sm_obs o ON t.obsid = o.id\n" +
             "WHERE t.obsid = #{obsid}\n")
     List<ResponsiblePerson> getAllTeacherByObsID(String obsid);
+
+    void updateUserByID(PersonnelRoster personnelRoster);
+
+    void updateStudentByID(PersonnelRoster personnelRoster);
+
+    void updateTeacherByID(PersonnelRoster personnelRoster);
+
+    @Select("")
+    Object getStudentByID(String id);
 }

@@ -227,6 +227,31 @@ public class SmObsServiceImpl implements SmObsService {
         return Result.success(rootObs);
     }
 
+    @Override
+    public String upToTeacherObs(Token token) {
+        long teacherLevel = smObsMapper.getLevel("2");
+        String obsID = token.getObsid();
+        if(token.getObsdeep() < teacherLevel){
+            long k =teacherLevel- token.getObsdeep();
+            for(int i=0;i<k;i++){
+                obsID = smObsMapper.getPidByID(obsID);
+            }
+        }
+        return obsID;
+    }
+
+    @Override
+    public Result updateOneProfession(CmProfession cmProfession) {
+        SmObs smObs = new SmObs(cmProfession);
+        try{
+            smObsMapper.updateObs(smObs);
+            smObsMapper.updateProfession(cmProfession);
+        }catch (NullPointerException e){
+            return Result.error("更新失败");
+        }
+        return Result.success();
+    }
+
     private void buildObsRPTree(List<ObsRPTree> parentSmObs, Map<String, List<ObsRPTree>> obsMap) {
         for (ObsRPTree parentObs : parentSmObs) {
             parentObs.setResponsiblePerson(stUsersMapper.getAllTeacherByObsID(parentObs.getId()));

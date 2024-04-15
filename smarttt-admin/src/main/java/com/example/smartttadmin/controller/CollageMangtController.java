@@ -54,6 +54,11 @@ public class CollageMangtController {
         return smObsService.updateOneObsByID(smObs);
     }
 
+    /**
+     * 获取可选的教师角色列表
+     * @param request
+     * @return
+     */
     @GetMapping("/collageRP")
     @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
     public Result CollegeRPList(HttpServletRequest request){
@@ -77,5 +82,4 @@ public class CollageMangtController {
         stRoleUser.setRoleid("516761049-de9ae949-6bfb-4314-be59-8b1f3c2626e4");
         return stUsersService.createOneRP(stRoleUser);
     }
-
 }

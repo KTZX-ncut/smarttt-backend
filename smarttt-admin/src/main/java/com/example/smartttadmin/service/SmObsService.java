@@ -2,6 +2,7 @@ package com.example.smartttadmin.service;
 
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
@@ -46,4 +47,8 @@ public interface SmObsService {
     Result updateOneObsByID(SmObs smObs);
 
     Result getObsRPList(String obsid);
+
+    String upToTeacherObs(Token token);
+
+    Result updateOneProfession(CmProfession cmProfession);
 }

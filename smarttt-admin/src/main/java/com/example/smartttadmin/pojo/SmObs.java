@@ -31,8 +31,13 @@ public class SmObs {
   }
 
     public SmObs(CmClass cmClass) {
-      this.id = cmClass.getId();
+      this.id = cmClass.getObsid();
       this.obsname = cmClass.getClassname();
       this.remark = cmClass.getRemark();
+    }
+    public SmObs(CmProfession cmProfession) {
+      this.id = cmProfession.getObsid();
+      this.obsname = cmProfession.getProname();
+      this.remark = cmProfession.getRemark();
     }
 }

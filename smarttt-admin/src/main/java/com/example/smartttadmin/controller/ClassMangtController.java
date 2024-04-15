@@ -6,6 +6,7 @@ import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
+import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,8 @@ import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 public class ClassMangtController {
     @Autowired
     SmObsService smObsService;
+    @Autowired
+    StUsersService stUsersService;
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-63929fcc-e8f9-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getClassList(HttpServletRequest request){
@@ -48,6 +51,11 @@ public class ClassMangtController {
     @PostMapping("/update")
     public Result updateClass(@RequestBody CmClass cmClass){
         return smObsService.updateClass(cmClass);
+    }
+
+    @GetMapping("/student")
+    public Result getStudentList(@RequestParam(name = "id")String id){
+        return stUsersService.getStudentByClassID(id);
     }
 
 }

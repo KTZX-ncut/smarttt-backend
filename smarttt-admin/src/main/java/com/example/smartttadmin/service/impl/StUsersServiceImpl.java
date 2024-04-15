@@ -60,7 +60,7 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public List<com.example.smartttadmin.dto.PersonnelRoster> importTeacherAndStudentExcel(MultipartFile file) {
+    public List<PersonnelRoster> importTeacherAndStudentExcel(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 假设 Excel 文件中只有一个工作表
@@ -94,12 +94,6 @@ public class StUsersServiceImpl implements StUsersService {
         }
     }
 
-    @Override
-    public Result getObsRP(String obsid) {
-        //获取该obsid的全部教师
-        stUsersMapper.getTeachersByobsid(obsid);
-        return null;
-    }
 
     /**
      * 这里应该对用户传进来的信息进行校验真实性（修改
@@ -123,5 +117,28 @@ public class StUsersServiceImpl implements StUsersService {
     public Result deleteRP(StRoleUser stRoleUser) {
         stUsersMapper.deletePRByObsIDAndUserID(stRoleUser);
         return Result.success();
+    }
+
+    @Override
+    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster) {
+        if(personnelRoster.getObsname()!=null){
+            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
+            if(obsIDList == null)
+                return Result.error("所属院系/班级输入错误");
+            personnelRoster.setObsid(obsIDList.get(0));
+        }
+        stUsersMapper.updateUserByID(personnelRoster);
+        if(Objects.equals(personnelRoster.getCatelog(), "1")){//学生
+            stUsersMapper.updateStudentByID(personnelRoster);
+        }else{//老师
+            stUsersMapper.updateTeacherByID(personnelRoster);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Result getStudentByClassID(String id) {
+        return Result.success(stUsersMapper.getStudentByID(id));
     }
 }
