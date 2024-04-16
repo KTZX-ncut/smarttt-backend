@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.CmClassroomUnitMapper">
+    <!-- <update id="updateGetabilityByID">
+        update cm_getability
+        <set>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+        </set>
+        where id=#{id} and courseid=#{courseid}
+    </update>
+        -->
+
+    <!--批量删除小节中的kwa-->
+    <delete id="deleteClassroomUnitkwa">
+        delete from cm_classroom_unit_kwa where unitid=#{unitid} and kwaid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </delete>
+    <!--批量删除多个小节中所有kwa-->
+    <delete id="deleteAllUnitkwaByUnitid">
+        delete from cm_classroom_unit_kwa where unitid in
+        <foreach item="id" collection="sectionUnitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--批量删除一章中所有kwa-->
+    <delete id="deleteAllUnitkwaByChapterUnitid">
+        delete from cm_classroom_unit_kwa where unitid in
+        select unitid from cm_classroom_unit where pid=#{chapterUnitid}
+    </delete>
+    <!--批量删除小节-->
+    <delete id="deleteSection">
+        delete from cm_classroom_unit where id in
+        <foreach item="id" collection="sectionids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--删除一章下所有小节-->
+    <delete id="deleteAllSectionByChapterUnitid">
+        delete from cm_classroom_unit where pid=#{chapterUnitid}
+    </delete>
+    <!--删除章-->
+    <delete id="deleteChapter">
+        delete from cm_classroom_unit where pid=0 and id=#{chapterUnitid}
+    </delete>
+</mapper>
