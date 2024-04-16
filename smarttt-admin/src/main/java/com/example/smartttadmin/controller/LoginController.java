@@ -7,10 +7,8 @@ import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StRolesService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RequestMapping("/login")
 @RestController
 public class LoginController {
@@ -18,6 +16,10 @@ public class LoginController {
     private StUsersService stUsersService;
     @Autowired
     private StRolesService stRoleUserService;
+    @GetMapping("")
+    public Result test(){
+        return Result.success("成功访问");
+    }
 
     /**
      * 登录功能，返回角色列表

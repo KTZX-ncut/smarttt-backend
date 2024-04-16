@@ -5,7 +5,9 @@ import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
+import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.service.SmObsService;
+import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,8 @@ import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 public class ProfessionMangtController {
     @Autowired
     private SmObsService smObsService;
+    @Autowired
+    private StUsersService stUsersService;
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getProfessionList(HttpServletRequest request){
@@ -49,4 +53,27 @@ public class ProfessionMangtController {
         return smObsService.deleteObssByIDS(ids);
     }
 
+    @PostMapping("/update")
+    public Result updateProfession(@RequestBody CmProfession cmProfession){
+        return smObsService.updateOneProfession(cmProfession);
+    }
+
+    @GetMapping("/professionRP")
+    @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
+    public Result CollegeRPList(HttpServletRequest request){
+        //低于系（当前配置的教师级别）,就回溯到有教师的级别,然后显示级别的所有数据
+        Token token = getTokenFromContext();
+        String obsID = smObsService.upToTeacherObs(token);
+        return smObsService.getObsRPList(obsID);
+    }
+    @PostMapping ("/professionRP/delete")
+    public Result deleteCollageRP(@RequestBody StRoleUser stRoleUser){
+        stRoleUser.setRoleid("516761049-916b5c26-ea1d-4f50-8e57-fe7c2e3aaf60");
+        return stUsersService.deleteRP(stRoleUser);
+    }
+    @PostMapping("/professionRP/create")
+    public Result createCollageRP(@RequestBody StRoleUser stRoleUser){
+        stRoleUser.setRoleid("516761049-916b5c26-ea1d-4f50-8e57-fe7c2e3aaf60");
+        return stUsersService.createOneRP(stRoleUser);
+    }
 }
