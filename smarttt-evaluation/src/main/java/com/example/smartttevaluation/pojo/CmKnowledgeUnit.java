@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CmClassroomUnitKwa {
-    String unitid;
-    String kwaid;
+public class CmKnowledgeUnit {
+    String id;
+    String pid;
+    String type;
     String name;
-    int statue;
+    String courseid;
 }

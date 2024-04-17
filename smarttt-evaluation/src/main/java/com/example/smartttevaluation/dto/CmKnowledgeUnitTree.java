@@ -1,7 +1,8 @@
 package com.example.smartttevaluation.dto;
 
-import com.example.smartttevaluation.pojo.CmClassroomUnit;
-import com.example.smartttevaluation.pojo.CmClassroomUnitKwa;
+import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
+import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
+import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CmClassroomUnitTree {
+public class CmKnowledgeUnitTree {
     String id;
     String name;
     String type;
-    List<CmClassroomUnitKwa> kwas;
-    List<CmClassroomUnitTree> children;
+    List<CmKnowledgeUnitKwa> kwas;
+    List<CmKnowledgeUnitTree> children;
 }

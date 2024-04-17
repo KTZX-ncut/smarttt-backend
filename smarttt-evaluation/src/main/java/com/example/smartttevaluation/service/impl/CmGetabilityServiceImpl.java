@@ -138,4 +138,14 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
         return Result.success();
     }*/
 
+    //通过能力id查询相关kwa
+    @Override
+    public Result getKwaByGetability(String courseid, List<String> ids) {
+    //查询课程id是否存在
+    if (cmGetabilityMapper.getNumOfCourseById(courseid) == 0) {
+        return Result.error(404, "课程id不存在");
+    }
+    cmGetabilityMapper.getKwaByGetabilityId(courseid,ids);
+    return Result.success();
+}
 }
