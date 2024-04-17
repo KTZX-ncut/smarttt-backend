@@ -61,12 +61,12 @@ public class UnitMangtController {
     }
 
     /**
-     * 教学单位的编辑功能,修改
+     * 教学单位的编辑功能
      * @return
      */
     @PostMapping("/update")
     public Result updateOneObs(@RequestBody SmObs smObs){
-        return null;
+        return smObsService.updateOneObsByID(smObs);
     }
 }
 

@@ -53,7 +53,10 @@ public class PersonnelMangtController {
     public Result deletePersonnelRosteByIDs(@RequestBody List<String> ids) {
         return stUsersService.deleteUsersByIDs(ids);
     }
-
+    @PostMapping("/update")
+    public Result UpdatePersonnalRoster(@RequestBody PersonnelRoster personnelRoster){
+        return stUsersService.updateOnePersonnelRoster(personnelRoster);
+    }
     /**
      * excel表格导入教师
      * @param file

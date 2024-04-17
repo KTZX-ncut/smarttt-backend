@@ -106,4 +106,9 @@ public interface SmObsMapper {
 
     @Select("select obsdeep from sm_obs where id = #{obsid}")
     String getObsdeepByObsid(String obsid);
+
+    @Select("select obsdeep from st_level where catelog = #{catelog}")
+    long getLevel(String catelog);
+
+    void updateProfession(CmProfession cmProfession);
 }

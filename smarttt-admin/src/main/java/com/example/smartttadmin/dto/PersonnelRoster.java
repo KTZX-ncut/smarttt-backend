@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PersonnelRoster {
-    private String id;
+    private String id;//userid
     private String obsid;
     private String username;
     private String loginname;
@@ -21,5 +21,5 @@ public class PersonnelRoster {
     private String obsname;
     private String remark;
     private String createtime;
-    private String personnelno;
+    private String personnelno;//
 }

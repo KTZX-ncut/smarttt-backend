@@ -3,6 +3,71 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttadmin.mapper.StUsersMapper">
+    <update id="updateUserByID">
+        update st_users
+        <!-- 使用set标签，代替update语句中的set关键字 -->
+        <set>
+            <if test="username != null">
+                username=#{username},
+            </if>
+            <if test="loginname != null">
+                loginname=#{loginname},
+            </if>
+            <if test="pwd != null">
+                pwd=#{pwd},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="catelog != null">
+                catelog=#{catelog},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime}
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+    <update id="updateStudentByID">
+        update sm_student
+        <set>
+            <if test="obsid != null">
+                obsid = #{obsid},
+            </if>
+            <if test="personnelno != null">
+                stuno = #{personnelno},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime}
+            </if>
+        </set>
+        where userid = #{id}
+    </update>
+
+    <update id="updateTeacherByID">
+        update sm_teacher
+        <set>
+            <if test="obsid != null">
+                obsid = #{obsid},
+            </if>
+            <if test="personnelno != null">
+                jobno = #{personnelno},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createtime != null">
+                createtime=#{createtime}
+            </if>
+        </set>
+        where userid = #{id}
+    </update>
 
     <delete id="deleteUsersByIDs">
         delete from st_users where id in
