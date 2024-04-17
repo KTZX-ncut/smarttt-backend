@@ -40,4 +40,10 @@ public class SmObs {
       this.obsname = cmProfession.getProname();
       this.remark = cmProfession.getRemark();
     }
+
+    public SmObs(SmObs smObs) {
+      this.id= smObs.getId();
+      this.remark = smObs.getRemark();
+      this.obsname =smObs.getObsname();
+    }
 }

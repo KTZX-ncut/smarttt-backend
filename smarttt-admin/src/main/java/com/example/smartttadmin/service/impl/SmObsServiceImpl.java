@@ -2,6 +2,7 @@ package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
+import com.example.smartttadmin.mapper.StLevelMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.CmProfession;
@@ -22,6 +23,9 @@ public class SmObsServiceImpl implements SmObsService {
     private SmObsMapper smObsMapper;
     @Autowired
     private StUsersMapper stUsersMapper;
+    @Autowired
+    private StLevelMapper stLevelMapper;
+
     @Override
     public Result getAllCollageList() {
         List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList();
@@ -229,7 +233,7 @@ public class SmObsServiceImpl implements SmObsService {
 
     @Override
     public String upToTeacherObs(Token token) {
-        long teacherLevel = smObsMapper.getLevel("2");
+        long teacherLevel = stLevelMapper.getTeacherLevel();
         String obsID = token.getObsid();
         if(token.getObsdeep() < teacherLevel){
             long k =teacherLevel- token.getObsdeep();

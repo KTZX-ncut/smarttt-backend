@@ -10,6 +10,8 @@ import com.example.smartttadmin.pojo.SmObs;
 import java.util.List;
 
 public interface SmObsService {
+
+
     Result getAllCollageList();
 
     /**

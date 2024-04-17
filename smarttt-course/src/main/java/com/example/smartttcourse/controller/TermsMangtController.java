@@ -1,8 +1,9 @@
-package com.example.smartttadmin.controller;
+package com.example.smartttcourse.controller;
 
-import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.pojo.CmTerm;
-import com.example.smartttadmin.service.CmTermService;
+
+import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.pojo.CmTerm;
+import com.example.smartttcourse.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

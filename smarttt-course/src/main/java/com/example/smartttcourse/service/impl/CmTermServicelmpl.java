@@ -1,16 +1,17 @@
-package com.example.smartttadmin.service.impl;
+package com.example.smartttcourse.service.impl;
 
-import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.mapper.CmTermMapper;
-import com.example.smartttadmin.pojo.CmTerm;
-import com.example.smartttadmin.service.CmTermService;
+
+import com.example.smartttcourse.Utils.CommonFunctions;
+import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.mapper.CmTermMapper;
+import com.example.smartttcourse.pojo.CmTerm;
+import com.example.smartttcourse.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 @Service
 public class CmTermServicelmpl implements CmTermService {
@@ -25,7 +26,7 @@ public class CmTermServicelmpl implements CmTermService {
 
     @Override
     public Result createTerms(CmTerm cmTerm) {
-        cmTerm.setId(generateEnhancedID("cm_term"));
+        cmTerm.setId(CommonFunctions.generateEnhancedID("cm_term"));
         cmTerm.setCreatetime(LocalDateTime.now().toString());
         cmTerm.setIscurrentterm("0");
         cmTermMapper.createTerms(cmTerm);
