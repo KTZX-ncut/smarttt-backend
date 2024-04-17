@@ -27,7 +27,6 @@ public class ProfessionMangtController {
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getProfessionList(HttpServletRequest request){
-        System.out.println("啊这");
         Token token = getTokenFromContext();
         return smObsService.getAllProfessionList(token.getObsid());
     }
@@ -59,11 +58,10 @@ public class ProfessionMangtController {
     }
 
     @GetMapping("/professionRP")
-    @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
+//    @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result CollegeRPList(HttpServletRequest request){
         //低于系（当前配置的教师级别）,就回溯到有教师的级别,然后显示级别的所有数据
-        Token token = getTokenFromContext();
-        String obsID = smObsService.upToTeacherObs(token);
+        String obsID = smObsService.getSchoolObs();
         return smObsService.getObsRPList(obsID);
     }
     @PostMapping ("/professionRP/delete")

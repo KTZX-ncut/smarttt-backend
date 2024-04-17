@@ -122,7 +122,7 @@ public class SmObsServiceImpl implements SmObsService {
     @Override
     public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) {
         List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
-        if(obsIDList == null)
+        if(obsIDList.isEmpty())
             return Result.error("所属院系/班级输入错误");
         String usersId = generateEnhancedID("st_users");
         personnelRoster.setId(usersId);
@@ -225,9 +225,15 @@ public class SmObsServiceImpl implements SmObsService {
                                         .collect(Collectors.toList())
                         )
                 ));
-        List<ObsRPTree> rootObs =  obsMap.get(obsid); // 根菜单的pid通常为0
+
+        List<ObsRPTree> rootObs =  obsMap.get(obsid);
         // 递归构建菜单树
-        buildObsRPTree(rootObs,  obsMap);
+        try{
+            buildObsRPTree(rootObs,  obsMap);
+        }catch (NullPointerException e){
+            return Result.error("未找到结果");
+        }
+
         return Result.success(rootObs);
     }
 
@@ -235,8 +241,8 @@ public class SmObsServiceImpl implements SmObsService {
     public String upToTeacherObs(Token token) {
         long teacherLevel = stLevelMapper.getTeacherLevel();
         String obsID = token.getObsid();
-        if(token.getObsdeep() < teacherLevel){
-            long k =teacherLevel- token.getObsdeep();
+        if(token.getObsdeep() > teacherLevel){
+            long k =token.getObsdeep()-teacherLevel;
             for(int i=0;i<k;i++){
                 obsID = smObsMapper.getPidByID(obsID);
             }
@@ -254,6 +260,11 @@ public class SmObsServiceImpl implements SmObsService {
             return Result.error("更新失败");
         }
         return Result.success();
+    }
+
+    @Override
+    public String getSchoolObs() {
+        return smObsMapper.getSchoolObs().getId();
     }
 
     private void buildObsRPTree(List<ObsRPTree> parentSmObs, Map<String, List<ObsRPTree>> obsMap) {

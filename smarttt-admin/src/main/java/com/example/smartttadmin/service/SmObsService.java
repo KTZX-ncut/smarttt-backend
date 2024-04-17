@@ -53,4 +53,6 @@ public interface SmObsService {
     String upToTeacherObs(Token token);
 
     Result updateOneProfession(CmProfession cmProfession);
+
+    String getSchoolObs();
 }

@@ -123,7 +123,7 @@ public class StUsersServiceImpl implements StUsersService {
     public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster) {
         if(personnelRoster.getObsname()!=null){
             List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
-            if(obsIDList == null)
+            if(obsIDList.isEmpty())
                 return Result.error("所属院系/班级输入错误");
             personnelRoster.setObsid(obsIDList.get(0));
         }
@@ -134,7 +134,7 @@ public class StUsersServiceImpl implements StUsersService {
             stUsersMapper.updateTeacherByID(personnelRoster);
         }
 
-        return null;
+        return Result.success();
     }
 
     @Override

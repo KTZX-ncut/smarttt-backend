@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 
 import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 import static com.example.smartttadmin.Utils.EncryptionUtil.*;
@@ -35,6 +38,23 @@ class SmartttAdminApplicationTests {
             StRoleMenu stRoleMenu = new StRoleMenu(generateEnhancedID("st_rolemenu"),string,roleMenuID,"3",LocalDateTime.now().toString(),"");
             mapper.createRoleMenus(stRoleMenu);
         }
+    }
+    @Test
+    void dealRoleMenus(){
+        List<String> stringList = mapper.getAllStRoleid();
+        List<String> stringList1 = mapper.getAllMenuid();
+        for(String roleID : stringList){
+            for(String menuID :stringList1){
+                if(mapper.getrolemenu(roleID,menuID).isEmpty()) {
+                    StRoleMenu stRoleMenu = new StRoleMenu(generateEnhancedID("st_rolemenu"), roleID, menuID, "3", LocalDateTime.now().toString(), "");
+                    mapper.createRoleMenus(stRoleMenu);
+                }
+            }
+        }
+        mapper.deleteRoleMenu();
+
+
+
     }
 
 }

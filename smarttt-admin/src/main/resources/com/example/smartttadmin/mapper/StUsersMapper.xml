@@ -16,11 +16,11 @@
             <if test="pwd != null">
                 pwd=#{pwd},
             </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
             <if test="status != null">
                 status=#{status},
-            </if>
-            <if test="catelog != null">
-                catelog=#{catelog},
             </if>
             <if test="remark != null">
                 remark=#{remark},
@@ -40,14 +40,11 @@
             <if test="personnelno != null">
                 stuno = #{personnelno},
             </if>
-            <if test="status != null">
-                status=#{status},
-            </if>
             <if test="createtime != null">
                 createtime=#{createtime}
             </if>
         </set>
-        where userid = #{id}
+        where usersid = #{id}
     </update>
 
     <update id="updateTeacherByID">
@@ -59,14 +56,11 @@
             <if test="personnelno != null">
                 jobno = #{personnelno},
             </if>
-            <if test="status != null">
-                status=#{status},
-            </if>
             <if test="createtime != null">
                 createtime=#{createtime}
             </if>
         </set>
-        where userid = #{id}
+        where usersid = #{id}
     </update>
 
     <delete id="deleteUsersByIDs">

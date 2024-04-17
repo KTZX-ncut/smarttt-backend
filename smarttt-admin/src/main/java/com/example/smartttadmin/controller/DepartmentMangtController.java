@@ -43,7 +43,7 @@ public class DepartmentMangtController {
         return smObsService.createOneObs(smObs);
     }
 
-    @PostMapping("")
+    @PostMapping("/update")
     @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479")
     public Result updateOneDepartment(@RequestBody SmObs smObs,HttpServletRequest request){
         return smObsService.updateOneObsByID(smObs);
@@ -55,11 +55,10 @@ public class DepartmentMangtController {
     }
 
     @GetMapping("/departmentRP")
-    @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479",isReadOnly = true)
+//    @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479",isReadOnly = true)
     public Result CollegeRPList(HttpServletRequest request){
         //低于系（当前配置的教师级别）,就回溯到有教师的级别,然后显示级别的所有数据
-        Token token = getTokenFromContext();
-        String obsID = smObsService.upToTeacherObs(token);
+        String obsID = smObsService.getSchoolObs();
         return smObsService.getObsRPList(obsID);
     }
     @PostMapping ("/departmentRP/delete")
