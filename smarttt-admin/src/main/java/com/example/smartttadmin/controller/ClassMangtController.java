@@ -54,7 +54,7 @@ public class ClassMangtController {
     }
 
     @GetMapping("/student")
-    public Result getStudentList(@RequestParam(name = "id")String id){
+    public Result getStudentList(@RequestParam(name = "id")String id){//班级的Id
         return stUsersService.getStudentByClassID(id);
     }
 

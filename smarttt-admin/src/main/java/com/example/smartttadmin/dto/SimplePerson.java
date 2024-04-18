@@ -13,6 +13,5 @@ public class SimplePerson {
     String id;//userid
     String username;
     String personnelno;
-    String obsname;
 
 }
