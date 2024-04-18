@@ -26,7 +26,7 @@ public interface StUsersMapper {
 
     @Insert("insert into st_users(id,username,loginname,pwd,phone,status,catelog,remark,createtime) values " +
             "(#{id},#{username},#{loginname},#{pwd},#{phone},#{status},#{catelog},#{remark},#{createtime})")
-    void createOneStUsersByPersonnelRoster(com.example.smartttadmin.dto.PersonnelRoster personnelRoster);
+    void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
 
     @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno})")
     void createOneSmTeacher(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("jobno")String jobno);

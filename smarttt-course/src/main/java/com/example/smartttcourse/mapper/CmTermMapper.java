@@ -1,6 +1,6 @@
-package com.example.smartttadmin.mapper;
+package com.example.smartttcourse.mapper;
 
-import com.example.smartttadmin.pojo.CmTerm;
+import com.example.smartttcourse.pojo.CmTerm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

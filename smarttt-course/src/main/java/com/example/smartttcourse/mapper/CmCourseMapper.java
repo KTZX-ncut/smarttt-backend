@@ -1,11 +1,9 @@
 package com.example.smartttcourse.mapper;
 
 
+import com.example.smartttcourse.dto.SimpleCourse;
 import com.example.smartttcourse.pojo.CmCourse;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -14,11 +12,11 @@ public interface CmCourseMapper {
     /**
      * 获取学期信息
      */
-    @Select("select id, term, coursechinesename, courseenglishname, coursecode, professionname, dutymanid, dutyman from cm_course")
-    List<CmCourse> getCourse ();
+    @Select("select id, schooltermId, courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{id}")
+    List<SimpleCourse> getCourse (String id);
 
-    @Update("INSERT INTO cm_course (term, coursechinesename, courseenglishname, coursecode, professionname, dutyman) " +
-            "VALUES (#{term},#{coursechinesename},#{courseenglishname},#{coursecode},#{professionname},#{dutyman})")
+    @Insert("INSERT INTO cm_course (id,schooltermId, coursechinesename, courseenglishname, coursecode, professionname, dutyman) " +
+            "VALUES (#{id},#{schooltermId},#{coursechinesename},#{courseenglishname},#{coursecode},#{professionname},#{dutyman})")
     void createCourse(CmCourse cmcourse);
 
     @Delete("delete from cm_course where id = #{id}")
@@ -26,5 +24,8 @@ public interface CmCourseMapper {
 
     @Select("select id, term, coursechinesename, coursecode, dutyman from cm_course")
     Object historyCourseByTerm(String term);
+
+    @Select("select termname from cm_term where id = #{schooltermId}")
+    String getTermName(String schooltermId);
 }
 

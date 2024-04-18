@@ -10,6 +10,8 @@ import com.example.smartttadmin.pojo.SmObs;
 import java.util.List;
 
 public interface SmObsService {
+
+
     Result getAllCollageList();
 
     /**
@@ -51,4 +53,6 @@ public interface SmObsService {
     String upToTeacherObs(Token token);
 
     Result updateOneProfession(CmProfession cmProfession);
+
+    String getSchoolObs();
 }

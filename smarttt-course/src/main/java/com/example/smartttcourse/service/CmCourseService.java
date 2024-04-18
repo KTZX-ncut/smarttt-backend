@@ -6,7 +6,7 @@ import com.example.smartttcourse.pojo.CmCourse;
 
 public interface CmCourseService {
 
-    Result getCourse();
+    Result getCourse(String obsID);
 
     Result createCourse(CmCourse cmCourse);
 

@@ -1,4 +1,5 @@
-package com.example.smartttcourse.pojo;
+package com.example.smartttcourse.Utils;
+
 
 import com.example.smartttcourse.dto.TreeStructure;
 
@@ -11,6 +12,8 @@ public class CommonFunctions {
      * @param name
      * @return
      */
+    public static final String StuRoleID = "516761049-9a741546-0b55-489b-9dc4-31789ee07153";
+    public static final String TokenSK = "123456";
     public static String generateEnhancedID(String name) {
         int nameHash = Math.abs(name.hashCode()*3+10);
         UUID uuid = UUID.randomUUID();

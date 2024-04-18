@@ -1,7 +1,9 @@
-package com.example.smartttadmin.service;
+package com.example.smartttcourse.service;
 
-import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.pojo.CmTerm;
+
+
+import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.pojo.CmTerm;
 
 import java.util.List;
 

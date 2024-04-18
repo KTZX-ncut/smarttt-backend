@@ -60,11 +60,11 @@ public class CollageMangtController {
      * @return
      */
     @GetMapping("/collageRP")
-    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
+//    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
     public Result CollegeRPList(HttpServletRequest request){
         //低于系（当前配置的教师级别）,就回溯到有教师的级别,然后显示级别的所有数据
-        Token token = getTokenFromContext();
-        return smObsService.getObsRPList(token.getObsid());
+        String obsID = smObsService.getSchoolObs();
+        return smObsService.getObsRPList(obsID);
     }
 
     /**

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttadmin.mapper.StLevelMapper">
+
+    <update id="updateStLevel">
+        update st_level
+        <set>
+            <if test="levelname != null">
+                levelname = #{levelname},
+            </if>
+            <if test="teacher != null">
+                teacher = #{teacher},
+            </if>
+            <if test="student != null">
+                student = #{student}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

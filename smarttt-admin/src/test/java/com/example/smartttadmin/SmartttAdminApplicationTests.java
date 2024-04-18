@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 
 import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 import static com.example.smartttadmin.Utils.EncryptionUtil.*;
@@ -27,14 +30,31 @@ class SmartttAdminApplicationTests {
     @Test
     void createMenus() {
         String roleMenuID = generateEnhancedID("st_menus");
-        mapper.createStMenus(new StMenus(roleMenuID,"层级测试菜单","531500340-8b762def-a3ea-4a06-a9b4-b91d2fd99b1a","1",
-                "","1",LocalDateTime.now().toString(),"101.101.101",
-                "基础信息管理/角色管理/层级测试菜单",""));
+        mapper.createStMenus(new StMenus(roleMenuID,"学校配置","531500340-04c5e8a8-a599-4dc2-8c8d-36112d472f2d","10",
+                "/sysmangt/schoolmangt","1",LocalDateTime.now().toString(),"101.110",
+                "基础信息管理/学校配置",""));
         List<String> stringList = mapper.getAllStRoleid();
         for(String string : stringList){
             StRoleMenu stRoleMenu = new StRoleMenu(generateEnhancedID("st_rolemenu"),string,roleMenuID,"3",LocalDateTime.now().toString(),"");
             mapper.createRoleMenus(stRoleMenu);
         }
+    }
+    @Test
+    void dealRoleMenus(){
+        List<String> stringList = mapper.getAllStRoleid();
+        List<String> stringList1 = mapper.getAllMenuid();
+        for(String roleID : stringList){
+            for(String menuID :stringList1){
+                if(mapper.getrolemenu(roleID,menuID).isEmpty()) {
+                    StRoleMenu stRoleMenu = new StRoleMenu(generateEnhancedID("st_rolemenu"), roleID, menuID, "3", LocalDateTime.now().toString(), "");
+                    mapper.createRoleMenus(stRoleMenu);
+                }
+            }
+        }
+        mapper.deleteRoleMenu();
+
+
+
     }
 
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.smartttadmin.mapper.CmTermMapper">
+<mapper namespace="com.example.smartttcourse.mapper.CmTermMapper">
     <update id="updateTermByID">
         update cm_term
         <!-- 使用set标签，代替update语句中的set关键字 -->
