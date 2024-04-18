@@ -26,4 +26,11 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getKwaByGetabilityId" resultType="java.lang.String">
+        Select name from cm_kwadict where courseid=#{courseid} and abilityid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

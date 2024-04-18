@@ -17,6 +17,6 @@ public interface CmGetabilityService {
     Result deleteGetabilityByID(String courseid,List<String> ids);
 
     //Result updateGetability(CmGetability cmGetability);
-
+    Result getKwaByGetability(String courseid, List<String> ids);
 
 }

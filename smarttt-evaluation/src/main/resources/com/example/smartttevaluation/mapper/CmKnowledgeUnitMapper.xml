@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper">
+    <!--批量删除小节中的kwa-->
+    <delete id="deleteKnowledgeUnitKwa">
+        delete from cm_knowledge_unit_kwa where unitid=#{unitid} and kwaid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--批量删除unit下kwa-->
+    <delete id="deleteKnowledgeUnitKwaByUnitids">
+        delete from cm_knowledge_unit_kwa where unitid in (select id from cm_knowledge_unit where id in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )or unitid in (select id from cm_knowledge_unit where pid in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <!--批量删除unit-->
+    <delete id="deleteKnowledgeUnitByUnitids">
+        delete from cm_knowledge_unit where id in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
