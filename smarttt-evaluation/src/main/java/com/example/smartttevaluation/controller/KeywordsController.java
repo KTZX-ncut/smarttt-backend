@@ -33,6 +33,11 @@ public class KeywordsController {
         return cmKeywordsService.deleteKeywordsByID(ids);
     }
 
+    @PostMapping("/getKwaByKeywordsID")
+    public Result getKwaByKeywordsID(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {
+        return cmKeywordsService.getKwaByKeywordsID(courseid,ids);
+    }
+
     @PostMapping
     public Result updateKeywords(@RequestBody CmKeywords cmKeywords){
         return cmKeywordsService.updateKeywords(cmKeywords);

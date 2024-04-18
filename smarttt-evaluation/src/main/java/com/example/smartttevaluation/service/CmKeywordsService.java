@@ -13,4 +13,6 @@ public interface CmKeywordsService {
     Result deleteKeywordsByID(List<String> ids);
 
     Result updateKeywords(CmKeywords cmKeywords);
+
+    Result getKwaByKeywordsID(String courseid, List<String> ids);
 }
