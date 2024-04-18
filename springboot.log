@@ -135,3 +135,169 @@ java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check th
 2024-04-18 00:03:41.772 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
 2024-04-18 00:06:44.240 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
 2024-04-18 00:06:44.249 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2024-04-18 01:26:27.752 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 17.0.6 on DESKTOP-K7HBEDF with PID 16548 (E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2\smarttt-evaluation\target\classes started by 15771 in E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2)
+2024-04-18 01:26:27.758 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
+2024-04-18 01:26:27.760 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-18 01:26:29.073 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-18 01:26:29.078 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-18 01:26:29.125 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 0 Redis repository interfaces.
+2024-04-18 01:26:30.395 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
+2024-04-18 01:26:30.416 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-04-18 01:26:30.417 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
+2024-04-18 01:26:30.673 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-04-18 01:26:30.674 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2788 ms
+2024-04-18 01:26:30.959 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2024-04-18 01:26:31.243 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-04-18 01:26:32.921 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
+2024-04-18 01:26:32.939 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 6.155 seconds (JVM running for 7.025)
+2024-04-18 01:26:37.284 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2024-04-18 01:26:37.286 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2024-04-18 10:21:30.475 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 17.0.6 on DESKTOP-K7HBEDF with PID 12716 (E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2\smarttt-evaluation\target\classes started by 15771 in E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2)
+2024-04-18 10:21:30.478 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
+2024-04-18 10:21:30.479 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-18 10:21:31.110 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-18 10:21:31.113 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-18 10:21:31.142 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2024-04-18 10:21:31.757 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
+2024-04-18 10:21:31.767 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-04-18 10:21:31.768 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
+2024-04-18 10:21:31.887 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-04-18 10:21:31.887 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1356 ms
+2024-04-18 10:21:32.025 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2024-04-18 10:21:32.174 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-04-18 10:21:33.074 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
+2024-04-18 10:21:33.085 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 3.044 seconds (JVM running for 3.459)
+2024-04-18 10:21:58.847 === [http-nio-8083-exec-2] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-18 10:21:58.847 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-04-18 10:21:58.848 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-04-18 10:22:29.527 === [http-nio-8083-exec-5] === ERROR === o.a.c.c.C.[.[localhost].[/].[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.binding.BindingException: Parameter 'ids' not found. Available parameters are [arg1, courseid, param1, param2]] with root cause
+org.apache.ibatis.binding.BindingException: Parameter 'ids' not found. Available parameters are [arg1, courseid, param1, param2]
+	at org.apache.ibatis.binding.MapperMethod$ParamMap.get(MapperMethod.java:212)
+	at org.apache.ibatis.scripting.xmltags.DynamicContext$ContextAccessor.getProperty(DynamicContext.java:120)
+	at org.apache.ibatis.ognl.OgnlRuntime.getProperty(OgnlRuntime.java:3338)
+	at org.apache.ibatis.ognl.ASTProperty.getValueBody(ASTProperty.java:121)
+	at org.apache.ibatis.ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:212)
+	at org.apache.ibatis.ognl.SimpleNode.getValue(SimpleNode.java:258)
+	at org.apache.ibatis.ognl.Ognl.getValue(Ognl.java:560)
+	at org.apache.ibatis.ognl.Ognl.getValue(Ognl.java:524)
+	at org.apache.ibatis.scripting.xmltags.OgnlCache.getValue(OgnlCache.java:46)
+	at org.apache.ibatis.scripting.xmltags.ExpressionEvaluator.evaluateIterable(ExpressionEvaluator.java:43)
+	at org.apache.ibatis.scripting.xmltags.ForEachSqlNode.apply(ForEachSqlNode.java:54)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.lambda$apply$0(MixedSqlNode.java:32)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.apply(MixedSqlNode.java:32)
+	at org.apache.ibatis.scripting.xmltags.DynamicSqlSource.getBoundSql(DynamicSqlSource.java:39)
+	at org.apache.ibatis.mapping.MappedStatement.getBoundSql(MappedStatement.java:305)
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.query(MybatisCachingExecutor.java:90)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:140)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426)
+	at jdk.proxy2/jdk.proxy2.$Proxy62.selectList(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:223)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForMany(MybatisMapperMethod.java:173)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:78)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:148)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at jdk.proxy2/jdk.proxy2.$Proxy69.getKwaByGetabilityId(Unknown Source)
+	at com.example.smartttevaluation.service.impl.CmGetabilityServiceImpl.getKwaByGetability(CmGetabilityServiceImpl.java:148)
+	at com.example.smartttevaluation.controller.GetabilityController.getKwaByGetability(GetabilityController.java:51)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:205)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:150)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:895)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:808)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1071)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:964)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:909)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:696)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:779)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:227)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:117)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:360)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:891)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1784)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2024-04-18 10:24:51.566 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2024-04-18 10:24:51.570 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2024-04-18 10:25:01.785 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 17.0.6 on DESKTOP-K7HBEDF with PID 25164 (E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2\smarttt-evaluation\target\classes started by 15771 in E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2)
+2024-04-18 10:25:01.788 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
+2024-04-18 10:25:01.788 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-18 10:25:02.366 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-18 10:25:02.368 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-18 10:25:02.398 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2024-04-18 10:25:02.960 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
+2024-04-18 10:25:02.970 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-04-18 10:25:02.970 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
+2024-04-18 10:25:03.074 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-04-18 10:25:03.075 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1244 ms
+2024-04-18 10:25:03.198 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2024-04-18 10:25:03.328 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-04-18 10:25:04.086 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
+2024-04-18 10:25:04.095 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 2.705 seconds (JVM running for 3.062)
+2024-04-18 10:25:18.931 === [http-nio-8083-exec-1] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-18 10:25:18.932 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-04-18 10:25:18.933 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-04-18 10:26:06.849 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2024-04-18 10:26:06.852 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2024-04-18 10:26:29.102 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 17.0.6 on DESKTOP-K7HBEDF with PID 21132 (E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2\smarttt-evaluation\target\classes started by 15771 in E:\IdeaJava\IdeaProjects\smarttt-backend\smarttt-backend\2)
+2024-04-18 10:26:29.103 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
+2024-04-18 10:26:29.104 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-18 10:26:29.690 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-04-18 10:26:29.692 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-04-18 10:26:29.721 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2024-04-18 10:26:30.307 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
+2024-04-18 10:26:30.316 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-04-18 10:26:30.316 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
+2024-04-18 10:26:30.428 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-04-18 10:26:30.429 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1277 ms
+2024-04-18 10:26:30.559 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2024-04-18 10:26:30.693 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-04-18 10:26:31.784 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
+2024-04-18 10:26:31.793 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 3.084 seconds (JVM running for 3.455)
+2024-04-18 10:26:40.295 === [http-nio-8083-exec-2] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-18 10:26:40.296 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-04-18 10:26:40.296 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2024-04-18 10:47:37.036 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2024-04-18 10:47:37.039 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed

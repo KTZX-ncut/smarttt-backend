@@ -51,5 +51,5 @@ public interface CmGetabilityMapper {
     CmAbility getAbilityById(@Param("id") String id);
 
     //通过能力id获取kwa列表
-    List<String> getKwaByGetabilityId(@Param("courseid") String courseid,List<String> ids);
+    List<String> getKwaByGetabilityId(@Param("courseid") String courseid,@Param("ids") List<String> ids);
 }
