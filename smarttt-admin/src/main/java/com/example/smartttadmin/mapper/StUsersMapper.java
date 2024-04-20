@@ -61,6 +61,6 @@ public interface StUsersMapper {
 
     void updateTeacherByID(PersonnelRoster personnelRoster);
 
-    @Select("")
-    Object getStudentByID(String id);
+    @Select("select st_users.id,username,stuno as personnelno  from st_users,sm_student where st_users.id=sm_student.usersid  and sm_student.obsid  = #{id}")
+    List<SimplePerson> getStudentByID(String id);
 }
