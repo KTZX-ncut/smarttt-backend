@@ -1,13 +1,10 @@
 package com.example.smartttevaluation.mapper;
 
-import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
-import com.example.smartttevaluation.pojo.CmGetability;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper
 public interface CmKnowledgeUnitMapper {
@@ -34,7 +31,7 @@ public interface CmKnowledgeUnitMapper {
     //批量删除同一小节中kwa
     void deleteKnowledgeUnitKwa(@Param("unitid") String unitid , @Param("ids") List<String> kwaids);
 
-
+    List<String> selectAllUnitidByUnitids(@Param("unitids") List<String> unitids);
     //批量删除UnitKwa
     void deleteKnowledgeUnitKwaByUnitids(@Param("unitids") List<String> unitids);
     //批量删除Unit

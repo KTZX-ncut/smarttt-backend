@@ -10,18 +10,23 @@
             #{id}
         </foreach>
     </delete>
-
+    <!--查询关联所有的unitid-->
+    <select id="selectAllUnitidByUnitids" resultType="java.lang.String">
+        select id from cm_knowledge_unit where id in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        or pid in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
     <!--批量删除unit下kwa-->
     <delete id="deleteKnowledgeUnitKwaByUnitids">
-        delete from cm_knowledge_unit_kwa where unitid in (select id from cm_knowledge_unit where id in
+        delete from cm_knowledge_unit_kwa where unitid in
         <foreach item="id" collection="unitids" open="(" separator="," close=")">
             #{id}
         </foreach>
-        )or unitid in (select id from cm_knowledge_unit where pid in
-        <foreach item="id" collection="unitids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-        )
     </delete>
 
     <!--批量删除unit-->

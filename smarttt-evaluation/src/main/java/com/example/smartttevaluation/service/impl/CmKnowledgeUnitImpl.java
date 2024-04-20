@@ -106,11 +106,16 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
     public Result deleteKnowledgeUnit(List<String> unitids){
-        //先删除kwa，以防查不到子节点
-        //删除所有与unitids有关联的kwa
-        cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByUnitids(unitids);
+        //获取关联的unitids
+        List<String> all_unitids=cmKnowledgeUnitMapper.selectAllUnitidByUnitids(unitids);
+        //如果为空则返回错误
+        if(all_unitids.isEmpty()){
+            return Result.error(404,"没有可删除项");
+        }
+        //删除所有unitids的kwa
+        cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByUnitids(all_unitids);
         //删除unit
-        cmKnowledgeUnitMapper.deleteKnowledgeUnitByUnitids(unitids);
+        cmKnowledgeUnitMapper.deleteKnowledgeUnitByUnitids(all_unitids);
         return Result.success();
     }
     public Result updateKnowledgeUnit(CmKnowledgeUnit cmKnowledgeUnit){
