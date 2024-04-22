@@ -55,4 +55,6 @@ public interface SmObsService {
     Result updateOneProfession(CmProfession cmProfession);
 
     String getSchoolObs();
+
+    Result checkSmObs(SmObs smObs);
 }

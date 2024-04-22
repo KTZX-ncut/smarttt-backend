@@ -19,4 +19,10 @@ public class CmProfession {
   private String remark;
   private String createtime;
 
+  public CmProfession(SmObs smObs){
+    this.obsid = smObs.getId();
+    this.proname = smObs.getObsname();
+    this.remark = smObs.getRemark();
+  }
+
 }

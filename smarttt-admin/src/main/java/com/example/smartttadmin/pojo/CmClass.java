@@ -17,4 +17,9 @@ public class CmClass {
   private String grade;
   private String remark;
 
+    public CmClass(SmObs smObs) {
+      this.obsid = smObs.getId();
+      this.classname = smObs.getObsname();
+      this.remark = smObs.getRemark();
+    }
 }

@@ -15,8 +15,8 @@ public interface CmCourseMapper {
     @Select("select id, schooltermId, courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{id}")
     List<SimpleCourse> getCourse (String id);
 
-    @Insert("INSERT INTO cm_course (id,schooltermId, coursechinesename, courseenglishname, coursecode, professionname, dutyman) " +
-            "VALUES (#{id},#{schooltermId},#{coursechinesename},#{courseenglishname},#{coursecode},#{professionname},#{dutyman})")
+    @Insert("INSERT INTO cm_course (id,schooltermId, coursechinesename, courseenglishname, coursecode, professionname, professionId) " +
+            "VALUES (#{id},#{schooltermId},#{coursechinesename},#{courseenglishname},#{coursecode},#{professionname},#{profession})")
     void createCourse(CmCourse cmcourse);
 
     @Delete("delete from cm_course where id = #{id}")
