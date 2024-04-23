@@ -38,10 +38,14 @@ public class CourseController {
     @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c",isReadOnly = true)
     @GetMapping("/allterm")
     public Result getAllTerm(){
+
         return null;
     }
+    @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @GetMapping("/create")
-    public Result createCourse(@RequestBody CmCourse cmCourse) {
+    public Result createCourse(@RequestBody CmCourse cmCourse,HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmCourse.setProfessionId(token.getObsid());
         return cmCourseService.createCourse(cmCourse);
     }
 

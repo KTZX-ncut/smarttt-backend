@@ -4,7 +4,6 @@ import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
-import com.example.smartttadmin.pojo.StLevel;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -114,4 +113,6 @@ public interface SmObsMapper {
     @Select("select id,obsname,remark from sm_obs where obsdeep = 1")
     SchoolInforReq getSchoolObs();
 
+    @Select("select id from st_level where obsdeep = #{obsdeep}")
+    long checkProfession(long obsdeep);
 }

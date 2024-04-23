@@ -60,5 +60,6 @@ public class CommonFunctions {
         levelCode.deleteCharAt(levelCode.length() - 1);
         return levelCode.toString();
     }
+
 }
 

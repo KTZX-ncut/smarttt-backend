@@ -267,6 +267,24 @@ public class SmObsServiceImpl implements SmObsService {
         return smObsMapper.getSchoolObs().getId();
     }
 
+    @Override
+    public Result checkSmObs(SmObs smObs) {
+        long levelID = smObsMapper.checkProfession(smObs.getObsdeep());
+        if(levelID == 104){
+            CmProfession cmProfession = new CmProfession(smObs);
+            cmProfession.setId(generateEnhancedID("cm_profession"));
+            cmProfession.setCreatetime(LocalDateTime.now().toString());
+            smObsMapper.createOneProfession(cmProfession);
+        }
+        else if(levelID == 105){
+            CmClass cmClass = new CmClass(smObs);
+            cmClass.setId(generateEnhancedID("cm_profession"));
+            smObsMapper.createOneClass(cmClass);
+        }
+        smObsMapper.createOneNewObs(smObs);
+        return Result.success();
+    }
+
     private void buildObsRPTree(List<ObsRPTree> parentSmObs, Map<String, List<ObsRPTree>> obsMap) {
         for (ObsRPTree parentObs : parentSmObs) {
             parentObs.setResponsiblePerson(stUsersMapper.getAllTeacherByObsID(parentObs.getId()));
