@@ -14,5 +14,6 @@ public class CmKnowledgeUnit {
     String pid;
     String type;
     String name;
+    double datavalue;
     String courseid;
 }

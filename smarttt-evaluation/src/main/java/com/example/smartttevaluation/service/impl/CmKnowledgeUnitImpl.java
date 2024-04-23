@@ -26,7 +26,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         //把一级目录加入至根节点
         for(CmKnowledgeUnit t_Chapter:t_Chapters){
             //创建一级目录对象
-            CmKnowledgeUnitTree t_cmKnowledgeUnitChapter=new CmKnowledgeUnitTree(t_Chapter.getId(),t_Chapter.getName(),t_Chapter.getType(),new ArrayList<>(),new ArrayList<>());
+            CmKnowledgeUnitTree t_cmKnowledgeUnitChapter=new CmKnowledgeUnitTree(t_Chapter.getId(),t_Chapter.getName(),t_Chapter.getType(),t_Chapter.getDatavalue(),new ArrayList<>(),new ArrayList<>());
             //将一级目录对象加入根列表
             cmKnowledgeUnitChapters.add(t_cmKnowledgeUnitChapter);
             String t_ChapterId=t_Chapter.getId();
@@ -40,7 +40,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
                 //获取当前节的kwa的列表
                 List<CmKnowledgeUnitKwa> t_cmKnowledgekwas=cmKnowledgeUnitMapper.getKnowledgeUnitKwa(t_Section.getId());
                 //创建该二级目录对象
-                CmKnowledgeUnitTree t_cmKnowledgeUnitSection=new CmKnowledgeUnitTree(t_Section.getId(),t_Section.getName(),t_Section.getType(),t_cmKnowledgekwas,new ArrayList<>());
+                CmKnowledgeUnitTree t_cmKnowledgeUnitSection=new CmKnowledgeUnitTree(t_Section.getId(),t_Section.getName(),t_Section.getType(),t_Section.getDatavalue(),t_cmKnowledgekwas,new ArrayList<>());
                 //将该对象添加到相应一级目录的节列表
                 t_cmKnowledgeUnitSections.add(t_cmKnowledgeUnitSection);
                 for(CmKnowledgeUnitKwa t_kwa:t_cmKnowledgekwas){
