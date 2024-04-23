@@ -29,4 +29,7 @@ public interface CmTermMapper {
     void setOtherTerms(String id);
 
     void updateTermByID(CmTerm cmTerm);
+
+    @Select("select id from cm_term where iscurrentterm = 1")
+    String getCurrentTerm();
 }
