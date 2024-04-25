@@ -24,6 +24,10 @@ public class CourseController {
     @Autowired
     private CmTermService cmTermService;
 
+    @GetMapping("/test")
+    public Result test(){
+        return Result.success();
+    }
     /**
      *专业负责人课程管理信息
      * @return Result

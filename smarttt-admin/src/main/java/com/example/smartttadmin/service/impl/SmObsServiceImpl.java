@@ -281,7 +281,6 @@ public class SmObsServiceImpl implements SmObsService {
             cmClass.setId(generateEnhancedID("cm_profession"));
             smObsMapper.createOneClass(cmClass);
         }
-        smObsMapper.createOneNewObs(smObs);
         return Result.success();
     }
 
