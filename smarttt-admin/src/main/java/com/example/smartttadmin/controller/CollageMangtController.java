@@ -1,8 +1,6 @@
 package com.example.smartttadmin.controller;
 
-import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.service.SmObsService;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+
 
 @RestController
 @RequestMapping("/sysmangt/collegemangt")

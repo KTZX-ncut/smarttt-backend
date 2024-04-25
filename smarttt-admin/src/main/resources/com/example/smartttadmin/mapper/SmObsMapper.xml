@@ -51,7 +51,7 @@
                 proname = #{proname},
             </if>
             <if test="procode != null">
-                procode = # {procode},
+                procode = #{procode},
             </if>
             <if test="reachpercent != null">
                 reachpercent = #{reachpercent},
