@@ -17,7 +17,7 @@ public class StRoleUser {
   private String userid;
   private String roleid;
   private String obsid;
-  private String obsdeep;
+  private long obsdeep;
   private String createtime;
   private String by1;
 

@@ -31,6 +31,7 @@ public class CmCourseServiceImpl implements CmCourseService {
         try{
             for(SimpleCourse simpleCourse:simpleCourseList){
                 simpleCourse.setTermname(cmCourseMapper.getTermName(simpleCourse.getSchooltermId()));
+                simpleCourse.setResponsiblePersonList(cmCourseMapper.getCourseRP(simpleCourse.getId()));
             }
         }catch (NullPointerException e){
             return Result.error("获取失败");

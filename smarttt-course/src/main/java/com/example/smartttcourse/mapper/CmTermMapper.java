@@ -13,7 +13,7 @@ public interface CmTermMapper {
     /**
      * 获取学期信息
      */
-    @Select("select id,termname, begindate, enddate, remark, iscurrentterm from cm_term")
+    @Select("select id,termname from cm_term where iscurrentterm = 0")
     List<CmTerm> getTerms ();
 
     @Update("INSERT INTO cm_term (id,termname,begindate,enddate,remark,iscurrentterm,createtime) " +

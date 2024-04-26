@@ -49,7 +49,7 @@ public class CourseController {
         return cmTermService.getTerms();
     }
     @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
-    @GetMapping("/create")
+    @PostMapping("/create")
     public Result createCourse(@RequestBody CmCourse cmCourse,HttpServletRequest request) {
         Token token = getTokenFromContext();
         cmCourse.setProfessionId(token.getObsid());
@@ -63,7 +63,7 @@ public class CourseController {
 
     @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @GetMapping("/history")
-    public Result historyCourseByTerm(@RequestParam(name = "termID")String termID,HttpServletRequest request) {
+    public Result historyCourseByTerm(@RequestParam(name = "id")String termID,HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmCourseService.historyCourseByTerm(termID,token.getObsid());
     }

@@ -1,6 +1,8 @@
 package com.example.smartttadmin.service;
 
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.SimpleRole;
+import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StRoles;
 import com.example.smartttadmin.pojo.StUsers;
 
@@ -33,4 +35,6 @@ public interface StRolesService {
     Result createRole(StRoles stRoles);
 
     Result getRolePurviewList();
+
+    Result switchRole(String id, SimpleRole simpleRole);
 }

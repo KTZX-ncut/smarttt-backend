@@ -1,6 +1,7 @@
 package com.example.smartttcourse.mapper;
 
 
+import com.example.smartttcourse.dto.ResponsiblePerson;
 import com.example.smartttcourse.dto.SimpleCourse;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmCourse;
@@ -16,14 +17,14 @@ public interface CmCourseMapper {
     @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
     List<SimpleCourse> getCourse (Token token);
 
-    @Insert("INSERT INTO cm_course (id,schooltermId, coursechinesename, courseenglishname, coursecode, professionname, professionId) " +
-            "VALUES (#{id},#{schooltermId},#{coursechinesename},#{courseenglishname},#{coursecode},#{professionname},#{profession})")
+    @Insert("INSERT INTO cm_course (id,schooltermId, courseChineseName, courseEnglishName, courseCode, professionName, professionId) " +
+            "VALUES (#{id},#{schooltermId},#{courseChineseName},#{courseEnglishName},#{courseCode},#{professionName},#{professionId})")
     void createCourse(CmCourse cmcourse);
 
     void deleteCourseByID(List<String> ids);
 
     @Select("select id, courseChineseName, courseEnglishName, courseCode from cm_course where schooltermId = #{termID} and professionId = #{obsid}")
-    Object historyCourseByTerm(@Param("termID") String termID,@Param("obsid") String obsid);
+    List<SimpleCourse> historyCourseByTerm(@Param("termID") String termID,@Param("obsid") String obsid);
 
     @Select("select termname from cm_term where id = #{schooltermId}")
     String getTermName(String schooltermId);
@@ -33,5 +34,8 @@ public interface CmCourseMapper {
 
     @Select("select * from cm_course where id = #{id}")
     CmCourse getCopyCourse(String id);
+
+    @Select("select * from st_roleuser where obsid = #{id}")
+    List<ResponsiblePerson> getCourseRP(String id);
 }
 
