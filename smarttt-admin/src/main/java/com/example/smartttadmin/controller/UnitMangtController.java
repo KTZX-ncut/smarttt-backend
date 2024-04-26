@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
+
 /**
  * 教学单位管理
  */
@@ -37,6 +40,7 @@ public class UnitMangtController {
             smObs.setPid(createUnitsReq.getId());
             smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
         }
+        smObs.setId(generateEnhancedID("sm_obs"));
         Result result = smObsService.checkSmObs(smObs);
         if(result.getCode()!=200)return Result.error("新建失败");
         return smObsService.createOneObs(smObs);
