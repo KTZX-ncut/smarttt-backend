@@ -41,9 +41,9 @@ public class UnitMangtController {
             smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
         }
         smObs.setId(generateEnhancedID("sm_obs"));
-        Result result = smObsService.checkSmObs(smObs);
+        Result result = smObsService.createOneObs(smObs);
         if(result.getCode()!=200)return Result.error("新建失败");
-        return smObsService.createOneObs(smObs);
+        return smObsService.checkSmObs(smObs);
     }
 
     /**
