@@ -15,4 +15,7 @@ public interface SmObsMapper {
     SchoolInforReq getSchoolObs();
     @Select("select * from sm_obs where obsdeep<=3")
     List<ObsRPTree> getRPTree();
+
+    @Select("select obsdeep from sm_obs where id = #{obsid}")
+    long getObsdeepByObsid(String obsid);
 }
