@@ -23,7 +23,7 @@ public interface CmCourseMapper {
 
     void deleteCourseByID(List<String> ids);
 
-    @Select("select id, courseChineseName, courseEnglishName, courseCode from cm_course where schooltermId = #{termID} and professionId = #{obsid}")
+    @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId  from cm_course where schooltermId = #{termID} and professionId = #{obsid}")
     List<SimpleCourse> historyCourseByTerm(@Param("termID") String termID,@Param("obsid") String obsid);
 
     @Select("select termname from cm_term where id = #{schooltermId}")

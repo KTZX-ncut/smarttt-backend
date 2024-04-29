@@ -4,6 +4,7 @@ import com.example.smartttcourse.Utils.AuthRequired;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmCourse;
 import com.example.smartttcourse.service.CmTermService;
+import com.example.smartttcourse.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.service.CmCourseService;
@@ -23,6 +24,8 @@ public class CourseController {
     private CmCourseService cmCourseService;
     @Autowired
     private CmTermService cmTermService;
+    @Autowired
+    private SmObsService smObsService;
 
     @GetMapping("/test")
     public Result test(){
@@ -70,6 +73,11 @@ public class CourseController {
     @GetMapping("/copy")
     public Result copyHistoryCourse(@RequestParam(name = "id")String id){
         return cmCourseService.copyHistoryCourse(id);
+    }
+    @PostMapping("/courseRP")
+    public Result courseRPList(){
+        String obsID = smObsService.getSchoolObs();
+        return smObsService.getObsRPList(obsID);
     }
 
 }
