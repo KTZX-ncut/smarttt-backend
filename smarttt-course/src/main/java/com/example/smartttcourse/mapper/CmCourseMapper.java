@@ -35,7 +35,12 @@ public interface CmCourseMapper {
     @Select("select * from cm_course where id = #{id}")
     CmCourse getCopyCourse(String id);
 
-    @Select("select * from st_roleuser where obsid = #{id}")
+    @Select("SELECT u.id, u.username, o.obsname\n" +
+            "FROM st_roleuser ru\n" +
+            "JOIN st_users u ON ru.userid = u.id\n" +
+            "JOIN sm_teacher t ON u.id = t.usersid\n" +
+            "JOIN sm_obs o ON t.obsid = o.id\n" +
+            "WHERE ru.obsid = #{id};\n")
     List<ResponsiblePerson> getCourseRP(String id);
 }
 
