@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.CmCoursetargetMapper">
+    <update id="updateCoursetargetByID">
+        update cm_coursetarget
+        <!-- 使用set标签，代替update语句中的set关键字 -->
+        <!-- id, code, name, remark, unitid, courseid, kwaid -->
+        <set>
+            <if test="code != null" >
+                code=#{code},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="unitid != null">
+                unitid=#{unitid},
+            </if>
+            <if test="kwaid != null">
+                kwaid=#{kwaid},
+            </if>
+            <if test="courseid != null">
+                courseid=#{courseid},
+            </if>
+            <if test="remark != null">
+                remark=#{remark},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteCoursetargetByIDs">
+        delete from cm_coursetarget where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertunit">
+        INSERT INTO cm_coursetarget (unitid, kwaid, courseid)
+        SELECT unitid, kwaid, #{courseid} FROM cm_knowledge_unit_kwa WHERE id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </insert>
+
+</mapper>
