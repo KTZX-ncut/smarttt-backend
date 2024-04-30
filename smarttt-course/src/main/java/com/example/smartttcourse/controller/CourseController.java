@@ -89,9 +89,13 @@ public class CourseController {
         return stUsersService.deleteRP(stRoleUser);
     }
     @PostMapping("/courseRP/create")
-    public Result createCourseRP(@RequestBody StRoleUser stRoleUser){
-        stRoleUser.setRoleid("516761049-234512f3-7c19-4580-abe2-ebfb1dd8db21");
-        return stUsersService.createOneRP(stRoleUser);
+    public Result createCourseRP(@RequestBody List<StRoleUser> stRoleUserList){
+        for(StRoleUser stRoleUser:stRoleUserList){
+            stRoleUser.setRoleid("516761049-234512f3-7c19-4580-abe2-ebfb1dd8db21");
+            Result result = stUsersService.createOneRP(stRoleUser);
+            if(result.getCode()!=200)return Result.error("新增错误");
+        }
+        return Result.success();
     }
 
 }

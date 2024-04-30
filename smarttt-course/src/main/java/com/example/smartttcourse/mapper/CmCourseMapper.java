@@ -5,6 +5,7 @@ import com.example.smartttcourse.dto.ResponsiblePerson;
 import com.example.smartttcourse.dto.SimpleCourse;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmCourse;
+import com.example.smartttcourse.pojo.StRoleUser;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -42,5 +43,8 @@ public interface CmCourseMapper {
             "JOIN sm_obs o ON t.obsid = o.id\n" +
             "WHERE ru.obsid = #{id};\n")
     List<ResponsiblePerson> getCourseRP(String id);
+
+    @Select("select * from st_roleuser where obsid = #{id}")
+    List<StRoleUser> getHistoryRP(String id);
 }
 
