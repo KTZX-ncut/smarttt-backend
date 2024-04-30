@@ -20,8 +20,8 @@ public class CmTermServicelmpl implements CmTermService {
     private CmTermMapper cmTermMapper;
 
     @Override
-    public Result getTerms() {
-        return Result.success(cmTermMapper.getTerms());
+    public Result getHistoryTerm() {
+        return Result.success(cmTermMapper.getHistoryTerms());
     }
 
     @Override
@@ -43,6 +43,11 @@ public class CmTermServicelmpl implements CmTermService {
     public Result updateTermByID(CmTerm cmTerm) {
         cmTermMapper.updateTermByID(cmTerm);
         return Result.success();
+    }
+
+    @Override
+    public Result getTerms() {
+        return Result.success(cmTermMapper.getTerms());
     }
 
     @Override

@@ -53,7 +53,7 @@ public class CourseController {
 
     @GetMapping("/allterm")
     public Result getAllTerm(){
-        return cmTermService.getTerms();
+        return cmTermService.getHistoryTerm();
     }
     @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @PostMapping("/create")
