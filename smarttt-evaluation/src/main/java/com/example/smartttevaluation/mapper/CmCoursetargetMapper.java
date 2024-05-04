@@ -11,11 +11,11 @@ import java.util.List;
 @Mapper
 public interface CmCoursetargetMapper {
 
-    @Select("select id, code, name, remark, unitid, courseid, kwaid from cm_coursetarget")
+    @Select("select id, code, name, remark, unitid, courseid from cm_coursetarget")
     List<CmCoursetarget> getCoursetarget ();
 
-    @Update("INSERT INTO cm_coursetarget (id, code, name, remark, unitid, courseid, kwaid) " +
-            "VALUES (#{id},#{code},#{name},#{remark},#{unitid},#{courseid},#{kwaid})")
+    @Update("INSERT INTO cm_coursetarget (id, code, name, remark, unitid, courseid) " +
+            "VALUES (#{id},#{code},#{name},#{remark},#{unitid},#{courseid})")
     void createCoursetarget(CmCoursetarget cmCoursetarget);
 
     void deleteCoursetargetByIDs(@Param("ids")List<String> ids);

@@ -17,9 +17,6 @@
             <if test="unitid != null">
                 unitid=#{unitid},
             </if>
-            <if test="kwaid != null">
-                kwaid=#{kwaid},
-            </if>
             <if test="courseid != null">
                 courseid=#{courseid},
             </if>
