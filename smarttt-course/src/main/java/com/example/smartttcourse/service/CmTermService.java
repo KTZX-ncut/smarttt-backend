@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CmTermService {
 
-    Result getTerms();
+    Result getHistoryTerm();
 
     Result createTerms(CmTerm cmTerm);
 
@@ -19,4 +19,6 @@ public interface CmTermService {
     Result deleteTermsByID(List<String> ids);
 
     Result updateTermByID(CmTerm cmTerm);
+
+    Result getTerms();
 }

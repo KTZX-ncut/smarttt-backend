@@ -87,7 +87,7 @@ public interface SmObsMapper {
     List<ClassResponse> getProfessionByPid(@Param("pid")String pid);
 
 //    @Select("select obsid as id ,classname,grade from cm_class where obsid in (select id from sm_obs where pid = #{id})")
-    @Select("SELECT o.id AS id, c.classname AS classname ,grade " +
+    @Select("SELECT o.id AS id, c.classname AS classname ,grade , c.remark " +
             "FROM sm_obs o JOIN cm_class c ON o.id = c.obsid\n" +
             "WHERE o.pid = #{id} ORDER BY o.orderno;\n")
     List<CmClass> getClassByProfessionID(@Param("id") String id);
@@ -105,7 +105,7 @@ public interface SmObsMapper {
     SmObs getObsByStuID(String id);
 
     @Select("select obsdeep from sm_obs where id = #{obsid}")
-    String getObsdeepByObsid(String obsid);
+    long getObsdeepByObsid(String obsid);
 
 
     void updateProfession(CmProfession cmProfession);

@@ -1,11 +1,9 @@
 package com.example.smartttadmin.service.impl;
 
-import com.example.smartttadmin.dto.LoginResponse;
+import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StMenusMapper;
 import com.example.smartttadmin.mapper.StRolesMapper;
-import com.example.smartttadmin.dto.SimpleRole;
-import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.*;
 import com.example.smartttadmin.service.StRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.Utils.CommonFunctions.StuRoleID;
-import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.*;
+import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
 public class StRolesServiceImpl implements StRolesService {
@@ -98,5 +96,12 @@ public class StRolesServiceImpl implements StRolesService {
     public Result getRolePurviewList() {
         List<StRoles> stRolesList = stRolesMapper.getSimpleRoles();
         return Result.success(stRolesList);
+    }
+
+    @Override
+    public Result switchRole(String id,SimpleRole simpleRole) {
+        Token token = new Token(simpleRole);
+//        TeaUser teaUser = new TeaUser(null,null,null,simpleRole.getRolename(),simpleRole.)
+        return Result.success(getToken(token,TokenSK));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.smartttadmin.dto;
 
+import com.example.smartttadmin.pojo.StRoleUser;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,4 +15,11 @@ public class Token {
     private String roleid;
     private String obsid;
     private long obsdeep;
+
+
+    public Token(SimpleRole simpleRole) {
+        this.roleid = simpleRole.getRoleid();
+        this.obsid = simpleRole.getObsid();
+        this.obsdeep = simpleRole.getObsdeep();
+    }
 }
