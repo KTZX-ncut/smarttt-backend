@@ -1,10 +1,10 @@
-package com.example.smartttcourse.dto;
+package com.example.smartttexam.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.example.smartttcourse.pojo.SmObs;
+import com.example.smartttexam.pojo.SmObs;
 
 @Data
 @AllArgsConstructor

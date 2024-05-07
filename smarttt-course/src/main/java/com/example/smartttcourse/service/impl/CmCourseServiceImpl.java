@@ -49,7 +49,7 @@ public class CmCourseServiceImpl implements CmCourseService {
         cmCourse.setId(generateEnhancedID("cm_course"));
         cmCourse.setProfessionName(cmCourseMapper.getObsName(cmCourse.getProfessionId()));
         cmCourseMapper.createCourse(cmCourse);
-        return Result.success();
+        return Result.success(cmCourse.getId());
     }
 
     @Override
