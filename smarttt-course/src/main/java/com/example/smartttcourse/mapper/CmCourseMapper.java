@@ -22,7 +22,7 @@ public interface CmCourseMapper {
             "VALUES (#{id},#{schooltermId},#{courseChineseName},#{courseEnglishName},#{courseCode},#{professionName},#{professionId})")
     void createCourse(CmCourse cmcourse);
 
-    void deleteCourseByID(List<String> ids);
+    void deleteCourseByID(@Param("ids") List<String> ids);
 
     @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId  from cm_course where schooltermId = #{termID} and professionId = #{obsid}")
     List<SimpleCourse> historyCourseByTerm(@Param("termID") String termID,@Param("obsid") String obsid);
