@@ -80,5 +80,11 @@ public class CmCourseServiceImpl implements CmCourseService {
         return Result.success();
     }
 
+    @Override
+    public Result updateOneCourse(CmCourse cmCourse) {
+        cmCourseMapper.updateOneCourse(cmCourse);
+        return Result.success();
+    }
+
 }
 

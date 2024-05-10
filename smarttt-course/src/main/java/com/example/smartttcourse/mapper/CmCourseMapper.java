@@ -46,5 +46,7 @@ public interface CmCourseMapper {
 
     @Select("select * from st_roleuser where obsid = #{id}")
     List<StRoleUser> getHistoryRP(String id);
+
+    void updateOneCourse(CmCourse cmCourse);
 }
 

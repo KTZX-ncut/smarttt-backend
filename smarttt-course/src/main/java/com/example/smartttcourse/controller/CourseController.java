@@ -74,6 +74,10 @@ public class CourseController {
         Token token = getTokenFromContext();
         return cmCourseService.historyCourseByTerm(termID,token.getObsid());
     }
+    @PostMapping("/update")
+    public Result updateCourse(@RequestBody CmCourse cmCourse){
+        return cmCourseService.updateOneCourse(cmCourse);
+    }
     @GetMapping("/copy")
     public Result copyHistoryCourse(@RequestParam(name = "id")String id){
         return cmCourseService.copyHistoryCourse(id);
