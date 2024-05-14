@@ -18,5 +18,7 @@ public interface CmCourseService {
     Result historyCourseByTerm(String termID, String obsid);
 
     Result copyHistoryCourse(String id);
+
+    Result updateOneCourse(CmCourse cmCourse);
 }
 

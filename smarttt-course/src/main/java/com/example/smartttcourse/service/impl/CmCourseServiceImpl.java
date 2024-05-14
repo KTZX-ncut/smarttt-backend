@@ -49,7 +49,7 @@ public class CmCourseServiceImpl implements CmCourseService {
         cmCourse.setId(generateEnhancedID("cm_course"));
         cmCourse.setProfessionName(cmCourseMapper.getObsName(cmCourse.getProfessionId()));
         cmCourseMapper.createCourse(cmCourse);
-        return Result.success();
+        return Result.success(cmCourse.getId());
     }
 
     @Override
@@ -77,6 +77,12 @@ public class CmCourseServiceImpl implements CmCourseService {
             stRoleUser.setCreatetime(LocalDate.now().toString());
             stUsersMapper.createOneRoleUser(stRoleUser);
         }
+        return Result.success();
+    }
+
+    @Override
+    public Result updateOneCourse(CmCourse cmCourse) {
+        cmCourseMapper.updateOneCourse(cmCourse);
         return Result.success();
     }
 

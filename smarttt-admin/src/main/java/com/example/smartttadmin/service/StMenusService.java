@@ -24,4 +24,6 @@ public interface StMenusService {
      * @return 成功
      */
     Result updateMenuStatus(UpdateMenuReq updateMenuReq);
+
+    Result getStudentCourse(String id);
 }
