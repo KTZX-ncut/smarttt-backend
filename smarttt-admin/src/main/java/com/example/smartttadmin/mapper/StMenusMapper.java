@@ -1,5 +1,6 @@
 package com.example.smartttadmin.mapper;
 
+import com.example.smartttadmin.dto.CourseListReq;
 import com.example.smartttadmin.dto.MenuTree;
 import com.example.smartttadmin.dto.MenusResponse;
 import com.example.smartttadmin.dto.UpdateMenuReq;
@@ -54,4 +55,7 @@ public interface StMenusMapper {
 
     @Select("select status from st_rolemenu where roleid = #{roleid} and menuid = #{menuid}")
     List<String> getStatueInRoleUser(@Param("roleid") String roleid, @Param("menuid") String menu);
+
+    @Select("select cm_classroom_classroommenu.classroomId as id ,cm_classroom.classroomName from cm_classroom_classroommenu,cm_classroom where cm_classroom.id=classroomId and stuId = #{id}")
+    List<CourseListReq> getStudentCourseList(String id);
 }

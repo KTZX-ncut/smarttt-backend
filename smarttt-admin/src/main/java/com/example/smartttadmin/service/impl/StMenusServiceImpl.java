@@ -99,4 +99,9 @@ public class StMenusServiceImpl implements StMenusService {
        stMenusMapper.updateMenuStatus(updateMenuReq);
        return Result.success();
     }
+
+    @Override
+    public Result getStudentCourse(String id) {
+        return Result.success(stMenusMapper.getStudentCourseList(id));
+    }
 }

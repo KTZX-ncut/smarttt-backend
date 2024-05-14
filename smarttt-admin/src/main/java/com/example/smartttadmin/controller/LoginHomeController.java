@@ -36,6 +36,12 @@ public class LoginHomeController {
         Token token = getTokenFromContext();
         return stMenusService.getMenusList(token.getRoleid());
     }
+    @PostMapping("/studenthome")
+    @AuthRequired(type = "admin",menu = "531500340-a9456c2b-c3f7-41b3-b2c4-1fd8e622dcc6")
+    public Result StuHome(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return stMenusService.getStudentCourse(token.getId());
+    }
     @PostMapping("/switchrole")
     @AuthRequired(type = "admin",menu = "531500340-0f2888b9-ecaf-49a7-b175-7ae00e14ae65")
     public Result switchRole(@RequestBody SimpleRole simpleRole, HttpServletRequest request){
