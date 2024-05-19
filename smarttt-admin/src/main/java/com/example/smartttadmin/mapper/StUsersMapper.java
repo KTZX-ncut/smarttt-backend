@@ -40,7 +40,7 @@ public interface StUsersMapper {
 
     @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
             "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
-    TeaUser getAllUserInfor(TeaInforReq teaInforReq);
+    TeaUser getAllUserInfor(UserInforReq userInforReq);
 
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
     void deletePRByObsIDAndUserID(StRoleUser stRoleUser);

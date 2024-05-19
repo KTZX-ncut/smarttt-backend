@@ -1,8 +1,8 @@
 package com.example.smartttcourse.service;
 
-import com.example.smartttcourse.dto.ClassroomReq;
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.dto.Token;
+import com.example.smartttcourse.pojo.CmClassroom;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ public interface CmClassRoomService {
 
     Result deleteClassroom(List<String> ids);
 
-    Result createOneClassroom(ClassroomReq classroomReq);
+    Result createOneClassroom(CmClassroom classroomReq);
 }

@@ -1,16 +1,19 @@
 package com.example.smartttcourse.service.impl;
 
-import com.example.smartttcourse.dto.ClassroomReq;
+import com.example.smartttcourse.dto.CourseClassroomReq;
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.mapper.CmClassRoomMapper;
+import com.example.smartttcourse.mapper.CmCourseMapper;
 import com.example.smartttcourse.mapper.CmTermMapper;
+import com.example.smartttcourse.pojo.CmClassroom;
 import com.example.smartttcourse.service.CmClassRoomService;
-import com.example.smartttcourse.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.example.smartttcourse.Utils.CommonFunctions.generateEnhancedID;
 
 @Service
 public class CmClassRoomServiceImpl implements CmClassRoomService {
@@ -18,14 +21,15 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     private CmClassRoomMapper cmClassRoomMapper;
     @Autowired
     private CmTermMapper cmTermMapper;
+    @Autowired
+    private CmCourseMapper cmCourseMapper;
     @Override
     public Result getClassRoomList(Token token) {
-        String currentTerm = cmTermMapper.getCurrentTerm();
-        List<ClassroomReq> classroomReqList  = cmClassRoomMapper.getClassRoomList(token.getObsid(),currentTerm);
-        for(ClassroomReq classroomReq:classroomReqList){
-            classroomReq.setCourseChineseName(cmClassRoomMapper.getCourseName(classroomReq.getCourseId()));
+        List<CourseClassroomReq> courseClassroomReqList = cmCourseMapper.getCourseName(token);
+        for(CourseClassroomReq courseClassroomReq:courseClassroomReqList) {
+            courseClassroomReq.setClassroomReqList(cmClassRoomMapper.getClassRoomList(courseClassroomReq.getId()));
         }
-        return Result.success(classroomReqList);
+        return Result.success(courseClassroomReqList);
     }
 
     @Override
@@ -35,8 +39,10 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     }
 
     @Override
-    public Result createOneClassroom(ClassroomReq classroomReq) {
-        cmClassRoomMapper.createClassroom(classroomReq);
+    public Result createOneClassroom(CmClassroom classroom) {
+        classroom.setId(generateEnhancedID("cm_classroom"));
+        classroom.setTermId(cmTermMapper.getCurrentTerm());
+        cmClassRoomMapper.createClassroom(classroom);
         return Result.success();
     }
 }
