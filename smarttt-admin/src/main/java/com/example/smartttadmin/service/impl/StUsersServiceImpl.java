@@ -3,6 +3,7 @@ package com.example.smartttadmin.service.impl;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
+import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
@@ -19,8 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
-import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.*;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
@@ -97,20 +97,20 @@ public class StUsersServiceImpl implements StUsersService {
 
     /**
      * 这里应该对用户传进来的信息进行校验真实性（修改
-     * @param teaInforReq
+     * @param userInforReq
      * @return
      */
     @Override
-    public Result getUserInfor(TeaInforReq teaInforReq) {
-        Token token = new Token(teaInforReq.getId(), teaInforReq.getRoleid(), teaInforReq.getObsid(), teaInforReq.getObsdeep());
-        TeaUser teaUser = stUsersMapper.getAllUserInfor(teaInforReq);
+    public Result getTeaInfor(UserInforReq userInforReq) {
+        Token token = new Token(userInforReq.getId(), userInforReq.getRoleid(), userInforReq.getObsid(), userInforReq.getObsdeep());
+        UserInfor userInfor = stUsersMapper.getAllUserInfor(userInforReq);
         try{
-                teaUser.setCatelog(teaInforReq.getCatelog());
+                userInfor.setCatelog(userInforReq.getCatelog());
         }catch (NullPointerException e){
             return Result.error("用户信息错误");
         }
-        teaUser.setToken(getToken(token,TokenSK));
-       return Result.success(teaUser);
+        userInfor.setToken(getToken(token,TokenSK));
+       return Result.success(userInfor);
     }
 
     @Override
@@ -140,5 +140,15 @@ public class StUsersServiceImpl implements StUsersService {
     @Override
     public Result getStudentByClassID(String id) {
         return Result.success(stUsersMapper.getStudentByID(id));
+    }
+
+    @Override
+    public Result getStudentInfor(StUsers stUsers) {
+        UserInfor userInfor = stUsersMapper.getStudentInfor(StuRoleID);
+        userInfor.setCatelog("1");
+        userInfor.setUsername(stUsers.getUsername());
+        Token token = new Token(stUsers.getId(),StuRoleID,null,-1);
+        userInfor.setToken(getToken(token,TokenSK));
+        return Result.success(userInfor);
     }
 }

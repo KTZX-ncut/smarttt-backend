@@ -1,6 +1,7 @@
 package com.example.smartttcourse.mapper;
 
 
+import com.example.smartttcourse.dto.CourseClassroomReq;
 import com.example.smartttcourse.dto.ResponsiblePerson;
 import com.example.smartttcourse.dto.SimpleCourse;
 import com.example.smartttcourse.dto.Token;
@@ -17,6 +18,8 @@ public interface CmCourseMapper {
      */
     @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
     List<SimpleCourse> getCourse (Token token);
+    @Select("select id,courseChineseName from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
+    List<CourseClassroomReq> getCourseName(Token token);
 
     @Insert("INSERT INTO cm_course (id,schooltermId, courseChineseName, courseEnglishName, courseCode, professionName, professionId) " +
             "VALUES (#{id},#{schooltermId},#{courseChineseName},#{courseEnglishName},#{courseCode},#{professionName},#{professionId})")

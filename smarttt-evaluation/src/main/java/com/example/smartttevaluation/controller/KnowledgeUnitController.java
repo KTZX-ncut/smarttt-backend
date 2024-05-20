@@ -12,6 +12,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/evaluation/knowledgeUnit")
 
+
+
 public class KnowledgeUnitController {
     @Autowired
     private CmKnowledgeUnitService cmKnowledgeUnitService;
@@ -42,8 +44,8 @@ public class KnowledgeUnitController {
     }
     //删除知识单元
     @PostMapping("/deleteKnowledgeUnit")
-    public Result deleteKnowledgeUnit(@RequestBody List<String> unitids) {
-        return cmKnowledgeUnitService.deleteKnowledgeUnit(unitids);
+    public Result deleteKnowledgeUnit(@RequestParam("courseid") String courseid,@RequestBody List<String> unitids) {
+        return cmKnowledgeUnitService.deleteKnowledgeUnit(courseid,unitids);
     }
 //更新知识单元
     @PostMapping("/updateKnowledgeUnit")
@@ -55,4 +57,13 @@ public class KnowledgeUnitController {
     public Result updateKnowledgeUnit(@RequestBody CmKnowledgeUnitKwa cmKnowledgeUnitKwa) {
         return cmKnowledgeUnitService.updateKnowledgeUnitKwa(cmKnowledgeUnitKwa);
     }
+    /*@GetMapping("/test")
+    public Result flashKnowledgeUnitOrdernum() {
+        return cmKnowledgeUnitService.flashKnowledgeUnitOrdernum();
+    }*/
+    @PostMapping("/updateKnowledgeUnitOrdernum")
+    public Result updateKnowledgeUnitOrdernum(@RequestParam("preOrdernum") long preOrdernum,@RequestBody CmKnowledgeUnit cmKnowledgeUnit) {
+        return cmKnowledgeUnitService.updateKnowledgeUnitOrdernum(cmKnowledgeUnit,preOrdernum);
+    }
+
 }

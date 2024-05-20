@@ -19,6 +19,7 @@ public class CmKnowledgeUnitTree {
     String name;
     String type;
     double datavalue;
+    long ordernum;
     List<CmKnowledgeUnitKwa> kwas;
     List<CmKnowledgeUnitTree> children;
 }

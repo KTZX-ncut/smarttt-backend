@@ -6,7 +6,7 @@ import com.example.smartttevaluation.pojo.CmCoursetarget;
 import java.util.List;
 
 public interface CmCoursetargetService {
-    Result getCoursetarget();
+    Result getCoursetarget(String courseid);
 
     Result createCoursetarget(CmCoursetarget cmCoursetarget);
 

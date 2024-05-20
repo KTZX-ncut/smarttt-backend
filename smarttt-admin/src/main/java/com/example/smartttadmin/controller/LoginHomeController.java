@@ -1,21 +1,21 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.Utils.AuthRequired;
-import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.dto.SimpleRole;
-import com.example.smartttadmin.dto.Token;
+import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.service.StMenusService;
 import com.example.smartttadmin.service.StRolesService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
+import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @RestController
 @RequestMapping("/homes")
@@ -42,6 +42,27 @@ public class LoginHomeController {
         Token token = getTokenFromContext();
         return stMenusService.getStudentCourse(token.getId());
     }
+
+    /**
+     * 把token返回
+     * @param id
+     * @param request
+     * @return
+     */
+    @PostMapping("/switchstucourse")
+    @AuthRequired(type = "admin",menu = "531500340-a9456c2b-c3f7-41b3-b2c4-1fd8e622dcc6")
+    public Result switchStuCourse(@RequestBody String id, HttpServletRequest request){
+        Token token = getTokenFromContext();
+        token.setObsid(id);
+        return stMenusService.getStudentCourseInfor(token);
+    }
+    @PostMapping("/studentmenu")
+    @AuthRequired(type = "admin",menu = "531500340-a9456c2b-c3f7-41b3-b2c4-1fd8e622dcc6")
+    public Result stuCourse(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return stMenusService.getMenusList(token.getRoleid());
+    }
+
     @PostMapping("/switchrole")
     @AuthRequired(type = "admin",menu = "531500340-0f2888b9-ecaf-49a7-b175-7ae00e14ae65")
     public Result switchRole(@RequestBody SimpleRole simpleRole, HttpServletRequest request){

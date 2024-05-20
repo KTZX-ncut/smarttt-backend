@@ -1,6 +1,7 @@
 package com.example.smartttadmin.service;
 
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.dto.UpdateMenuReq;
 
 public interface StMenusService {
@@ -26,4 +27,6 @@ public interface StMenusService {
     Result updateMenuStatus(UpdateMenuReq updateMenuReq);
 
     Result getStudentCourse(String id);
+
+    Result getStudentCourseInfor(Token token);
 }

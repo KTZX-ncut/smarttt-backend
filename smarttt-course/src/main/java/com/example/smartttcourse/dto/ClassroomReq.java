@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 public class ClassroomReq {
     private String id;
     private String classroomName;
-    private String courseId;
-    private String courseChineseName;//
     private String teacherId;
     private String usedClassList;
     private String beginTime;

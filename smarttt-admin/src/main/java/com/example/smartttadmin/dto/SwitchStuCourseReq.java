@@ -1,4 +1,4 @@
-package com.example.smartttevaluation.pojo;
+package com.example.smartttadmin.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -9,12 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CmKnowledgeUnit {
-    String id;
-    String pid;
-    String type;
-    String name;
-    double datavalue;
-    String courseid;
-    long ordernum;
+public class SwitchStuCourseReq {
+    private String token;
+    private String CourseChineseName;
 }

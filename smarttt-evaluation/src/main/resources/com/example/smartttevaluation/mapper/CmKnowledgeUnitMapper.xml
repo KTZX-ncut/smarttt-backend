@@ -21,6 +21,13 @@
             #{id}
         </foreach>
     </select>
+    <!--查询所有关联父单元的unitid-->
+    <select id="selectAllPUnitidByUnitids" resultType="java.lang.String">
+        select distinct pid from cm_knowledge_unit where id in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
     <!--批量删除unit下kwa-->
     <delete id="deleteKnowledgeUnitKwaByUnitids">
         delete from cm_knowledge_unit_kwa where unitid in
@@ -36,5 +43,20 @@
             #{id}
         </foreach>
     </delete>
-
+    <update id="flashKnowledgeUnitOrdernum">
+        <!--计数-->
+        set @num:=#{preOrdernum};
+        <!--更新ordernum-->
+        <!--先将原有的ordernum进行重新赋值,查出unitid和对应的新的ordernum（内层select）,
+        并通过id找到对应的新ordernum(中层select)，
+        将新ordernum更新到对应行中（外层update）-->
+        update cm_knowledge_unit a set ordernum=(
+            select t.num from(
+                select @num:=@num+1 as num,id from cm_knowledge_unit where pid=#{unitid} and courseid=#{courseid} and ordernum>=#{beginOrdernum} and #{endOrdernum}>=ordernum order by ordernum asc
+            ) t where t.id=a.id
+        )where pid=#{unitid} and courseid=#{courseid} and ordernum>=#{beginOrdernum} and #{endOrdernum}>=ordernum;
+    </update>
+    <update id="updateKnowledgeUnitOrdernum">
+        update cm_knowledge_unit set ordernum=#{newOrdernum} where id=#{id}
+    </update>
 </mapper>

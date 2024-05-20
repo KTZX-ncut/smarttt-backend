@@ -13,7 +13,8 @@ public interface CmKnowledgeUnitService {
     Result insertSection(CmKnowledgeUnit cmKnowledgeUnit);
     Result insertKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa);
     Result deleteKnowledgeUnitKwa(String unitid,List<String> kwaids);
-    Result deleteKnowledgeUnit(List<String> unitids);
+    Result deleteKnowledgeUnit(String courseid,List<String> unitids);
     Result updateKnowledgeUnit(CmKnowledgeUnit cmKnowledgeUnit);
     Result updateKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa);
+    Result updateKnowledgeUnitOrdernum(CmKnowledgeUnit cmKnowledgeUnit,long preOrdernum);
 }

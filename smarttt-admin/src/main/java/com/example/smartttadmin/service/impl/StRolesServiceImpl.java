@@ -27,20 +27,10 @@ public class StRolesServiceImpl implements StRolesService {
     @Autowired
     private SmObsMapper smObsMapper;
     public Result getSimpleRolesList(StUsers stUsers){
-        List<SimpleRole> simpleRoleList = new ArrayList<>();
-        if(Objects.equals(stUsers.getCatelog(), "1")){
-
-            SmObs smObs = smObsMapper.getObsByStuID(stUsers.getId());
-            SimpleRole simpleRole = new SimpleRole(StuRoleID,"学生",smObs.getId(),smObs.getObsdeep());
-            simpleRoleList.add(simpleRole);
+        List<SimpleRole> simpleRoleList = stRolesMapper.getRolesByUserID(stUsers.getId());
+        for(SimpleRole simpleRole : simpleRoleList){
+            simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
         }
-        else {
-            simpleRoleList= stRolesMapper.getRolesByUserID(stUsers.getId());
-            for(SimpleRole simpleRole : simpleRoleList){
-                simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
-            }
-        }
-
        LoginResponse loginResponse =new LoginResponse(stUsers.getId(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
        return Result.success(loginResponse);
@@ -101,7 +91,7 @@ public class StRolesServiceImpl implements StRolesService {
     @Override
     public Result switchRole(String id,SimpleRole simpleRole) {
         Token token = new Token(simpleRole);
-//        TeaUser teaUser = new TeaUser(null,null,null,simpleRole.getRolename(),simpleRole.)
+//        UserInfor teaUser = new UserInfor(null,null,null,simpleRole.getRolename(),simpleRole.)
         return Result.success(getToken(token,TokenSK));
     }
 }

@@ -1,13 +1,15 @@
 package com.example.smartttadmin.controller;
 
 import com.example.smartttadmin.dto.LoginReq;
-import com.example.smartttadmin.dto.TeaInforReq;
+import com.example.smartttadmin.dto.UserInforReq;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StRolesService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RequestMapping("/login")
 @RestController
@@ -32,10 +34,13 @@ public class LoginController {
        if(result.getCode() == 400){
            return result;
        }
+       if(Objects.equals(loginReq.getCatelog(), "1")) {
+           return stUsersService.getStudentInfor((StUsers) result.getData());
+       }
        return stRoleUserService.getSimpleRolesList((StUsers) result.getData());
     }
     @PostMapping("/user")
-    public Result getUserInformation(@RequestBody TeaInforReq teaInforReq){
-        return stUsersService.getUserInfor(teaInforReq);
+    public Result getUserInformation(@RequestBody UserInforReq userInforReq){
+        return stUsersService.getTeaInfor(userInforReq);
     }
 }

@@ -1,10 +1,11 @@
 package com.example.smartttadmin.service;
 
 import com.example.smartttadmin.dto.LoginReq;
-import com.example.smartttadmin.dto.TeaInforReq;
+import com.example.smartttadmin.dto.UserInforReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StRoleUser;
+import com.example.smartttadmin.pojo.StUsers;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,11 +33,13 @@ public interface StUsersService {
     List<PersonnelRoster>importTeacherAndStudentExcel(MultipartFile file) throws IOException;
 
 
-    Result getUserInfor(TeaInforReq teaInforReq);
+    Result getTeaInfor(UserInforReq userInforReq);
 
     Result deleteRP(StRoleUser stRoleUser);
 
     Result updateOnePersonnelRoster(PersonnelRoster personnelRoster);
 
     Result getStudentByClassID(String id);
+
+    Result getStudentInfor(StUsers data);
 }

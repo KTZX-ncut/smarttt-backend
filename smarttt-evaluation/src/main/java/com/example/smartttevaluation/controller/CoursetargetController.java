@@ -19,8 +19,8 @@ public class CoursetargetController {
     @Autowired
     private CmCoursetargetService cmCoursetargetService;
     @GetMapping
-    public Result getCoursetarget() {
-        return cmCoursetargetService.getCoursetarget();
+    public Result getCoursetarget(@RequestParam("courseid") String courseid) {
+        return cmCoursetargetService.getCoursetarget(courseid);
     }
 
     @PostMapping("/create")

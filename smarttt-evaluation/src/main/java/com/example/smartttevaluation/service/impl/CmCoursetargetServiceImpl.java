@@ -18,7 +18,7 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
     private CmCoursetargetMapper cmCoursetargetMapper;
 
     @Override
-    public Result getCoursetarget() {
+    public Result getCoursetarget(String courseid) {
         return Result.success(cmCoursetargetMapper.getCoursetarget());
     }
 
