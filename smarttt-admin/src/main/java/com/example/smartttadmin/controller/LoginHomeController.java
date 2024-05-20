@@ -49,9 +49,9 @@ public class LoginHomeController {
      * @param request
      * @return
      */
-    @PostMapping("/switchstucourse")
+    @GetMapping("/switchstucourse")
     @AuthRequired(type = "admin",menu = "531500340-a9456c2b-c3f7-41b3-b2c4-1fd8e622dcc6")
-    public Result switchStuCourse(@RequestBody String id, HttpServletRequest request){
+    public Result switchStuCourse(@RequestParam(name = "id") String id, HttpServletRequest request){
         Token token = getTokenFromContext();
         token.setObsid(id);
         return stMenusService.getStudentCourseInfor(token);
