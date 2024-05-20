@@ -40,7 +40,7 @@ public interface StUsersMapper {
 
     @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
             "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
-    TeaUser getAllUserInfor(UserInforReq userInforReq);
+    UserInfor getAllUserInfor(UserInforReq userInforReq);
 
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
     void deletePRByObsIDAndUserID(StRoleUser stRoleUser);
@@ -63,4 +63,9 @@ public interface StUsersMapper {
 
     @Select("select st_users.id,username,stuno as personnelno  from st_users,sm_student where st_users.id=sm_student.usersid  and sm_student.obsid  = #{id}")
     List<SimplePerson> getStudentByID(String id);
+
+    @Select("select rolename,homeurl from st_roles where id = #{id}")
+    UserInfor getStudentInfor(String id);
+    @Select("select id from cm_term where iscurrentterm = 1")
+    String getCurrentTerm();
 }

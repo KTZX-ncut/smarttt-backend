@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
+import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
+
 @Service
 public class StMenusServiceImpl implements StMenusService {
     @Autowired
@@ -103,5 +106,11 @@ public class StMenusServiceImpl implements StMenusService {
     @Override
     public Result getStudentCourse(String id) {
         return Result.success(stMenusMapper.getStudentCourseList(id));
+    }
+
+    @Override
+    public Result getStudentCourseInfor(Token token) {
+        SwitchStuCourseReq switchStuCourseReq = new SwitchStuCourseReq(getToken(token,TokenSK),stMenusMapper.getCourseName(token.getObsid()));
+        return Result.success(switchStuCourseReq);
     }
 }

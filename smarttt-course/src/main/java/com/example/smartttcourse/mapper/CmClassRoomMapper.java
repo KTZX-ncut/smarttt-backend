@@ -17,7 +17,7 @@ public interface CmClassRoomMapper {
     @Select("select courseChineseName from cm_course where id = #{id}")
     String getCourseName(String id);
 
-    void deleteClassroom(List<String> ids);
+    void deleteClassroom(@Param("ids") List<String> ids);
 
     @Insert("insert into cm_classroom(id,classroomName,termId,courseId,teacherId,usedClassList,beginTime,endTime,remark,teacherName,creator,creatorName,labTeacherId,labTeacher,practiceTeacherId,practiceTeacher,teachTime,labTime,practiceTime)" +
             " values (#{id},#{classroomName},#{termId},#{courseId},#{teacherId},#{usedClassList},#{beginTime},#{endTime},#{remark},#{teacherName},#{creator},#{creatorName},#{labTeacherId},#{labTeacher},#{practiceTeacherId},#{practiceTeacher},#{teachTime},#{labTime},#{practiceTime})"

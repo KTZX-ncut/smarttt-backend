@@ -3,6 +3,7 @@ package com.example.smartttadmin.service.impl;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
+import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
@@ -19,8 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.Utils.CommonFunctions.TokenSK;
-import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
+import static com.example.smartttadmin.Utils.CommonFunctions.*;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
@@ -101,16 +101,16 @@ public class StUsersServiceImpl implements StUsersService {
      * @return
      */
     @Override
-    public Result getUserInfor(UserInforReq userInforReq) {
+    public Result getTeaInfor(UserInforReq userInforReq) {
         Token token = new Token(userInforReq.getId(), userInforReq.getRoleid(), userInforReq.getObsid(), userInforReq.getObsdeep());
-        TeaUser teaUser = stUsersMapper.getAllUserInfor(userInforReq);
+        UserInfor userInfor = stUsersMapper.getAllUserInfor(userInforReq);
         try{
-                teaUser.setCatelog(userInforReq.getCatelog());
+                userInfor.setCatelog(userInforReq.getCatelog());
         }catch (NullPointerException e){
             return Result.error("用户信息错误");
         }
-        teaUser.setToken(getToken(token,TokenSK));
-       return Result.success(teaUser);
+        userInfor.setToken(getToken(token,TokenSK));
+       return Result.success(userInfor);
     }
 
     @Override
@@ -143,7 +143,12 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public Result getStudentInfor(StUsers data) {
-        return null;
+    public Result getStudentInfor(StUsers stUsers) {
+        UserInfor userInfor = stUsersMapper.getStudentInfor(StuRoleID);
+        userInfor.setCatelog("1");
+        userInfor.setUsername(stUsers.getUsername());
+        Token token = new Token(stUsers.getId(),StuRoleID,null,-1);
+        userInfor.setToken(getToken(token,TokenSK));
+        return Result.success(userInfor);
     }
 }

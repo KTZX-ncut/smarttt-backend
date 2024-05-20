@@ -33,7 +33,7 @@ public interface StUsersService {
     List<PersonnelRoster>importTeacherAndStudentExcel(MultipartFile file) throws IOException;
 
 
-    Result getUserInfor(UserInforReq userInforReq);
+    Result getTeaInfor(UserInforReq userInforReq);
 
     Result deleteRP(StRoleUser stRoleUser);
 

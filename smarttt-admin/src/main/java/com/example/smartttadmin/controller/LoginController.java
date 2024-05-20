@@ -34,14 +34,13 @@ public class LoginController {
        if(result.getCode() == 400){
            return result;
        }
-       if(Objects.equals(loginReq.getCatelog(), "1")){
-           UserInforReq userInforReq = new UserInforReq((StUsers) result.getData());
-           return stUsersService.getUserInfor(userInforReq);
+       if(Objects.equals(loginReq.getCatelog(), "1")) {
+           return stUsersService.getStudentInfor((StUsers) result.getData());
        }
        return stRoleUserService.getSimpleRolesList((StUsers) result.getData());
     }
     @PostMapping("/user")
     public Result getUserInformation(@RequestBody UserInforReq userInforReq){
-        return stUsersService.getUserInfor(userInforReq);
+        return stUsersService.getTeaInfor(userInforReq);
     }
 }

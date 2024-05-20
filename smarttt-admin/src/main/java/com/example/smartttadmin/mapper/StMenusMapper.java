@@ -58,4 +58,7 @@ public interface StMenusMapper {
 
     @Select("select cm_classroom_classroommenu.classroomId as id ,cm_classroom.classroomName from cm_classroom_classroommenu,cm_classroom where cm_classroom.id=classroomId and stuId = #{id}")
     List<CourseListReq> getStudentCourseList(String id);
+
+    @Select("select classroomName from cm_classroom where id = #{id}")
+    String getCourseName(String id);
 }
