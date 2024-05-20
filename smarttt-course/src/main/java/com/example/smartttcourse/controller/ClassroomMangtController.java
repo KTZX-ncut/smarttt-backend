@@ -6,6 +6,7 @@ import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmClassroom;
 import com.example.smartttcourse.service.CmClassRoomService;
+import com.example.smartttcourse.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,8 @@ import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromCo
 public class ClassroomMangtController {
     @Autowired
     private CmClassRoomService cmClassRoomService;
+    @Autowired
+    private SmObsService smObsService;
 
     @GetMapping
     @AuthRequired(type = "admin",menu = "531500340-64d18378-9bfe-48c2-b72e-3cc672826b93",isReadOnly = true)
@@ -40,6 +43,12 @@ public class ClassroomMangtController {
         Token token = getTokenFromContext();
         classroom.setCreator(token.getId());
         return cmClassRoomService.createOneClassroom(classroom);
+    }
+    @GetMapping("/teacher")
+//    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
+    public Result getTeacherList(HttpServletRequest request){
+        String obsID = smObsService.getSchoolObs();
+        return smObsService.getObsRPList(obsID);
     }
 
 }
