@@ -1,6 +1,7 @@
 package com.example.smartttcourse.mapper;
 
 import com.example.smartttcourse.dto.ClassroomReq;
+import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.pojo.CmClassroom;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,4 +24,6 @@ public interface CmClassRoomMapper {
             " values (#{id},#{classroomName},#{termId},#{courseId},#{teacherId},#{usedClassList},#{beginTime},#{endTime},#{remark},#{teacherName},#{creator},#{creatorName},#{labTeacherId},#{labTeacher},#{practiceTeacherId},#{practiceTeacher},#{teachTime},#{labTime},#{practiceTime})"
     )
     void createClassroom(CmClassroom classroom);
+
+    Result updateOneClassroom(CmClassroom classroom);
 }

@@ -45,4 +45,9 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
         cmClassRoomMapper.createClassroom(classroom);
         return Result.success();
     }
+
+    @Override
+    public Result updateOneClassroom(CmClassroom classroom) {
+        return cmClassRoomMapper.updateOneClassroom(classroom);
+    }
 }

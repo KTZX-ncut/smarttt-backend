@@ -12,4 +12,6 @@ public interface CmClassRoomService {
     Result deleteClassroom(List<String> ids);
 
     Result createOneClassroom(CmClassroom classroomReq);
+
+    Result updateOneClassroom(CmClassroom classroom);
 }
