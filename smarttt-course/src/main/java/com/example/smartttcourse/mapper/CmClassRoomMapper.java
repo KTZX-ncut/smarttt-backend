@@ -25,5 +25,5 @@ public interface CmClassRoomMapper {
     )
     void createClassroom(CmClassroom classroom);
 
-    Result updateOneClassroom(CmClassroom classroom);
+    void updateOneClassroom(CmClassroom classroom);
 }
