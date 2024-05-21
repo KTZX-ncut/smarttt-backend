@@ -37,7 +37,7 @@ public class StRolesServiceImpl implements StRolesService {
                 if(courseName == null){
                     courseName = cmCourseMapper.getCourseNameByClassroom(simpleRole.getObsid());
                 }
-                simpleRole.setRolename(courseName+simpleRole.getRolename());
+                simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
             }
             else simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
         }
