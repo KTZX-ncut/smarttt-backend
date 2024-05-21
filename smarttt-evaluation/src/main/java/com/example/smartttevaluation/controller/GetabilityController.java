@@ -45,4 +45,9 @@ public class GetabilityController {
         return cmGetabilityService.updateGetability(cmGetability);
     }
     */
+
+    @PostMapping("/getKwaByGetability")
+    public Result getKwaByGetability(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {
+        return cmGetabilityService.getKwaByGetability(courseid,ids);
+    }
 }

@@ -22,4 +22,9 @@ public interface CmKeywordsMapper {
 
     void updateKeywordsByID(CmKeywords cmKeywords);
 
+    List<String> getKwaByKeywordsId(@Param("courseid") String courseid, @Param("ids") List<String> ids);
+
+    @Select("Select count(*) from cm_course where id=#{id}")
+    long getNumOfCourseById(@Param("id") String id);
+
 }

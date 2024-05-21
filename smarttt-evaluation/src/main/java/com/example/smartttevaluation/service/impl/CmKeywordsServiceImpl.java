@@ -41,4 +41,13 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
         return Result.success();
     }
 
+    //通过关键字id查询相关kwa
+    @Override
+    public Result getKwaByKeywordsID(String courseid, List<String> ids) {
+        //查询课程id是否存在
+        if (cmKeywordsMapper.getNumOfCourseById(courseid) == 0) {
+            return Result.error(404, "课程id不存在");
+        }
+        return Result.success(cmKeywordsMapper.getKwaByKeywordsId(courseid,ids));
+    }
 }

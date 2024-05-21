@@ -2,19 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.smartttevaluation.mapper.CmKeywordsMapper">
-    <update id="updateKeywordsByID">
-        update cm_keywords
+<mapper namespace="com.example.smartttevaluation.mapper.CmCoursetargetMapper">
+    <update id="updateCoursetargetByID">
+        update cm_coursetarget
         <!-- 使用set标签，代替update语句中的set关键字 -->
+        <!-- id, code, name, remark, unitid, courseid, kwaid -->
         <set>
+            <if test="code != null" >
+                code=#{code},
+            </if>
             <if test="name != null">
                 name=#{name},
             </if>
-            <if test="datavalue != null">
-                datavalue=#{datavalue},
+            <if test="unitid != null">
+                unitid=#{unitid},
             </if>
-            <if test="importantlevelid != null">
-                importantlevelid=#{importantlevelid},
+            <if test="courseid != null">
+                courseid=#{courseid},
             </if>
             <if test="remark != null">
                 remark=#{remark},
@@ -23,17 +27,19 @@
         where id=#{id}
     </update>
 
-    <delete id="deleteKeywordsByIDs">
-        delete from cm_keywords where id in
+    <delete id="deleteCoursetargetByIDs">
+        delete from cm_coursetarget where id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
-    <select id="getKwaByKeywordsId" resultType="java.lang.String">
-        Select name from cm_kwadict where courseid=#{courseid} and keywordid in
+    <insert id="insertunit">
+        INSERT INTO cm_coursetarget (unitid, kwaid, courseid)
+        SELECT unitid, kwaid, #{courseid} FROM cm_knowledge_unit_kwa WHERE id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </select>
+    </insert>
+
 </mapper>
