@@ -3,6 +3,42 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttcourse.mapper.CmClassRoomMapper">
+    <update id="updateOneClassroom">
+        update cm_classroom
+        <set>
+            <if test="classroomName != null">
+                classroomName = #{classroomName},
+            </if>
+            <if test="teacherId != null">
+                teacherId = #{teacherId},
+            </if>
+            <if test="teachTime != 0">
+                teachTime = #{teachTime},
+            </if>
+            <if test="labTime != 0">
+                labTime = #{labTime},
+            </if>
+            <if test="practiceTime != 0">
+                practiceTime = #{practiceTime},
+            </if>
+            <if test="teacherName != null">
+                teacherName = #{teacherName},
+            </if>
+            <if test="labTeacherId != null">
+                labTeacherId = #{labTeacherId},
+            </if>
+            <if test="labTeacher != null">
+                labTeacher = #{labTeacher},
+            </if>
+            <if test="practiceTeacherId != null">
+                practiceTeacherId = #{practiceTeacherId},
+            </if>
+            <if test="practiceTeacher != null">
+                practiceTeacher = #{practiceTeacher}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
     <delete id="deleteClassroom">
         delete from cm_classroom where id in

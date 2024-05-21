@@ -44,8 +44,12 @@ public class ClassroomMangtController {
         classroom.setCreator(token.getId());
         return cmClassRoomService.createOneClassroom(classroom);
     }
+    @PostMapping("/update")
+    public Result updateClassroom(@RequestBody CmClassroom classroom){
+        return cmClassRoomService.updateOneClassroom(classroom);
+    }
+
     @GetMapping("/teacher")
-//    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
     public Result getTeacherList(HttpServletRequest request){
         String obsID = smObsService.getSchoolObs();
         return smObsService.getObsRPList(obsID);

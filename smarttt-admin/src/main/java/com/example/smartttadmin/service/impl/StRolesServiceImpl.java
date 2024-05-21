@@ -1,6 +1,7 @@
 package com.example.smartttadmin.service.impl;
 
 import com.example.smartttadmin.dto.*;
+import com.example.smartttadmin.mapper.CmCourseMapper;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StMenusMapper;
 import com.example.smartttadmin.mapper.StRolesMapper;
@@ -26,10 +27,19 @@ public class StRolesServiceImpl implements StRolesService {
     private StMenusMapper stMenusMapper;
     @Autowired
     private SmObsMapper smObsMapper;
+    @Autowired
+    private CmCourseMapper cmCourseMapper;
     public Result getSimpleRolesList(StUsers stUsers){
         List<SimpleRole> simpleRoleList = stRolesMapper.getRolesByUserID(stUsers.getId());
         for(SimpleRole simpleRole : simpleRoleList){
-            simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
+            if(simpleRole.getObsdeep() == -1){
+                String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
+                if(courseName == null){
+                    courseName = cmCourseMapper.getCourseNameByClassroom(simpleRole.getObsid());
+                }
+                simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
+            }
+            else simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
         }
        LoginResponse loginResponse =new LoginResponse(stUsers.getId(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
