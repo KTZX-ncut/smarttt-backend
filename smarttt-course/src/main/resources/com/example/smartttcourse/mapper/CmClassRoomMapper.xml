@@ -12,13 +12,13 @@
             <if test="teacherId != null">
                 teacherId = #{teacherId},
             </if>
-            <if test="teachTime != 0">
+            <if test="teachTime != -1">
                 teachTime = #{teachTime},
             </if>
-            <if test="labTime != 0">
+            <if test="labTime != -1">
                 labTime = #{labTime},
             </if>
-            <if test="practiceTime != 0">
+            <if test="practiceTime != -1">
                 practiceTime = #{practiceTime},
             </if>
             <if test="teacherName != null">
