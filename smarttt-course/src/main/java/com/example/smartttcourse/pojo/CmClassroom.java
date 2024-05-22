@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class CmClassroom {
 
   private String id;
@@ -41,4 +40,9 @@ public class CmClassroom {
   private String unitrelation;
   private String diagramInfo;
 
+  public CmClassroom() {
+    teachTime = -1;
+    labTime = -1;
+    practiceTime =-1;
+  }
 }
