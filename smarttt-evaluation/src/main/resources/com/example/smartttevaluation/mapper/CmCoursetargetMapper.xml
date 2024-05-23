@@ -17,6 +17,9 @@
             <if test="unitid != null">
                 unitid=#{unitid},
             </if>
+            <if test="unitname != null">
+                unitname=#{unitname},
+            </if>
             <if test="courseid != null">
                 courseid=#{courseid},
             </if>
