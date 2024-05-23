@@ -21,5 +21,6 @@ public class CmKnowledgeUnitTree {
     double datavalue;
     long ordernum;
     List<CmKnowledgeUnitKwa> kwas;
+    List<CmKnowledgeUnitKwa> children_kwas;
     List<CmKnowledgeUnitTree> children;
 }
