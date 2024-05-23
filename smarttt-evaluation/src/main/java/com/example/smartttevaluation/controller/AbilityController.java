@@ -12,7 +12,7 @@ import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.service.CmAbilityService;
 
 @RestController
-@RequestMapping("/coursemangt/ability")
+@RequestMapping("/evaluation/ability")
 public class AbilityController {
 
     @Autowired

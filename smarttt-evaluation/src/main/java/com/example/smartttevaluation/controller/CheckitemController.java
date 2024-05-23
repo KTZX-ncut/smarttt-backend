@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/coursemangt/checkitem")
+@RequestMapping("/evaluation/checkitem")
 public class CheckitemController {
 
     @Autowired
