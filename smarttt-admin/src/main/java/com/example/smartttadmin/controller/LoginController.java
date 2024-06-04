@@ -7,6 +7,7 @@ import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StRolesService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
@@ -18,9 +19,10 @@ public class LoginController {
     private StUsersService stUsersService;
     @Autowired
     private StRolesService stRoleUserService;
+
     @GetMapping("")
     public Result test(){
-        return Result.success("成功访问");
+        return stUsersService.testTran();
     }
 
     /**
