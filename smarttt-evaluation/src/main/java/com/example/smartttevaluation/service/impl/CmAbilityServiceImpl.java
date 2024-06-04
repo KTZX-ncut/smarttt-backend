@@ -10,8 +10,6 @@ import com.example.smartttevaluation.mapper.CmAbilityMapper;
 import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.stereotype.Service;
 
-import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
-
 import java.util.*;
 
 @Service
@@ -44,7 +42,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 批量删除
      */
     @Override
-    public Result deleteAbilityByIDs(List<String> ids) {
+    public Result deleteAbilityByIDs(List<String> ids, String proid) {
         List<CmAbility> cmAbilityList = cmAbilityMapper.getCmAbilityByIDs(ids);
         if(cmAbilityList.size()<ids.size())return Result.error(404,"批量删除能力出错");
         for(String id:ids){
@@ -58,7 +56,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 能力树
      */
     @Override
-    public Result getAbilityTree() {
+    public Result getAbilityTree(String ObsID) {
         List<CmAbilityTree> allAbilityTree = cmAbilityMapper.getAllCmAbilityTree();
         Map<String, List<CmAbilityTree>> abilityMap = allAbilityTree.stream()
                 .collect(Collectors.groupingBy(CmAbilityTree::getPid,

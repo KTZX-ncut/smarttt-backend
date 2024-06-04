@@ -37,7 +37,7 @@ public class KnowledgeUnitController {
     public Result insertKnowledgeUnitKwa(@RequestBody CmKnowledgeUnitKwa cmKnowledgeUnitKwa) {
         return cmKnowledgeUnitService.insertKnowledgeUnitKwa(cmKnowledgeUnitKwa);
     }
-//批量删除kwa
+    //批量删除kwa
     @PostMapping("/deleteKnowledgeUnitKwa")
     public Result deleteKnowledgeUnitKwa(@RequestParam("unitid") String unitid,@RequestBody List<String> kwaids) {
         return cmKnowledgeUnitService.deleteKnowledgeUnitKwa(unitid,kwaids);
@@ -47,7 +47,7 @@ public class KnowledgeUnitController {
     public Result deleteKnowledgeUnit(@RequestParam("courseid") String courseid,@RequestBody List<String> unitids) {
         return cmKnowledgeUnitService.deleteKnowledgeUnit(courseid,unitids);
     }
-//更新知识单元
+    //更新知识单元
     @PostMapping("/updateKnowledgeUnit")
     public Result updateKnowledgeUnit(@RequestBody CmKnowledgeUnit cmKnowledgeUnit) {
         return cmKnowledgeUnitService.updateKnowledgeUnit(cmKnowledgeUnit);

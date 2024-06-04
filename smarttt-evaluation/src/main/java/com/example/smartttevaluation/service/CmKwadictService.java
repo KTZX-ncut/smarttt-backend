@@ -6,7 +6,7 @@ import com.example.smartttevaluation.pojo.CmKwadict;
 import java.util.List;
 
 public interface CmKwadictService {
-    Result getKwadict();
+    Result getKwadict(String ObsID);
 
     Result createKwadict(CmKwadict cmKwadict);
 

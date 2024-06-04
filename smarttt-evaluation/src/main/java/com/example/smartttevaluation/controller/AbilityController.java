@@ -1,15 +1,21 @@
 package com.example.smartttevaluation.controller;
 
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateAbilityReq;
 import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.example.smartttadmin.dto.Token;
 
 import java.util.List;
 import java.util.Objects;
 
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.service.CmAbilityService;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 
 @RestController
 @RequestMapping("/evaluation/ability")
@@ -18,11 +24,12 @@ public class AbilityController {
     @Autowired
     private CmAbilityService cmAbilityService;
 
-
-    @GetMapping
-    Result getAbilityList(){
-            return cmAbilityService.getAbilityTree();
-        }
+    @GetMapping("")
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    public Result getAbilityList(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return cmAbilityService.getAbilityTree(token.getObsid());
+    }
 
     @PostMapping("/create")
    Result createByAbilitySecretary(@RequestBody CreateAbilityReq createAbilityReq){
@@ -41,8 +48,8 @@ public class AbilityController {
    }
 
    @PostMapping("/delete")
-   public Result deleteAbilityByIDs(@RequestBody List<String> ids){
-       return cmAbilityService.deleteAbilityByIDs(ids);
+   public Result deleteAbilityByIDs(@RequestBody List<String> ids, @RequestParam(name = "proid")String proid){
+       return cmAbilityService.deleteAbilityByIDs(ids, proid);
    }
 
    @GetMapping("/upgrade")

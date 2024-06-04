@@ -6,7 +6,7 @@ import com.example.smartttevaluation.pojo.CmKeywords;
 import java.util.List;
 
 public interface CmKeywordsService {
-    Result getKeywords();
+    Result getKeywords(String ObsID);
 
     Result createKeywords(CmKeywords cmKeywords);
 

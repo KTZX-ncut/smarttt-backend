@@ -9,13 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CmCoursetarget {
+public class CmCoursetargetUnit {
     /**
-     * 课程目标信息列表
+     * 课程目标Unit信息列表
      */
-    private String id;//课程目标id
-    private String code;//代码
-    private String name;//课程目标名称
-    private String remark;//备注
-    private String courseid;//课程id
+    private String targetid;//课程目标id
+    private String unitname;//基本教学目标单元名称
+    private String unitid;//基本教学目标单元id
 }

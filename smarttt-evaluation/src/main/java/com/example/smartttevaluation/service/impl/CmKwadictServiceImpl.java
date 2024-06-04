@@ -18,7 +18,7 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     private CmKwadictMapper cmKwadictMapper;
 
     @Override
-    public Result getKwadict() {
+    public Result getKwadict(String ObsID) {
 
         return Result.success(cmKwadictMapper.getKwadict());
     }

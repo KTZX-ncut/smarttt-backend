@@ -1,11 +1,16 @@
 package com.example.smartttevaluation.controller;
+import com.example.smartttadmin.Utils.AuthRequired;
+import com.example.smartttadmin.dto.Token;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 
 /**
  * KWA管理
@@ -15,10 +20,13 @@ import java.util.List;
 public class KwadictController {
     @Autowired
     private CmKwadictService cmKwadictService;
-    @GetMapping
-    public Result getKwadict() {
-        //获取整个表格信息
-        return cmKwadictService.getKwadict();
+
+    //获取整个表格信息
+    @GetMapping("")
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    public Result getKwadict(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return cmKwadictService.getKwadict(token.getObsid());
     }
 
     @GetMapping("/kwa")

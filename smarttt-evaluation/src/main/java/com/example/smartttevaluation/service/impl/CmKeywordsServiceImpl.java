@@ -18,7 +18,7 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
     private CmKeywordsMapper cmKeywordsMapper;
 
     @Override
-    public Result getKeywords() {
+    public Result getKeywords(String ObsID) {
         return Result.success(cmKeywordsMapper.getKeywords());
     }
 

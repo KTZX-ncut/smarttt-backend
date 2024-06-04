@@ -6,11 +6,12 @@ import com.example.smartttevaluation.pojo.CmCheckitem;
 import java.util.List;
 
 public interface CmCheckitemService {
-    Result getCheckitemTree(String courseid);
 
     Result createOneCheckitem(CmCheckitem cmCheckitem, String courseid);
 
     Result deleteCheckitemByIDs(List<String> ids);
 
     Result upgradeOneCheckitemByID(String id);
+
+    Result getCheckitemList(String ObsID);
 }

@@ -9,10 +9,10 @@ public interface CmAbilityService {
 
     Result createOneAbility(CmAbility cmAbility);
 
-    Result getAbilityTree();
+    Result getAbilityTree(String ObsID);
 
 
     Result upgradeOneAbilityByID(String id);
 
-    Result deleteAbilityByIDs(List<String> ids);
+    Result deleteAbilityByIDs(List<String> ids, String proid);
 }
