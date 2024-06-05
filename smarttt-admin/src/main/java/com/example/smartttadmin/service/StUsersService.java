@@ -42,4 +42,6 @@ public interface StUsersService {
     Result getStudentByClassID(String id);
 
     Result getStudentInfor(StUsers data);
+
+    Result testTran();
 }

@@ -10,6 +10,7 @@ import com.example.smartttadmin.service.StUsersService;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -150,5 +151,12 @@ public class StUsersServiceImpl implements StUsersService {
         Token token = new Token(stUsers.getId(),StuRoleID,null,-1);
         userInfor.setToken(getToken(token,TokenSK));
         return Result.success(userInfor);
+    }
+    @Transactional
+    @Override
+    public Result testTran()  {
+        String s = "test2";
+        stUsersMapper.testTran(s);
+        return Result.error("我就是要错误");
     }
 }

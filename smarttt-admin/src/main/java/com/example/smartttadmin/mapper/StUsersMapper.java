@@ -1,6 +1,7 @@
 package com.example.smartttadmin.mapper;
 
 import com.example.smartttadmin.dto.*;
+import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import org.apache.ibatis.annotations.*;
@@ -68,4 +69,7 @@ public interface StUsersMapper {
     UserInfor getStudentInfor(String id);
     @Select("select id from cm_term where iscurrentterm = 1")
     String getCurrentTerm();
+
+    @Update("update st_users set phone = 11111111 where loginname =  #{s} ")
+    void testTran(String s);
 }
