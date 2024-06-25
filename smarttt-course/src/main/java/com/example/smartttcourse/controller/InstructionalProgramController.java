@@ -26,17 +26,18 @@ public class InstructionalProgramController {
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
     public Result getInstructionalProgram(HttpServletRequest request){
         Token token = getTokenFromContext();
+        System.out.println(token.getObsid());
         return cmCourseService.getInstructionalProgram(token.getObsid());
     }
     @PostMapping("/upload")
-    @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
-    public Result testFileUpload(MultipartFile file) throws IOException {
+    @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
+    public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request) throws IOException {
         Token token = getTokenFromContext();
         return cmCourseService.uploadTeachingProgram(file,uploadDir,token.getObsid());
     }
     @GetMapping("/download/{fileName:.+}")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
-    public Result testFileDownLoad(@PathVariable String fileName){
+    public Result TeachingProgramFileDownLoad(@PathVariable String fileName, HttpServletRequest request){
         Token token = getTokenFromContext();
         return cmCourseService.downloadTeachingProgram(fileName,uploadDir+"/"+token.getObsid());
     }

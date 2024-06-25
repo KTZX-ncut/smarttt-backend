@@ -91,12 +91,16 @@ public class CmCourseServiceImpl implements CmCourseService {
     }
 
     @Override
-    public Result uploadTeachingProgram(MultipartFile file, String uploadDir, String obsid) throws IOException {
+    public Result uploadTeachingProgram(MultipartFile file, String uploadDir, String obsid) {
         try{
             String fileName = "1111"+file.getOriginalFilename();
-            Path filePath = Paths.get(uploadDir, fileName);
+            Path directoryPath = Paths.get(uploadDir, obsid);
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
+            }
+            Path filePath = Paths.get(uploadDir, obsid+"/"+fileName);
             Files.copy(file.getInputStream(), filePath);
-            cmCourseMapper.uploadTeachingProgram(filePath.toString(),obsid);
+            cmCourseMapper.uploadTeachingProgram(fileName,obsid);
 
         }catch (IOException e){
             return Result.error("上传失败");
