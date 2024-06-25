@@ -33,12 +33,14 @@ public class InstructionalProgramController {
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
     public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request) throws IOException {
         Token token = getTokenFromContext();
-        return cmCourseService.uploadTeachingProgram(file,uploadDir,token.getObsid());
+        Result result = cmCourseService.uploadfile(file,uploadDir+"/"+token.getObsid());
+        if(result.getCode()!=200)return Result.error("上传失败");
+        return cmCourseService.updateTeachingProgram(result.getData().toString(),token.getObsid());
     }
     @GetMapping("/download/{fileName:.+}")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
     public Result TeachingProgramFileDownLoad(@PathVariable String fileName, HttpServletRequest request){
         Token token = getTokenFromContext();
-        return cmCourseService.downloadTeachingProgram(fileName,uploadDir+"/"+token.getObsid());
+        return cmCourseService.downloadfile(fileName,uploadDir+"/"+token.getObsid());
     }
 }

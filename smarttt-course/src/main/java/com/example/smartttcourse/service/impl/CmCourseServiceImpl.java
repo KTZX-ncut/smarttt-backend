@@ -91,25 +91,24 @@ public class CmCourseServiceImpl implements CmCourseService {
     }
 
     @Override
-    public Result uploadTeachingProgram(MultipartFile file, String uploadDir, String obsid) {
+    public Result uploadfile(MultipartFile file, String uploadDir) {
+        String fileName = "1111"+file.getOriginalFilename();
         try{
-            String fileName = "1111"+file.getOriginalFilename();
-            Path directoryPath = Paths.get(uploadDir, obsid);
+            Path directoryPath = Paths.get(uploadDir);
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
             }
-            Path filePath = Paths.get(uploadDir, obsid+"/"+fileName);
+            Path filePath = Paths.get(uploadDir, "/"+fileName);
             Files.copy(file.getInputStream(), filePath);
-            cmCourseMapper.uploadTeachingProgram(fileName,obsid);
 
         }catch (IOException e){
             return Result.error("上传失败");
         }
-        return Result.success();
+        return Result.success(fileName);
     }
 
     @Override
-    public Result downloadTeachingProgram(String fileName, String uploadDir) {
+    public Result downloadfile(String fileName, String uploadDir) {
         Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
 //        System.out.println(filePath);
         File file = filePath.toFile();
@@ -136,6 +135,13 @@ public class CmCourseServiceImpl implements CmCourseService {
     public Result getInstructionalProgram(String obsid) {
         return Result.success(cmCourseMapper.getInstructionalProgram(obsid));
     }
+
+    @Override
+    public Result updateTeachingProgram(String fileName, String obsid) {
+        cmCourseMapper.uploadTeachingProgram(fileName,obsid);
+        return Result.success();
+    }
+
 
 }
 

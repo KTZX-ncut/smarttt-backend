@@ -23,10 +23,13 @@ public interface CmCourseService {
 
     Result updateOneCourse(CmCourse cmCourse);
 
-    Result uploadTeachingProgram(MultipartFile file, String uploadDir, String obsid) throws IOException;
+    Result uploadfile(MultipartFile file, String uploadDir) throws IOException;
 
-    Result downloadTeachingProgram(String fileName, String uploadDir);
+    Result downloadfile(String fileName, String uploadDir);
 
     Result getInstructionalProgram(String obsid);
+
+
+    Result updateTeachingProgram(String string, String obsid);
 }
 
