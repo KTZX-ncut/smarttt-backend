@@ -8,13 +8,17 @@ import com.example.smartttcourse.mapper.StUsersMapper;
 import com.example.smartttcourse.pojo.CmCourse;
 import com.example.smartttcourse.pojo.StRoleUser;
 import com.example.smartttcourse.service.CmCourseService;
-import com.example.smartttcourse.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.mapper.CmCourseMapper;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -84,6 +88,49 @@ public class CmCourseServiceImpl implements CmCourseService {
     public Result updateOneCourse(CmCourse cmCourse) {
         cmCourseMapper.updateOneCourse(cmCourse);
         return Result.success();
+    }
+
+    @Override
+    public Result uploadTeachingProgram(MultipartFile file, String uploadDir, String obsid) throws IOException {
+        try{
+            String fileName = "1111"+file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir, fileName);
+            Files.copy(file.getInputStream(), filePath);
+            cmCourseMapper.uploadTeachingProgram(filePath.toString(),obsid);
+
+        }catch (IOException e){
+            return Result.error("上传失败");
+        }
+        return Result.success();
+    }
+
+    @Override
+    public Result downloadTeachingProgram(String fileName, String uploadDir) {
+        Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+//        System.out.println(filePath);
+        File file = filePath.toFile();
+        if (!file.exists() || !file.isFile()) {
+            return Result.error("找不到文件");
+        }
+        try (InputStream inputStream = Files.newInputStream(file.toPath());
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+            byte[] byteBuffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(byteBuffer, 0, 1024)) != -1) {
+                buffer.write(byteBuffer, 0, bytesRead);
+            }
+            byte[] fileContent = buffer.toByteArray();
+            // 将文件内容封装在 Result 的 data 字段中
+            return Result.success(fileContent);
+        } catch (IOException e) {
+            return Result.error(500, "Failed to download file");
+        }
+    }
+
+    @Override
+    public Result getInstructionalProgram(String obsid) {
+        return Result.success(cmCourseMapper.getInstructionalProgram(obsid));
     }
 
 }

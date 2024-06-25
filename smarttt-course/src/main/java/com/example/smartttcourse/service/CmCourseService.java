@@ -4,7 +4,9 @@ package com.example.smartttcourse.service;
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmCourse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CmCourseService {
@@ -20,5 +22,11 @@ public interface CmCourseService {
     Result copyHistoryCourse(String id);
 
     Result updateOneCourse(CmCourse cmCourse);
+
+    Result uploadTeachingProgram(MultipartFile file, String uploadDir, String obsid) throws IOException;
+
+    Result downloadTeachingProgram(String fileName, String uploadDir);
+
+    Result getInstructionalProgram(String obsid);
 }
 

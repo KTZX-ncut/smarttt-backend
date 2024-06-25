@@ -51,5 +51,10 @@ public interface CmCourseMapper {
     List<StRoleUser> getHistoryRP(String id);
 
     void updateOneCourse(CmCourse cmCourse);
+
+    @Update("update cm_course set teachingProgram = #{path} where id=#{obsid}")
+    void uploadTeachingProgram(String path, String obsid);
+    @Select("select teachingProgram from cm_course where id = #{obsid}")
+    String getInstructionalProgram(String obsid);
 }
 
