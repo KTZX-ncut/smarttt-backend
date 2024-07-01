@@ -17,5 +17,4 @@ public class UserInfor {
     private String rolename;
     private String homeurl;
     private String token;
-
 }

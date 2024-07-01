@@ -90,58 +90,5 @@ public class CmCourseServiceImpl implements CmCourseService {
         return Result.success();
     }
 
-    @Override
-    public Result uploadfile(MultipartFile file, String uploadDir) {
-        String fileName = "1111"+file.getOriginalFilename();
-        try{
-            Path directoryPath = Paths.get(uploadDir);
-            if (!Files.exists(directoryPath)) {
-                Files.createDirectories(directoryPath);
-            }
-            Path filePath = Paths.get(uploadDir, "/"+fileName);
-            Files.copy(file.getInputStream(), filePath);
-
-        }catch (IOException e){
-            return Result.error("上传失败");
-        }
-        return Result.success(fileName);
-    }
-
-    @Override
-    public Result downloadfile(String fileName, String uploadDir) {
-        Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
-//        System.out.println(filePath);
-        File file = filePath.toFile();
-        if (!file.exists() || !file.isFile()) {
-            return Result.error("找不到文件");
-        }
-        try (InputStream inputStream = Files.newInputStream(file.toPath());
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-
-            byte[] byteBuffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(byteBuffer, 0, 1024)) != -1) {
-                buffer.write(byteBuffer, 0, bytesRead);
-            }
-            byte[] fileContent = buffer.toByteArray();
-            // 将文件内容封装在 Result 的 data 字段中
-            return Result.success(fileContent);
-        } catch (IOException e) {
-            return Result.error(500, "Failed to download file");
-        }
-    }
-
-    @Override
-    public Result getInstructionalProgram(String obsid) {
-        return Result.success(cmCourseMapper.getInstructionalProgram(obsid));
-    }
-
-    @Override
-    public Result updateTeachingProgram(String fileName, String obsid) {
-        cmCourseMapper.uploadTeachingProgram(fileName,obsid);
-        return Result.success();
-    }
-
-
 }
 

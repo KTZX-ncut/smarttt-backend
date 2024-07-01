@@ -22,14 +22,5 @@ public interface CmCourseService {
     Result copyHistoryCourse(String id);
 
     Result updateOneCourse(CmCourse cmCourse);
-
-    Result uploadfile(MultipartFile file, String uploadDir) throws IOException;
-
-    Result downloadfile(String fileName, String uploadDir);
-
-    Result getInstructionalProgram(String obsid);
-
-
-    Result updateTeachingProgram(String string, String obsid);
 }
 
