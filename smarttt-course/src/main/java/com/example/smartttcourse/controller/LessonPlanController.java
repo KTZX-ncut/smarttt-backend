@@ -23,21 +23,27 @@ public class LessonPlanController {
     private String uploadDir;
     @GetMapping
     @AuthRequired(type = "admin",menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5",isReadOnly = true)
-    public Result uploadLessonPlan(){
+    public Result getLessonPlan(){
         Token token = getTokenFromContext();
         return fileMangtService.getFileList(token.getObsid(),"LessonPlan");
     }
     @PostMapping("/upload")
     @AuthRequired(type = "admin",menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5")
-    public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
+    public Result FileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
         return fileMangtService.uploadfile(file,uploadDir, token.getObsid(), "LessonPlan");
     }
     @GetMapping("/download/{fileName:.+}")
-    @AuthRequired(type = "admin", menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5")
+    @AuthRequired(type = "admin", menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5",isReadOnly = true)
     public void downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) {
         Token token = getTokenFromContext(); // 获取token信息
         fileMangtService.downloadFile(fileName, uploadDir+"/"+token.getObsid()+"/"+"LessonPlan", response);
+    }
+    @GetMapping("/delete/{fileName:.+}")
+    @AuthRequired(type = "admin", menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5")
+    public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+"LessonPlan"+fileName,token.getObsid(), "LessonPlan");
     }
 
 }

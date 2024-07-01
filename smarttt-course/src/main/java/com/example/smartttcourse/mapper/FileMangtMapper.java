@@ -1,10 +1,7 @@
 package com.example.smartttcourse.mapper;
 
 import com.example.smartttcourse.pojo.CmCourseFile;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -16,4 +13,8 @@ public interface FileMangtMapper {
 
     @Select("select * from cm_course_file where type = #{type} and obsid = #{obsid}")
     List<CmCourseFile> getFileList(@Param("obsid") String obsid, @Param("type") String type);
+
+
+    @Delete("delete from cm_course_file where obsid = #{obsid} and type = #{type}")
+    void deleteFile(@Param("obsid") String obsid, @Param("type") String type);
 }

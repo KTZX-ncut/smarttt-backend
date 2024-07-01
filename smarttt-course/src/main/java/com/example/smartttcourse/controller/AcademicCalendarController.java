@@ -31,12 +31,18 @@ public class AcademicCalendarController {
     @AuthRequired(type = "admin",menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
     public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
-        return fileMangtService.uploadfile(file,uploadDir, token.getObsid(), "LessonPlan");
+        return fileMangtService.uploadfile(file,uploadDir, token.getObsid(), "academiccalendar");
     }
     @GetMapping("/download/{fileName:.+}")
-    @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
+    @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d",isReadOnly = true)
     public void downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) {
         Token token = getTokenFromContext(); // 获取token信息
-        fileMangtService.downloadFile(fileName, uploadDir+"/"+token.getObsid()+"/"+"LessonPlan", response);
+        fileMangtService.downloadFile(fileName, uploadDir+"/"+token.getObsid()+"/"+"academiccalendar", response);
+    }
+    @GetMapping("/delete/{fileName:.+}")
+    @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
+    public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+"academiccalendar"+fileName,token.getObsid(), "academiccalendar");
     }
 }

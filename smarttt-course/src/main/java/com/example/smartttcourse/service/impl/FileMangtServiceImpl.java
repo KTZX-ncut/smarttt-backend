@@ -88,28 +88,15 @@ public class FileMangtServiceImpl implements FileMangtService {
         }
     }
 
-
     @Override
-    public Result downloadfile(String fileName, String uploadDir) {
-        Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
-//        System.out.println(filePath);
-        File file = filePath.toFile();
-        if (!file.exists() || !file.isFile()) {
-            return Result.error("找不到文件");
+    public Result deleteOneFile(String uploadDir,String obsid, String type) {
+        File file = new File(uploadDir);
+        if(file.exists() && file.delete()){
+            fileMangtMapper.deleteFile(obsid,type);
+            return Result.success();
         }
-        try (InputStream inputStream = Files.newInputStream(file.toPath());
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-
-            byte[] byteBuffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(byteBuffer, 0, 1024)) != -1) {
-                buffer.write(byteBuffer, 0, bytesRead);
-            }
-            byte[] fileContent = buffer.toByteArray();
-            // 将文件内容封装在 Result 的 data 字段中
-            return Result.success(fileContent);
-        } catch (IOException e) {
-            return Result.error(500, "Failed to download file");
-        }
+        return Result.error("删除错误");
     }
+
+
 }

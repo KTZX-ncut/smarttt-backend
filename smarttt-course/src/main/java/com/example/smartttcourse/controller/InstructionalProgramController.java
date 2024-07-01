@@ -13,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-
 import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromContext;
 
 @RestController
@@ -39,11 +37,16 @@ public class InstructionalProgramController {
         return fileMangtService.uploadfile(file,uploadDir,token.getObsid(),"teachingprogram");
     }
     @GetMapping("/download/{fileName:.+}")
-    @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
     public void downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) {
-        Token token = getTokenFromContext(); // 获取token信息
+        Token token = getTokenFromContext();
         fileMangtService.downloadFile(fileName, uploadDir+"/"+token.getObsid(), response);
     }
-
+    @GetMapping("/delete/{fileName:.+}")
+    @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
+    public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+fileName,token.getObsid(), "teachingprogram");
+    }
 
 }
