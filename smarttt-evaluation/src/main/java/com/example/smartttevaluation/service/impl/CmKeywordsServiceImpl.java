@@ -16,32 +16,41 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
 
     @Autowired
     private CmKeywordsMapper cmKeywordsMapper;
-
+    /**
+     *获取关键字
+     */
     @Override
     public Result getKeywords(String ObsID) {
         return Result.success(cmKeywordsMapper.getKeywords());
     }
-
+    /**
+     *创建关键字
+     */
     @Override
     public Result createKeywords(CmKeywords cmKeywords) {
         cmKeywords.setId(generateEnhancedID("cm_keywords"));
         cmKeywordsMapper.createKeywords(cmKeywords);
         return Result.success();
     }
-
+    /**
+     *批量删除关键字
+     */
     @Override
     public Result deleteKeywordsByID(List<String> ids) {
         cmKeywordsMapper.deleteKeywordsByIDs(ids);
         return Result.success();
     }
-
+    /**
+     *更新关键字
+     */
     @Override
     public Result updateKeywords(CmKeywords cmKeywords) {
         cmKeywordsMapper.updateKeywordsByID(cmKeywords);
         return Result.success();
     }
-
-    //通过关键字id查询相关kwa
+    /**
+     *通过关键字id查询相关kwa
+     */
     @Override
     public Result getKwaByKeywordsID(String courseid, List<String> ids) {
         //查询课程id是否存在

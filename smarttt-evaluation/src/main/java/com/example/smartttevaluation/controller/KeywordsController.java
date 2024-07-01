@@ -23,29 +23,39 @@ public class KeywordsController {
 
     @Autowired
     private CmKeywordsService cmKeywordsService;
-
+    /**
+     * 关键字列表
+     */
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
     public Result getKeywords(HttpServletRequest request){
         Token token = getTokenFromContext();
         return cmKeywordsService.getKeywords(token.getObsid());
     }
-
+    /**
+     * 创建关键字
+     */
     @PostMapping("/create")
     public Result createKeywords(@RequestBody CmKeywords cmKeywords) {
         return cmKeywordsService.createKeywords(cmKeywords);
     }
-
+    /**
+     * 删除关键字
+     */
     @PostMapping("/delete")
     public Result deleteKeywordsByID(@RequestBody List<String> ids) {
         return cmKeywordsService.deleteKeywordsByID(ids);
     }
-
+    /**
+     * 通过关键字id获取kwa
+     */
     @PostMapping("/getKwaByKeywordsID")
     public Result getKwaByKeywordsID(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {
         return cmKeywordsService.getKwaByKeywordsID(courseid,ids);
     }
-
+    /**
+     * 更新关键字
+     */
     @PostMapping
     public Result updateKeywords(@RequestBody CmKeywords cmKeywords){
         return cmKeywordsService.updateKeywords(cmKeywords);

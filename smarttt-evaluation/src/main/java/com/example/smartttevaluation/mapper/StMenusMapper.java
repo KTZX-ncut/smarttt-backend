@@ -9,7 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface StMenusMapper {
-
+    /**
+     *
+     */
     @Select("select status from st_rolemenu where roleid = #{roleid} and menuid = #{menuid}")
     List<String> getStatueInRoleUser(@Param("roleid") String roleid, @Param("menuid") String menu);
 

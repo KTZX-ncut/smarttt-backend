@@ -21,17 +21,23 @@ import java.util.List;
 public class AssessmentPlanController {
     @Autowired
     private CmAssessmentPlanService cmAssessmentPlanService;
-    //获取知识单元树
+    /**
+     *考核方案表格
+     */
     @GetMapping("/getAssessmentPlanTable")
     Result getAssessmentPlanTable(@RequestParam("courseid") String courseid){
         return cmAssessmentPlanService.getAssessmentPlanTable(courseid);
     }
-
+    /**
+     *更新考核项
+     */
     @PostMapping("/updateAssessmentPlanItem")
     Result updateAssessmentPlanItem(@RequestBody CmAssessmentPlanItem cmAssessmentPlanItem){
         return cmAssessmentPlanService.updateItem(cmAssessmentPlanItem);
     }
-
+    /**
+     *更新考核方案比例
+     */
     @PostMapping("/updateAssessmentPlanProportion")
     Result updateAssessmentPlanProportion(@RequestBody CmAssessmentPlanProportion cmAssessmentPlanProportion){
         return cmAssessmentPlanService.updateProportion(cmAssessmentPlanProportion);

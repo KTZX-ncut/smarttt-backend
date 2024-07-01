@@ -24,6 +24,9 @@ public class AbilityController {
     @Autowired
     private CmAbilityService cmAbilityService;
 
+    /**
+     * 能力列表
+     */
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
     public Result getAbilityList(HttpServletRequest request){
@@ -31,6 +34,9 @@ public class AbilityController {
         return cmAbilityService.getAbilityTree(token.getObsid());
     }
 
+    /**
+     * 同级新增&下级新增
+     */
     @PostMapping("/create")
    Result createByAbilitySecretary(@RequestBody CreateAbilityReq createAbilityReq){
         CmAbility cmAbility = createAbilityReq.getCmAbility();
@@ -47,11 +53,17 @@ public class AbilityController {
         return cmAbilityService.createOneAbility(cmAbility);
    }
 
+    /**
+     * 删除能力——批量删除
+     */
    @PostMapping("/delete")
    public Result deleteAbilityByIDs(@RequestBody List<String> ids, @RequestParam(name = "proid")String proid){
        return cmAbilityService.deleteAbilityByIDs(ids, proid);
    }
 
+    /**
+     * 更新能力
+     */
    @GetMapping("/upgrade")
    public Result upgradeOneAbility(@RequestParam(name = "id")String id){
             return cmAbilityService.upgradeOneAbilityByID(id);

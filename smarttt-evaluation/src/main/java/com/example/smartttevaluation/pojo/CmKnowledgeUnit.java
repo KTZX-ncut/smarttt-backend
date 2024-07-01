@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CmKnowledgeUnit {
+    /**
+     * 知识单元信息列表
+     */
     String id;
     String pid;
     String type;

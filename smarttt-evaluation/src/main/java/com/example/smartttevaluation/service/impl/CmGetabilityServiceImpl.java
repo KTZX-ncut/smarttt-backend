@@ -18,8 +18,9 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
 
     @Autowired
     private CmGetabilityMapper cmGetabilityMapper;
-
-    //查询能力树
+    /**
+     *查询能力树
+     */
     @Override
     public Result getGetability(String courseid) {
         //查询课程id是否存在
@@ -29,7 +30,9 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
         return Result.success(getGetabilityList(courseid));
     }
 
-
+    /**
+     *获取课程能力列表
+     */
     public List<CmGetabilityTree> getGetabilityList(String courseid){
         List<CmGetability> cmGetabilitys=cmGetabilityMapper.getGetability(courseid);
         Map<String,CmGetabilityTree> map_id_tree=new HashMap<>();
@@ -78,8 +81,9 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
     public Result getAbility() {
         return Result.success(cmGetabilityMapper.getAbility());
     }*/
-
-    //插入一条能力
+    /**
+     *插入一条能力
+     */
     @Override
     public Result insertGetability(String courseid,List<String> ids) {
         //查询课程id是否存在
@@ -115,8 +119,9 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
         String str="成功插入数量:"+cnt_success+","+str_error;
         return Result.success(str);
     }
-
-    //通过id删除能力
+    /**
+     *通过id删除能力
+     */
     @Override
     public Result deleteGetabilityByID(String courseid, List<String> ids) {
         //查询课程id是否存在
@@ -137,8 +142,9 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
         cmGetabilityMapper.updateGetabilityByID(cmGetability);
         return Result.success();
     }*/
-
-    //通过能力id查询相关kwa
+    /**
+     *通过能力id查询相关kwa
+     */
     @Override
     public Result getKwaByGetability(String courseid, List<String> ids) {
         //查询课程id是否存在

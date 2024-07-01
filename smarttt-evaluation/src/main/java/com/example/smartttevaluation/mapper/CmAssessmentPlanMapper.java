@@ -9,7 +9,10 @@ import java.util.List;
 
 @Mapper
 public interface CmAssessmentPlanMapper {
-    //获取课程目标数量
+
+    /**
+     * 获取课程目标数量
+     */
     @Select("select count(*) from cm_course_target where courseid=#{courseid}")
     int getCourseTargetNum (@Param("courseid") String courseid);
 
@@ -18,6 +21,7 @@ public interface CmAssessmentPlanMapper {
 
     @Select("select nProportion,eProportion,courseid from cm_course_assessment where courseid=#{courseid}")
     CmAssessmentPlanProportion selectAssessmentPlanProportion (@Param("courseid") String courseid);
+
     List<CmAssessmentPlanItem> selectAssessmentPlanItems(@Param("courseid") String courseid);
 
 

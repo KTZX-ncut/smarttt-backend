@@ -7,12 +7,20 @@ import java.util.List;
 
 public interface CmAbilityService {
 
+    /**
+     * 创建能力，用来实现同级新增&下级新增
+     */
     Result createOneAbility(CmAbility cmAbility);
-
+    /**
+     * 能力树，用来实现能力列表
+     */
     Result getAbilityTree(String ObsID);
-
-
+    /**
+     * 更新能力
+     */
     Result upgradeOneAbilityByID(String id);
-
+    /**
+     * 删除能力
+     */
     Result deleteAbilityByIDs(List<String> ids, String proid);
 }

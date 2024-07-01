@@ -20,32 +20,41 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
 
     @Autowired
     private CmCoursetargetMapper cmCoursetargetMapper;
-
+    /**
+     *获取课程目标
+     */
     @Override
     public Result getCoursetarget(String ObsID) {
         return Result.success(cmCoursetargetMapper.getCoursetarget());
     }
-
+    /**
+     *创建课程目标
+     */
     @Override
     public Result createCoursetarget(CmCoursetarget cmCoursetarget) {
         cmCoursetarget.setId(generateEnhancedID("cm_coursetarget"));
         cmCoursetargetMapper.createCoursetarget(cmCoursetarget);
         return Result.success();
     }
-
+    /**
+     *批量删除课程目标
+     */
     @Override
     public Result deleteCoursetargetByID(List<String> ids) {
         cmCoursetargetMapper.deleteCoursetargetByIDs(ids);
         return Result.success();
     }
-
+    /**
+     *更新课程目标
+     */
     @Override
     public Result updateCoursetarget(CmCoursetarget cmCoursetarget) {
         cmCoursetargetMapper.updateCoursetargetByID(cmCoursetarget);
         return Result.success();
     }
-
-    //添加unit
+    /**
+     *添加unit
+     */
     public Result insertCoursetargetUnit(@Param("courseid") String courseid, CmCoursetargetUnit cmCoursetargetUnit){
         if(cmCoursetargetMapper.getUnitCount(cmCoursetargetUnit)!=0){
             return Result.error("该基本教学目标已存在");
@@ -53,8 +62,9 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
         cmCoursetargetMapper.insertCoursetargetUnit(courseid, cmCoursetargetUnit);
         return Result.success();
     }
-
-    //删除Unit
+    /**
+     *删除Unit
+     */
     public Result deleteCoursetargetUnit(String unitid, String targetid){
         if(cmCoursetargetMapper.getUnitCountByUnitId(unitid,targetid)==0){
             return Result.error("单元id不存在");
@@ -63,7 +73,9 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
         return Result.success();
     }
 
-    //删除课程目标
+    /**
+     *批量删除课程目标
+     */
     public Result deleteCoursetargetByIDs(List<String> ids, String courseid, String unitid){
         //获取ids
         List<String> all_ids=cmCoursetargetMapper.selectAllidByids(ids);
@@ -86,8 +98,9 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
 //        cmCoursetargetMapper.updateCoursetargetUnit(cmCoursetargetUnit);
 //        return Result.success();
 //    }
-
-    //更新Unit
+    /**
+     *更新Unit
+     */
     public Result updateCoursetargetUnit(CmCoursetargetUnit cmCoursetargetUnit){
         if(cmCoursetargetMapper.getUnitCount(cmCoursetargetUnit)==0){
             return Result.error("此unit不存在");
@@ -95,7 +108,9 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
         cmCoursetargetMapper.updateCoursetargetUnit(cmCoursetargetUnit);
         return Result.success();
     }
-
+    /**
+     *插入unit
+     */
     @Override
     public Result insertunit(String courseid, List<String> ids) {
         //查询课程id是否存在

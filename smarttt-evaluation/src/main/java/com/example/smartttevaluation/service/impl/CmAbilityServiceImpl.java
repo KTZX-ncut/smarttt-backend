@@ -75,7 +75,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
 
 
     /**
-     * 能力-升级
+     * 升级能力
      */
     @Override
     public Result upgradeOneAbilityByID(String id) {
@@ -86,7 +86,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     }
 
     /**
-     *能力树
+     *构建菜单树
      * @param parentCmAbility
      * @param AbilityMap
      */
