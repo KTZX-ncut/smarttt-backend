@@ -4,7 +4,9 @@ package com.example.smartttcourse.service;
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmCourse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface CmCourseService {

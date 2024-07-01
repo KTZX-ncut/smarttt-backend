@@ -8,13 +8,17 @@ import com.example.smartttcourse.mapper.StUsersMapper;
 import com.example.smartttcourse.pojo.CmCourse;
 import com.example.smartttcourse.pojo.StRoleUser;
 import com.example.smartttcourse.service.CmCourseService;
-import com.example.smartttcourse.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.mapper.CmCourseMapper;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
