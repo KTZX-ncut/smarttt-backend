@@ -47,7 +47,7 @@ public interface CmKnowledgeUnitMapper {
      */
     void deleteKnowledgeUnitKwa(@Param("unitid") String unitid , @Param("ids") List<String> kwaids);
     /**
-     *查询
+     *查询unitids
      */
     List<String> selectAllUnitidByUnitids(@Param("unitids") List<String> unitids);
     /**
@@ -97,6 +97,9 @@ public interface CmKnowledgeUnitMapper {
      *更新知识单元顺序号
      */
     void updateKnowledgeUnitOrdernum(@Param("id") String id,@Param("newOrdernum") long newOrdernum);
+    /**
+     *查询最大顺序号
+     */
     @Select("select ifnull(max(ordernum),0) from cm_course_unit where  pid=#{pid} and courseid=#{courseid}")
     long selectMaxOrdernum(@Param("pid") String pid,@Param("courseid") String courseid);
     /**

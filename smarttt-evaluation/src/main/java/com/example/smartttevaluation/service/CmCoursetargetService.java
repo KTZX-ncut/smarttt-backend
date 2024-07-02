@@ -40,7 +40,7 @@ public interface CmCoursetargetService {
      */
     Result updateCoursetargetUnit(CmCoursetargetUnit cmCoursetargetUnit);
     /**
-     *删除课程目标unit
+     *删除课程目标
      */
     Result deleteCoursetargetByID(List<String> ids);
 }

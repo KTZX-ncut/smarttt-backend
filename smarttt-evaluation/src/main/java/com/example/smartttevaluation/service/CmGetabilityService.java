@@ -13,8 +13,8 @@ public interface CmGetabilityService {
     Result getGetability(String courseid);
     /*Y*/
     //Result getAbility();
-    /**插入能力
-     *
+    /**
+     *插入能力
      */
     Result insertGetability(String courseid,List<String> ids);
     /**

@@ -55,7 +55,7 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
     }
 
     /**
-     * 考核项树
+     * 考核项列表
      */
     @Override
     public Result getCheckitemList(String ObsID) {
