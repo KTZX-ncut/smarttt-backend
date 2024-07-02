@@ -15,6 +15,6 @@ public interface FileMangtMapper {
     List<CmCourseFile> getFileList(@Param("obsid") String obsid, @Param("type") String type);
 
 
-    @Delete("delete from cm_course_file where obsid = #{obsid} and type = #{type}")
-    void deleteFile(@Param("obsid") String obsid, @Param("type") String type);
+    @Delete("delete from cm_course_file where obsid = #{obsid} and type = #{type} and filename = #{filename}")
+    void deleteFile(@Param("obsid") String obsid, @Param("type") String type,@Param("filename")String filename);
 }

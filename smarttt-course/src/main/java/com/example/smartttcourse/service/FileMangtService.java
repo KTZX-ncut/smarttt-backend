@@ -13,5 +13,5 @@ public interface FileMangtService {
 
     void downloadFile(String fileName, String obsid, HttpServletResponse response);
 
-    Result deleteOneFile(String uploadDir,String obsid, String Type);
+    Result deleteOneFile(String uploadDir,String fileName, String obsid, String Type);
 }

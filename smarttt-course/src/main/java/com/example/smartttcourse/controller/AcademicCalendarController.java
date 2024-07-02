@@ -43,6 +43,6 @@ public class AcademicCalendarController {
     @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
     public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
         Token token = getTokenFromContext();
-        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+"/"+"academiccalendar"+"/"+fileName,token.getObsid(), "academiccalendar");
+        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+"/"+"academiccalendar"+"/"+fileName,fileName,token.getObsid(), "academiccalendar");
     }
 }

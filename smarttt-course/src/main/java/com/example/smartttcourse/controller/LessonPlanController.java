@@ -43,7 +43,7 @@ public class LessonPlanController {
     @AuthRequired(type = "admin", menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5")
     public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
         Token token = getTokenFromContext();
-        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+"LessonPlan"+fileName,token.getObsid(), "LessonPlan");
+        return fileMangtService.deleteOneFile(uploadDir+"/"+token.getObsid()+"LessonPlan"+fileName,fileName,token.getObsid(), "LessonPlan");
     }
 
 }
