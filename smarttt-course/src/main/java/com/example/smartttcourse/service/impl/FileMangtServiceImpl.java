@@ -89,10 +89,10 @@ public class FileMangtServiceImpl implements FileMangtService {
     }
 
     @Override
-    public Result deleteOneFile(String uploadDir,String obsid, String type) {
+    public Result deleteOneFile(String uploadDir, String filename,String obsid, String type) {
         File file = new File(uploadDir);
-        if(file.exists() && file.delete()){
-            fileMangtMapper.deleteFile(obsid,type);
+        if (file.exists() && file.isFile() && file.delete()){
+            fileMangtMapper.deleteFile(obsid,type,filename);
             return Result.success();
         }
         return Result.error("删除错误");
