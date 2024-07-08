@@ -16,16 +16,23 @@ import java.util.List;
 public class LinesController {
     @Autowired
     private CmLinesService cmLinesService;
+    /**
+     *连线列表
+     */
     @GetMapping
     public Result getLines() {
         return cmLinesService.getLines();
     }
-
+    /**
+     *新增连线
+     */
     @PostMapping("/create")
     public Result createLines(@RequestBody CmLines cmLines) {
         return cmLinesService.createLines(cmLines);
     }
-
+    /**
+     *删除连线
+     */
     @PostMapping("/delete")
     public Result deleteLinesByID(@RequestBody List<String> ids) {
         return cmLinesService.deleteLinesByID(ids);

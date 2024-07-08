@@ -17,6 +17,9 @@
             <if test="unitid != null">
                 unitid=#{unitid},
             </if>
+            <if test="unitname != null">
+                unitname=#{unitname},
+            </if>
             <if test="courseid != null">
                 courseid=#{courseid},
             </if>
@@ -34,9 +37,26 @@
         </foreach>
     </delete>
 
+
+    <!--批量删除unit-->
+    <delete id="deleteCoursetargetUnit">
+        delete from cm_coursetargetunit where unitid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--查询关联所有的id-->
+    <select id="selectAllidByids" resultType="java.lang.String">
+        select id from cm_coursetarget where id in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
     <insert id="insertunit">
-        INSERT INTO cm_coursetarget (unitid, kwaid, courseid)
-        SELECT unitid, kwaid, #{courseid} FROM cm_knowledge_unit_kwa WHERE id in
+        INSERT INTO cm_coursetarget (unitid, courseid)
+        SELECT unitid, #{courseid} FROM cm_knowledge_unit_kwa WHERE id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>

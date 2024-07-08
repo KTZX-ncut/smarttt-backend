@@ -12,7 +12,9 @@ import java.util.List;
 
 @Mapper
 public interface CmKwadictMapper {
-
+    /**
+     *获取kwa列表
+     */
     @Select("select id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue from cm_kwadict")
     List<CmKwadict> getKwadict ();
 
@@ -24,7 +26,9 @@ public interface CmKwadictMapper {
     //        "WHERE k.id = #{cmKwadict.id} AND a.id = #{cmKwadict.abilityid}")
     //void createKwadict(CmKwadict cmKwadict);
 //"WHERE kw.id = #{id} AND kw.name = #{name} AND kw.keywordid = #{keywordid} AND kw.abilityid = #{abilityid} AND kw.keywordname = #{keywordname} AND kw.abilityname =#{abilityname} AND kw.courseid = #{courseid} AND kw.datavalue = #{datavalue}")
-
+    /**
+     *新建kwa
+     */
     @Update("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue) " +
             "VALUES (#{id},#{name},#{keywordid},#{abilityid}, #{keywordname}, #{abilityname}, #{courseid}, #{datavalue})")
     void createKwadict(CmKwadict cmKwadict);
@@ -37,11 +41,17 @@ public interface CmKwadictMapper {
             "JOIN cm_keywords k ON k.id = kw.keywordid AND k.name = kw.keywordname\n" +
             "WHERE k.id = #{keywordid} AND a.id = #{abilityid} AND k.name = #{keywordname} AND a.name = #{abilityname}")
     void IScreateKwadict(CmKwadict cmKwadict);
-
+    /**
+     *批量删除kwa
+     */
     void deleteKwadictByIDs(@Param("ids")List<String> ids);
-
+    /**
+     *更新kwa
+     */
     void updateKwadictByID(CmKwadict cmKwadict);
-
+    /**
+     *通过KeywordId获取关键字
+     */
     @Select("SELECT k.id, k.name, k.datavalue, k.importantlevelid, k.remark, k.courseid\n" +
             "FROM cm_keywords k\n"+
             "JOIN cm_kwadict kw ON k.id = kw.keywordid\n"+
@@ -54,14 +64,18 @@ public interface CmKwadictMapper {
     //        "FROM cm_keywords k " +
     //        "WHERE k.id = #{keywordid}")
     //List<Keywordlist> getKeywordsByKeywordId(@Param("keywordid") String keywordid);
-
+    /**
+     *通过AbilityId获取能力
+     */
     @Select("SELECT a.id, a.name, a.datavalue, a.importantlevel, a.remark, a.courseid\n" +
             "FROM cm_getability a\n"+
             "JOIN cm_kwadict kw ON a.id = kw.abilityid\n" +
             "JOIN cm_kwadict kw ON a.name = kw.abilityname\n"+
             "WHERE a.id = #{abilityid}")
     CmGetability getAbilityByAbilityId(@Param("abilityid") String abilityid);
-
+    /**
+     *通过keywordid和abilityid获取kwa
+     */
     @Select("SELECT k.id AS keywordid , k.name AS keywordname, " +
             "a.id AS abilityid, a.name AS abilityname\n" +
             "FROM cm_kwadict kw \n"+
@@ -69,10 +83,14 @@ public interface CmKwadictMapper {
             "JOIN cm_keywords k ON k.id = kw.keywordid\n"+
             "WHERE k.id = #{keywordid} AND a.id = #{abilityid}")
     Object getKwadictBykeywordidAndabilityid(@Param("keywordid")String keywordid, @Param("abilityid")String abilityid);
-
+    /**
+     *获取关键字字典
+     */
     @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords")
     List<CmKeywords> getKeywordsDict(@Param("courseid") String courseid);
-
+    /**
+     *获取能力字典
+     */
     @Select("select id, orderno, abilitydeep, levelcode, name, datavalue, importantlevel, remark, courseid from cm_getability")
     List<CmGetability> getAbilityDict(@Param("courseid") String courseid);
 

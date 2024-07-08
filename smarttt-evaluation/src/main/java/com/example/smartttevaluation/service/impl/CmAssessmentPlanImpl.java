@@ -16,6 +16,9 @@ import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhance
 public class CmAssessmentPlanImpl implements CmAssessmentPlanService {
     @Autowired
     private CmAssessmentPlanMapper cmAssessmentPlanMapper;
+    /**
+     *获取考核方案表格
+     */
     @Override
     public Result getAssessmentPlanTable(String courseid){
         //如果没有，则添加空记录，此处为课程创建后首次查询
@@ -30,13 +33,17 @@ public class CmAssessmentPlanImpl implements CmAssessmentPlanService {
         CmAssessmentPlanTable cmAssessmentPlanTable=new CmAssessmentPlanTable(cmAssessmentPlanItems,cmAssessmentPlanProportion);
         return Result.success(cmAssessmentPlanTable);
     }
-
+    /**
+     *更新考核项
+     */
     public Result updateItem(CmAssessmentPlanItem cmAssessmentPlanItem){
 
         cmAssessmentPlanMapper.updateItem(cmAssessmentPlanItem);
         return Result.success();
     }
-
+    /**
+     *更新比例
+     */
     public Result updateProportion(CmAssessmentPlanProportion cmAssessmentPlanProportion){
 
         cmAssessmentPlanMapper.updateProportion(cmAssessmentPlanProportion);
