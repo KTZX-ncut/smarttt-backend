@@ -14,6 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CmCourse {
+
+    /**
+     * 课程信息列表
+     */
     private String id;//课程id
     private String term;//学期
     private String coursechinesename;//课程名称（中文）

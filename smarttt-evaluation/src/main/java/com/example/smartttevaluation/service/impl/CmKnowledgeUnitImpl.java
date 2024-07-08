@@ -15,6 +15,9 @@ import java.util.*;
 public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
     @Autowired
     private CmKnowledgeUnitMapper cmKnowledgeUnitMapper;
+    /**
+     *获取知识单元列表
+     */
     @Override
     public Result getKnowledgeUnitList(String courseid){
         if(cmKnowledgeUnitMapper.getCourseCountByid(courseid)==0){
@@ -73,7 +76,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
 
         return Result.success(cmKnowledgeUnitChapters);
     }
-//添加一级目录（章）
+    /**
+     *添加一级目录（章）
+     */
     public Result insertChapter(CmKnowledgeUnit cmKnowledgeUnit){
         String t_courseid=cmKnowledgeUnit.getCourseid();
         if(cmKnowledgeUnitMapper.getCourseCountByid(t_courseid)==0){
@@ -84,8 +89,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         cmKnowledgeUnitMapper.insertChapter(cmKnowledgeUnit);
         return Result.success();
     }
-
-    //添加二级目录（节）
+    /**
+     *添加二级目录（节）
+     */
     public Result insertSection(CmKnowledgeUnit cmKnowledgeUnit){
         String t_courseid=cmKnowledgeUnit.getCourseid();
         if(cmKnowledgeUnitMapper.getCourseCountByid(t_courseid)==0){
@@ -101,8 +107,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         cmKnowledgeUnitMapper.insertSection(cmKnowledgeUnit);
         return Result.success();
     }
-
-    //添加知识单元Kwa
+    /**
+     *添加知识单元Kwa
+     */
     public Result insertKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa){
         if(cmKnowledgeUnitMapper.getUnitKwaCount(cmKnowledgeUnitKwa)!=0){
             return Result.error("该能力已存在");
@@ -110,7 +117,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         cmKnowledgeUnitMapper.insertKnowledgeUnitKwa(cmKnowledgeUnitKwa);
         return Result.success();
     }
-    //删除UnitKwa
+    /**
+     *删除UnitKwa
+     */
     public Result deleteKnowledgeUnitKwa(String unitid,List<String> kwaids){
         if(cmKnowledgeUnitMapper.getUnitCountByUnitId(unitid)==0){
             return Result.error("单元id不存在");
@@ -118,7 +127,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         cmKnowledgeUnitMapper.deleteKnowledgeUnitKwa(unitid,kwaids);
         return Result.success();
     }
-    //删除知识单元
+    /**
+     *删除知识单元
+     */
     public Result deleteKnowledgeUnit(String courseid,List<String> unitids){
         //获取关联的unitids
         List<String> all_unitids=cmKnowledgeUnitMapper.selectAllUnitidByUnitids(unitids);
@@ -138,7 +149,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         }
         return Result.success();
     }
-    //更新知识单元
+    /**
+     *更新知识单元
+     */
     public Result updateKnowledgeUnit(CmKnowledgeUnit cmKnowledgeUnit){
         if(cmKnowledgeUnitMapper.getUnitCountByUnitId(cmKnowledgeUnit.getId())==0){
             return Result.error("此单元不存在");
@@ -146,7 +159,9 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         cmKnowledgeUnitMapper.updateKnowledgeUnit(cmKnowledgeUnit);
         return Result.success();
     }
-    //更新Unitkwa
+    /**
+     *更新Unitkwa
+     */
     public Result updateKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa){
         if(cmKnowledgeUnitMapper.getUnitKwaCount(cmKnowledgeUnitKwa)==0){
             return Result.error("此kwa不存在");
@@ -154,13 +169,16 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         cmKnowledgeUnitMapper.updateKnowledgeUnitKwa(cmKnowledgeUnitKwa);
         return Result.success();
     }
-    //刷新节点的子节点的ordernum
-
+    /**
+     *刷新节点的子节点的ordernum
+     */
     public void flashKnowledgeUnitOrdernum(String unitid,String courseid,long preOrdernum,long begin,long end){
         cmKnowledgeUnitMapper.flashKnowledgeUnitOrdernum(unitid,courseid,preOrdernum,begin,end);
         return ;
     }
-    //更新顺序号，实现移动
+    /**
+     *更新顺序号，实现移动
+     */
     public Result updateKnowledgeUnitOrdernum(CmKnowledgeUnit cmKnowledgeUnit,long preOrdernum){
         long oldOrdernum=cmKnowledgeUnit.getOrdernum();
         long newOrdernum;

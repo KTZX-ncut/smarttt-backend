@@ -16,32 +16,42 @@ import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhance
 public class CmKwadictServiceImpl implements CmKwadictService {
     @Autowired
     private CmKwadictMapper cmKwadictMapper;
-
+    /**
+     *获取kwa
+     */
     @Override
-    public Result getKwadict() {
+    public Result getKwadict(String ObsID) {
 
         return Result.success(cmKwadictMapper.getKwadict());
     }
-
+    /**
+     *创建kwa
+     */
     @Override
     public Result createKwadict(CmKwadict cmKwadict) {
         cmKwadict.setId(generateEnhancedID("cm_kwadict"));
         cmKwadictMapper.createKwadict(cmKwadict);
         return Result.success();
     }
-
+    /**
+     *删除kwa
+     */
     @Override
     public Result deleteKwadictByID(List<String> ids) {
         cmKwadictMapper.deleteKwadictByIDs(ids);
         return Result.success();
     }
-
+    /**
+     *更新kwa
+     */
     @Override
     public Result updateKwadict(CmKwadict cmKwadict) {
         cmKwadictMapper.updateKwadictByID(cmKwadict);
         return Result.success();
     }
-
+    /**
+     *通过KeywordId获取关键字
+     */
     @Override
     public boolean getKeywordsByKeywordId(String keywordid) {
         CmKeywords cmkeywords = cmKwadictMapper.getKeywordsByKeywordId(keywordid);
@@ -53,7 +63,9 @@ public class CmKwadictServiceImpl implements CmKwadictService {
             return false;
         }
     }
-
+    /**
+     *通过AbilityId获取能力
+     */
     @Override
     public boolean getAbilityByAbilityId(String abilityid) {
         CmGetability ability = cmKwadictMapper.getAbilityByAbilityId(abilityid);
@@ -65,21 +77,26 @@ public class CmKwadictServiceImpl implements CmKwadictService {
             return false;
         }
     }
-
+    /**
+     *通过keywordid和abilityid获取kwa
+     */
     @Override
     public Result getKwadictBykeywordidAndabilityid(String keywordid, String abilityid) {
         return Result.success(cmKwadictMapper.getKwadictBykeywordidAndabilityid(keywordid, abilityid));
     }
-
+    /**
+     *获取关键字字典
+     */
     @Override
     public Result getKeywordsDict(String courseid) {
         return Result.success(cmKwadictMapper.getKeywordsDict(courseid));
     }
-
+    /**
+     *获取能力字典
+     */
     @Override
     public Result getAbilityDict(String courseid) {
         return Result.success(cmKwadictMapper.getAbilityDict(courseid));
     }
-
 
 }

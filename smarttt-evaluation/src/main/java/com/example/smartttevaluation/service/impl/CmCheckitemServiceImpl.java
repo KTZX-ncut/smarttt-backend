@@ -55,10 +55,10 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
     }
 
     /**
-     * 考核项树
+     * 考核项列表
      */
     @Override
-    public Result getCheckitemTree(@RequestParam("courseid") String courseid) {
+    public Result getCheckitemList(String ObsID) {
         List<CmCheckitemTree> allCheckitemTree = cmCheckitemMapper.getAllCmCheckitemTree();
         Map<String, List<CmCheckitemTree>> checkitemMap = allCheckitemTree.stream()
                 .collect(Collectors.groupingBy(CmCheckitemTree::getPid,

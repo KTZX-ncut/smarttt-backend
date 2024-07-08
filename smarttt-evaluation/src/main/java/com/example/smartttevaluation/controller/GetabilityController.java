@@ -18,7 +18,9 @@ public class GetabilityController {
 
     @Autowired
     private CmGetabilityService cmGetabilityService;
-
+    /**
+     *课程能力列表
+     */
     @GetMapping
     public Result getGetability(@RequestParam("courseid") String courseid) {
         return cmGetabilityService.getGetability(courseid);
@@ -29,12 +31,16 @@ public class GetabilityController {
     public Result getAbility() {
         return cmGetabilityService.getAbility();
     }*/
-
-    //添加一条能力
+    /**
+     *添加一条能力
+     */
     @PostMapping("/insert")
     public Result insertGetability(@RequestParam("courseid") String courseid ,@RequestBody List<String> ids) {
         return cmGetabilityService.insertGetability(courseid,ids);
     }
+    /**
+     *删除一条能力
+     */
     @PostMapping("/delete")
     public Result deleteGetabilityByID(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {
         return cmGetabilityService.deleteGetabilityByID(courseid,ids);
@@ -45,7 +51,9 @@ public class GetabilityController {
         return cmGetabilityService.updateGetability(cmGetability);
     }
     */
-
+    /**
+     *通过能力id获取kwa
+     */
     @PostMapping("/getKwaByGetability")
     public Result getKwaByGetability(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {
         return cmGetabilityService.getKwaByGetability(courseid,ids);

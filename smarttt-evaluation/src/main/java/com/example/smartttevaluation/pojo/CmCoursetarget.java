@@ -17,6 +17,5 @@ public class CmCoursetarget {
     private String code;//代码
     private String name;//课程目标名称
     private String remark;//备注
-    private String unitid;//基本教学目标单元id
     private String courseid;//课程id
 }
