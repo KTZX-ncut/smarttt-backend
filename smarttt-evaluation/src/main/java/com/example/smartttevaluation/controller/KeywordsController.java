@@ -1,8 +1,9 @@
 package com.example.smartttevaluation.controller;
 
 
-import com.example.smartttadmin.Utils.AuthRequired;
+
 import com.example.smartttadmin.dto.Token;
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.service.CmKeywordsService;
@@ -27,9 +28,10 @@ public class KeywordsController {
      * 关键字列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09",isReadOnly = true)
     public Result getKeywords(HttpServletRequest request){
         Token token = getTokenFromContext();
+        System.out.println(token);
         return cmKeywordsService.getKeywords(token.getObsid());
     }
     /**

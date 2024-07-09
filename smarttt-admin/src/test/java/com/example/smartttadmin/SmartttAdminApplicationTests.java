@@ -30,9 +30,9 @@ class SmartttAdminApplicationTests {
     @Test
     void createMenus() {
         String roleMenuID = generateEnhancedID("st_menus");
-        mapper.createStMenus(new StMenus(roleMenuID,"课程资源","531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35","6",
-                "/coursemangt/courseresources","1",LocalDateTime.now().toString(),"103.106",
-                "/课程管理/课程资源",""));
+        mapper.createStMenus(new StMenus(roleMenuID,"我的问卷","531500340-c0220993-26e0-4d21-bc25-f612c67170c5","11",
+                "/exam/myquestionnaire","1",LocalDateTime.now().toString(),"104.110",
+                "/考试系统/我的问卷",""));
         List<String> stringList = mapper.getAllStRoleid();
         for(String string : stringList){
             StRoleMenu stRoleMenu = new StRoleMenu(generateEnhancedID("st_rolemenu"),string,roleMenuID,"3",LocalDateTime.now().toString(),"");
