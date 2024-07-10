@@ -1,9 +1,11 @@
 package com.example.smartttevaluation.controller;
 
-import com.example.smartttadmin.Utils.AuthRequired;
-import com.example.smartttadmin.dto.Token;
+
+
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateCheckitemReq;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmCheckitem;
 import com.example.smartttevaluation.service.CmCheckitemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
+
 
 @RestController
 @RequestMapping("/evaluation/checkitem")
@@ -25,7 +28,7 @@ public class CheckitemController {
      *考核项列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c6170c5",isReadOnly = true)
     public Result getCheckitemList(HttpServletRequest request){
         Token token = getTokenFromContext();
         return cmCheckitemService.getCheckitemList(token.getObsid());

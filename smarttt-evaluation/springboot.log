@@ -1,8 +1,17 @@
-2024-05-16 09:36:03.520 === [main] === INFO  === c.e.s.SmartttEvaluationApplicationTests - Starting SmartttEvaluationApplicationTests using Java 1.8.0_402 on DESKTOP-HNKPGD1 with PID 24856 (started by dell in D:\smarttt-backend\smarttt-evaluation)
-2024-05-16 09:36:03.552 === [main] === DEBUG === c.e.s.SmartttEvaluationApplicationTests - Running with Spring Boot v2.7.6, Spring v5.3.24
-2024-05-16 09:36:03.554 === [main] === INFO  === c.e.s.SmartttEvaluationApplicationTests - No active profile set, falling back to 1 default profile: "default"
-2024-05-16 09:36:07.439 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2024-05-16 09:36:07.454 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2024-05-16 09:36:07.567 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 52 ms. Found 0 Redis repository interfaces.
-2024-05-16 09:36:11.239 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2024-05-16 09:36:12.408 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-07-10 11:15:00.514 === [main] === INFO  === c.e.s.SmartttEvaluationApplicationTests - Starting SmartttEvaluationApplicationTests using Java 1.8.0_391 on wangliqingdeMacBook-Pro.local with PID 79128 (started by wangliqing in /Users/wangliqing/Desktop/project/smarttt-backend/smarttt-evaluation)
+2024-07-10 11:15:00.516 === [main] === DEBUG === c.e.s.SmartttEvaluationApplicationTests - Running with Spring Boot v2.7.6, Spring v5.3.24
+2024-07-10 11:15:00.516 === [main] === INFO  === c.e.s.SmartttEvaluationApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2024-07-10 11:15:00.811 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-07-10 11:15:00.813 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-07-10 11:15:00.827 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2024-07-10 11:15:01.198 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2024-07-10 11:15:01.283 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-07-10 11:15:01.791 === [main] === INFO  === o.s.b.a.web.servlet.WelcomePageHandlerMapping - Adding welcome page: ServletContext resource [/index.html]
+2024-07-10 11:15:02.166 === [main] === INFO  === c.e.s.SmartttEvaluationApplicationTests - Started SmartttEvaluationApplicationTests in 1.773 seconds (JVM running for 2.162)
+2024-07-10 11:15:02.253 === [main] === TRACE === c.e.s.SmartttEvaluationApplicationTests - 这是trace日志...
+2024-07-10 11:15:02.254 === [main] === DEBUG === c.e.s.SmartttEvaluationApplicationTests - 这是debug日志...
+2024-07-10 11:15:02.254 === [main] === INFO  === c.e.s.SmartttEvaluationApplicationTests - 这是info日志...
+2024-07-10 11:15:02.254 === [main] === WARN  === c.e.s.SmartttEvaluationApplicationTests - 这是warn日志...
+2024-07-10 11:15:02.254 === [main] === ERROR === c.e.s.SmartttEvaluationApplicationTests - 这是error日志...
+2024-07-10 11:15:02.278 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2024-07-10 11:15:02.278 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
