@@ -17,8 +17,6 @@ import java.util.List;
 public class RoleMangtController {
     @Autowired
     private StRolesService stRolesService;
-    @Autowired
-    private StMenusService stMenusService;
 
     /**
      *超管获取全部角色的信息
@@ -26,7 +24,6 @@ public class RoleMangtController {
      */
     @GetMapping
     public Result getRoleList() {
-
         return stRolesService.getStRoleMangtList();
     }
 

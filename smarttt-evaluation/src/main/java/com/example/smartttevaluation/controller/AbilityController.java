@@ -1,11 +1,12 @@
 package com.example.smartttevaluation.controller;
 
-import com.example.smartttadmin.Utils.AuthRequired;
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateAbilityReq;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.example.smartttadmin.dto.Token;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +16,8 @@ import com.example.smartttevaluation.service.CmAbilityService;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
+
 
 @RestController
 @RequestMapping("/evaluation/ability")

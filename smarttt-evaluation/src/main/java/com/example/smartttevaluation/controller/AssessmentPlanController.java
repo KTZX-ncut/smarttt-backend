@@ -3,11 +3,9 @@ package com.example.smartttevaluation.controller;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.pojo.CmAssessmentPlanItem;
 import com.example.smartttevaluation.pojo.CmAssessmentPlanProportion;
-import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
-import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
+
 import com.example.smartttevaluation.service.CmAssessmentPlanService;
-import com.example.smartttevaluation.service.CmKnowledgeUnitService;
-import org.apache.ibatis.annotations.Param;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
