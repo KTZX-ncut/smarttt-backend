@@ -2,6 +2,7 @@ package com.example.smartttevaluation.controller;
 
 
 
+import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateCheckitemReq;
 import com.example.smartttevaluation.dto.Result;
@@ -31,7 +32,7 @@ public class CheckitemController {
     @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
     public Result getCheckitemList(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return cmCheckitemService.getCheckitemList(token.getObsid());
+        return cmCheckitemService.getCheckitemList(token);
     }
     /**
      *新增一个考核项

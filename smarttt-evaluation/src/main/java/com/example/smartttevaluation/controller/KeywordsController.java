@@ -33,7 +33,7 @@ public class KeywordsController {
     public Result getKeywords(HttpServletRequest request){
         Token token = getTokenFromContext();
         System.out.println(token);
-        return cmKeywordsService.getKeywords(token.getObsid());
+        return cmKeywordsService.getKeywords(token);
     }
     /**
      * 创建关键字

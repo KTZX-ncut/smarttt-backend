@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.dto.CmCheckitemTree;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.dto.TreeStructure;
@@ -58,7 +59,7 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
      * 考核项列表
      */
     @Override
-    public Result getCheckitemList(String ObsID) {
+    public Result getCheckitemList(Token token) {
         List<CmCheckitemTree> allCheckitemTree = cmCheckitemMapper.getAllCmCheckitemTree();
         Map<String, List<CmCheckitemTree>> checkitemMap = allCheckitemTree.stream()
                 .collect(Collectors.groupingBy(CmCheckitemTree::getPid,
