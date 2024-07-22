@@ -1,9 +1,10 @@
 package com.example.smartttevaluation.controller;
 
 
-import com.example.smartttadmin.Utils.AuthRequired;
-import com.example.smartttadmin.dto.Token;
+
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.service.CmKeywordsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
+
 
 /**
  * 关键字管理
@@ -27,9 +29,10 @@ public class KeywordsController {
      * 关键字列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09",isReadOnly = true)
     public Result getKeywords(HttpServletRequest request){
         Token token = getTokenFromContext();
+        System.out.println(token);
         return cmKeywordsService.getKeywords(token.getObsid());
     }
     /**

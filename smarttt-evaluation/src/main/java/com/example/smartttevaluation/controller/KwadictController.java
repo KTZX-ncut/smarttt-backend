@@ -1,7 +1,8 @@
 package com.example.smartttevaluation.controller;
-import com.example.smartttadmin.Utils.AuthRequired;
-import com.example.smartttadmin.dto.Token;
+
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
+
 
 /**
  * KWA管理

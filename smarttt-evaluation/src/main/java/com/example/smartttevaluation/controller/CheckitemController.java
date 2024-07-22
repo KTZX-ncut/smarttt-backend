@@ -1,9 +1,11 @@
 package com.example.smartttevaluation.controller;
 
-import com.example.smartttadmin.Utils.AuthRequired;
-import com.example.smartttadmin.dto.Token;
+
+
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateCheckitemReq;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmCheckitem;
 import com.example.smartttevaluation.service.CmCheckitemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
+
 
 @RestController
 @RequestMapping("/evaluation/checkitem")

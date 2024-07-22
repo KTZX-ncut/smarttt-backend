@@ -1,8 +1,6 @@
 package com.example.smartttevaluation.controller;
 
 import com.example.smartttevaluation.dto.Result;
-import com.example.smartttevaluation.pojo.CmAbility;
-import com.example.smartttevaluation.pojo.CmGetability;
 import com.example.smartttevaluation.service.CmGetabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
