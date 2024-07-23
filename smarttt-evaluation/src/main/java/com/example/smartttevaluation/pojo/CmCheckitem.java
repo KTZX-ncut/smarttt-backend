@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,4 +25,6 @@ public class CmCheckitem {
     private String task;//考核任务
     private String remark;//备注
     private String courseid;//课程id
+    List<CmCheckitem> childrens;
+    int percent;
 }

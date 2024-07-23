@@ -1,7 +1,7 @@
 package com.example.smartttevaluation.dto;
 
-import com.example.smartttevaluation.pojo.CmAssessmentPlanItem;
-import com.example.smartttevaluation.pojo.CmAssessmentPlanProportion;
+import com.example.smartttevaluation.pojo.CmCourseAssessment;
+import com.example.smartttevaluation.pojo.CmCheckitem;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CmAssessmentPlanTable {
-    List<CmAssessmentPlanItem> items;
-    CmAssessmentPlanProportion proportion;
+public class CmCourseAssessmentTableItem {
+    String name;
+    List<CmCourseAssessment> cmCourseAssessments;
 }
