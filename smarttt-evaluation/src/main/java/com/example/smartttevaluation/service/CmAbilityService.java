@@ -1,6 +1,7 @@
 package com.example.smartttevaluation.service;
 
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmAbility;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface CmAbilityService {
     /**
      * 能力树，用来实现能力列表
      */
-    Result getAbilityTree(String ObsID);
+    Result getAbilityTree(Token token);
     /**
      * 更新能力
      */

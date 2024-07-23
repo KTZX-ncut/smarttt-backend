@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.mapper.CmCoursetargetMapper;
 import com.example.smartttevaluation.pojo.CmCoursetarget;
 import com.example.smartttevaluation.pojo.CmCoursetargetUnit;
@@ -24,7 +25,7 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
      *获取课程目标
      */
     @Override
-    public Result getCoursetarget(String ObsID) {
+    public Result getCoursetarget(Token token) {
         return Result.success(cmCoursetargetMapper.getCoursetarget());
     }
     /**

@@ -34,7 +34,7 @@ public class CoursetargetController {
     @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
     public Result getCoursetarget(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return cmCoursetargetService.getCoursetarget(token.getObsid());
+        return cmCoursetargetService.getCoursetarget(token);
     }
     /**
      *创建课程目标
