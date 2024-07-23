@@ -30,7 +30,6 @@ public class AuthorizationAspect {
         Token token = parseToken(stringToken,TokenSK);
         // 存储 stringToken 到上下文中
         tokenThreadLocal.set(token);
-        // 在这里可以执行其他鉴权逻辑
         String type = authRequired.type();
         if ("admin".equals(type)) {
             // 执行管理员鉴权逻辑

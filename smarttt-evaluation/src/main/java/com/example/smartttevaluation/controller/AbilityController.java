@@ -33,7 +33,7 @@ public class AbilityController {
     @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
     public Result getAbilityList(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return cmAbilityService.getAbilityTree(token.getObsid());
+        return cmAbilityService.getAbilityTree(token);
     }
 
     /**

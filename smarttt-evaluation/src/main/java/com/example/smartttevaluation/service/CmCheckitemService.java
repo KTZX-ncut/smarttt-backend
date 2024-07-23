@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service;
 
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.pojo.CmCheckitem;
 
@@ -21,5 +22,5 @@ public interface CmCheckitemService {
     /**
      *获取考核项列表
      */
-    Result getCheckitemList(String ObsID);
+    Result getCheckitemList(Token token);
 }

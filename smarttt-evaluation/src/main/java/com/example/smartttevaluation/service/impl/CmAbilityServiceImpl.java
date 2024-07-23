@@ -56,7 +56,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 能力树
      */
     @Override
-    public Result getAbilityTree(String ObsID) {
+    public Result getAbilityTree(Token token) {
         List<CmAbilityTree> allAbilityTree = cmAbilityMapper.getAllCmAbilityTree();
         Map<String, List<CmAbilityTree>> abilityMap = allAbilityTree.stream()
                 .collect(Collectors.groupingBy(CmAbilityTree::getPid,
