@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
 import com.example.smartttevaluation.pojo.CmGetability;
 import com.example.smartttevaluation.pojo.CmKeywords;
@@ -20,7 +21,7 @@ public class CmKwadictServiceImpl implements CmKwadictService {
      *获取kwa
      */
     @Override
-    public Result getKwadict(String ObsID) {
+    public Result getKwadict(Token token) {
 
         return Result.success(cmKwadictMapper.getKwadict());
     }

@@ -1,6 +1,7 @@
 package com.example.smartttevaluation.service;
 
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmCoursetarget;
 import com.example.smartttevaluation.pojo.CmCoursetargetUnit;
 
@@ -10,7 +11,7 @@ public interface CmCoursetargetService {
     /**
      *获取课程目标
      */
-    Result getCoursetarget(String ObsID);
+    Result getCoursetarget(Token token);
     /**
      *创建课程目标
      */
