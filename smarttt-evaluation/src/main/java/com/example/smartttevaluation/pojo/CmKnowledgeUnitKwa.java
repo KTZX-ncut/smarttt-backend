@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CmKnowledgeUnitKwa {
+    String id;
     String unitid;
     String kwaid;
     String name;
