@@ -29,11 +29,11 @@ public class FileMangtServiceImpl implements FileMangtService {
         String fileName = "1111"+file.getOriginalFilename();
         CmCourseFile cmCourseFile = new CmCourseFile(generateEnhancedID("cm_course_file"),obsid,fileName,file.getSize(),type, LocalDateTime.now().toString(),null);
         try{
-            Path directoryPath = Paths.get(uploadDir,obsid);
+            Path directoryPath = Paths.get(uploadDir,obsid,type);
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
             }
-            Path filePath = Paths.get(uploadDir,obsid, fileName);
+            Path filePath = Paths.get(uploadDir,obsid,type,fileName);
             Files.copy(file.getInputStream(), filePath);
 
         }catch (IOException e){
@@ -91,8 +91,11 @@ public class FileMangtServiceImpl implements FileMangtService {
     @Override
     public Result deleteOneFile(String uploadDir, String filename,String obsid, String type) {
         File file = new File(uploadDir);
+        System.out.println("????");
+        System.out.println(uploadDir);
         if (file.exists() && file.isFile() && file.delete()){
             fileMangtMapper.deleteFile(obsid,type,filename);
+            System.out.println("????");
             return Result.success();
         }
         return Result.error("删除错误");

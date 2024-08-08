@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 能力管理
+ * 能力
  */
 @RestController
 @RequestMapping("/evaluation/getability")

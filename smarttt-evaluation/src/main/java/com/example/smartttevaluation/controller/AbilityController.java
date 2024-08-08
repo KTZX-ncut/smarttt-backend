@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
 
-
+/**
+ * 能力字典
+ */
 @RestController
 @RequestMapping("/evaluation/ability")
 public class AbilityController {
@@ -30,10 +32,8 @@ public class AbilityController {
      * 能力列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-fe5bb833-fdd7-4416-81dd-f5b20107540f",isReadOnly = true)
-    public Result getAbilityList(HttpServletRequest request){
-        Token token = getTokenFromContext();
-        return cmAbilityService.getAbilityTree(token);
+    public Result getAbilityList(){
+        return cmAbilityService.getAbilityTree();
     }
 
     /**

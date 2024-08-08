@@ -15,7 +15,7 @@ public interface CmAbilityService {
     /**
      * 能力树，用来实现能力列表
      */
-    Result getAbilityTree(Token token);
+    Result getAbilityTree();
     /**
      * 更新能力
      */
