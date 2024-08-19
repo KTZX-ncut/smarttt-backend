@@ -42,13 +42,19 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 批量删除
      */
     @Override
-    public Result deleteAbilityByIDs(List<String> ids, String proid) {
+    public Result deleteAbilityByIDs(List<String> ids) {
         List<CmAbility> cmAbilityList = cmAbilityMapper.getCmAbilityByIDs(ids);
         if(cmAbilityList.size()<ids.size())return Result.error(404,"批量删除能力出错");
         for(String id:ids){
             cmAbilityMapper.updateBrotherAbilityOrderNo(id);
             cmAbilityMapper.deleteAbilityByID(id);
         }
+        return Result.success();
+    }
+
+    @Override
+    public Result updateOneAbility(CmAbility cmAbility) {
+        cmAbilityMapper.updateAbility(cmAbility);
         return Result.success();
     }
 

@@ -1,7 +1,6 @@
 package com.example.smartttevaluation.service;
 
 import com.example.smartttevaluation.dto.Result;
-import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmKwadict;
 
 import java.util.List;
@@ -10,7 +9,7 @@ public interface CmKwadictService {
     /**
      *获取kwa
      */
-    Result getKwadict(Token token);
+    Result getKwadict(String token);
     /**
      *创建kwa
      */

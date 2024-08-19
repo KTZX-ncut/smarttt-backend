@@ -3,7 +3,6 @@ package com.example.smartttevaluation.mapper;
 import com.example.smartttevaluation.pojo.CmCoursetarget;
 import com.example.smartttevaluation.pojo.CmCoursetargetUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
-import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -13,8 +12,8 @@ public interface CmCoursetargetMapper {
     /**
      *课程目标列表
      */
-    @Select("select id, code, name, remark, courseid from cm_course_target")
-    List<CmCoursetarget> getCoursetarget ();
+    @Select("select id, code, name, remark, courseid from cm_course_target where courseid = #{obsid}")
+    List<CmCoursetarget> getCoursetarget (String obsid);
     /**
      *创建课程目标
      */

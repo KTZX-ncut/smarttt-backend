@@ -61,4 +61,7 @@ public interface CmAbilityMapper {
      * 通过ids返回能力列表
      */
     List<CmAbility> getCmAbilityByIDs(@Param("ids")List<String> ids);
+
+    @Update("update cm_ability set name = #{name} where id = #{id}")
+    void updateAbility(CmAbility cmAbility);
 }

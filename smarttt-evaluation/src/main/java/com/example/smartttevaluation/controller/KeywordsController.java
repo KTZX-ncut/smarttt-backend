@@ -32,14 +32,16 @@ public class KeywordsController {
     @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09",isReadOnly = true)
     public Result getKeywords(HttpServletRequest request){
         Token token = getTokenFromContext();
-        System.out.println(token);
-        return cmKeywordsService.getKeywords(token);
+        return cmKeywordsService.getKeywords(token.getObsid());
     }
     /**
      * 创建关键字
      */
     @PostMapping("/create")
-    public Result createKeywords(@RequestBody CmKeywords cmKeywords) {
+    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
+    public Result createKeywords(@RequestBody CmKeywords cmKeywords,HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmKeywords.setCourseid(token.getObsid());
         return cmKeywordsService.createKeywords(cmKeywords);
     }
     /**

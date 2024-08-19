@@ -26,12 +26,12 @@ public interface CmCheckitemMapper {
     /**
      *获取考核项树
      */
-    @Select("select * from cm_course_checkitem")
-    List<CmCheckitemTree> getAllCmCheckitemTree();
+    @Select("select * from cm_course_checkitem where courseid = #{obsid}")
+    List<CmCheckitemTree> getAllCmCheckitemTree(String obsid);
     /**
      *获取考核项列表
      */
-    @Select("select * from cm_course_checkitem")
+    @Select("select * from cm_course_checkitem where courseid = #{courseid}")
     List<CmCheckitem> getAllCmCheckitemList(@RequestParam("courseid") String courseid);
     /**
      *通过pid获取考核项列表

@@ -15,7 +15,7 @@ import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFr
 
 
 /**
- * KWA管理
+ * KWA管理/基本教学目标
  */
 @RestController
 @RequestMapping("/evaluation/kwadict")
@@ -29,7 +29,7 @@ public class KwadictController {
     @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
     public Result getKwadict(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return cmKwadictService.getKwadict(token);
+        return cmKwadictService.getKwadict(token.getObsid());
     }
     /**
      *获取kwa
@@ -75,7 +75,10 @@ public class KwadictController {
      *新增kwa
      */
     @PostMapping("/create")
-    public Result createKwadict(@RequestBody CmKwadict cmKwadict) {
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5")
+    public Result createKwadict(@RequestBody CmKwadict cmKwadict,HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmKwadict.setCourseid(token.getObsid());
         return cmKwadictService.createKwadict(cmKwadict);
     }
     /**

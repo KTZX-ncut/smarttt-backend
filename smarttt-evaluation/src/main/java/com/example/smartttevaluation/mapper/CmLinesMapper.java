@@ -12,8 +12,8 @@ public interface CmLinesMapper {
     /**
      *获取连线列表
      */
-    @Select("select id, startkwaid, endkwaid, remark, courseid, startunitid, endunitid from cm_lines")
-    List<CmLines> getLines ();
+    @Select("select id, startkwaid, endkwaid, remark, courseid, startunitid, endunitid from cm_lines where courseid = #{courseid}")
+    List<CmLines> getLines (String courseid);
     /**
      *创建连线
      */

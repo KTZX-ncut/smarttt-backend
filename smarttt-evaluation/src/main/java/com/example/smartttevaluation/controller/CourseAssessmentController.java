@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
 
+/**
+ *  考核项方案
+ */
 @RestController
 @RequestMapping("/evaluation/assessmentPlan")
-
-
-
 public class CourseAssessmentController {
     @Autowired
     private CmCourseAssessmentService cmAssessmentPlanService;

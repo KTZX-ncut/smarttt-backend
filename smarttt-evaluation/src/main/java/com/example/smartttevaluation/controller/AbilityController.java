@@ -59,15 +59,19 @@ public class AbilityController {
      * 删除能力——批量删除
      */
    @PostMapping("/delete")
-   public Result deleteAbilityByIDs(@RequestBody List<String> ids, @RequestParam(name = "proid")String proid){
-       return cmAbilityService.deleteAbilityByIDs(ids, proid);
+   public Result deleteAbilityByIDs(@RequestBody List<String> ids){
+       return cmAbilityService.deleteAbilityByIDs(ids);
    }
 
     /**
-     * 更新能力
+     * 升级能力
      */
    @GetMapping("/upgrade")
    public Result upgradeOneAbility(@RequestParam(name = "id")String id){
             return cmAbilityService.upgradeOneAbilityByID(id);
+    }
+    @PostMapping("/update")
+    public Result updateAbility(@RequestBody CmAbility cmAbility){
+        return cmAbilityService.updateOneAbility(cmAbility);
     }
 }

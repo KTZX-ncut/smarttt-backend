@@ -1,7 +1,6 @@
 package com.example.smartttevaluation.service;
 
 import com.example.smartttevaluation.dto.Result;
-import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmKeywords;
 
 import java.util.List;
@@ -10,7 +9,7 @@ public interface CmKeywordsService {
     /**
      *获取关键字列表
      */
-    Result getKeywords(Token token);
+    Result getKeywords(String obsid);
     /**
      *创建关键字
      */

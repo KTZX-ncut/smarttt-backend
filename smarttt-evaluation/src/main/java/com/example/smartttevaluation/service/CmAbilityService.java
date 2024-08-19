@@ -23,5 +23,7 @@ public interface CmAbilityService {
     /**
      * 删除能力
      */
-    Result deleteAbilityByIDs(List<String> ids, String proid);
+    Result deleteAbilityByIDs(List<String> ids);
+
+    Result updateOneAbility(CmAbility cmAbility);
 }

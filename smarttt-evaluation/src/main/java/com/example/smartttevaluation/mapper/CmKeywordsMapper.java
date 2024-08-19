@@ -14,13 +14,13 @@ public interface CmKeywordsMapper {
     /**
      * 获取关键字列表
      */
-    @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords")
-    List<CmKeywords> getKeywords ();
+    @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords where courseid=#{courseid}")
+    List<CmKeywords> getKeywords (String courseid);
     /**
      * 创建关键字
      */
-    @Update("INSERT INTO cm_keywords (id, name, datavalue, importantlevelid, remark) " +
-            "VALUES (#{id},#{name},#{datavalue},#{importantlevelid},#{remark})")
+    @Update("INSERT INTO cm_keywords (id, name, datavalue, importantlevelid,courseid, remark) " +
+            "VALUES (#{id},#{name},#{datavalue},#{importantlevelid},#{courseid},#{remark})")
     void createKeywords(CmKeywords cmKeywords);
     /**
      * 删除关键字

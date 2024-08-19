@@ -60,7 +60,7 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
      */
     @Override
     public Result getCheckitemList(Token token) {
-        List<CmCheckitemTree> allCheckitemTree = cmCheckitemMapper.getAllCmCheckitemTree();
+        List<CmCheckitemTree> allCheckitemTree = cmCheckitemMapper.getAllCmCheckitemTree(token.getObsid());
         Map<String, List<CmCheckitemTree>> checkitemMap = allCheckitemTree.stream()
                 .collect(Collectors.groupingBy(CmCheckitemTree::getPid,
                         Collectors.collectingAndThen(

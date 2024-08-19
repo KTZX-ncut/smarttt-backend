@@ -9,7 +9,7 @@ public interface CmLinesService {
     /**
      *获取连线列表
      */
-    Result getLines();
+    Result getLines(String obsid);
     /**
      *创建连线
      */

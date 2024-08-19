@@ -26,10 +26,10 @@ public class CheckitemController {
     @Autowired
     private CmCheckitemService cmCheckitemService;
     /**
-     *考核项列表
+     *考核项设计
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-4d66eeda-f440-4994-8998-bc2fcaba3c16",isReadOnly = true)
     public Result getCheckitemList(HttpServletRequest request){
         Token token = getTokenFromContext();
         return cmCheckitemService.getCheckitemList(token);
@@ -38,7 +38,10 @@ public class CheckitemController {
      *新增一个考核项
      */
     @PostMapping("/create")
-    Result createByCheckitemSecretary(@RequestBody CreateCheckitemReq createCheckitemReq, @RequestParam("courseid") String courseid){
+    @AuthRequired(type = "admin",menu = "531500340-4d66eeda-f440-4994-8998-bc2fcaba3c16")
+    Result createByCheckitemSecretary(@RequestBody CreateCheckitemReq createCheckitemReq,HttpServletRequest request){
+        Token token = getTokenFromContext();
+        String courseid = token.getObsid();
         CmCheckitem cmCheckitem = createCheckitemReq.getCmCheckitem();
         //同级新增
         if(Objects.equals(createCheckitemReq.getType(), "1")){

@@ -19,8 +19,8 @@ public class CmLinesServiceImpl implements CmLinesService {
      *获取连线列表
      */
     @Override
-    public Result getLines() {
-        return Result.success(cmLinesMapper.getLines());
+    public Result getLines(String obsid) {
+        return Result.success(cmLinesMapper.getLines(obsid));
     }
     /**
      *创建连线

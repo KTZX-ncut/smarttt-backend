@@ -15,8 +15,8 @@ public interface CmKwadictMapper {
     /**
      *获取kwa列表
      */
-    @Select("select id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue from cm_kwadict")
-    List<CmKwadict> getKwadict ();
+    @Select("select id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue from cm_kwadict where courseid = #{courseid}")
+    List<CmKwadict> getKwadict (String courseid);
 
 
     //@Update("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue) " +

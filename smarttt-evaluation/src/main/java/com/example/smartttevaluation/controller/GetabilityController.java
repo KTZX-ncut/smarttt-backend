@@ -1,11 +1,17 @@
 package com.example.smartttevaluation.controller;
 
+import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.dto.Token;
+import com.example.smartttevaluation.service.CmAbilityService;
 import com.example.smartttevaluation.service.CmGetabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
 
 /**
  * 能力
@@ -16,28 +22,31 @@ public class GetabilityController {
 
     @Autowired
     private CmGetabilityService cmGetabilityService;
+    @Autowired
+    private CmAbilityService cmAbilityService;
     /**
      *课程能力列表
      */
     @GetMapping
-    public Result getGetability(@RequestParam("courseid") String courseid) {
-        return cmGetabilityService.getGetability(courseid);
+    @AuthRequired(type = "admin",menu = "531500340-c0fc7d55-5459-433c-ad6a-593856295d51",isReadOnly = true)
+    public Result getGetability(HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmGetabilityService.getGetability(token.getObsid());
     }
-/*Y*/
-    //获取全部能力字典
-    /*@GetMapping("/allability")
+
+    @GetMapping("/allability")
     public Result getAbility() {
-        return cmGetabilityService.getAbility();
-    }*/
+        return cmAbilityService.getAbilityTree();
+    }
     /**
-     *添加一条能力
+     *批量添加能力
      */
     @PostMapping("/insert")
     public Result insertGetability(@RequestParam("courseid") String courseid ,@RequestBody List<String> ids) {
         return cmGetabilityService.insertGetability(courseid,ids);
     }
     /**
-     *删除一条能力
+     *批量删除能力
      */
     @PostMapping("/delete")
     public Result deleteGetabilityByID(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {

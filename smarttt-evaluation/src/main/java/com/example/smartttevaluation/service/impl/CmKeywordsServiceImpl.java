@@ -1,7 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.Result;
-import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.mapper.CmKeywordsMapper;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.service.CmKeywordsService;
@@ -21,8 +20,8 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
      *获取关键字
      */
     @Override
-    public Result getKeywords(Token token) {
-        return Result.success(cmKeywordsMapper.getKeywords());
+    public Result getKeywords(String obsId) {
+        return Result.success(cmKeywordsMapper.getKeywords(obsId));
     }
     /**
      *创建关键字

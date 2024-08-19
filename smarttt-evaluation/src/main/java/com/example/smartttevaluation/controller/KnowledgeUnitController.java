@@ -14,10 +14,11 @@ import java.util.List;
 
 import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
 
+/**
+ * 知识单元
+ */
 @RestController
 @RequestMapping("/evaluation/knowledgeUnit")
-
-
 
 public class KnowledgeUnitController {
     @Autowired
@@ -47,6 +48,7 @@ public class KnowledgeUnitController {
 //批量删除kwa
     @PostMapping("/deleteKnowledgeUnitKwa")
     public Result deleteKnowledgeUnitKwa(@RequestParam("unitid") String unitid,@RequestBody List<String> kwaids) {
+        System.out.println("????????");
         return cmKnowledgeUnitService.deleteKnowledgeUnitKwa(unitid,kwaids);
     }
     //删除知识单元

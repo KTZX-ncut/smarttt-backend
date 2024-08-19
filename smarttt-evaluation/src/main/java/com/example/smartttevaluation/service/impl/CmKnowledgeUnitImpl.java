@@ -134,9 +134,10 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         //删除unit
         cmKnowledgeUnitMapper.deleteKnowledgeUnitByUnitids(all_unitids);
         //刷新有删除操作的unit
-        for(String t_pid:all_p_unitids) {
-            flashKnowledgeUnitOrdernum(t_pid,courseid,0,1,cmKnowledgeUnitMapper.selectMaxOrdernum(t_pid,courseid));
-        }
+        //有问题
+//        for(String t_pid:all_p_unitids) {
+//            flashKnowledgeUnitOrdernum(t_pid,courseid,0,1,cmKnowledgeUnitMapper.selectMaxOrdernum(t_pid,courseid));
+//        }
         return Result.success();
     }
     //更新知识单元

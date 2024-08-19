@@ -26,14 +26,14 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
      */
     @Override
     public Result getCoursetarget(Token token) {
-        return Result.success(cmCoursetargetMapper.getCoursetarget());
+        return Result.success(cmCoursetargetMapper.getCoursetarget(token.getObsid()));
     }
     /**
      *创建课程目标
      */
     @Override
     public Result createCoursetarget(CmCoursetarget cmCoursetarget) {
-        cmCoursetarget.setId(generateEnhancedID("cm_coursetarget"));
+        cmCoursetarget.setId(generateEnhancedID("cm_course_target"));
         cmCoursetargetMapper.createCoursetarget(cmCoursetarget);
         return Result.success();
     }
