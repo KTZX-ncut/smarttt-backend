@@ -110,7 +110,14 @@ public class StMenusServiceImpl implements StMenusService {
 
     @Override
     public Result getStudentCourseInfor(Token token) {
-        SwitchStuCourseReq switchStuCourseReq = new SwitchStuCourseReq(getToken(token,TokenSK),stMenusMapper.getCourseName(token.getObsid()));
-        return Result.success(switchStuCourseReq);
+        SwitchCourseReq switchCourseReq = new SwitchCourseReq(getToken(token,TokenSK),stMenusMapper.getCourseName(token.getObsid()));
+        return Result.success(switchCourseReq);
     }
+
+    @Override
+    public Result getTeachingGoal(String obsid) {
+
+        return null;
+    }
+
 }

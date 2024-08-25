@@ -51,5 +51,9 @@ public interface CmCourseMapper {
     List<StRoleUser> getHistoryRP(String id);
 
     void updateOneCourse(CmCourse cmCourse);
+
+    @Select("select cm_course.id,cm_course.courseChineseName from cm_course\n" +
+            "where cm_course.id in (select obsid as id from st_roleuser where roleid =#{roleid}  and userid=#{id})")
+    List<CourseClassroomReq> getTeacherOtherCourse(Token token);
 }
 

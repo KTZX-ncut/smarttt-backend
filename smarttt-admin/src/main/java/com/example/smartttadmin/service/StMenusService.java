@@ -29,4 +29,6 @@ public interface StMenusService {
     Result getStudentCourse(String id);
 
     Result getStudentCourseInfor(Token token);
+
+    Result getTeachingGoal(String obsid);
 }

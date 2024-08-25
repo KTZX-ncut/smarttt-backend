@@ -1,6 +1,7 @@
 package com.example.smartttadmin.mapper;
 
 import com.example.smartttadmin.dto.SimpleRole;
+import com.example.smartttadmin.dto.UserInforReq;
 import com.example.smartttadmin.pojo.StRoleMenu;
 import com.example.smartttadmin.pojo.StRoles;
 import org.apache.ibatis.annotations.*;
@@ -46,4 +47,9 @@ public interface StRolesMapper {
     void deleteRoles(String id);
 
     void updateRoles(StRoles stRoles);
+
+    @Select("select #{id} as id,st_roles.id as roleid,rolename,obsid,obsdeep,2 as catelog from st_roles,st_roleuser\n" +
+            "where st_roles.id = st_roleuser.roleid\n" +
+            " and userid = #{id};")
+    List<UserInforReq> getRoleList(String id);
 }

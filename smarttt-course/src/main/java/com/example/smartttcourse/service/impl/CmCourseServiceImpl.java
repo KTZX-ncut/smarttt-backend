@@ -90,5 +90,10 @@ public class CmCourseServiceImpl implements CmCourseService {
         return Result.success();
     }
 
+    @Override
+    public Result getTeacherCourse(Token token) {
+        return Result.success(cmCourseMapper.getTeacherOtherCourse(token));
+    }
+
 }
 

@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.smartttadmin.Utils.CommonFunctions.*;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
@@ -99,9 +97,8 @@ public class StRolesServiceImpl implements StRolesService {
     }
 
     @Override
-    public Result switchRole(String id,SimpleRole simpleRole) {
-        Token token = new Token(simpleRole);
-//        UserInfor teaUser = new UserInfor(null,null,null,simpleRole.getRolename(),simpleRole.)
-        return Result.success(getToken(token,TokenSK));
+    public Result switchRole(String id) {
+        List<UserInforReq> userInforReqList = stRolesMapper.getRoleList(id);
+        return Result.success(userInforReqList);
     }
 }

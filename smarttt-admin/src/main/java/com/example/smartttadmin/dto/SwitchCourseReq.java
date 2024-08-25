@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SwitchStuCourseReq {
+public class SwitchCourseReq {
     private String token;
     private String CourseChineseName;
 }

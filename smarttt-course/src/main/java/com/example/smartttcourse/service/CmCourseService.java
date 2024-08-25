@@ -22,5 +22,7 @@ public interface CmCourseService {
     Result copyHistoryCourse(String id);
 
     Result updateOneCourse(CmCourse cmCourse);
+
+    Result getTeacherCourse(Token token);
 }
 
