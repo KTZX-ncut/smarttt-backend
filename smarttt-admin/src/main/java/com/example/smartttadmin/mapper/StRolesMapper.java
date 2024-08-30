@@ -29,7 +29,8 @@ public interface StRolesMapper {
      * @param userid 用户id
      * @return 简化版角色列表
      */
-    @Select("select * from st_roles left join st_roleuser on st_roles.id = st_roleuser.roleid where userid = #{userid}")
+//    @Select("select * from st_roles left join st_roleuser on st_roles.id = st_roleuser.roleid where userid = #{userid}")
+    @Select("select st_roleuser.id,roleid,rolename,obsid,obsdeep from st_roleuser,st_roles where st_roleuser.roleid =st_roles.id and userid = #{userid}")
     List<SimpleRole> getRolesByUserID(String userid);
 
     /**

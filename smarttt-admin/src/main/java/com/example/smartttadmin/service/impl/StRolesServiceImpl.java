@@ -98,7 +98,18 @@ public class StRolesServiceImpl implements StRolesService {
 
     @Override
     public Result switchRole(String id) {
-        List<UserInforReq> userInforReqList = stRolesMapper.getRoleList(id);
-        return Result.success(userInforReqList);
+        List<SimpleRole> simpleRoleList = stRolesMapper.getRolesByUserID(id);
+        for(SimpleRole simpleRole : simpleRoleList){
+            if(simpleRole.getObsdeep() == -1){
+                String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
+                if(courseName == null){
+                    courseName = cmCourseMapper.getCourseNameByClassroom(simpleRole.getObsid());
+                }
+                simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
+            }
+            else simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
+            simpleRole.setId(id);
+        }
+        return Result.success(simpleRoleList);
     }
 }

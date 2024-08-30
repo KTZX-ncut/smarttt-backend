@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SimpleRole {
+    private String id;
     private String roleid;
     private String rolename;
     private String obsid;
