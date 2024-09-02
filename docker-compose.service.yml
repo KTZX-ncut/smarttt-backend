@@ -19,9 +19,9 @@ services:
     networks:
       - mynetwork
 
-#  smarttt-evaluation:
-#    build: ./smarttt-evaluation
-#    ports:
-#      - "8083:8083"
-#    networks:
-#      - mynetwork
+  smarttt-evaluation:
+    build: ./smarttt-evaluation
+    ports:
+      - "8083:8083"
+    networks:
+      - mynetwork
