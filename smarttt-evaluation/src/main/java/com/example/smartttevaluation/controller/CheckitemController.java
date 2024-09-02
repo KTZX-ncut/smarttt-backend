@@ -2,7 +2,6 @@ package com.example.smartttevaluation.controller;
 
 
 
-import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateCheckitemReq;
 import com.example.smartttevaluation.dto.Result;
