@@ -146,7 +146,9 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 // 拿到Username
                 String userName = stUsersService.getUsernameById(s.getUsersid());
                 studentVO.setUsername(userName);
-
+                // 拿到班级
+                String obsName = cmClassStudentMapper.getObsNameByUserId(s.getUsersid());
+                studentVO.setObsname(obsName);
                 studentVOList.add(studentVO);
             });
             studentVOFinalList.addAll(studentVOList);

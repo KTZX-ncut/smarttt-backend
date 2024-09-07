@@ -20,4 +20,7 @@ public interface CmClassStudentMapper extends BaseMapper<CmClassroomStudent>{
             "ON cs.userId = ss.usersid\n" +
             "WHERE cs.classroomId = #{classRoomId}")
     List<StudentInfoVO> getStudentListByClassRoomId(@Param("classRoomId") String classRoomId);
+
+    @Select("SELECT obsname FROM cm_classroom_student WHERE userId = #{userId}")
+    String getObsNameByUserId(@Param("userId") String userId);
 }
