@@ -1,7 +1,7 @@
 package com.example.smartttcourse.controller;
 
 
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.pojo.CmTerm;
 import com.example.smartttcourse.service.CmTermService;
 import org.springframework.beans.factory.annotation.Autowired;

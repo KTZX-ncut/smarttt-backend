@@ -1,7 +1,6 @@
 package com.example.smartttcourse.mapper;
 
 import com.example.smartttcourse.dto.ClassroomReq;
-import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.pojo.CmClassroom;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;

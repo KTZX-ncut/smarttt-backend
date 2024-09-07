@@ -1,6 +1,6 @@
 package com.example.smartttcourse.service.impl;
 
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.FileMangtMapper;
 import com.example.smartttcourse.pojo.CmCourseFile;
 import com.example.smartttcourse.service.FileMangtService;

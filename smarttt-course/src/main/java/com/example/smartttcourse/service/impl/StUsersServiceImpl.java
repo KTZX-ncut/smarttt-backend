@@ -1,6 +1,6 @@
 package com.example.smartttcourse.service.impl;
 
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.SmObsMapper;
 import com.example.smartttcourse.mapper.StUsersMapper;
 import com.example.smartttcourse.pojo.StRoleUser;
@@ -37,5 +37,10 @@ public class StUsersServiceImpl implements StUsersService {
             return Result.error(404,"新建失败");
         }
         return Result.success();
+    }
+
+    @Override
+    public String getUsernameById(String usersid) {
+        return stUsersMapper.getUsernameById(usersid);
     }
 }
