@@ -22,7 +22,7 @@ public interface CmClassroomStudentService extends IService<CmClassroomStudent>{
 
     Result getStudentList(String obsis);
 
-    List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file);
+    List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file,String classRoomId);
 
     Result getObsRPStudentList(String obsID);
 }

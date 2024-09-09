@@ -50,4 +50,9 @@ public class StUsersServiceImpl implements StUsersService {
     public List<StudentDto> getAllStudentByObsID(String id) {
         return stUsersMapper.getAllStudentByObsID(id);
     }
+
+    @Override
+    public String getloginNameById(String usersid) {
+        return stUsersMapper.getloginNameById(usersid);
+    }
 }

@@ -26,7 +26,7 @@ public interface StUsersMapper{
     @Select("SELECT username FROM  st_users where id = #{usersid}")
     String getUsernameById(@Param("usersid") String usersid);
 
-    @Select("SELECT s.id stuId,s.obsid,s.usersid,c.proname,c.obsName obsname,c.loginname,c.userName username FROM sm_student s\n" +
+    @Select("SELECT s.id,s.obsid,s.usersid,c.proname,c.obsName obsname,c.loginname,c.userName username FROM sm_student s\n" +
             "JOIN st_users u\n" +
             "ON s.usersid = u.id\n" +
             "JOIN sm_obs o \n" +
@@ -35,4 +35,7 @@ public interface StUsersMapper{
             "ON s.usersid = c.userId\n" +
             "WHERE s.obsid = #{obsid}")
     List<StudentDto> getAllStudentByObsID(@Param("obsid") String id);
+
+    @Select("SELECT loginname FROM st_users WHERE id=#{id}")
+    String getloginNameById(@Param("id") String id);
 }

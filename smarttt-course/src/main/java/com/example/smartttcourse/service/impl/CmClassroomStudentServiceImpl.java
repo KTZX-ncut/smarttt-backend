@@ -1,6 +1,7 @@
 package com.example.smartttcourse.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttcourse.Utils.CommonFunctions;
 import com.example.smartttcourse.dto.StudentTree;
@@ -148,7 +149,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file) {
+    public List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file,String classRoomId) {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 假设 Excel 文件中只有一个工作表
@@ -159,23 +160,30 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
             List<CmClassroomStudent> classroomStudentList = new ArrayList<>();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                Long rowNo = Long.valueOf(dataFormatter.formatCellValue(row.getCell(0)));
-                String stuno = dataFormatter.formatCellValue(row.getCell(1));
-                String username = dataFormatter.formatCellValue(row.getCell(2));
-                String loginname = dataFormatter.formatCellValue(row.getCell(3));
-                String classRoomName = dataFormatter.formatCellValue(row.getCell(4));
-                String obsname = dataFormatter.formatCellValue(row.getCell(5));
-                String proname = dataFormatter.formatCellValue(row.getCell(6));
-                // 拿到ClassRoomId
-                String classRoomId = cmClassRoomService.getClassRoomByClassRoomName(classRoomName);
+                String stuno = dataFormatter.formatCellValue(row.getCell(0));
+                String username = dataFormatter.formatCellValue(row.getCell(1));
+                String obsName = dataFormatter.formatCellValue(row.getCell(2));
+                SmartAssert.notEmpty(stuno,ResponseEnum.PARAM_IS_NOT_NULL);
+                SmartAssert.notEmpty(username,ResponseEnum.PARAM_IS_NOT_NULL);
 
-                // 通过学号stuno拿到 userId
-                LambdaQueryWrapper<SmStudent> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(SmStudent::getStuno,stuno);
-                SmStudent student = smStudentService.getOne(wrapper);
-                String userId = student.getUsersid();
-                String obsId = student.getObsid();
-                CmClassroomStudent classroomStudent = new CmClassroomStudent(CommonFunctions.generateEnhancedID(username+userId),classRoomId,userId,obsId,username,obsname,proname,loginname,rowNo,0);
+                CmClassroomStudent classroomStudent = new CmClassroomStudent();
+                classroomStudent.setClassroomId(classRoomId);
+                // userId
+                QueryWrapper<SmStudent> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("stuno",stuno);
+                SmStudent student = smStudentService.getOne(queryWrapper);
+                classroomStudent.setUserId(student.getUsersid());
+                classroomStudent.setObsId(student.getObsid());
+                classroomStudent.setProName(student.getProname());
+                // 判断username是否合法
+                String usernameInDataSource = stUsersService.getUsernameById(student.getUsersid());
+                SmartAssert.eq(usernameInDataSource,username,ResponseEnum.USERNAME_NOT_EQ);
+                // username
+                classroomStudent.setUserName(username);
+                // obsName
+                classroomStudent.setObsName(obsName);
+                // loginname
+                classroomStudent.setLoginname(stUsersService.getloginNameById(student.getUsersid()));
                 classroomStudentList.add(classroomStudent);
             }
             return classroomStudentList;

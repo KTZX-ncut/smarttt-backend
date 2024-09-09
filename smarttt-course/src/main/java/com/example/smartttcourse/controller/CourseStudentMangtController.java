@@ -73,9 +73,9 @@ public class CourseStudentMangtController {
      * @return
      */
     @PostMapping("/import")
-    public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file){
+    public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file, @RequestParam("classroomId") String classRoomId){
         try{
-            List<CmClassroomStudent> classroomStudentList = cmClassroomStudentService.importClassRoomStudentExcel(file);
+            List<CmClassroomStudent> classroomStudentList = cmClassroomStudentService.importClassRoomStudentExcel(file,classRoomId);
             // 批量插入
             SmartAssert.notFalse(cmClassroomStudentService
                     .saveBatch(classroomStudentList),

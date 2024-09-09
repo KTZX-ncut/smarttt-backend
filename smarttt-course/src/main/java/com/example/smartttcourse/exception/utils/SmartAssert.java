@@ -32,4 +32,8 @@ public abstract class SmartAssert {
     public static void notNull(Object o, ResponseEnum responseEnum) {
         if(o == null) throw new BusinessException(responseEnum);
     }
+
+    public static void eq(String usernameInDataSource, String username, ResponseEnum responseEnum) {
+        if(!usernameInDataSource.equals(username)) throw new BusinessException(responseEnum);
+    }
 }

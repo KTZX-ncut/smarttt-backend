@@ -14,4 +14,6 @@ public interface StUsersService {
     String getUsernameById(String usersid);
 
     List<StudentDto> getAllStudentByObsID(String id);
+
+    String getloginNameById(String usersid);
 }

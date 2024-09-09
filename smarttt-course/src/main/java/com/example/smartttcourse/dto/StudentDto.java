@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDto{
-    private String stuId;
+    // 学生表中的id（stuId）
+    private String id;
     // 学生是属于哪一个班级 相当与班级ID
     private String obsid;
     //学生ID
