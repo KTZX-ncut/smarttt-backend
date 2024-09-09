@@ -1,6 +1,5 @@
 package com.example.smartttcourse.exception.utils;
 
-import com.example.smartttcourse.dto.CreateStudentDto;
 import com.example.smartttcourse.exception.cus.BusinessException;
 import com.example.smartttcourse.exception.res.ResponseEnum;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +23,13 @@ public abstract class SmartAssert {
         }
     }
 
-    public static void ListIsNotNull(List<CreateStudentDto> createStudentDtoList,ResponseEnum responseEnum) {
-        if(createStudentDtoList == null || createStudentDtoList.size() < 1){
-            throw new BusinessException(responseEnum);
-        }
-    }
+
 
     public static void notFalse(boolean b, ResponseEnum responseEnum) {
         if(!b) throw new BusinessException(responseEnum);
+    }
+
+    public static void notNull(Object o, ResponseEnum responseEnum) {
+        if(o == null) throw new BusinessException(responseEnum);
     }
 }

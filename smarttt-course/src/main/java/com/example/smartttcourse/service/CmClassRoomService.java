@@ -14,4 +14,6 @@ public interface CmClassRoomService {
     Result createOneClassroom(CmClassroom classroomReq);
 
     Result updateOneClassroom(CmClassroom classroom);
+
+    String getClassRoomByClassRoomName(String classRoomName);
 }

@@ -1,5 +1,6 @@
 package com.example.smartttcourse.service.impl;
 
+import com.example.smartttcourse.dto.StudentDto;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.SmObsMapper;
 import com.example.smartttcourse.mapper.StUsersMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.example.smartttcourse.Utils.CommonFunctions.generateEnhancedID;
 
@@ -42,5 +44,10 @@ public class StUsersServiceImpl implements StUsersService {
     @Override
     public String getUsernameById(String usersid) {
         return stUsersMapper.getUsernameById(usersid);
+    }
+
+    @Override
+    public List<StudentDto> getAllStudentByObsID(String id) {
+        return stUsersMapper.getAllStudentByObsID(id);
     }
 }

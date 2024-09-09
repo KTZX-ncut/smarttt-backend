@@ -8,4 +8,6 @@ public interface SmObsService extends IService<SmObs> {
     String getSchoolObs();
 
     Result getObsRPList(String obsID);
+
+    Result getObsRPStudentList(String obsID);
 }

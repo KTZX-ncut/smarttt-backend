@@ -25,4 +25,8 @@ public interface CmClassRoomMapper {
     void createClassroom(CmClassroom classroom);
 
     void updateOneClassroom(CmClassroom classroom);
+
+    @Select("SELECT id FROM cm_classroom\n" +
+            "where classroomName = #{classRoomName}")
+    String getClassRoomByClassRoomName(@Param("classRoomName") String classRoomName);
 }

@@ -51,4 +51,9 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
         cmClassRoomMapper.updateOneClassroom(classroom);
         return Result.success();
     }
+
+    @Override
+    public String getClassRoomByClassRoomName(String classRoomName) {
+        return cmClassRoomMapper.getClassRoomByClassRoomName(classRoomName);
+    }
 }

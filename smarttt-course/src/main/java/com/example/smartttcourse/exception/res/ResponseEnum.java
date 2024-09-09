@@ -16,8 +16,9 @@ public enum ResponseEnum {
     ERROR(-1, "服务器内部错误"),
     SERVLET_ERROR(-2,"controller上层错误"),
     PARAM_IS_NOT_NULL(-710,"参数为空"),
-    INSERT_FAIL(-711,"插入失败")
-    ;
+    INSERT_FAIL(-711,"插入失败"),
+    TOKEN_IS_NULL(-712, "token为空"),
+    FIELD_IS_NULL(-713, "所要求的字段为空，请检查字段！");
     private Integer code;//状态码
     private String message;//消息
 }

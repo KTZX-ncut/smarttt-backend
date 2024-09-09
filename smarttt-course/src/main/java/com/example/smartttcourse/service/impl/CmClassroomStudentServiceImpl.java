@@ -3,14 +3,15 @@ package com.example.smartttcourse.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttcourse.Utils.CommonFunctions;
+import com.example.smartttcourse.dto.StudentTree;
+import com.example.smartttcourse.exception.res.ResponseEnum;
 import com.example.smartttcourse.exception.res.Result;
-import com.example.smartttcourse.dto.StudentDto;
+import com.example.smartttcourse.exception.utils.SmartAssert;
 import com.example.smartttcourse.mapper.CmClassStudentMapper;
 import com.example.smartttcourse.mapper.SmObsMapper;
 import com.example.smartttcourse.pojo.*;
 import com.example.smartttcourse.service.*;
 import com.example.smartttcourse.vo.StudentInfoVO;
-import com.example.smartttcourse.vo.StudentVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.BeanUtils;
@@ -43,9 +44,11 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
 
     private final StUsersService stUsersService;
 
+    private final CmClassRoomService cmClassRoomService;
 
 
-    public CmClassroomStudentServiceImpl(CmClassStudentMapper cmClassStudentMapper, CmClassroomClassroommenuService cmClassroomClassroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomMypracticelistService cmClassroomMypracticelistService, SmStudentService smStudentService, SmObsMapper smObsMapper, SmObsService smObsService, StUsersService stUsersService) {
+
+    public CmClassroomStudentServiceImpl(CmClassStudentMapper cmClassStudentMapper, CmClassroomClassroommenuService cmClassroomClassroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomMypracticelistService cmClassroomMypracticelistService, SmStudentService smStudentService, SmObsMapper smObsMapper, SmObsService smObsService, StUsersService stUsersService, CmClassRoomService cmClassRoomService) {
         this.cmClassStudentMapper = cmClassStudentMapper;
         this.cmClassroomClassroommenuService = cmClassroomClassroommenuService;
         this.cmClassroomHomeworkinfoService = cmClassroomHomeworkinfoService;
@@ -53,6 +56,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         this.smStudentService = smStudentService;
         this.smObsService = smObsService;
         this.stUsersService = stUsersService;
+        this.cmClassRoomService = cmClassRoomService;
     }
 
     @Override
@@ -120,43 +124,30 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
     }
 
     @Override
-    public Result getStudentList(StudentDto studentDto) {
-        List<SmObs> AllObs = smObsService.list();
-        Map<String, List<SmObs>> obsMap = AllObs.stream()
-                .collect(Collectors.groupingBy(SmObs::getPid));
-        List<SmObs> rootObs = obsMap.get(studentDto.getObsid());
-        List<String> obsChildrenList = new ArrayList<>();
-        obsChildrenList.add(studentDto.getObsid());
-        if(rootObs!=null)obsChildrenList.addAll(getObsChildren(rootObs,obsMap));
-        List<StudentVO> studentVOFinalList = new ArrayList<>();
-        for (String obsId : obsChildrenList) {
-            // 去学生表里查学生
-            LambdaQueryWrapper<SmStudent> studentWrapper = new LambdaQueryWrapper<>();
-            studentWrapper.eq(SmStudent::getObsid,obsId);
-            // 分别选择性根据班级，专业进行过滤
-            studentWrapper.eq(!isEmpty(studentDto.getClassno()),SmStudent::getClassno,studentDto.getClassno());
-            studentWrapper.eq(!isEmpty(studentDto.getProname()),SmStudent::getProname,studentDto.getProname());
-
-            List<SmStudent> smStudentList =smStudentService.list(studentWrapper);
-            // 获取学生姓名
-            List<StudentVO> studentVOList = new ArrayList<>();
-            smStudentList.stream().forEach(s->{
-                StudentVO studentVO = new StudentVO();
-                BeanUtils.copyProperties(s,studentVO);
-                // 拿到Username
-                String userName = stUsersService.getUsernameById(s.getUsersid());
-                studentVO.setUsername(userName);
-                // 拿到班级
-                String obsName = cmClassStudentMapper.getObsNameByUserId(s.getUsersid());
-                studentVO.setObsname(obsName);
-                studentVOList.add(studentVO);
-            });
-            studentVOFinalList.addAll(studentVOList);
+    public Result getStudentList(String obsid){
+        SmartAssert.notEmpty(obsid, ResponseEnum.FIELD_IS_NULL);
+        // 查数据库
+        LambdaQueryWrapper<CmClassroomStudent> wrapper =
+                new LambdaQueryWrapper<>();
+        wrapper.eq(CmClassroomStudent::getClassroomId,obsid);
+        List<CmClassroomStudent> studentList = baseMapper.selectList(wrapper);
+        ArrayList<StudentInfoVO> studentInfoVOS = new ArrayList<>();
+        for (CmClassroomStudent student : studentList) {
+            StudentInfoVO studentInfoVO = new StudentInfoVO();
+            BeanUtils.copyProperties(student,studentInfoVO);
+            LambdaQueryWrapper<SmStudent> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(SmStudent::getUsersid,studentInfoVO.getUserId());
+            SmStudent one = smStudentService.getOne(lambdaQueryWrapper);
+            studentInfoVO.setStuId(one.getId());
+            studentInfoVO.setStuno(one.getStuno());
+            studentInfoVOS.add(studentInfoVO);
         }
-        return Result.success(studentVOFinalList);
+
+        return Result.success(studentInfoVOS);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
@@ -168,40 +159,75 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
             List<CmClassroomStudent> classroomStudentList = new ArrayList<>();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
-                String classRoomId = dataFormatter.formatCellValue(row.getCell(1));
-                String UserId = dataFormatter.formatCellValue(row.getCell(2));
-                String obsId = dataFormatter.formatCellValue(row.getCell(3));
-                String username = dataFormatter.formatCellValue(row.getCell(4));
+                Long rowNo = Long.valueOf(dataFormatter.formatCellValue(row.getCell(0)));
+                String stuno = dataFormatter.formatCellValue(row.getCell(1));
+                String username = dataFormatter.formatCellValue(row.getCell(2));
+                String loginname = dataFormatter.formatCellValue(row.getCell(3));
+                String classRoomName = dataFormatter.formatCellValue(row.getCell(4));
                 String obsname = dataFormatter.formatCellValue(row.getCell(5));
                 String proname = dataFormatter.formatCellValue(row.getCell(6));
-                String loginname = dataFormatter.formatCellValue(row.getCell(7));
+                // 拿到ClassRoomId
+                String classRoomId = cmClassRoomService.getClassRoomByClassRoomName(classRoomName);
 
-                CmClassroomStudent classroomStudent = new CmClassroomStudent(CommonFunctions.generateEnhancedID(username+UserId),classRoomId,UserId,obsId,username,obsname,proname,loginname,0,0);
+                // 通过学号stuno拿到 userId
+                LambdaQueryWrapper<SmStudent> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(SmStudent::getStuno,stuno);
+                SmStudent student = smStudentService.getOne(wrapper);
+                String userId = student.getUsersid();
+                String obsId = student.getObsid();
+                CmClassroomStudent classroomStudent = new CmClassroomStudent(CommonFunctions.generateEnhancedID(username+userId),classRoomId,userId,obsId,username,obsname,proname,loginname,rowNo,0);
                 classroomStudentList.add(classroomStudent);
             }
             return classroomStudentList;
         } catch (IOException e) {
+            System.out.println(e.getStackTrace());
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * 递归输出rootobsid下的所有ChildrenObsid
-     * @param parentSmObs
-     * @param ObsMap
-     * @return
-     */
-    public static List<String> getObsChildren(List<SmObs> parentSmObs, Map<String, List<SmObs>>  ObsMap){
-        List<String> obsChildren = parentSmObs.stream()
-                .map(SmObs::getId)
-                .collect(Collectors.toList());
-        for(SmObs parentObs :parentSmObs){
-            List<SmObs> childObs =  ObsMap.get(parentObs.getId());
+    @Override
+    public Result getObsRPStudentList(String RootObsID) {
+        List<SmObs> allObs = smObsService.list();
+        // List<SmObs> 转 List<StudentTree>
+        ArrayList<StudentTree> allObsTree = new ArrayList<>();
+        for (SmObs obs : allObs) {
+            StudentTree studentTree = new StudentTree();
+            BeanUtils.copyProperties(obs,studentTree);
+            allObsTree.add(studentTree);
+        }
+        Map<String, List<StudentTree>> obsMap = allObsTree.stream()
+                .collect(Collectors.groupingBy(StudentTree::getPid,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.stream()
+                                        .sorted(Comparator.comparingLong(StudentTree::getOrderno))
+                                        .collect(Collectors.toList())
+                        )
+                ));
+
+
+        List<StudentTree> rootObs =  obsMap.get(RootObsID);
+        // 递归构建菜单树
+        try{
+            buildObsRPTree(rootObs,  obsMap);
+        }catch (NullPointerException e){
+            return Result.error("未找到结果");
+        }
+
+        return Result.success(rootObs);
+    }
+
+
+    private void buildObsRPTree(List<StudentTree> parentSmObs, Map<String, List<StudentTree>> obsMap) {
+        for (StudentTree parentObs : parentSmObs) {
+            parentObs.setStudentDtos(stUsersService.getAllStudentByObsID(parentObs.getId()));
+            //找出pid为父菜单的孩子
+            List<StudentTree> childObs =  obsMap.get(parentObs.getId());
             if (childObs != null) {
-                obsChildren.addAll(getObsChildren(childObs, ObsMap));
+                parentObs.setChildren(childObs);
+                buildObsRPTree(childObs, obsMap);
             }
         }
-        return obsChildren;
     }
 
     public static boolean isEmpty(String o){

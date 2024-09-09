@@ -1,8 +1,8 @@
 package com.example.smartttcourse.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.exception.res.Result;
-import com.example.smartttcourse.dto.StudentDto;
 import com.example.smartttcourse.pojo.CmClassroomStudent;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +20,9 @@ public interface CmClassroomStudentService extends IService<CmClassroomStudent>{
 
     boolean deleteClassRoomStudentAll(String classRoomId);
 
-    Result getStudentList(StudentDto studentDto);
+    Result getStudentList(String obsis);
 
     List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file);
+
+    Result getObsRPStudentList(String obsID);
 }
