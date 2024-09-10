@@ -26,13 +26,18 @@ public interface StUsersMapper{
     @Select("SELECT username FROM  st_users where id = #{usersid}")
     String getUsernameById(@Param("usersid") String usersid);
 
-    @Select("SELECT s.id,s.obsid,s.usersid,c.proname,c.obsName obsname,c.loginname,c.userName username FROM sm_student s\n" +
+    @Select("SELECT s.id,s.obsid,s.usersid,\n" +
+            "(\n" +
+            "SELECT obsname FROM sm_obs WHERE id = (\n" +
+            "\t\tSELECT pid FROM sm_obs WHERE id = s.obsid\n" +
+            "\t)\n" +
+            ") proname,\n" +
+            "(SELECT obsname FROM sm_obs WHERE id = s.obsid) obsname,\n" +
+            "u.loginname,u.username FROM sm_student s\n" +
             "JOIN st_users u\n" +
             "ON s.usersid = u.id\n" +
             "JOIN sm_obs o \n" +
             "ON s.obsid = o.id\n" +
-            "JOIN cm_classroom_student c \n" +
-            "ON s.usersid = c.userId\n" +
             "WHERE s.obsid = #{obsid}")
     List<StudentDto> getAllStudentByObsID(@Param("obsid") String id);
 

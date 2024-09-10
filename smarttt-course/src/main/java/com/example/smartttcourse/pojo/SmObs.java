@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SmObs {
-
   private String id;
   private String pid;
   private long orderno;
