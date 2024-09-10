@@ -172,6 +172,15 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 QueryWrapper<SmStudent> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("stuno",stuno);
                 SmStudent student = smStudentService.getOne(queryWrapper);
+                // 判断班级里面有没有这个学生
+                LambdaQueryWrapper<CmClassroomStudent> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(CmClassroomStudent::getUserId,student.getUsersid())
+                                .eq(CmClassroomStudent::getClassroomId,classRoomId);
+                Integer count = baseMapper.selectCount(wrapper);
+                if (count != 0){
+                    // 说明该班级存在这个学生了,抛出异常
+                    throw new RuntimeException();
+                }
                 classroomStudent.setUserId(student.getUsersid());
                 classroomStudent.setObsId(student.getObsid());
                 classroomStudent.setProName(student.getProname());
@@ -181,6 +190,9 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 // username
                 classroomStudent.setUserName(username);
                 // obsName
+                String obsNameInDataSource = smObsService.getById(student.getObsid()).getObsname();
+                // 校验班级是否合法
+                SmartAssert.eq(obsNameInDataSource,obsName,ResponseEnum.DATA_NOT_VALIDATE);
                 classroomStudent.setObsName(obsName);
                 // loginname
                 classroomStudent.setLoginname(stUsersService.getloginNameById(student.getUsersid()));

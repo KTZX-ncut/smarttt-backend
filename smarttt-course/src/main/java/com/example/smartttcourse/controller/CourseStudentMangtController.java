@@ -1,5 +1,6 @@
 package com.example.smartttcourse.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.smartttcourse.Utils.AuthorizationAspect;
 import com.example.smartttcourse.Utils.CommonFunctions;
 import com.example.smartttcourse.dto.CreateStudent;
@@ -54,14 +55,20 @@ public class CourseStudentMangtController {
     @PostMapping("/create")
     @Transactional(rollbackFor = Exception.class)
     public Result createStudentClassRoom(@RequestBody List<CreateStudent> createStudentList){
-
         ArrayList<CmClassroomStudent> list = new ArrayList<>();
         for (CreateStudent createStudent : createStudentList) {
             CmClassroomStudent classroomStudent = new CmClassroomStudent();
             // 校验字段
             validateCreateStudentClassRoom(createStudent,classroomStudent);
-
-            list.add(classroomStudent);
+            // 这个学生有没有在课堂中
+            LambdaQueryWrapper<CmClassroomStudent> wrapper =
+                    new LambdaQueryWrapper<>();
+            wrapper.eq(CmClassroomStudent::getClassroomId,classroomStudent.getClassroomId())
+                    .eq(CmClassroomStudent::getUserId,classroomStudent.getUserId());
+            int count = cmClassroomStudentService.count(wrapper);
+            if(count == 0){
+                list.add(classroomStudent);
+            }
         }
         Boolean f = cmClassroomStudentService.saveBatch(list);
         return Result.success(f);
