@@ -2,7 +2,6 @@ package com.example.smartttcourse.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.smartttcourse.Utils.AuthorizationAspect;
-import com.example.smartttcourse.Utils.CommonFunctions;
 import com.example.smartttcourse.dto.CreateStudent;
 import com.example.smartttcourse.exception.res.ResponseEnum;
 import com.example.smartttcourse.exception.res.Result;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +39,6 @@ public class CourseStudentMangtController {
      */
     @GetMapping("/list")
     public Result getStudentList(@RequestParam("obsid") String obsid){
-
         return cmClassroomStudentService.getStudentList(obsid);
     }
 
@@ -52,6 +49,11 @@ public class CourseStudentMangtController {
         return cmClassroomStudentService.getObsRPStudentList(obsID);
     }
 
+    /**
+     * 将学生加入指定课堂
+     * @param createStudentList
+     * @return
+     */
     @PostMapping("/create")
     @Transactional(rollbackFor = Exception.class)
     public Result createStudentClassRoom(@RequestBody List<CreateStudent> createStudentList){
@@ -93,17 +95,6 @@ public class CourseStudentMangtController {
         }
     }
 
-    /**
-     * 查询任课老师的课堂下的所有学生
-     * @return Result
-     */
-    @GetMapping("/v/list")
-    public Result getStudentListTest(){
-        // 从ThreadLocal中拿到token
-        Token token = AuthorizationAspect.getTokenFromContext();
-        if(token == null || token.getObsid() == null) return Result.error("token为空,非法请求");
-        return cmClassroomStudentService.getStudentListByClassRoomId(token.getObsid());
-    }
 
     /**
      * 删除指定课堂ID下的学生
@@ -123,6 +114,11 @@ public class CourseStudentMangtController {
 
     }
 
+    /**
+     * 删除指定课堂ID下的全部学生
+     * @param classRoomId
+     * @return
+     */
     @DeleteMapping("/deleteAll")
     public Result deleteAllStudent(@RequestParam("classRoomId") String classRoomId){
         if(classRoomId == null || "".equals(classRoomId)){

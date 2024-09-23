@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttcourse.mapper.CmClassStudentMapper">
+
+    <select id="getStudentListByClassRoomId" parameterType="string" resultType="com.example.smartttcourse.dto.StudentInfoDto">
+        SELECT cs.id,cs.classroomId,cs.userId,cs.obsId,cs.userName,cs.loginname,
+               cs.rowNo,
+               cs.courseScore,
+               s1.obsname obsname,
+               s2.obsName proname,
+               st.id stuId,
+                st.stuno
+        FROM cm_classroom_student cs
+        JOIN sm_obs s1
+        ON cs.obsId = s1.id
+        JOIN sm_obs s2
+        ON s1.pid = s2.id
+        JOIN sm_student st
+        ON st.usersid = cs.userId
+        <where>
+            cs.classroomId = #{classRoomId}
+        </where>
+    </select>
+
+</mapper>

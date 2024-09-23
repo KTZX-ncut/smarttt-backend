@@ -14,8 +14,6 @@ import java.util.List;
  */
 public interface CmClassroomStudentService extends IService<CmClassroomStudent>{
 
-    Result getStudentListByClassRoomId(String classRoomId);
-
     boolean deleteClassRoomStudent(List<String> ids, String classRoomId);
 
     boolean deleteClassRoomStudentAll(String classRoomId);

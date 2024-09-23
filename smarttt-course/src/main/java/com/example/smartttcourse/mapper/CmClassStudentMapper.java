@@ -2,7 +2,7 @@ package com.example.smartttcourse.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.smartttcourse.pojo.CmClassroomStudent;
-import com.example.smartttcourse.vo.StudentInfoVO;
+import com.example.smartttcourse.dto.StudentInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -15,11 +15,8 @@ import java.util.List;
  */
 @Mapper
 public interface CmClassStudentMapper extends BaseMapper<CmClassroomStudent>{
-    @Select("SELECT cs.*, ss.stuno,ss.id stuId FROM cm_classroom_student cs\n" +
-            "LEFT JOIN sm_student ss\n" +
-            "ON cs.userId = ss.usersid\n" +
-            "WHERE cs.classroomId = #{classRoomId}")
-    List<StudentInfoVO> getStudentListByClassRoomId(@Param("classRoomId") String classRoomId);
+
+    List<StudentInfoDto> getStudentListByClassRoomId(@Param("classRoomId") String classRoomId);
 
     @Select("SELECT obsname FROM cm_classroom_student WHERE userId = #{userId}")
     String getObsNameByUserId(@Param("userId") String userId);

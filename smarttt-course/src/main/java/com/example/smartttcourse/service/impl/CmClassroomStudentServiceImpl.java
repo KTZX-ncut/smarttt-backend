@@ -3,7 +3,7 @@ package com.example.smartttcourse.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.smartttcourse.Utils.CommonFunctions;
+import com.example.smartttcourse.dto.StudentInfoDto;
 import com.example.smartttcourse.dto.StudentTree;
 import com.example.smartttcourse.exception.res.ResponseEnum;
 import com.example.smartttcourse.exception.res.Result;
@@ -12,7 +12,6 @@ import com.example.smartttcourse.mapper.CmClassStudentMapper;
 import com.example.smartttcourse.mapper.SmObsMapper;
 import com.example.smartttcourse.pojo.*;
 import com.example.smartttcourse.service.*;
-import com.example.smartttcourse.vo.StudentInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.BeanUtils;
@@ -32,9 +31,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMapper,CmClassroomStudent> implements CmClassroomStudentService {
-
-    private final CmClassStudentMapper cmClassStudentMapper;
-
     private final CmClassroomClassroommenuService cmClassroomClassroommenuService;
     private final CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService;
     private final CmClassroomMypracticelistService cmClassroomMypracticelistService;
@@ -45,26 +41,15 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
 
     private final StUsersService stUsersService;
 
-    private final CmClassRoomService cmClassRoomService;
-
-
-
-    public CmClassroomStudentServiceImpl(CmClassStudentMapper cmClassStudentMapper, CmClassroomClassroommenuService cmClassroomClassroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomMypracticelistService cmClassroomMypracticelistService, SmStudentService smStudentService, SmObsMapper smObsMapper, SmObsService smObsService, StUsersService stUsersService, CmClassRoomService cmClassRoomService) {
-        this.cmClassStudentMapper = cmClassStudentMapper;
+    public CmClassroomStudentServiceImpl(CmClassroomClassroommenuService cmClassroomClassroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomMypracticelistService cmClassroomMypracticelistService, SmStudentService smStudentService,SmObsService smObsService, StUsersService stUsersService) {
         this.cmClassroomClassroommenuService = cmClassroomClassroommenuService;
         this.cmClassroomHomeworkinfoService = cmClassroomHomeworkinfoService;
         this.cmClassroomMypracticelistService = cmClassroomMypracticelistService;
         this.smStudentService = smStudentService;
         this.smObsService = smObsService;
         this.stUsersService = stUsersService;
-        this.cmClassRoomService = cmClassRoomService;
     }
 
-    @Override
-    public Result getStudentListByClassRoomId(String classRoomId) {
-        List<StudentInfoVO> StudentInfoVOList = cmClassStudentMapper.getStudentListByClassRoomId(classRoomId);
-        return Result.success(StudentInfoVOList);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -111,15 +96,18 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         baseMapper.delete(classroomStudentLambdaQueryWrapper);
         // 2. 从课堂菜单表删除
         LambdaQueryWrapper<CmClassroomClassroommenu> classroomClassroommenuLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        classroomClassroommenuLambdaQueryWrapper.eq(CmClassroomClassroommenu::getClassroomid,classRoomId);
+        classroomClassroommenuLambdaQueryWrapper.
+                eq(CmClassroomClassroommenu::getClassroomid,classRoomId);
         cmClassroomClassroommenuService.remove(classroomClassroommenuLambdaQueryWrapper);
         // 3. 作业统计信息表
         LambdaQueryWrapper<CmClassroomHomeworkinfo> cmClassroomHomeworkinfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        cmClassroomHomeworkinfoLambdaQueryWrapper.eq(CmClassroomHomeworkinfo::getClassroomid,classRoomId);
+        cmClassroomHomeworkinfoLambdaQueryWrapper.
+                eq(CmClassroomHomeworkinfo::getClassroomid,classRoomId);
         cmClassroomHomeworkinfoService.remove(cmClassroomHomeworkinfoLambdaQueryWrapper);
         // 4. 作业考试表
         LambdaQueryWrapper<CmClassroomMypracticelist> classroomMypracticelistLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        classroomMypracticelistLambdaQueryWrapper.eq(CmClassroomMypracticelist::getClassroomid,classRoomId);
+        classroomMypracticelistLambdaQueryWrapper.
+                eq(CmClassroomMypracticelist::getClassroomid,classRoomId);
         cmClassroomMypracticelistService.remove(classroomMypracticelistLambdaQueryWrapper);
         return true;
     }
@@ -127,24 +115,13 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
     @Override
     public Result getStudentList(String obsid){
         SmartAssert.notEmpty(obsid, ResponseEnum.FIELD_IS_NULL);
-        // 查数据库
-        LambdaQueryWrapper<CmClassroomStudent> wrapper =
-                new LambdaQueryWrapper<>();
-        wrapper.eq(CmClassroomStudent::getClassroomId,obsid);
-        List<CmClassroomStudent> studentList = baseMapper.selectList(wrapper);
-        ArrayList<StudentInfoVO> studentInfoVOS = new ArrayList<>();
-        for (CmClassroomStudent student : studentList) {
-            StudentInfoVO studentInfoVO = new StudentInfoVO();
-            BeanUtils.copyProperties(student,studentInfoVO);
-            LambdaQueryWrapper<SmStudent> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(SmStudent::getUsersid,studentInfoVO.getUserId());
-            SmStudent one = smStudentService.getOne(lambdaQueryWrapper);
-            studentInfoVO.setStuId(one.getId());
-            studentInfoVO.setStuno(one.getStuno());
-            studentInfoVOS.add(studentInfoVO);
-        }
 
-        return Result.success(studentInfoVOS);
+        // 查cm_classroom_student
+        // (单独去join表，因为这个表里没有proName 和 obsName）-> 从sm_obs中拿
+        // 从Student表中拿到studentId 和 stuno
+        List<StudentInfoDto> studentInfoDtoList = baseMapper.getStudentListByClassRoomId(obsid);
+        log.info("一共{}个学生",studentInfoDtoList.size());
+        return Result.success(studentInfoDtoList);
     }
 
     @Override
