@@ -12,8 +12,8 @@ public interface CmAbilityMapper {
     /**
      * 创建一个新能力
      */
-    @Insert("INSERT INTO cm_ability (id, pid, orderno, abilitydeep, name, datavalue,importantlevel, remark, levelcode) " +
-            "VALUES (#{id},#{pid},#{orderno},#{abilitydeep},#{name},#{datavalue},#{importantlevel}, #{remark},#{levelcode})")
+    @Insert("INSERT INTO cm_ability (id, pid,professionid ,orderno, abilitydeep, name, datavalue,importantlevel, remark, levelcode) " +
+            "VALUES (#{id},#{pid},#{professionid},#{orderno},#{abilitydeep},#{name},#{datavalue},#{importantlevel}, #{remark},#{levelcode})")
     void createOneNewAbility(CmAbility cmAbility);
     /**
      * 删除一个能力
@@ -27,8 +27,8 @@ public interface CmAbilityMapper {
     /**
      * 返回全部能力树
      */
-    @Select("select * from cm_ability")
-    List<CmAbilityTree> getAllCmAbilityTree();
+    @Select("select * from cm_ability where professionId=#{proId}")
+    List<CmAbilityTree> getAllCmAbilityTreeByProId(@Param("proId") String proId);
     /**
      * 返回全部能力列表
      */

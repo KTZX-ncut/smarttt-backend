@@ -20,8 +20,10 @@ public class CommonFunctions {
     /**
      * 生成一棵树路径
      * @param treeList 所有的树形结构都满足
+     * @param id 传当前节点id
      * @return 一棵树的路径，可用与生成层级码和path
      * id->(pid,orderno)
+     * ret：生成一个与当前id为叶子节点的一跳树的路径
      */
     public static List<TreeStructure> generateTreeStructureList(List<TreeStructure> treeList, String id){
 
