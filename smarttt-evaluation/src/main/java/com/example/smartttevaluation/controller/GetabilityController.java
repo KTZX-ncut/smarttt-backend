@@ -36,7 +36,8 @@ public class GetabilityController {
     }
 
     @GetMapping("/allability")
-    public Result getAbility() {
+    @AuthRequired
+    public Result getAbility(HttpServletRequest request) {
         // 从token里那获取专业ID
         Token token = getTokenFromContext();
         if(token == null) return Result.error(-710,"请登录");
