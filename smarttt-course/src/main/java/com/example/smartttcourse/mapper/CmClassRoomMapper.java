@@ -1,7 +1,6 @@
 package com.example.smartttcourse.mapper;
 
 import com.example.smartttcourse.dto.ClassroomReq;
-import com.example.smartttcourse.dto.Result;
 import com.example.smartttcourse.pojo.CmClassroom;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,4 +25,8 @@ public interface CmClassRoomMapper {
     void createClassroom(CmClassroom classroom);
 
     void updateOneClassroom(CmClassroom classroom);
+
+    @Select("SELECT id FROM cm_classroom\n" +
+            "where classroomName = #{classRoomName}")
+    String getClassRoomByClassRoomName(@Param("classRoomName") String classRoomName);
 }

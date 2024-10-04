@@ -1,8 +1,7 @@
 package com.example.smartttcourse.controller;
 
 import com.example.smartttcourse.Utils.AuthRequired;
-import com.example.smartttcourse.dto.ClassroomReq;
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmClassroom;
 import com.example.smartttcourse.service.CmClassRoomService;

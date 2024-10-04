@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.dto.Token;
@@ -35,8 +36,14 @@ public class GetabilityController {
     }
 
     @GetMapping("/allability")
-    public Result getAbility() {
-        return cmAbilityService.getAbilityTree();
+    @AuthRequired
+    public Result getAbility(HttpServletRequest request) {
+        // 从token里那获取专业ID
+        Token token = getTokenFromContext();
+        if(token == null) return Result.error(-710,"请登录");
+        String proId = token.getObsid();
+        if(proId == null) return Result.error(-710,"token不合法");
+        return cmAbilityService.getAbilityTreeByProId(proId);
     }
     /**
      *批量添加能力

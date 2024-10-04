@@ -8,7 +8,7 @@ import com.example.smartttcourse.service.CmTermService;
 import com.example.smartttcourse.service.SmObsService;
 import com.example.smartttcourse.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.service.CmCourseService;
 import org.springframework.web.bind.annotation.*;
 

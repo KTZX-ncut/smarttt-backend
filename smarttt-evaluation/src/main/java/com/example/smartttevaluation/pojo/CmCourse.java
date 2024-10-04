@@ -26,5 +26,6 @@ public class CmCourse {
     private String professionname;//所属专业
     private String dutymanid;//课程负责人id
     private String dutyman;//课程负责人
+    private String professionId; // 专业id
     private String createtime;
 }

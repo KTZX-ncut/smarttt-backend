@@ -1,9 +1,11 @@
 package com.example.smartttcourse.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttcourse.dto.ObsRPTree;
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.SmObsMapper;
 import com.example.smartttcourse.mapper.StUsersMapper;
+import com.example.smartttcourse.pojo.SmObs;
 import com.example.smartttcourse.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class SmObsServiceImpl implements SmObsService {
+public class SmObsServiceImpl extends ServiceImpl<SmObsMapper, SmObs> implements SmObsService {
     @Autowired
     private SmObsMapper smObsMapper;
     @Autowired
@@ -48,6 +50,12 @@ public class SmObsServiceImpl implements SmObsService {
 
         return Result.success(rootObs);
     }
+
+    @Override
+    public Result getObsRPStudentList(String obsID) {
+        return null;
+    }
+
     private void buildObsRPTree(List<ObsRPTree> parentSmObs, Map<String, List<ObsRPTree>> obsMap) {
         for (ObsRPTree parentObs : parentSmObs) {
             parentObs.setResponsiblePerson(stUsersMapper.getAllTeacherByObsID(parentObs.getId()));

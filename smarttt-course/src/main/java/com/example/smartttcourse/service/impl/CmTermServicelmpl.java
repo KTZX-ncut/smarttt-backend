@@ -2,7 +2,7 @@ package com.example.smartttcourse.service.impl;
 
 
 import com.example.smartttcourse.Utils.CommonFunctions;
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.CmTermMapper;
 import com.example.smartttcourse.pojo.CmTerm;
 import com.example.smartttcourse.service.CmTermService;

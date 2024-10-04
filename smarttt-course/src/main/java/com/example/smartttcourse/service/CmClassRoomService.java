@@ -1,6 +1,6 @@
 package com.example.smartttcourse.service;
 
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmClassroom;
 
@@ -14,4 +14,6 @@ public interface CmClassRoomService {
     Result createOneClassroom(CmClassroom classroomReq);
 
     Result updateOneClassroom(CmClassroom classroom);
+
+    String getClassRoomByClassRoomName(String classRoomName);
 }

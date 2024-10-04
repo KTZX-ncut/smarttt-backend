@@ -13,9 +13,13 @@ public class CmClassroomStudent {
   private String classroomId;
   private String userId;
   private String obsId;
+  // 姓名
   private String userName;
+  // 班级
   private String obsName;
+  // 专业
   private String proName;
+  // 登录名称
   private String loginname;
   private long rowNo;
   private double courseScore;

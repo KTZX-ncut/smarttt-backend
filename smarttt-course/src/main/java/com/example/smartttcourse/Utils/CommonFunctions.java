@@ -1,8 +1,10 @@
 package com.example.smartttcourse.Utils;
 
 
+import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.dto.TreeStructure;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 
@@ -60,6 +62,23 @@ public class CommonFunctions {
         }
         levelCode.deleteCharAt(levelCode.length() - 1);
         return levelCode.toString();
+    }
+
+    // 解析token
+    public static Token getToken(HttpServletRequest request){
+        // 从请求头或请求参数中提取出 token
+        String token = request.getHeader("token");
+        if (token == null || token.isEmpty()) {
+            token = request.getParameter("token");
+        }
+        return JwtTokenUtils.parseToken(token,TokenSK);
+    }
+
+    // 模拟一个token
+    public static String getTokenTest(){
+        Token token = new Token();
+        token.setObsid("8aea800182e80d000182e886980c0d7a");
+        return JwtTokenUtils.getToken(token,TokenSK);
     }
 }
 

@@ -1,7 +1,7 @@
 package com.example.smartttcourse.service.impl;
 
 import com.example.smartttcourse.dto.CourseClassroomReq;
-import com.example.smartttcourse.dto.Result;
+import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.mapper.CmClassRoomMapper;
 import com.example.smartttcourse.mapper.CmCourseMapper;
@@ -50,5 +50,10 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     public Result updateOneClassroom(CmClassroom classroom) {
         cmClassRoomMapper.updateOneClassroom(classroom);
         return Result.success();
+    }
+
+    @Override
+    public String getClassRoomByClassRoomName(String classRoomName) {
+        return cmClassRoomMapper.getClassRoomByClassRoomName(classRoomName);
     }
 }

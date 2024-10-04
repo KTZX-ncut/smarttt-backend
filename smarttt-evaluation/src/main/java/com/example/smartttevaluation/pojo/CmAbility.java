@@ -23,5 +23,5 @@ public class CmAbility {
     private String datavalue;//数值
     private String importantlevel;//重要程度
     private String remark;//备注
-    private String proid;//专业id
+    private String professionid;//专业id
 }

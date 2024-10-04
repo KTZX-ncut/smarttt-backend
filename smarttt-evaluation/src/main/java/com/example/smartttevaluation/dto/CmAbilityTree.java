@@ -18,6 +18,7 @@ public class CmAbilityTree {
     private long abilitydeep;
     private String name;
     private String levelcode;
+    private String professionid;
     private List<CmAbilityTree> children;
 
 }

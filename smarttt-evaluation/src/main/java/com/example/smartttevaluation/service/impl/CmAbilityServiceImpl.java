@@ -25,7 +25,8 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     public Result createOneAbility(CmAbility cmAbility) {
         cmAbility.setId(CommonFunctions.generateEnhancedID("cm_ability"));
         //获取兄弟的最大值,然后+1就是orderno
-        long orderNoMax = cmAbilityMapper.getCmAbilityListByPid(cmAbility.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
+        long orderNoMax = cmAbilityMapper.getCmAbilityListByPid(cmAbility.getPid())
+                .stream().mapToLong(Long::valueOf).max().orElse(0);
         cmAbility.setOrderno(orderNoMax+1);
         //cmAbility.setCreatetime(LocalDateTime.now().toString());
         List<CmAbility> cmAbilityList = cmAbilityMapper.getAllCmAbilityList();
@@ -62,10 +63,13 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 能力树
      */
     @Override
-    public Result getAbilityTree() {
-        List<CmAbilityTree> allAbilityTree = cmAbilityMapper.getAllCmAbilityTree();
+    public Result getAbilityTreeByProId(String proId) {
+
+        List<CmAbilityTree> allAbilityTree = cmAbilityMapper.getAllCmAbilityTreeByProId(proId);
+
         Map<String, List<CmAbilityTree>> abilityMap = allAbilityTree.stream()
-                .collect(Collectors.groupingBy(CmAbilityTree::getPid,
+                .collect(
+                        Collectors.groupingBy(CmAbilityTree::getPid,
                         Collectors.collectingAndThen(
                                 Collectors.toList(),
                                 list -> list.stream()
