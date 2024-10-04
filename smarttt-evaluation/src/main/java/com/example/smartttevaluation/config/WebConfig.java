@@ -10,6 +10,6 @@ public class WebConfig implements  WebMvcConfigurer {
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         // 指定controller统一的接口前缀，可以改名,相当于在url上拼了一个/api/xxx
-//        configurer.addPathPrefix("/api", clazz -> clazz.isAnnotationPresent(RestController.class));
+        configurer.addPathPrefix("/api", clazz -> clazz.isAnnotationPresent(RestController.class));
     }
 }
