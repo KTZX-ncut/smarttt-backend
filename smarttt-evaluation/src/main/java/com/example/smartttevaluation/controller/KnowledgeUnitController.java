@@ -32,12 +32,18 @@ public class KnowledgeUnitController {
     }
     //插入一级目录
     @PostMapping("/insertChapter")
-    public Result insertChapter(@RequestBody  CmKnowledgeUnit cmKnowledgeUnit) {
+    @AuthRequired(type = "admin",menu = "531500340-b64043df-c9f1-43a2-b96b-a6134b2953e1")
+    public Result insertChapter(@RequestBody  CmKnowledgeUnit cmKnowledgeUnit,HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmKnowledgeUnit.setCourseid(token.getObsid());
         return cmKnowledgeUnitService.insertChapter(cmKnowledgeUnit);
     }
     //插入二级目录
     @PostMapping("/insertSection")
-    public Result insertSection(@RequestBody  CmKnowledgeUnit cmKnowledgeUnit) {
+    @AuthRequired(type = "admin",menu = "531500340-b64043df-c9f1-43a2-b96b-a6134b2953e1")
+    public Result insertSection(@RequestBody  CmKnowledgeUnit cmKnowledgeUnit,HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmKnowledgeUnit.setCourseid(token.getObsid());
         return cmKnowledgeUnitService.insertSection(cmKnowledgeUnit);
     }
     //插入知识单元kwa
@@ -48,7 +54,6 @@ public class KnowledgeUnitController {
 //批量删除kwa
     @PostMapping("/deleteKnowledgeUnitKwa")
     public Result deleteKnowledgeUnitKwa(@RequestParam("unitid") String unitid,@RequestBody List<String> kwaids) {
-        System.out.println("????????");
         return cmKnowledgeUnitService.deleteKnowledgeUnitKwa(unitid,kwaids);
     }
     //删除知识单元

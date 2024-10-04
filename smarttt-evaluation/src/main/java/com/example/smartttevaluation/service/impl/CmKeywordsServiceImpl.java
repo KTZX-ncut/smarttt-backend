@@ -4,10 +4,17 @@ import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.mapper.CmKeywordsMapper;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.service.CmKeywordsService;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
 
@@ -58,5 +65,31 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
             return Result.error(404, "课程id不存在");
         }
         return Result.success(cmKeywordsMapper.getKwaByKeywordsId(courseid,ids));
+    }
+
+    @Override
+    public List<CmKeywords> importKeywordExcel(MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0); // 假设 Excel 文件中只有一个工作表
+            DataFormatter dataFormatter = new DataFormatter();
+            Iterator<Row> rowIterator = sheet.iterator();
+            rowIterator.next(); // 跳过标题行
+
+            List<CmKeywords> cmKeywordsList = new ArrayList<>();
+            while (rowIterator.hasNext()) {
+                CmKeywords cmKeywords = new CmKeywords();
+                Row row = rowIterator.next();
+                cmKeywords.setName(dataFormatter.formatCellValue(row.getCell(1)));
+                cmKeywords.setDatavalue(dataFormatter.formatCellValue(row.getCell(2)));
+                cmKeywords.setImportantlevelid(dataFormatter.formatCellValue(row.getCell(3)));
+                cmKeywords.setRemark(dataFormatter.formatCellValue(row.getCell(4)));
+                cmKeywordsList.add(cmKeywords);
+
+            }
+            return cmKeywordsList;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

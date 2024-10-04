@@ -2,7 +2,6 @@ package com.example.smartttevaluation.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.smartttevaluation.dto.CmCourseAssessmentTable;
-import com.example.smartttevaluation.dto.CmCourseAssessmentTableItem;
 import com.example.smartttevaluation.pojo.*;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.mapper.CmCourseAssessmentMapper;
@@ -25,7 +24,7 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
         Map<String,CmCheckitem> t_map = new HashMap<>();
         for(CmCheckitem t_cmCourseCheckItem:cmCourseCheckItems){
             t_map.put(t_cmCourseCheckItem.getId(),t_cmCourseCheckItem);
-            t_cmCourseCheckItem.setChildrens(new ArrayList<>());
+            t_cmCourseCheckItem.setChildren(new ArrayList<>());
         }
         for(CmCheckitem t_cmCourseCkeckItem:cmCourseCheckItems){
             if(Objects.equals(t_cmCourseCkeckItem.getPid(), "0")){
@@ -40,7 +39,7 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
                 String t_pid=t_cmCourseCkeckItem.getPid();
                 CmCheckitem p_cmCourseCheckItem=t_map.get(t_pid);
 
-                p_cmCourseCheckItem.getChildrens().add(t_cmCourseCkeckItem);
+                p_cmCourseCheckItem.getChildren().add(t_cmCourseCkeckItem);
             }
 
         }

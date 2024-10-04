@@ -55,7 +55,7 @@ public class CheckitemController {
         return cmCheckitemService.createOneCheckitem(cmCheckitem, courseid);
     }
     /**
-     *删除一个考核项
+     *删除考核项列表
      */
     @PostMapping("/delete")
     public Result deleteCheckitemByIDs(@RequestBody List<String> ids){

@@ -7,6 +7,7 @@ import com.example.smartttadmin.mapper.StUsersMapper;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
+import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.SmObsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,6 +125,8 @@ public class SmObsServiceImpl implements SmObsService {
         List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
         if(obsIDList.isEmpty())
             return Result.error("所属院系/班级输入错误");
+        List<String> stUsersList  = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
+        if(stUsersList!=null)return Result.error("用户名重复");
         String usersId = generateEnhancedID("st_users");
         personnelRoster.setId(usersId);
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
@@ -210,6 +213,16 @@ public class SmObsServiceImpl implements SmObsService {
     @Override
     public Result updateOneObsByID(SmObs smObs) {
         smObsMapper.updateObs(smObs);
+        long levelID = smObsMapper.checkProfession(smObs.getObsdeep());
+//        System.out.println(levelID+"?????????");
+        if(levelID == 104){
+            CmProfession cmProfession= new CmProfession(smObs);
+            smObsMapper.updateProfession(cmProfession);
+        }
+        else if(levelID == 105) {
+            CmClass cmClass = new CmClass(smObs);
+            smObsMapper.updateClass(cmClass);
+        }
         return Result.success();
     }
 
@@ -270,6 +283,7 @@ public class SmObsServiceImpl implements SmObsService {
     @Override
     public Result checkSmObs(SmObs smObs) {
         long levelID = smObsMapper.checkProfession(smObs.getObsdeep());
+//        System.out.println(levelID+"?????????");
         if(levelID == 104){
             CmProfession cmProfession = new CmProfession(smObs);
             cmProfession.setId(generateEnhancedID("cm_profession"));
@@ -278,7 +292,8 @@ public class SmObsServiceImpl implements SmObsService {
         }
         else if(levelID == 105){
             CmClass cmClass = new CmClass(smObs);
-            cmClass.setId(generateEnhancedID("cm_profession"));
+//            System.out.println(cmClass);
+            cmClass.setId(generateEnhancedID("cm_class"));
             smObsMapper.createOneClass(cmClass);
         }
         return Result.success();

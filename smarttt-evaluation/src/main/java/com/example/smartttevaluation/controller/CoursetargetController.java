@@ -40,7 +40,10 @@ public class CoursetargetController {
      *创建课程目标
      */
     @PostMapping("/create")
-    public Result createCoursetarget(@RequestBody CmCoursetarget cmCoursetarget) {
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5")
+    public Result createCoursetarget(@RequestBody CmCoursetarget cmCoursetarget,HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmCoursetarget.setCourseid(token.getObsid());
         return cmCoursetargetService.createCoursetarget(cmCoursetarget);
     }
     /**
