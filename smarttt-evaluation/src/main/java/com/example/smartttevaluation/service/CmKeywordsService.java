@@ -2,6 +2,7 @@ package com.example.smartttevaluation.service;
 
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.pojo.CmKeywords;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface CmKeywordsService {
      *通过关键字id获取kwa
      */
     Result getKwaByKeywordsID(String courseid, List<String> ids);
+
+    List<CmKeywords> importKeywordExcel(MultipartFile file);
 }

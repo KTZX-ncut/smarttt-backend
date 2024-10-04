@@ -86,12 +86,12 @@ public interface CmKwadictMapper {
     /**
      *获取关键字字典
      */
-    @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords")
+    @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords where courseid = #{courseid}")
     List<CmKeywords> getKeywordsDict(@Param("courseid") String courseid);
     /**
      *获取能力字典
      */
-    @Select("select id, orderno, abilitydeep, levelcode, name, datavalue, importantlevel, remark, courseid from cm_getability")
+    @Select("select id, orderno, abilitydeep, levelcode, name, datavalue, importantlevel, remark, courseid from cm_getability where courseid= #{courseid}")
     List<CmGetability> getAbilityDict(@Param("courseid") String courseid);
 
 }

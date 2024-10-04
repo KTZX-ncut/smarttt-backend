@@ -32,6 +32,7 @@ public class AbilityController {
      * 能力列表
      */
     @GetMapping("")
+
     public Result getAbilityList(){
         return cmAbilityService.getAbilityTree();
     }

@@ -72,4 +72,7 @@ public interface StUsersMapper {
 
     @Update("update st_users set phone = 11111111 where loginname =  #{s} ")
     void testTran(String s);
+
+    @Select("select id from st_users where loginname = #{loginname}")
+    List<String> getStUsersByloginName(String loginname);
 }

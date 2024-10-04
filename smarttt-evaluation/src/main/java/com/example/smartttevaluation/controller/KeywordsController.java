@@ -9,8 +9,10 @@ import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.service.CmKeywordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
@@ -64,6 +66,19 @@ public class KeywordsController {
     @PostMapping
     public Result updateKeywords(@RequestBody CmKeywords cmKeywords){
         return cmKeywordsService.updateKeywords(cmKeywords);
+    }
+
+    @PostMapping("/import")
+    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
+    public Result importKeywords(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+        Token token = getTokenFromContext();
+        List<CmKeywords> cmKeywordsList = cmKeywordsService.importKeywordExcel(file);
+        for(CmKeywords cmKeywords :  cmKeywordsList){
+            cmKeywords.setCourseid(token.getObsid());
+            cmKeywordsService.createKeywords(cmKeywords);
+        }
+        return Result.success();
+
     }
 }
 
