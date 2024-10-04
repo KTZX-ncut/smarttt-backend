@@ -32,27 +32,21 @@ public class AbilityController {
 
     @Autowired
     private CmAbilityService cmAbilityService;
-    @Autowired
-    private CourseService courseService;
 
     /**
      * 能力列表
      */
     @GetMapping("")
-    public Result getAbilityListByProId(@RequestParam("courseId") String courseId){
-        // 先拿到课程id
-        //Token token = getTokenFromContext();
-        //String courseId = token.getObsid();
-        if (StringUtils.isBlank(courseId)){
-            return Result.error(-710,"课程id不能为空，请登录");
-        }
-        // 根据课程id 去 课程表 拿到专业id
-        String proId = courseService.getProIdByCourseId(courseId);
-        if (StringUtils.isBlank(proId)){
-            return Result.error(-710,"非法请求");
-        }
-        // 根据专业id去查对应的能力
+    @AuthRequired(type = "admin",menu = "531500340-fe5bb833-fdd7-4416-81dd-f5b20107540f",isReadOnly = true)
+    public Result getAbilityListByProId(HttpServletRequest request){
+
+        // 从token里那获取专业ID
+        Token token = getTokenFromContext();
+        if(token == null) return Result.error(-710,"请登录");
+        String proId = token.getObsid();
+        if(proId == null) return Result.error(-710,"token不合法");
         return cmAbilityService.getAbilityTreeByProId(proId);
+
     }
 
     /**

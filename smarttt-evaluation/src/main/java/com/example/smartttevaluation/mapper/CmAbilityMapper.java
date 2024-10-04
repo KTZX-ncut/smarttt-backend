@@ -12,7 +12,7 @@ public interface CmAbilityMapper {
     /**
      * 创建一个新能力
      */
-    @Insert("INSERT INTO cm_ability (id, pid,professionid ,orderno, abilitydeep, name, datavalue,importantlevel, remark, levelcode) " +
+    @Insert("INSERT INTO cm_ability (id, pid,professionid,orderno, abilitydeep, name, datavalue,importantlevel, remark, levelcode) " +
             "VALUES (#{id},#{pid},#{professionid},#{orderno},#{abilitydeep},#{name},#{datavalue},#{importantlevel}, #{remark},#{levelcode})")
     void createOneNewAbility(CmAbility cmAbility);
     /**
