@@ -36,7 +36,8 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
         List<TreeStructure> treeStructureList = cmCheckitemList.stream()
                 .map(cmCheckitem_ex -> new TreeStructure(cmCheckitem_ex.getId(), cmCheckitem_ex.getPid(), cmCheckitem_ex.getOrderno()))
                 .collect(Collectors.toList());
-        cmCheckitem.setLevelcode(CommonFunctions.generateLevelCode(CommonFunctions.generateTreeStructureList(treeStructureList,cmCheckitem.getId())));
+        cmCheckitem.setItemCode(CommonFunctions.generateLevelCode(CommonFunctions.generateTreeStructureList(treeStructureList,cmCheckitem.getId())));
+        cmCheckitem.setCourseid(courseid);
         cmCheckitemMapper.createOneNewCheckitem(cmCheckitem);
         return Result.success();
     }
@@ -73,7 +74,21 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
         List<CmCheckitemTree> rootCheckitem =  checkitemMap.get("0"); // 根菜单的pid通常为0
         // 递归构建菜单树
         buildCheckitemTree(rootCheckitem,  checkitemMap);
+        for(CmCheckitemTree checkitemTree:rootCheckitem){
+            setDeep(checkitemTree,0);
+        }
         return Result.success(rootCheckitem);
+    }
+    void setDeep(CmCheckitemTree item,int deep){
+        if(item.getTask() == null){
+            item.setTask(false);
+        }
+        item.setCheckitemdeep(deep);
+        if(item.getChildren() != null && !item.getChildren().isEmpty()){
+            for(CmCheckitemTree child:item.getChildren()){
+                setDeep(child,deep+1);
+            }
+        }
     }
 
     /**
@@ -117,5 +132,11 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
             }
         }
         return checkitemChildren;
+    }
+
+    @Override
+    public Result changeCheckitemTask(String id,String status){
+        cmCheckitemMapper.changeCheckitemTask(id,status);
+        return Result.success();
     }
 }
