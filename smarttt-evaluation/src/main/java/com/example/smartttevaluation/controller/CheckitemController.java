@@ -58,14 +58,19 @@ public class CheckitemController {
      *删除考核项列表
      */
     @PostMapping("/delete")
-    public Result deleteCheckitemByIDs(@RequestBody List<String> ids){
+    public Result deleteCheckitemByIDs(@RequestParam List<String> ids){
         return cmCheckitemService.deleteCheckitemByIDs(ids);
     }
     /**
      *更新一个考核项
      */
-    @GetMapping("/upgrade")
+    @PostMapping("/upgrade")
     public Result upgradeOneCheckitem(@RequestParam(name = "id")String id){
         return cmCheckitemService.upgradeOneCheckitemByID(id);
+    }
+
+    @PostMapping("/changeTask")
+    public Result changeCheckitemTask(@RequestParam String id,@RequestParam String status){
+        return cmCheckitemService.changeCheckitemTask(id, status);
     }
 }
