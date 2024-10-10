@@ -19,12 +19,12 @@ public class CmCheckitem {
     private String id;//考核项id
     private String pid;//父节点
     private long orderno;//顺序号
-    private String levelcode;//层级码
-    private long checkitemdeep;
     private String itemName;//考核项名称
-    private String task;//考核任务
+    private String itemCode;//层级码
     private String remark;//备注
+    private long checkitemdeep;
+    private Boolean task;//考核任务
     private String courseid;//课程id
-    List<CmCheckitem> children;
+    List<CmCheckitem> childrens;
     int percent;
 }
