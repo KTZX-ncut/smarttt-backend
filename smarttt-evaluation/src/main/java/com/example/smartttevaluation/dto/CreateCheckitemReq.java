@@ -15,7 +15,6 @@ public class CreateCheckitemReq {
 
     private String id;
     private String pid;
-    private String task;
     private String type;
     private long checkitemdeep;
     private CmCheckitem cmCheckitem;
