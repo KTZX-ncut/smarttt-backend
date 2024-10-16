@@ -54,5 +54,10 @@ public class ClassroomMangtController {
         String obsID = smObsService.getSchoolObs();
         return smObsService.getObsRPList(obsID);
     }
+    @PostMapping("/classroomRP")
+    public Result classroomRPList(){
+        String obsID = smObsService.getSchoolObs();
+        return smObsService.getObsRPList(obsID);
+    }
 
 }

@@ -29,4 +29,6 @@ public interface CmClassRoomMapper {
     @Select("SELECT id FROM cm_classroom\n" +
             "where classroomName = #{classRoomName}")
     String getClassRoomByClassRoomName(@Param("classRoomName") String classRoomName);
+    @Select("select courseId from cm_classroom where id = #{classroomID}")
+    String getCourseIDByClassroomId(String classroomID);
 }

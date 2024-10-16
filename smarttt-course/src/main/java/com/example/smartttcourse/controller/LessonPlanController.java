@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromContext;
 
+/**
+ * 课程教案
+ */
 @RestController
 @RequestMapping("/coursemangt/classroommangt/lessonplan")
 public class LessonPlanController {
@@ -31,7 +34,8 @@ public class LessonPlanController {
     @AuthRequired(type = "admin",menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5")
     public Result FileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
-        return fileMangtService.uploadfile(file,uploadDir, token.getObsid(), "LessonPlan");
+        String path = fileMangtService.getFilePath(token.getObsid(),"LessonPlan",false);
+        return fileMangtService.uploadfile(file,path);
     }
     @GetMapping("/download/{fileName:.+}")
     @AuthRequired(type = "admin", menu = "531500340-188ff31e-ff6b-47eb-a6d6-1ed0b703c0b5",isReadOnly = true)

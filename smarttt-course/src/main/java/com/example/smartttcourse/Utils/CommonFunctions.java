@@ -15,6 +15,7 @@ public class CommonFunctions {
      * @return
      */
     public static final String StuRoleID = "516761049-9a741546-0b55-489b-9dc4-31789ee07153";
+    public static final String classroomRoleId = "516761049-a74a69b4-427d-4d7f-addb-521d0a493f8f";
     public static final String TokenSK = "123456";
     public static String generateEnhancedID(String name) {
         int nameHash = Math.abs(name.hashCode()*3+10);
