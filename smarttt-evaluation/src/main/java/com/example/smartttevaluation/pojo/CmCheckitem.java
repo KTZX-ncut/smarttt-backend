@@ -25,6 +25,6 @@ public class CmCheckitem {
     private String task;//考核任务
     private String remark;//备注
     private String courseid;//课程id
-    List<CmCheckitem> children;
+    private List<CmCheckitem> children;
     int percent;
 }
