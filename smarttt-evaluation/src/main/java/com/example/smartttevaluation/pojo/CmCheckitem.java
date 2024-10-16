@@ -25,6 +25,6 @@ public class CmCheckitem {
     private long checkitemdeep;
     private Boolean task;//考核任务
     private String courseid;//课程id
-    List<CmCheckitem> childrens;
+    private List<CmCheckitem> children;
     int percent;
 }
