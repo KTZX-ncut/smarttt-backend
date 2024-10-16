@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface FileMangtService {
 
-    Result uploadfile(MultipartFile file, String dir,String obsid, String type);
+
+    String getFilePath(String ObsId, String type, Boolean isClassroom);
+
+    Result uploadfile(MultipartFile file, String Path);
 
     Result getFileList(String obsid, String type);
 
