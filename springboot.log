@@ -1148,3 +1148,23 @@ java.net.SocketTimeoutException: Read timed out
 	at java.base/java.lang.Thread.run(Thread.java:842)
 2024-10-16 01:15:55.447 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
 2024-10-16 01:15:55.455 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2024-10-16 09:47:50.641 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 17.0.10 on Asuka with PID 15992 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
+2024-10-16 09:47:50.651 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
+2024-10-16 09:47:50.653 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - No active profile set, falling back to 1 default profile: "default"
+2024-10-16 09:47:52.121 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-10-16 09:47:52.125 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-10-16 09:47:52.187 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 26 ms. Found 0 Redis repository interfaces.
+2024-10-16 09:47:53.805 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
+2024-10-16 09:47:53.824 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2024-10-16 09:47:53.825 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
+2024-10-16 09:47:54.055 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-10-16 09:47:54.056 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3251 ms
+2024-10-16 09:47:54.527 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2024-10-16 09:47:54.790 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2024-10-16 09:47:57.160 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
+2024-10-16 09:47:57.184 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 7.299 seconds (JVM running for 8.417)
+2024-10-16 09:49:18.706 === [http-nio-8083-exec-1] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-16 09:49:18.706 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-10-16 09:49:18.708 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-10-16 10:08:21.091 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2024-10-16 10:08:21.097 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed

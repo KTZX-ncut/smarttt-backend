@@ -23,4 +23,8 @@ public interface CmCheckitemService {
      *获取考核项列表
      */
     Result getCheckitemList(Token token);
+    /**
+     *更新考核任务
+     */
+    Result changeCheckitemTask(String id,String status);
 }

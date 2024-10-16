@@ -14,9 +14,12 @@ public class CmCheckitemTree {
 
     private String id;
     private String pid;
-    private long orderno;
-    private String name;
+    private int orderno;
+    private int checkitemdeep;
+    private String itemName;
     private String levelcode;
+    private Boolean task;
+    private String remark;
     private List<CmCheckitemTree> children;
 
 }

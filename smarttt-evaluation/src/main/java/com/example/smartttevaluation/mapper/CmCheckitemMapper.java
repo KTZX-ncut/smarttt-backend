@@ -60,4 +60,7 @@ public interface CmCheckitemMapper {
      *通过ids获取考核项
      */
     List<CmCheckitem> getCmCheckitemByIDs(@Param("ids")List<String> ids);
+
+    @Update("update cm_course_checkitem set task = #{status} where id = #{id}")
+    void changeCheckitemTask(@Param("id")String id,@Param("status")String status);
 }
