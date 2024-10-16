@@ -43,17 +43,21 @@ public class KwadictController {
      *获取关键字字典
      */
     @GetMapping("/getKeyworddict")
-    public Result getKeywordDict(@RequestParam(name = "courseid") String courseid) {
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5")
+    public Result getKeywordDict(HttpServletRequest request) {
         // 通过courseid获取关键字字典
-        return cmKwadictService.getKeywordsDict(courseid);
+        Token token  = getTokenFromContext();
+        return cmKwadictService.getKeywordsDict(token.getObsid());
     }
     /**
      *获取能力字典
      */
     @GetMapping("/getabilitydict")
-    public Result getAbilityDict(@RequestParam(name = "courseid") String courseid) {
+    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5")
+    public Result getAbilityDict(HttpServletRequest request) {
         // 通过courseid获取能力字典
-        return cmKwadictService.getAbilityDict(courseid);
+        Token token  = getTokenFromContext();
+        return cmKwadictService.getAbilityDict(token.getObsid());
     }
     /**
      *通过keywordid查询关键字

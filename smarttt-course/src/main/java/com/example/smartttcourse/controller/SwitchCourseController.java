@@ -16,6 +16,9 @@ import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromCo
 import static com.example.smartttcourse.Utils.CommonFunctions.TokenSK;
 import static com.example.smartttcourse.Utils.JwtTokenUtils.getToken;
 
+/**
+ * 课程转换
+ */
 @RestController
 @RequestMapping("/coursemangt/switch")
 public class SwitchCourseController {

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromContext;
 
+/**
+ * 教学日历
+ */
 @RestController
 @RequestMapping("/coursemangt/classroommangt/academiccalendar")
 public class AcademicCalendarController {
@@ -31,7 +34,8 @@ public class AcademicCalendarController {
     @AuthRequired(type = "admin",menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
     public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
-        return fileMangtService.uploadfile(file,uploadDir, token.getObsid(), "academiccalendar");
+        String path = fileMangtService.getFilePath(token.getObsid(),"academiccalendar",false);
+        return fileMangtService.uploadfile(file,path);
     }
     @GetMapping("/download/{fileName:.+}")
     @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d",isReadOnly = true)

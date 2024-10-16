@@ -3,6 +3,7 @@ package com.example.smartttcourse.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.smartttcourse.dto.ResponsiblePerson;
 import com.example.smartttcourse.dto.StudentDto;
+import com.example.smartttcourse.pojo.CmClassroom;
 import com.example.smartttcourse.pojo.StRoleUser;
 import org.apache.ibatis.annotations.*;
 
@@ -43,4 +44,7 @@ public interface StUsersMapper{
 
     @Select("SELECT loginname FROM st_users WHERE id=#{id}")
     String getloginNameById(@Param("id") String id);
+
+    @Update("update st_roleuser set userid = #{teacherId} where obsid = #{id}")
+    void updateClassroomTeacher(CmClassroom classroom);
 }
