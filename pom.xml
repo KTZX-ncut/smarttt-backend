@@ -13,6 +13,7 @@
         <module>smarttt-course</module>
         <module>smarttt-evaluation</module>
         <module>smarttt-exam</module>
+        <module>smarttt-common</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>

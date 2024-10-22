@@ -1,5 +1,6 @@
 package com.example.smartttadmin.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.smartttadmin.dto.LoginReq;
 import com.example.smartttadmin.dto.UserInforReq;
 import com.example.smartttadmin.dto.PersonnelRoster;
@@ -11,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-public interface StUsersService {
+public interface StUsersService{
     Result createOneRP(StRoleUser stRoleUser);
 
     /**
@@ -44,4 +45,8 @@ public interface StUsersService {
     Result getStudentInfor(StUsers data);
 
     Result testTran();
+
+    List<String> getStUsersByloginName(String loginname);
+
+    void saveBach(List<PersonnelRoster> personnelRosterList);
 }

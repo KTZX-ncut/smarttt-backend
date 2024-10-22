@@ -1,14 +1,17 @@
 package com.example.smartttadmin.controller;
 
+import com.alibaba.excel.EasyExcel;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
-import com.example.smartttadmin.service.SmObsService;
+import com.example.smartttadmin.listeners.PersonnelListenerExcel;
+import com.example.smartttadmin.pojo.PersonnelExcel;
+import com.example.smartttadmin.service.*;
 
-import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,6 +25,13 @@ public class PersonnelMangtController {
     private SmObsService smObsService;
     @Autowired
     private StUsersService stUsersService;
+
+    @Resource
+    private StudentService studentService;
+    @Resource
+    private TeacherService teacherService;
+    @Resource
+    private StLevelService levelService;
     @GetMapping
     public Result getSmObsTree(){
         return smObsService.getObsTree();
@@ -58,22 +68,28 @@ public class PersonnelMangtController {
         return stUsersService.updateOnePersonnelRoster(personnelRoster);
     }
     /**
-     * excel表格导入教师
+     * excel表格导入教师或者学生
      * @param file
      * @return
      */
     @PostMapping("/import")
     public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file){
-        try{
-            List<PersonnelRoster> personnelRosterList = stUsersService.importTeacherAndStudentExcel(file);
-            for(PersonnelRoster personnelRoster :personnelRosterList){
-                smObsService.createOnePersonnelRoster(personnelRoster);
-            }
+        PersonnelListenerExcel personnelListenerExcel = new PersonnelListenerExcel(
+                smObsService,
+                stUsersService,
+                studentService,
+                teacherService,
+                levelService
+        );
+        try {
+            EasyExcel.read(file.getInputStream(), PersonnelExcel.class, personnelListenerExcel)
+                    .sheet()
+                    .doRead();
             return Result.success();
-
-        } catch (IOException e){
-            return Result.error(400,"文件导入失败");
+        } catch (IOException e) {
+            return Result.error(-710,"导入文件失败！");
         }
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.smartttcourse.service.impl;
 
+import com.example.smartttcommon.utils.MinioUtil;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.CmClassRoomMapper;
 import com.example.smartttcourse.mapper.CmTermMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -34,6 +36,9 @@ public class FileMangtServiceImpl implements FileMangtService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
+    @Resource
+    private MinioUtil minioUtil;
+
     @Override
     public String getFilePath(String obsId, String type, Boolean isClassroom) {
         String obsPath = obsId;
@@ -50,12 +55,14 @@ public class FileMangtServiceImpl implements FileMangtService {
         String fileName = Math.random()+file.getOriginalFilename();
 //        CmCourseFile cmCourseFile = new CmCourseFile(generateEnhancedID("cm_course_file"),obsid,fileName,file.getSize(),type, LocalDateTime.now().toString(),null);
         try{
-            Path directoryPath = Paths.get(Path);
-            if (!Files.exists(directoryPath)) {
-                Files.createDirectories(directoryPath);
-            }
-            Path filePath = Paths.get(Path,fileName);
-            Files.copy(file.getInputStream(), filePath);
+              // 测试
+              minioUtil.upload(file.getInputStream(),"test",fileName);
+//            Path directoryPath = Paths.get(Path);
+//            if (!Files.exists(directoryPath)) {
+//                Files.createDirectories(directoryPath);
+//            }
+//            Path filePath = Paths.get(Path,fileName);
+//            Files.copy(file.getInputStream(), filePath);
 
         }catch (IOException e){
             return Result.error("上传失败");

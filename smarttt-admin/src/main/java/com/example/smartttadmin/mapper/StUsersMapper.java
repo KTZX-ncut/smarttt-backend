@@ -75,4 +75,6 @@ public interface StUsersMapper {
 
     @Select("select id from st_users where loginname = #{loginname}")
     List<String> getStUsersByloginName(String loginname);
+
+    void saveBach(@Param("personnelRosterList") List<PersonnelRoster> personnelRosterList);
 }

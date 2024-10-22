@@ -1,5 +1,6 @@
 package com.example.smartttadmin.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
@@ -9,7 +10,7 @@ import com.example.smartttadmin.pojo.SmObs;
 
 import java.util.List;
 
-public interface SmObsService {
+public interface SmObsService extends IService<SmObs> {
 
 
     Result getAllCollageList();
@@ -57,4 +58,6 @@ public interface SmObsService {
     String getSchoolObs();
 
     Result checkSmObs(SmObs smObs);
+
+    List<String> getObsIdByObsName(String obsname);
 }
