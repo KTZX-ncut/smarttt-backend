@@ -3,10 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttevaluation.mapper.CmLinesMapper">
-    <delete id="deleteLinesByIDs">
+    <delete id="deleteLinesByIds">
         delete from cm_lines where id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteLinesByKwaIds">
+        delete from cm_lines where startkwaid in
+        <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
+            #{kwaId}
+        </foreach>
+        or endkwaid in
+        <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
+            #{kwaId}
         </foreach>
     </delete>
 </mapper>

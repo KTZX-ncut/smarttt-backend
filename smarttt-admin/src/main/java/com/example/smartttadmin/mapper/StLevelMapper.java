@@ -1,5 +1,6 @@
 package com.example.smartttadmin.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.smartttadmin.pojo.StLevel;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -9,7 +10,7 @@ import org.apache.ibatis.annotations.Update;
 import java.util.List;
 
 @Mapper
-public interface StLevelMapper {
+public interface StLevelMapper extends BaseMapper<StLevel> {
     @Select("select * from st_level")
     List<StLevel> getStLevel();
 

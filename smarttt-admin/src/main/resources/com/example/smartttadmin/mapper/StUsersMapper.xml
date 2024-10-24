@@ -69,4 +69,13 @@
             #{id}
         </foreach>
     </delete>
+
+    <insert id="saveBach" parameterType="list">
+        INSERT INTO st_users(id,username,loginname,pwd,phone,status,catelog,remark)
+        VALUES
+        <foreach collection="personnelRosterList" item="p" separator=",">
+            (#{p.id},#{p.username},#{p.loginname},#{p.pwd},
+            #{p.phone},#{p.status},#{p.catelog},#{p.remark})
+        </foreach>
+    </insert>
 </mapper>

@@ -26,6 +26,9 @@ public class CourseAssessmentController {
     @Autowired
     private CmCourseAssessmentService cmAssessmentPlanService;
 
+    /**
+     * 获取考核方案表格
+     */
     @GetMapping("/getAssessmentTable")
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3", isReadOnly = true)
     Result getAssessmentPlanTable(HttpServletRequest request) {
@@ -33,22 +36,20 @@ public class CourseAssessmentController {
         return cmAssessmentPlanService.getAssessmentTable(token.getObsid());
     }
 
-    @PostMapping("/updateStandardScores")
-    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
-    Result updateStandardScores(@RequestBody Map<String, Map<String, Integer>> jsonData, HttpServletRequest request) {
-        Token token = getTokenFromContext();
-        return cmAssessmentPlanService.updateStandardScores(jsonData, token.getObsid());
-    }
-
+    /**
+     * 批量修改考核方案表格
+     */
     @PostMapping("/updateAssessmentTable")
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
     Result updateAssessmentTable(@RequestBody Map<String, Object> data, HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmAssessmentPlanService.updateAssessmentTable(data, token.getObsid());
     }
-
+    /**
+     * 获取文件列表
+     */
     @GetMapping("/getFileList")
-    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
+    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3", isReadOnly = true)
     Result getFiles(@RequestParam("checkitemId") String checkitemId, HttpServletRequest request) {
         Token token = getTokenFromContext();
         CmCheckitem cmCheckitem = new CmCheckitem();
@@ -56,7 +57,9 @@ public class CourseAssessmentController {
         cmCheckitem.setCourseid(token.getObsid());
         return cmAssessmentPlanService.getFiles(cmCheckitem);
     }
-
+    /**
+     * 上传文件
+     */
     @PostMapping("/uploadFile")
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
     Result uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
@@ -67,14 +70,18 @@ public class CourseAssessmentController {
         cmCourseCheckitemFile.setFileData(file.getBytes());
         return cmAssessmentPlanService.uploadFile(cmCourseCheckitemFile);
     }
-
+    /**
+     * 删除文件时获取与其关联的考核项列表
+     */
     @GetMapping("/getAssociateCheckitems")
-    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
+    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3", isReadOnly = true)
     Result getAssociateFiles(@RequestParam("fileId") String fileId, HttpServletRequest request) {
         Token token = getTokenFromContext();
-        return cmAssessmentPlanService.getAssociateFiles(fileId, token.getObsid());
+        return cmAssessmentPlanService.getAssociateCheckitems(fileId, token.getObsid());
     }
-
+    /**
+     * 删除文件
+     */
     @PostMapping("/deleteFile")
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
     Result deleteFile(@RequestBody CmCourseCheckitemFile cmCourseCheckitemFile, HttpServletRequest request) {
@@ -82,12 +89,16 @@ public class CourseAssessmentController {
         cmCourseCheckitemFile.setObsid(token.getObsid());
         return cmAssessmentPlanService.deleteFile(cmCourseCheckitemFile);
     }
-
+    /**
+     * 关联文件
+     */
     @PostMapping("/associate")
     Result associate(@RequestBody Map<String, Object> data) {
         return cmAssessmentPlanService.associate(data);
     }
-
+    /**
+     * 取消关联文件
+     */
     @PostMapping("/disassociate")
     Result disassociate(@RequestBody Map<String, Object> data) {
         return cmAssessmentPlanService.disassociate(data);

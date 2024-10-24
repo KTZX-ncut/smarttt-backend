@@ -2,6 +2,7 @@ package com.example.smartttevaluation.mapper;
 
 import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmGetability;
+import com.example.smartttevaluation.pojo.CmKwadict;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -62,5 +63,5 @@ public interface CmGetabilityMapper {
     /**
      *通过能力id获取kwa列表
      */
-    List<String> getKwaByGetabilityId(@Param("courseid") String courseid,@Param("ids") List<String> ids);
+    List<CmKwadict> getKwaByGetabilityId(@Param("obsId") String obsId, @Param("ids") List<String> ids);
 }

@@ -45,7 +45,7 @@ public class LinesController {
      */
     @PostMapping("/delete")
     public Result deleteLinesByID(@RequestBody List<String> ids) {
-        return cmLinesService.deleteLinesByID(ids);
+        return cmLinesService.deleteLinesByIds(ids);
     }
 
 }

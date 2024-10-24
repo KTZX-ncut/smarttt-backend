@@ -27,8 +27,11 @@
         </foreach>
     </delete>
 
-    <select id="getKwaByGetabilityId" resultType="java.lang.String">
-        Select name from cm_kwadict where courseid=#{courseid} and abilityid in
+    <select id="getKwaByGetabilityId" resultType="com.example.smartttevaluation.pojo.CmKwadict">
+        select k.name as keywordname, a.name as abilityname from cm_kwadict kwa
+        inner join cm_keywords k on k.id = kwa.keywordid
+        inner join cm_ability a on a.id = kwa.abilityid
+        where kwa.courseid=#{obsId} and kwa.abilityid in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>

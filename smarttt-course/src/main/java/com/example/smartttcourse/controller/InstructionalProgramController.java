@@ -1,5 +1,6 @@
 package com.example.smartttcourse.controller;
 
+import com.example.smartttcommon.utils.MinioUtil;
 import com.example.smartttcourse.Utils.AuthRequired;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
@@ -10,8 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 
 import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromContext;
 
@@ -25,6 +34,9 @@ public class InstructionalProgramController {
     private CmCourseService cmCourseService;
     @Autowired
     private FileMangtService fileMangtService;
+
+    @Resource
+    private MinioUtil minioUtil;
     @Value("${file.upload-dir}")
     private String uploadDir;
     @GetMapping
@@ -42,9 +54,22 @@ public class InstructionalProgramController {
     }
     @GetMapping("/download/{fileName:.+}")
     @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
-    public void downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) {
+    public Result downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Token token = getTokenFromContext();
-        fileMangtService.downloadFile(fileName, uploadDir+"/"+token.getObsid()+"/"+"teachingprogram", response);
+        // TODO: 测试
+        // 拿到流
+        InputStream inputStream = minioUtil.download("test", fileName);
+        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, len);
+        }
+        inputStream.close();
+        String url = minioUtil.getUrl("test",fileName);
+        return Result.success(url);
+        //fileMangtService.downloadFile(fileName, uploadDir+"/"+token.getObsid()+"/"+"teachingprogram", response);
+
     }
     @GetMapping("/delete/{fileName:.+}")
     @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")

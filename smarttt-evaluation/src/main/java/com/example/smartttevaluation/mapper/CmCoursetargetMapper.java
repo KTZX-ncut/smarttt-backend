@@ -3,79 +3,68 @@ package com.example.smartttevaluation.mapper;
 import com.example.smartttevaluation.pojo.CmCoursetarget;
 import com.example.smartttevaluation.pojo.CmCoursetargetUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
+import com.example.smartttevaluation.pojo.CmKwadict;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
 public interface CmCoursetargetMapper {
     /**
-     *课程目标列表
+     * 课程目标列表
      */
-    @Select("select id, code, name, remark, courseid from cm_course_target where courseid = #{obsid}")
-    List<CmCoursetarget> getCoursetarget (String obsid);
+    @Select("select id, code, name, remark, courseid from cm_course_target where courseid = #{obsId} order by createTime")
+    List<CmCoursetarget> getCoursetarget(String obsId);
+
     /**
-     *创建课程目标
+     * 获取课程目标的kwas
      */
-    @Update("INSERT INTO cm_course_target (id, code, name, remark, courseid) " +
-            "VALUES (#{id},#{code},#{name},#{remark},#{courseid})")
-    void createCoursetarget(CmCoursetarget cmCoursetarget);
+    @Select("select targetKwa.kwaId as id, k.name as keywordname, a.name as abilityname from cm_course_target_kwa targetKwa " +
+            "inner join cm_keywords k on k.id = (select kwa.keywordid from cm_kwadict kwa where kwa.id = targetKwa.kwaId) " +
+            "inner join cm_ability a on a.id = (select kwa.abilityid from cm_kwadict kwa where kwa.id = targetKwa.kwaId) " +
+            "where obsId = #{obsId} and targetId = #{targetId}")
+    List<CmKwadict> getKwas(@Param("targetId") String targetId, @Param("obsId") String obsId);
+
     /**
-     *批量删除课程目标
+     * 创建课程目标
      */
-    void deleteCoursetargetByIDs(@Param("ids")List<String> ids);
+    @Update("INSERT INTO cm_course_target (id, code, name, remark, courseid, createTime) " +
+            "VALUES (#{cct.id},#{cct.code},#{cct.name},#{cct.remark},#{cct.courseid},#{createTime})")
+    void createCoursetarget(@Param("cct") CmCoursetarget cmCoursetarget, @Param("createTime") LocalDateTime createTime);
+
     /**
-     *更新课程目标
+     * 批量删除课程目标
+     */
+    void deleteCoursetargetByIds(@Param("targetIds") List<String> ids);
+
+    /**
+     * 根据targetId批量删除其关联的kwa
+     */
+    void deleteKwasByTargetIds(@Param("targetIds") List<String> targetIds);
+
+    /**
+     * 更新课程目标
      */
     void updateCoursetargetByID(CmCoursetarget cmCoursetarget);
 
-    @Update("update cm_course_unit set name=#{name},datavalue=#{datavalue} where id=#{id}")
-    void updateCoursetarget(CmKnowledgeUnit cmKnowledgeUnit);
     /**
-     *更新课程目标unit
-     */
-    @Update("update cm_course_unit_kwa set status=#{status} where unitid=#{unitid} ")
-    void updateCoursetargetUnit(CmCoursetargetUnit cmCoursetargetUnit);
-    /**
-     *插入unit
-     */
-    void insertunit(@Param("courseid") String courseid,@Param("ids") List<String>  ids);
-    /**
-     *获取unit数量
+     * 获取unit数量
      */
     @Select("select count(*) from cm_course_unit_kwa where unitid=#{unitid}")
     long getUnitCount(CmCoursetargetUnit cmCoursetargetUnit);
     /**
-     *插入课程目标unit
+     * 根据课程目标id和kwaid新增课程目标的kwa
      */
-    @Insert("insert into cm_course_target_unit(unitid,unitname,targetid) values(#{unitid},#{unitname},#{targetid})")
-    void insertCoursetargetUnit(@Param("courseid") String courseid, CmCoursetargetUnit cmCoursetargetUnit);
+    void createKwasByTargetIdAndKwaId(@Param("cmCoursetarget") CmCoursetarget cmCoursetarget);
+
     /**
-     *通过unitid获取unit数量
+     * 根据课程目标id和kwaid删除课程目标的kwa
      */
-    @Select("select count(*) from cm_course_target_unit where unitid=#{unitid}")
-    long getUnitCountByUnitId(@Param("unitid") String unitid, @Param("targetid") String targetid);
+    void deleteKwasByTargetIdAndKwaId(@Param("cmCoursetarget") CmCoursetarget cmCoursetarget);
+
     /**
-     *通过ids获取id
+     * 根据kwaid删除课程目标的kwa
      */
-    List<String> selectAllidByids(@Param("ids") List<String> ids);
-    /**
-     *批量删除unit
-     */
-    void deleteCoursetargetUnit(@Param("unitid") String unitid);
-    /**
-     *通过id查找基本教学目标，可用来判断基本教学目标是否存在
-     */
-    @Select("Select count(*) from cm_course_unit where id=#{id}")
-    long getNumOfUnitById(@Param("id") String id);
-    /**
-     *通过id查找对应课程数量，可用来判断课程是否存在
-     */
-    @Select("Select count(*) from cm_course where id=#{id}")
-    long getNumOfCourseById(@Param("id") String id);
-    /**
-     *通过课程目标id和课程id寻找记录数量
-     */
-    @Select("Select count(*) from cm_course_target where id=#{id} and courseid=#{courseid}")
-    long getNumOfTargetIdAndCourseById(@Param("id") String id,@Param("courseid") String courseId);
+    void deleteKwasByKwaIds(@Param("kwaIds") List<String> kwaIds);
 }

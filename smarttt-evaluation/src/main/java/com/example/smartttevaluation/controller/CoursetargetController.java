@@ -31,56 +31,30 @@ public class CoursetargetController {
      *课程目标列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-17a53f15-4a36-4450-abf5-387825a2434a",isReadOnly = true)
     public Result getCoursetarget(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return cmCoursetargetService.getCoursetarget(token);
+        return cmCoursetargetService.getCoursetarget(token.getObsid());
     }
     /**
      *创建课程目标
      */
     @PostMapping("/create")
-    @AuthRequired(type = "admin",menu = "531500340-c0220993-26e0-4d21-bc25-f612c67170c5")
+    @AuthRequired(type = "admin",menu = "531500340-17a53f15-4a36-4450-abf5-387825a2434a")
     public Result createCoursetarget(@RequestBody CmCoursetarget cmCoursetarget,HttpServletRequest request) {
         Token token = getTokenFromContext();
         cmCoursetarget.setCourseid(token.getObsid());
         return cmCoursetargetService.createCoursetarget(cmCoursetarget);
     }
     /**
-     *删除一个课程目标
+     * 批量删除课程目标
      */
     @PostMapping("/delete")
-    public Result deleteCoursetargetByID(@RequestBody List<String> ids) {
-        return cmCoursetargetService.deleteCoursetargetByID(ids);
+    @AuthRequired(type = "admin",menu = "531500340-17a53f15-4a36-4450-abf5-387825a2434a")
+    public Result deleteCoursetargetByID(@RequestBody List<String> ids, HttpServletRequest request) {
+        return cmCoursetargetService.deleteCoursetargetByIds(ids);
     }
-    /**
-     *批量删除课程目标
-     */
-    @PostMapping("/deleteCoursetarget")
-    public Result deleteCoursetargetByIDs(@RequestBody List<String> ids, @Param("courseid") String courseid, @Param("unitid") String unitid) {
-        return cmCoursetargetService.deleteCoursetargetByIDs(ids, courseid, unitid);
-    }
-    /**
-     *插入课程目标的unit
-     */
-    @PostMapping("/insertCoursetargetUnit")
-    public Result insertCoursetargetUnit(@Param("courseid") String courseid, @RequestBody CmCoursetargetUnit cmCoursetargetUnit) {
-        return cmCoursetargetService.insertCoursetargetUnit(courseid, cmCoursetargetUnit);
-    }
-    /**
-     *批量删除课程目标的unit
-     */
-    @PostMapping("/deleteCoursetargetUnit")
-    public Result deleteCoursetargetUnit(@RequestParam("unitid") String unitid, @RequestParam("targetid") String targetid) {
-        return cmCoursetargetService.deleteCoursetargetUnit(unitid, targetid);
-    }
-    /**
-     *更新课程目标的unit
-     */
-    @PostMapping("/updateCoursetargetUnit")
-    public Result updateCoursetargetUnit(@RequestBody CmCoursetargetUnit cmCoursetargetUnit) {
-        return cmCoursetargetService.updateCoursetargetUnit(cmCoursetargetUnit);
-    }
+
     /**
      *更新课程目标
      */
@@ -88,11 +62,26 @@ public class CoursetargetController {
     public Result updateCoursetarget(@RequestBody CmCoursetarget cmCoursetarget){
         return cmCoursetargetService.updateCoursetarget(cmCoursetarget);
     }
+
     /**
-     *新增unit
+     * 根据课程目标id和kwaid新增课程目标的kwa
      */
-    @PostMapping("/insertunit")
-    public Result insertunit(@Param("courseid") String courseid, @Param("ids") List<String> ids){
-        return cmCoursetargetService.insertunit(courseid, ids);
+    @PostMapping("/createKwas")
+    @AuthRequired(type = "admin",menu = "531500340-17a53f15-4a36-4450-abf5-387825a2434a")
+    public Result createKwas(@RequestBody CmCoursetarget cmCoursetarget, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmCoursetarget.setCourseid(token.getObsid());
+        return cmCoursetargetService.createKwasByTargetIdAndKwaId(cmCoursetarget);
+    }
+
+    /**
+     * 根据课程目标id和kwaid删除课程目标的kwa
+     */
+    @PostMapping("/deleteKwas")
+    @AuthRequired(type = "admin",menu = "531500340-17a53f15-4a36-4450-abf5-387825a2434a")
+    public Result deleteKwas(@RequestBody CmCoursetarget cmCoursetarget, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        cmCoursetarget.setCourseid(token.getObsid());
+        return cmCoursetargetService.deleteKwasByTargetIdAndKwaId(cmCoursetarget);
     }
 }

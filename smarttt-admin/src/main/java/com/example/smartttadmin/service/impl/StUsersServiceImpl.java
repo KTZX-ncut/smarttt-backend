@@ -159,4 +159,14 @@ public class StUsersServiceImpl implements StUsersService {
         stUsersMapper.testTran(s);
         return Result.error("我就是要错误");
     }
+
+    @Override
+    public List<String> getStUsersByloginName(String loginname) {
+        return stUsersMapper.getStUsersByloginName(loginname);
+    }
+
+    @Override
+    public void saveBach(List<PersonnelRoster> personnelRosterList) {
+        stUsersMapper.saveBach(personnelRosterList);
+    }
 }

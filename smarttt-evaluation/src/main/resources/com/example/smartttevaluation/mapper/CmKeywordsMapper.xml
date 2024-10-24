@@ -30,9 +30,12 @@
         </foreach>
     </delete>
 
-    <select id="getKwaByKeywordsId" resultType="java.lang.String">
-        Select name from cm_kwadict where courseid=#{courseid} and keywordid in
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
+    <select id="getKwaByKeywordsId" resultType="com.example.smartttevaluation.pojo.CmKwadict">
+        select k.name as keywordname, a.name as abilityname from cm_kwadict kwa
+        inner join cm_ability a on a.id = kwa.abilityid
+        inner join cm_keywords k on k.id = kwa.keywordid
+        where kwa.courseid=#{obsId} and kwa.keywordid in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </select>

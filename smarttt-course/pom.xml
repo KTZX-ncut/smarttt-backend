@@ -85,7 +85,11 @@
             <version>5.2.0</version> <!-- 或者是您项目中使用的其他版本 -->
         </dependency>
 
-
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>smarttt-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>

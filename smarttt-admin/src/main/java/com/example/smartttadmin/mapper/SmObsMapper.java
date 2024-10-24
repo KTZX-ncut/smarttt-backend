@@ -1,5 +1,6 @@
 package com.example.smartttadmin.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.CmProfession;
@@ -9,7 +10,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface SmObsMapper {
+public interface SmObsMapper extends BaseMapper<SmObs> {
 
     /**
      * 查找学院列表用于教务处的展示（无负责人列表）

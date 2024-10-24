@@ -1,5 +1,6 @@
 package com.example.smartttadmin.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.SchoolInforReq;
 import com.example.smartttadmin.mapper.SmObsMapper;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class StLevelServiceImpl implements StLevelService {
+public class StLevelServiceImpl extends ServiceImpl<StLevelMapper,StLevel> implements StLevelService {
     @Autowired
     private SmObsMapper smObsMapper;
     @Autowired

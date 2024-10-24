@@ -1,5 +1,6 @@
 package com.example.smartttadmin.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StLevelMapper;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 import static com.example.smartttadmin.Utils.CommonFunctions.*;
 
 @Service
-public class SmObsServiceImpl implements SmObsService {
+public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements SmObsService {
     @Autowired
     private SmObsMapper smObsMapper;
     @Autowired
@@ -297,6 +298,11 @@ public class SmObsServiceImpl implements SmObsService {
             smObsMapper.createOneClass(cmClass);
         }
         return Result.success();
+    }
+
+    @Override
+    public List<String> getObsIdByObsName(String obsname) {
+        return smObsMapper.getObsIDByObsName(obsname);
     }
 
     private void buildObsRPTree(List<ObsRPTree> parentSmObs, Map<String, List<ObsRPTree>> obsMap) {

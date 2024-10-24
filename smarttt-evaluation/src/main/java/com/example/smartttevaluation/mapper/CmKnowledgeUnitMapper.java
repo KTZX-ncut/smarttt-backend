@@ -1,13 +1,10 @@
 package com.example.smartttevaluation.mapper;
 
-import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
-import com.example.smartttevaluation.pojo.CmGetability;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper
 public interface CmKnowledgeUnitMapper {
@@ -17,15 +14,16 @@ public interface CmKnowledgeUnitMapper {
     @Select("select id,pId,name,concat(#{p_type},\".\",orderNum) as type,dataValue,orderNum from cm_course_unit where pId=#{pid} order by orderNum ")
     List<CmKnowledgeUnit> getSection (@Param("pid") String pid,@Param("p_type") String p_type);
 
-    @Select("select #{unitid} as unitid,cm_course_unit_kwa.kwaId,cm_kwadict.name,cm_course_unit_kwa.status from cm_course_unit_kwa,cm_kwadict where cm_course_unit_kwa.kwaId=cm_kwadict.id and unitId=#{unitid}")
-    List<CmKnowledgeUnitKwa> getKnowledgeUnitKwa (@Param("unitid") String unitid);
+    @Select("select unitKwa.id as id, unitKwa.unitId as unitId, unitKwa.kwaId, a.name as abilityName, k.name as keywordName, unitKwa.status as status from cm_course_unit_kwa unitKwa " +
+            "inner join cm_keywords k on k.id = (select kwa.keywordid from cm_kwadict kwa where kwa.id = unitKwa.kwaId) " +
+            "inner join cm_ability a on a.id = (select kwa.abilityid from cm_kwadict kwa where kwa.id = unitKwa.kwaId) where unitId=#{obsid}")
+    List<CmKnowledgeUnitKwa> getKnowledgeUnitKwa (String obsid);
 
     @Insert("insert into cm_course_unit(id,pId,name,nodeType,dataValue,courseId,orderNum) values(#{id},0,#{name},#{type},#{datavalue},#{courseid},#{ordernum})")
     void insertChapter(CmKnowledgeUnit cmKnowledgeUnit);
 
     @Insert("insert into cm_course_unit(id,pId,name,nodeType,dataValue,courseId,orderNum) values(#{id},#{pid},#{name},#{type},#{datavalue},#{courseid},#{ordernum})")
     void insertSection(CmKnowledgeUnit cmKnowledgeUnit);
-
 
     //添加能力单元kwa
     @Insert("insert into cm_course_unit_kwa(id,unitId,kwaId,status) values(#{id},#{unitid},#{kwaid},#{status})")
@@ -39,13 +37,15 @@ public interface CmKnowledgeUnitMapper {
     List<String> selectAllPUnitidByUnitids(@Param("unitids") List<String> unitids);
     //批量删除UnitKwa
     void deleteKnowledgeUnitKwaByUnitids(@Param("unitids") List<String> unitids);
+    // 根据kwaid批量删除Unitkwa
+    void deleteKnowledgeUnitKwaByKwaIds(@Param("kwaIds") List<String> kwaIds);
     //批量删除Unit
     void deleteKnowledgeUnitByUnitids(@Param("unitids") List<String> unitids);
     //更新知识单元
     @Update("update cm_course_unit set name=#{name},nodeType=#{type},dataValue=#{datavalue} where id=#{id}")
     void updateKnowledgeUnit(CmKnowledgeUnit cmKnowledgeUnit);
     //更改kwa状态
-    @Update("update cm_course_unit_kwa set status=#{status} where id=#{id}")
+    @Update("update cm_course_unit_kwa set status=#{status} where kwaId=#{kwaid} and unitId=#{unitid}")
     void updateKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa);
 
     @Select("select count(*) from cm_course_unit where id=#{id}")
@@ -53,22 +53,21 @@ public interface CmKnowledgeUnitMapper {
 
     @Select("select count(*) from cm_course_unit_kwa where kwaId=#{kwaid} and unitid=#{unitid}")
     long getUnitKwaCount(CmKnowledgeUnitKwa cmKnowledgeUnitKwa);
-    @Select("select count(*) from cm_course_unit_kwa where id=#{id}")
-    long getUnitKwaCountById(CmKnowledgeUnitKwa cmKnowledgeUnitKwa);
 
     @Select("select count(*) from cm_course where id=#{id}")
     long getCourseCountByid(@Param("id") String id);
-/*
-    @Update("update cm_knowledge_unit set type=,where")*/
+
     void flashKnowledgeUnitOrdernum(@Param("unitid") String unitid,@Param("courseid") String courseid,@Param("preOrdernum") long preOrdernum,@Param("beginOrdernum") long beginOdernum,@Param("endOrdernum") long endOrdernum);
 
     void updateKnowledgeUnitOrdernum(@Param("id") String id,@Param("newOrdernum") long newOrdernum);
+
     @Select("select ifnull(max(orderNum),0) from cm_course_unit where  pId=#{pid} and courseId=#{courseid}")
     long selectMaxOrdernum(@Param("pid") String pid,@Param("courseid") String courseid);
 
     //平移区间内ordernum
     @Update("update cm_course_unit set orderNum=orderNum+#{changeValue} where pId=#{pid} and courseId=#{courseid} and orderNum>=#{minOrdernum} and orderNum<=#{maxOrdernum}")
     void updateOtherKnowledgeUnitOrdernum(@Param("changeValue") int changeValue,@Param("pid") String unitid,@Param("courseid") String courseid,@Param("minOrdernum") long newOrdernum,@Param("maxOrdernum") long oldOrdernum);
+
     @Select("select orderNum from cm_course_unit where id=#{id}")
     long getOrdernumById(@Param("id") String id);
 }

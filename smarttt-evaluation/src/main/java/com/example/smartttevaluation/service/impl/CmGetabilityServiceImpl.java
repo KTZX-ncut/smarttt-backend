@@ -5,6 +5,7 @@ import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.mapper.CmGetabilityMapper;
 import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmGetability;
+import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmGetabilityService;
 import com.example.smartttevaluation.service.CmKeywordsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,11 +147,15 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
      *通过能力id查询相关kwa
      */
     @Override
-    public Result getKwaByGetability(String courseid, List<String> ids) {
+    public Result getKwaByGetabilityId(String obsId, List<String> ids) {
         //查询课程id是否存在
-        if (cmGetabilityMapper.getNumOfCourseById(courseid) == 0) {
+        if (cmGetabilityMapper.getNumOfCourseById(obsId) == 0) {
             return Result.error(404, "课程id不存在");
         }
-        return Result.success(cmGetabilityMapper.getKwaByGetabilityId(courseid,ids));
+        List<CmKwadict> kwas = cmGetabilityMapper.getKwaByGetabilityId(obsId,ids);
+        kwas.forEach(kwa -> {
+            kwa.setName(kwa.getKeywordname() + "-" + kwa.getAbilityname());
+        });
+        return Result.success(kwas);
     }
 }

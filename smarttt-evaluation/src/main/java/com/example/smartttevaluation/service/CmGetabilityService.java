@@ -25,6 +25,6 @@ public interface CmGetabilityService {
     /**
      *通过能力获取kwa
      */
-    Result getKwaByGetability(String courseid, List<String> ids);
+    Result getKwaByGetabilityId(String obsId, List<String> ids);
 
 }

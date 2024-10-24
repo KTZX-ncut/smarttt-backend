@@ -6,20 +6,12 @@ import com.example.smartttevaluation.pojo.*;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.mapper.CmCourseAssessmentMapper;
 import com.example.smartttevaluation.service.CmCourseAssessmentService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.sql.rowset.serial.SerialBlob;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.apache.tika.Tika;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
 
@@ -157,14 +149,13 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
     }
 
     public Result getFiles(CmCheckitem cmCheckitem) {
+        Tika tika = new Tika();
         List<CmCourseCheckitemFile> files = cmCourseAssessmentMapper.getFiles(cmCheckitem.getCourseid());
         files.forEach(file -> {
-            try {
-                file.setMimeType(Files.probeContentType(Paths.get(file.getFileName())));
-                file.setBase64FileData(Base64.getEncoder().encodeToString(file.getFileData()    ));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+//            file.setMimeType(Files.probeContentType(Paths.get(file.getFileName())));
+            file.setMimeType(tika.detect(file.getFileData()));
+            file.setBase64FileData(Base64.getEncoder().encodeToString(file.getFileData()));
+            file.setFileData(null);
         });
         List<String> associateFileIds = cmCourseAssessmentMapper.getAssociateFileIds(cmCheckitem.getId());
         Map<String, Object> res = new HashMap<>();
@@ -181,7 +172,7 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
         return Result.success();
     }
 
-    public Result getAssociateFiles(String fileId, String obsid) {
+    public Result getAssociateCheckitems(String fileId, String obsid) {
         List<CmCheckitem> checkitems = cmCourseAssessmentMapper.getAssociateCheckitems(fileId, obsid);
         return Result.success(checkitems);
     }

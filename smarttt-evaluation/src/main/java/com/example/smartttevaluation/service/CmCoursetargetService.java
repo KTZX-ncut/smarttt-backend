@@ -9,39 +9,32 @@ import java.util.List;
 
 public interface CmCoursetargetService {
     /**
-     *获取课程目标
+     * 获取课程目标
      */
-    Result getCoursetarget(Token token);
+    Result getCoursetarget(String obsId);
+
     /**
-     *创建课程目标
+     * 创建课程目标
      */
     Result createCoursetarget(CmCoursetarget cmCoursetarget);
+
     /**
-     *批量删除课程目标
-     */
-    Result deleteCoursetargetByIDs(List<String> ids, String courseid, String unitid);
-    /**
-     *更新课程目标
+     * 更新课程目标
      */
     Result updateCoursetarget(CmCoursetarget cmCoursetarget);
+
     /**
-     *插入unit
+     * 批量删除课程目标
      */
-    Result insertunit(String courseid, List<String> ids);
+    Result deleteCoursetargetByIds(List<String> ids);
+
     /**
-     *插入课程目标unit
+     * 根据课程目标id和kwaid新增课程目标的kwa
      */
-    Result insertCoursetargetUnit(String courseid, CmCoursetargetUnit cmCoursetargetUnit);
+    Result createKwasByTargetIdAndKwaId(CmCoursetarget cmCoursetarget);
+
     /**
-     *删除课程目标unit
+     * 根据课程目标id和kwaid删除课程目标的kwa
      */
-    Result deleteCoursetargetUnit(String unitid, String targetid);
-    /**
-     *更新课程目标unit
-     */
-    Result updateCoursetargetUnit(CmCoursetargetUnit cmCoursetargetUnit);
-    /**
-     *删除课程目标
-     */
-    Result deleteCoursetargetByID(List<String> ids);
+    Result deleteKwasByTargetIdAndKwaId(CmCoursetarget cmCoursetarget);
 }

@@ -17,6 +17,6 @@ public interface CmLinesService {
     /**
      *删除连线
      */
-    Result deleteLinesByID(List<String> ids);
+    Result deleteLinesByIds(List<String> ids);
 
 }
