@@ -1,6 +1,10 @@
 package com.example.smartttevaluation.service.impl;
+
 import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.mapper.CmCoursetargetMapper;
+import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
+import com.example.smartttevaluation.mapper.CmLinesMapper;
 import com.example.smartttevaluation.pojo.CmGetability;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.pojo.CmKwadict;
@@ -16,16 +20,27 @@ import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhance
 public class CmKwadictServiceImpl implements CmKwadictService {
     @Autowired
     private CmKwadictMapper cmKwadictMapper;
+    @Autowired
+    private CmKnowledgeUnitMapper cmKnowledgeUnitMapper;
+    @Autowired
+    private CmCoursetargetMapper cmCoursetargetMapper;
+    @Autowired
+    private CmLinesMapper cmLinesMapper;
+
     /**
-     *获取kwa
+     * 获取kwa
      */
     @Override
-    public Result getKwadict(String obsId) {
-
-        return Result.success(cmKwadictMapper.getKwadict(obsId));
+    public Result getKwadict(String obsid) {
+        List<CmKwadict> kwas = cmKwadictMapper.getKwadict(obsid);
+        kwas.forEach(kwa -> {
+            kwa.setName(kwa.getKeywordname() + "-" + kwa.getAbilityname());
+        });
+        return Result.success(kwas);
     }
+
     /**
-     *创建kwa
+     * 创建kwa
      */
     @Override
     public Result createKwadict(CmKwadict cmKwadict) {
@@ -33,66 +48,47 @@ public class CmKwadictServiceImpl implements CmKwadictService {
         cmKwadictMapper.createKwadict(cmKwadict);
         return Result.success();
     }
+
     /**
-     *删除kwa
+     * 删除kwa
      */
     @Override
-    public Result deleteKwadictByID(List<String> ids) {
-        cmKwadictMapper.deleteKwadictByIDs(ids);
+    public Result deleteKwadictByIds(List<String> ids) {
+        cmKwadictMapper.deleteKwadictByIds(ids);
+        // 删除kwa时同时把知识单元和课程目标以及知识能力图谱的连线中与这个kwa关联的记录删除
+        cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByKwaIds(ids);
+        cmCoursetargetMapper.deleteKwasByKwaIds(ids);
+        cmLinesMapper.deleteLinesByKwaIds(ids);
         return Result.success();
     }
+
     /**
-     *更新kwa
+     * 更新kwa
      */
     @Override
     public Result updateKwadict(CmKwadict cmKwadict) {
         cmKwadictMapper.updateKwadictByID(cmKwadict);
         return Result.success();
     }
+
     /**
-     *通过KeywordId获取关键字
-     */
-    @Override
-    public boolean getKeywordsByKeywordId(String keywordid) {
-        CmKeywords cmkeywords = cmKwadictMapper.getKeywordsByKeywordId(keywordid);
-        if (cmkeywords != null) {
-            // 找到了匹配的记录
-            return true;
-        } else {
-            // 没有找到匹配的记录
-            return false;
-        }
-    }
-    /**
-     *通过AbilityId获取能力
-     */
-    @Override
-    public boolean getAbilityByAbilityId(String abilityid) {
-        CmGetability ability = cmKwadictMapper.getAbilityByAbilityId(abilityid);
-        if (ability != null) {
-            // 找到了匹配的记录
-            return true;
-        } else {
-            // 没有找到匹配的记录
-            return false;
-        }
-    }
-    /**
-     *通过keywordid和abilityid获取kwa
+     * 通过keywordid和abilityid获取kwa
      */
     @Override
     public Result getKwadictBykeywordidAndabilityid(String keywordid, String abilityid) {
         return Result.success(cmKwadictMapper.getKwadictBykeywordidAndabilityid(keywordid, abilityid));
     }
+
     /**
-     *获取关键字字典
+     * 获取关键字字典
      */
     @Override
     public Result getKeywordsDict(String courseid) {
         return Result.success(cmKwadictMapper.getKeywordsDict(courseid));
     }
+
     /**
-     *获取能力字典
+     * 获取能力字典
      */
     @Override
     public Result getAbilityDict(String courseid) {

@@ -21,8 +21,13 @@ public interface CmLinesMapper {
             "VALUES (#{id},#{startkwaid},#{endkwaid},#{remark},#{courseid},#{startunitid},#{endunitid})")
     void createLines(CmLines cmLines);
     /**
-     *删除连线
+     * 根据连线id删除连线
      */
-    void deleteLinesByIDs(@Param("ids")List<String> ids);
+    void deleteLinesByIds(@Param("ids")List<String> ids);
+
+    /**
+     * 根据起始kwa或终点kwa的id删除连线
+     */
+    void deleteLinesByKwaIds(@Param("kwaIds") List<String> kwaIds);
 
 }

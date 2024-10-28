@@ -36,6 +36,13 @@
         </foreach>
     </delete>
 
+    <!--根据kwa的id批量删除unitKwa-->
+    <delete id="deleteKnowledgeUnitKwaByKwaIds">
+        delete from cm_course_unit_kwa where kwaId in
+        <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
+            #{kwaId}
+        </foreach>
+    </delete>
     <!--批量删除unit-->
     <delete id="deleteKnowledgeUnitByUnitids">
         delete from cm_course_unit where id in

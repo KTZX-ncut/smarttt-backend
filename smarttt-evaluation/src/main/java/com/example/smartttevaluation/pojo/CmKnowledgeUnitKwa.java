@@ -14,5 +14,7 @@ public class CmKnowledgeUnitKwa {
     String unitid;
     String kwaid;
     String name;
+    String keywordName;
+    String abilityName;
     int status;
 }

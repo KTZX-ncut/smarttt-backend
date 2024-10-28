@@ -30,36 +30,40 @@
         where id=#{id}
     </update>
 
-    <delete id="deleteCoursetargetByIDs">
-        delete from cm_coursetarget where id in
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
+    <delete id="deleteCoursetargetByIds">
+        delete from cm_course_target where id in
+        <foreach item="id" collection="targetIds" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
-
-    <!--批量删除unit-->
-    <delete id="deleteCoursetargetUnit">
-        delete from cm_coursetargetunit where unitid in
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
+    <delete id="deleteKwasByTargetIds">
+        delete from cm_course_target_kwa where targetId in
+        <foreach collection="targetIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
 
-    <!--查询关联所有的id-->
-    <select id="selectAllidByids" resultType="java.lang.String">
-        select id from cm_coursetarget where id in
-        <foreach item="id" collection="unitids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-    </select>
-
-    <insert id="insertunit">
-        INSERT INTO cm_coursetarget (unitid, courseid)
-        SELECT unitid, #{courseid} FROM cm_course_unit_kwa WHERE id in
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
+    <insert id="createKwasByTargetIdAndKwaId">
+        insert into cm_course_target_kwa(kwaId, targetId, obsId)
+        values
+        <foreach collection="cmCoursetarget.kwas" item="kwa" separator=",">
+            (#{kwa.id}, #{cmCoursetarget.id}, #{cmCoursetarget.courseid})
         </foreach>
     </insert>
 
+    <delete id="deleteKwasByTargetIdAndKwaId">
+        delete from cm_course_target_kwa where kwaId in
+        <foreach collection="cmCoursetarget.kwas" item="kwa" open="(" separator="," close=")">
+            #{kwa.id}
+        </foreach>
+        and obsId = #{cmCoursetarget.courseid} and targetId = #{cmCoursetarget.id}
+    </delete>
+
+    <delete id="deleteKwasByKwaIds">
+        delete from cm_course_target_kwa where kwaId in
+        <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
+            #{kwaId}
+        </foreach>
+    </delete>
 </mapper>

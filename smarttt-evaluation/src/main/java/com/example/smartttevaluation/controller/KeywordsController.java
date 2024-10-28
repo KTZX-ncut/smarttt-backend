@@ -1,7 +1,6 @@
 package com.example.smartttevaluation.controller;
 
 
-
 import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.dto.Token;
@@ -27,25 +26,28 @@ public class KeywordsController {
 
     @Autowired
     private CmKeywordsService cmKeywordsService;
+
     /**
      * 关键字列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09",isReadOnly = true)
-    public Result getKeywords(HttpServletRequest request){
+    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09", isReadOnly = true)
+    public Result getKeywords(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmKeywordsService.getKeywords(token.getObsid());
     }
+
     /**
      * 创建关键字
      */
     @PostMapping("/create")
-    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
-    public Result createKeywords(@RequestBody CmKeywords cmKeywords,HttpServletRequest request) {
+    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
+    public Result createKeywords(@RequestBody CmKeywords cmKeywords, HttpServletRequest request) {
         Token token = getTokenFromContext();
         cmKeywords.setCourseid(token.getObsid());
         return cmKeywordsService.createKeywords(cmKeywords);
     }
+
     /**
      * 删除关键字
      */
@@ -53,27 +55,31 @@ public class KeywordsController {
     public Result deleteKeywordsByID(@RequestBody List<String> ids) {
         return cmKeywordsService.deleteKeywordsByID(ids);
     }
+
     /**
      * 通过关键字id获取kwa
      */
-    @PostMapping("/getKwaByKeywordsID")
-    public Result getKwaByKeywordsID(@RequestParam("courseid") String courseid , @RequestBody List<String> ids) {
-        return cmKeywordsService.getKwaByKeywordsID(courseid,ids);
+    @PostMapping("/getKwaByKeywordsId")
+    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09", isReadOnly = true)
+    public Result getKwaByKeywordsId(@RequestBody List<String> ids, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmKeywordsService.getKwaByKeywordsId(token.getObsid(), ids);
     }
+
     /**
      * 更新关键字
      */
     @PostMapping
-    public Result updateKeywords(@RequestBody CmKeywords cmKeywords){
+    public Result updateKeywords(@RequestBody CmKeywords cmKeywords) {
         return cmKeywordsService.updateKeywords(cmKeywords);
     }
 
     @PostMapping("/import")
-    @AuthRequired(type = "admin",menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
-    public Result importKeywords(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
+    public Result importKeywords(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         Token token = getTokenFromContext();
         List<CmKeywords> cmKeywordsList = cmKeywordsService.importKeywordExcel(file);
-        for(CmKeywords cmKeywords :  cmKeywordsList){
+        for (CmKeywords cmKeywords : cmKeywordsList) {
             cmKeywords.setCourseid(token.getObsid());
             cmKeywordsService.createKeywords(cmKeywords);
         }

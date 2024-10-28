@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,4 +22,5 @@ public class CmCoursetarget {
     private String unitname;
     private String remark;//备注
     private String courseid;//课程id
+    private List<CmKwadict> kwas;
 }

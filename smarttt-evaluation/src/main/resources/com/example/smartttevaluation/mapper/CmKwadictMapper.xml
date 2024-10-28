@@ -7,15 +7,6 @@
         update cm_kwadict
         <!-- 使用set标签，代替update语句中的set关键字 -->
         <set>
-            <if test="name != null">
-                name=#{name},
-            </if>
-            <if test="keywordname != null">
-                keywordname=#{keywordname},
-            </if>
-            <if test="abilityname != null">
-                abilityname=#{abilityname},
-            </if>
             <if test="datavalue != null">
                 datavalue=#{datavalue},
             </if>
@@ -29,7 +20,7 @@
         where id=#{id}
     </update>
 
-    <delete id="deleteKwadictByIDs">
+    <delete id="deleteKwadictByIds">
         delete from cm_kwadict where id in
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}

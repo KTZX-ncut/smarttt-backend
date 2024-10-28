@@ -35,8 +35,8 @@ public class CmLinesServiceImpl implements CmLinesService {
      *删除连线
      */
     @Override
-    public Result deleteLinesByID(List<String> ids) {
-        cmLinesMapper.deleteLinesByIDs(ids);
+    public Result deleteLinesByIds(List<String> ids) {
+        cmLinesMapper.deleteLinesByIds(ids);
         return Result.success();
     }
 
