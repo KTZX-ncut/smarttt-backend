@@ -24,9 +24,6 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
         List<CmCoursetarget> targets = cmCoursetargetMapper.getCoursetarget(obsId);
         targets.forEach(target -> {
             List<CmKwadict> kwas = cmCoursetargetMapper.getKwas(target.getId(), obsId);
-            kwas.forEach(kwa -> {
-                kwa.setName(kwa.getKeywordname() + "-" + kwa.getAbilityname());
-            });
             target.setKwas(kwas);
         });
         return Result.success(targets);

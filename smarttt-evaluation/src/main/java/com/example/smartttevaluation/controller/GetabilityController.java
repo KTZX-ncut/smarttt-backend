@@ -85,11 +85,11 @@ public class GetabilityController {
     /**
      * 通过能力id获取kwa
      */
-    @PostMapping("/getKwaByGetabilityId")
+    @PostMapping("/getCourseKwaByGetabilityId")
     @AuthRequired(type = "admin",menu = "531500340-c0fc7d55-5459-433c-ad6a-593856295d51", isReadOnly = true)
     public Result getKwaByGetabilityId(@RequestBody List<String> ids, HttpServletRequest request) {
         Token token = getTokenFromContext();
-        return cmGetabilityService.getKwaByGetabilityId(token.getObsid(), ids);
+        return cmGetabilityService.getCourseKwaByGetabilityId(token.getObsid(), ids);
     }
 
 }

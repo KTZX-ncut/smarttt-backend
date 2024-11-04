@@ -2,6 +2,7 @@ package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.mapper.CmKeywordsMapper;
+import com.example.smartttevaluation.mapper.CmKwadictMapper;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKeywordsService;
@@ -12,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
 
@@ -24,12 +22,15 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
 
     @Autowired
     private CmKeywordsMapper cmKeywordsMapper;
+    @Autowired
+    private CmKwadictMapper cmKwadictMapper;
 
     /**
      * 获取关键字
      */
     @Override
-    public Result getKeywords(String obsId) {
+    public Result
+    getKeywords(String obsId) {
         return Result.success(cmKeywordsMapper.getKeywords(obsId));
     }
 
@@ -58,6 +59,17 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
     @Override
     public Result updateKeywords(CmKeywords cmKeywords) {
         cmKeywordsMapper.updateKeywordsByID(cmKeywords);
+        // 获取与这个关键字关联的kwa
+        List<String> ids = new ArrayList<>();
+        ids.add(cmKeywords.getId());
+        List<CmKwadict> kwas = cmKeywordsMapper.getKwaByKeywordsId(ids);
+        // 对每个关联的kwa的name字段的keyword部分更新
+        kwas.forEach(kwa -> {
+            String oldName = kwa.getName();
+            String[] part = oldName.split("-", 2);
+            kwa.setName(cmKeywords.getName() + "-" + part[1]);
+        });
+        cmKwadictMapper.updateKwadictByID(kwas);
         return Result.success();
     }
 
@@ -65,15 +77,12 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
      * 通过关键字id查询相关kwa
      */
     @Override
-    public Result getKwaByKeywordsId(String obsId, List<String> ids) {
+    public Result getKwaByKeywordsId(List<String> ids) {
         //查询课程id是否存在
-        if (cmKeywordsMapper.getNumOfCourseById(obsId) == 0) {
-            return Result.error(404, "课程id不存在");
-        }
-        List<CmKwadict> kwas = cmKeywordsMapper.getKwaByKeywordsId(obsId, ids);
-        kwas.forEach(kwa -> {
-            kwa.setName(kwa.getKeywordname() + "-" + kwa.getAbilityname());
-        });
+//        if (cmKeywordsMapper.getNumOfCourseById(obsId) == 0) {
+//            return Result.error(404, "课程id不存在");
+//        }
+        List<CmKwadict> kwas = cmKeywordsMapper.getKwaByKeywordsId(ids);
         return Result.success(kwas);
     }
 
@@ -102,4 +111,6 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
             throw new RuntimeException(e);
         }
     }
+
+
 }

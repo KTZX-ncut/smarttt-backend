@@ -15,35 +15,21 @@ public interface CmKwadictMapper {
     /**
      * 获取kwa列表
      */
-    @Select("select kwa.id as id, kwa.keywordid as keywordid, kwa.abilityid as abilityid, k.name as keywordname, a.name as abilityname, kwa.courseid as courseid, kwa.datavalue as datavalue from cm_kwadict kwa " +
+//    @Select("select kwa.id as id, kwa.keywordid as keywordid, kwa.abilityid as abilityid, k.name as keywordname, a.name as abilityname, kwa.courseid as courseid, kwa.datavalue as datavalue from cm_kwadict kwa " +
+//            "inner join cm_keywords k on k.id = kwa.keywordid " +
+//            "inner join cm_ability a on a.id = kwa.abilityid where kwa.courseid = #{obsid}")
+//    List<CmKwadict> getKwadict(String obsid);
+    @Select("select *, k.name as keywordname, a.name as abilityname from cm_kwadict kwa " +
             "inner join cm_keywords k on k.id = kwa.keywordid " +
-            "inner join cm_ability a on a.id = kwa.abilityid where kwa.courseid = #{obsid}")
-    List<CmKwadict> getKwadict(String obsid);
-
-
-    //@Update("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue) " +
-    //        "SELECT k.id, k.name, #{cmKwadict.keywordid}, #{cmKwadict.abilityid}, #{cmKwadict.keywordname}, #{cmKwadict.abilityname}, #{cmKwadict.courseid}, #{cmKwadict.datavalue} " +
-    //        "FROM cm_keywords k " +
-    //        "JOIN cm_getability a ON k.id = a.id " +
-    //        "WHERE k.id = #{cmKwadict.id} AND a.id = #{cmKwadict.abilityid}")
-    //void createKwadict(CmKwadict cmKwadict);
-//"WHERE kw.id = #{id} AND kw.name = #{name} AND kw.keywordid = #{keywordid} AND kw.abilityid = #{abilityid} AND kw.keywordname = #{keywordname} AND kw.abilityname =#{abilityname} AND kw.courseid = #{courseid} AND kw.datavalue = #{datavalue}")
+            "inner join cm_ability a on a.id = kwa.abilityid where kwa.courseid=#{obsId}")
+    List<CmKwadict> getKwadict(String obsId);
 
     /**
      * 新建kwa
      */
-    @Update("INSERT INTO cm_kwadict (id, keywordid, abilityid, courseid, datavalue) " +
-            "VALUES (#{id},#{keywordid},#{abilityid}, #{courseid}, #{datavalue})")
+    @Update("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, courseid, datavalue) " +
+            "VALUES (#{id}, #{name}, #{keywordid}, #{abilityid}, #{courseid}, #{datavalue})")
     void createKwadict(CmKwadict cmKwadict);
-
-
-//    @Select("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, keywordname, abilityname, courseid, datavalue)"+
-//            "SELECT kw.id, kw.name, k.id, a.id, k.name, a.name, kw.courseid, kw.datavalue\n" +
-//            "FROM cm_kwadict kw\n" +
-//            "JOIN cm_getability a ON a.id = kw.abilityid AND a.name = kw.abilityname\n" +
-//            "JOIN cm_keywords k ON k.id = kw.keywordid AND k.name = kw.keywordname\n" +
-//            "WHERE k.id = #{keywordid} AND a.id = #{abilityid} AND k.name = #{keywordname} AND a.name = #{abilityname}")
-//    void IScreateKwadict(CmKwadict cmKwadict);
 
     /**
      * 批量删除kwa
@@ -51,9 +37,9 @@ public interface CmKwadictMapper {
     void deleteKwadictByIds(@Param("ids") List<String> ids);
 
     /**
-     * 更新kwa
+     * 批量更新kwa
      */
-    void updateKwadictByID(CmKwadict cmKwadict);
+    void updateKwadictByID(@Param("kwas") List<CmKwadict> kwas);
 
     /**
      * 通过keywordid和abilityid获取kwa

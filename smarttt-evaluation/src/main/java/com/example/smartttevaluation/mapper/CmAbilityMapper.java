@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.mapper;
 
+import com.example.smartttevaluation.pojo.CmKwadict;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -64,4 +65,7 @@ public interface CmAbilityMapper {
 
     @Update("update cm_ability set name = #{name} where id = #{id}")
     void updateAbility(CmAbility cmAbility);
+
+    @Select("select * from cm_kwadict where abilityid=#{abilityId}")
+    List<CmKwadict> getAllKwaByAbilityId(String abilityId);
 }

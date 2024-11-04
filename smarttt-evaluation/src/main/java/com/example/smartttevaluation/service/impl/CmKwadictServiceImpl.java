@@ -12,6 +12,7 @@ import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
@@ -33,9 +34,6 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     @Override
     public Result getKwadict(String obsid) {
         List<CmKwadict> kwas = cmKwadictMapper.getKwadict(obsid);
-        kwas.forEach(kwa -> {
-            kwa.setName(kwa.getKeywordname() + "-" + kwa.getAbilityname());
-        });
         return Result.success(kwas);
     }
 
@@ -45,6 +43,7 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     @Override
     public Result createKwadict(CmKwadict cmKwadict) {
         cmKwadict.setId(generateEnhancedID("cm_kwadict"));
+        cmKwadict.setName(cmKwadict.getKeywordname() + "-" + cmKwadict.getAbilityname());
         cmKwadictMapper.createKwadict(cmKwadict);
         return Result.success();
     }
@@ -67,7 +66,18 @@ public class CmKwadictServiceImpl implements CmKwadictService {
      */
     @Override
     public Result updateKwadict(CmKwadict cmKwadict) {
-        cmKwadictMapper.updateKwadictByID(cmKwadict);
+        cmKwadict.setName(cmKwadict.getKeywordname() + "-" + cmKwadict.getAbilityname());
+        List<CmKwadict> kwas = new ArrayList<>();
+        kwas.add(cmKwadict);
+        cmKwadictMapper.updateKwadictByID(kwas);
+        return Result.success();
+    }
+
+    /**
+     * 用于更新关键字或能力时更新对应kwa的名称
+     */
+    public Result updateKwaName(List<CmKwadict> kwas) {
+
         return Result.success();
     }
 

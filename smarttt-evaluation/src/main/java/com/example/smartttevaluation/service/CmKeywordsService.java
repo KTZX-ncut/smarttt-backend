@@ -26,7 +26,7 @@ public interface CmKeywordsService {
     /**
      *通过关键字id获取kwa
      */
-    Result getKwaByKeywordsId(String obsId, List<String> ids);
+    Result getKwaByKeywordsId(List<String> ids);
 
     List<CmKeywords> importKeywordExcel(MultipartFile file);
 }

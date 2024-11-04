@@ -33,9 +33,6 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
             CmKnowledgeUnitTree t_cmKnowledgeUnitChapter = new CmKnowledgeUnitTree(t_ChapterId, t_Chapter.getName(), t_Chapter.getType(), t_Chapter.getDatavalue(), t_Chapter.getOrdernum(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             // 获取章的kwa，并设置kwa的名字
             List<CmKnowledgeUnitKwa> chapterKwas = cmKnowledgeUnitMapper.getKnowledgeUnitKwa(t_ChapterId);
-            chapterKwas.forEach(kwa -> {
-                kwa.setName(kwa.getKeywordName() + "-" + kwa.getAbilityName());
-            });
             t_cmKnowledgeUnitChapter.setKwas(chapterKwas);
 
             //将一级目录对象加入根列表
@@ -57,12 +54,10 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
                 //将该对象添加到相应一级目录的节列表
                 t_cmKnowledgeUnitSections.add(t_cmKnowledgeUnitSection);
                 for (CmKnowledgeUnitKwa t_kwa : t_cmKnowledgekwas) {
-                    t_kwa.setName(t_kwa.getKeywordName() + "-" + t_kwa.getAbilityName());
                     //当前kwaid是否存在章中
                     if (map_kwaid_to_kwa.containsKey(t_kwa.getKwaid()) == false) {
                         //不存在，新增
-                        CmKnowledgeUnitKwa t_chapterkwa = new CmKnowledgeUnitKwa("0", t_ChapterId, t_kwa.getKwaid(), "", t_kwa.getKeywordName(), t_kwa.getAbilityName(), t_kwa.getStatus());
-                        t_chapterkwa.setName(t_chapterkwa.getKeywordName() + "-" + t_chapterkwa.getAbilityName());
+                        CmKnowledgeUnitKwa t_chapterkwa = new CmKnowledgeUnitKwa("0", t_ChapterId, t_kwa.getKwaid(), t_kwa.getName(), t_kwa.getKeywordName(), t_kwa.getAbilityName(), t_kwa.getStatus());
                         //存到章kwa列表
                         t_cmKnowledgeUnitChapter.getChildren_kwas().add(t_chapterkwa);
                         //创建映射关系

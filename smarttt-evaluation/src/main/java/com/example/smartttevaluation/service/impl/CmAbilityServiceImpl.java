@@ -1,5 +1,7 @@
 package com.example.smartttevaluation.service.impl;
 
+import com.example.smartttevaluation.mapper.CmKwadictMapper;
+import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.pojo.CommonFunctions;
 import com.example.smartttevaluation.service.CmAbilityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import java.util.*;
 public class CmAbilityServiceImpl implements CmAbilityService {
     @Autowired
     private CmAbilityMapper cmAbilityMapper;
+    @Autowired
+    private CmKwadictMapper cmKwadictMapper;
 
 
     /**
@@ -56,6 +60,18 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     @Override
     public Result updateOneAbility(CmAbility cmAbility) {
         cmAbilityMapper.updateAbility(cmAbility);
+
+        // 获取与这个能力相关的所有kwa
+        List<CmKwadict> kwas = cmAbilityMapper.getAllKwaByAbilityId(cmAbility.getId());
+        kwas.forEach(kwa -> {
+            String oldName = kwa.getName();
+            String[] part = oldName.split("-", 2);
+            // 更新kwa的名称
+            kwa.setName(part[0] + "-" + cmAbility.getName());
+        });
+        System.out.println("+++++++++++++++++++++++" + kwas);
+        // 更新有关的kwa
+        cmKwadictMapper.updateKwadictByID(kwas);
         return Result.success();
     }
 
