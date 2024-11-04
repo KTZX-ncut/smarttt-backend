@@ -4,20 +4,25 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttevaluation.mapper.CmKwadictMapper">
     <update id="updateKwadictByID">
-        update cm_kwadict
-        <!-- 使用set标签，代替update语句中的set关键字 -->
-        <set>
-            <if test="datavalue != null">
-                datavalue=#{datavalue},
-            </if>
-            <if test="keywordid != null">
-                keywordid=#{keywordid},
-            </if>
-            <if test="abilityid != null">
-                abilityid=#{abilityid},
-            </if>
-        </set>
-        where id=#{id}
+        <foreach collection="kwas" item="kwa" separator=";">
+            update cm_kwadict
+            <!-- 使用set标签，代替update语句中的set关键字 -->
+            <set>
+                <if test="kwa.name != null">
+                    name=#{kwa.name},
+                </if>
+                <if test="kwa.datavalue != null">
+                    datavalue=#{kwa.datavalue},
+                </if>
+                <if test="kwa.keywordid != null">
+                    keywordid=#{kwa.keywordid},
+                </if>
+                <if test="kwa.abilityid != null">
+                    abilityid=#{kwa.abilityid},
+                </if>
+            </set>
+            where id=#{kwa.id}
+        </foreach>
     </update>
 
     <delete id="deleteKwadictByIds">

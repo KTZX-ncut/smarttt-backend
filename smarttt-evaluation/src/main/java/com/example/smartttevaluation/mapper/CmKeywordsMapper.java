@@ -38,7 +38,7 @@ public interface CmKeywordsMapper {
     /**
      * 通过关键字id获取kwa
      */
-    List<CmKwadict> getKwaByKeywordsId(@Param("obsId") String obsId, @Param("ids") List<String> ids);
+    List<CmKwadict> getKwaByKeywordsId(@Param("ids") List<String> ids);
 
     /**
      * 通过id获取课程数量

@@ -147,15 +147,12 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
      *通过能力id查询相关kwa
      */
     @Override
-    public Result getKwaByGetabilityId(String obsId, List<String> ids) {
+    public Result getCourseKwaByGetabilityId(String obsId, List<String> ids) {
         //查询课程id是否存在
         if (cmGetabilityMapper.getNumOfCourseById(obsId) == 0) {
             return Result.error(404, "课程id不存在");
         }
-        List<CmKwadict> kwas = cmGetabilityMapper.getKwaByGetabilityId(obsId,ids);
-        kwas.forEach(kwa -> {
-            kwa.setName(kwa.getKeywordname() + "-" + kwa.getAbilityname());
-        });
+        List<CmKwadict> kwas = cmGetabilityMapper.getCourseKwaByGetabilityId(obsId, ids);
         return Result.success(kwas);
     }
 }

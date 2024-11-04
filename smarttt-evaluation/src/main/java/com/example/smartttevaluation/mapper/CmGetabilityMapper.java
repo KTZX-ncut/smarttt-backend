@@ -63,5 +63,5 @@ public interface CmGetabilityMapper {
     /**
      *通过能力id获取kwa列表
      */
-    List<CmKwadict> getKwaByGetabilityId(@Param("obsId") String obsId, @Param("ids") List<String> ids);
+    List<CmKwadict> getCourseKwaByGetabilityId(@Param("obsId") String obsId, @Param("ids") List<String> ids);
 }

@@ -13,7 +13,7 @@ public class CmKeywords {
     /**
      * 关键字信息列表
      */
-    private String id;//能力id
+    private String id;//关键字id
     private String name;//名称
     private String datavalue;//数值
     private String importantlevelid;//重要程度

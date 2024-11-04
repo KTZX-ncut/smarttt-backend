@@ -60,10 +60,8 @@ public class KeywordsController {
      * 通过关键字id获取kwa
      */
     @PostMapping("/getKwaByKeywordsId")
-    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09", isReadOnly = true)
-    public Result getKwaByKeywordsId(@RequestBody List<String> ids, HttpServletRequest request) {
-        Token token = getTokenFromContext();
-        return cmKeywordsService.getKwaByKeywordsId(token.getObsid(), ids);
+    public Result getKwaNameByKeywordsId(@RequestBody List<String> ids) {
+        return cmKeywordsService.getKwaByKeywordsId(ids);
     }
 
     /**

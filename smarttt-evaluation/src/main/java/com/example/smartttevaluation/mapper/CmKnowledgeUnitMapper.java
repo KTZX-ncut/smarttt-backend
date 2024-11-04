@@ -14,9 +14,8 @@ public interface CmKnowledgeUnitMapper {
     @Select("select id,pId,name,concat(#{p_type},\".\",orderNum) as type,dataValue,orderNum from cm_course_unit where pId=#{pid} order by orderNum ")
     List<CmKnowledgeUnit> getSection (@Param("pid") String pid,@Param("p_type") String p_type);
 
-    @Select("select unitKwa.id as id, unitKwa.unitId as unitId, unitKwa.kwaId, a.name as abilityName, k.name as keywordName, unitKwa.status as status from cm_course_unit_kwa unitKwa " +
-            "inner join cm_keywords k on k.id = (select kwa.keywordid from cm_kwadict kwa where kwa.id = unitKwa.kwaId) " +
-            "inner join cm_ability a on a.id = (select kwa.abilityid from cm_kwadict kwa where kwa.id = unitKwa.kwaId) where unitId=#{obsid}")
+    @Select("select unitKwa.id as id, unitKwa.unitId as unitId, unitKwa.kwaId as kwaid,kwa.name as name, unitKwa.status as status from cm_course_unit_kwa unitKwa, cm_kwadict kwa " +
+            "where unitId=#{obsid} and kwaId=kwa.id")
     List<CmKnowledgeUnitKwa> getKnowledgeUnitKwa (String obsid);
 
     @Insert("insert into cm_course_unit(id,pId,name,nodeType,dataValue,courseId,orderNum) values(#{id},0,#{name},#{type},#{datavalue},#{courseid},#{ordernum})")
