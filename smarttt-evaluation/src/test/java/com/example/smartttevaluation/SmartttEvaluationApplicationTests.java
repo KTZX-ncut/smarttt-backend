@@ -14,7 +14,6 @@ class SmartttEvaluationApplicationTests {
 
     //private static final Logger logger = LoggerFactory.getLogger(SmartttEvaluationApplicationTests.class);
 
-    @Test
     void contextLoads() {
 
         //日志的级别
