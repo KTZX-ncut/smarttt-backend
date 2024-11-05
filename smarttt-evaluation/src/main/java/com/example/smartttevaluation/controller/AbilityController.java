@@ -36,13 +36,13 @@ public class AbilityController {
      * 能力列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-fe5bb833-fdd7-4416-81dd-f5b20107540f",isReadOnly = true)
-    public Result getAbilityListByProId(HttpServletRequest request){
+    @AuthRequired(type = "admin", menu = "531500340-fe5bb833-fdd7-4416-81dd-f5b20107540f", isReadOnly = true)
+    public Result getAbilityListByProId(HttpServletRequest request) {
         // 从token里那获取专业ID
         Token token = getTokenFromContext();
-        if(token == null) return Result.error(-710,"请登录");
+        if (token == null) return Result.error(-710, "请登录");
         String proId = token.getObsid();
-        if(proId == null) return Result.error(-710,"token不合法");
+        if (proId == null) return Result.error(-710, "token不合法");
         return cmAbilityService.getAbilityTreeByProId(proId);
     }
 
@@ -50,38 +50,42 @@ public class AbilityController {
      * 同级新增&下级新增
      */
     @PostMapping("/create")
-   Result createByAbilitySecretary(@RequestBody CreateAbilityReq createAbilityReq){
+    @AuthRequired(type = "admin", menu = "531500340-fe5bb833-fdd7-4416-81dd-f5b20107540f")
+    Result createByAbilitySecretary(@RequestBody CreateAbilityReq createAbilityReq, HttpServletRequest request) {
+        Token token = getTokenFromContext();
         CmAbility cmAbility = createAbilityReq.getCmAbility();
+        cmAbility.setProfessionid(token.getObsid());
         //同级新增
-        if(Objects.equals(createAbilityReq.getType(), "1")){
+        if (Objects.equals(createAbilityReq.getType(), "1")) {
             cmAbility.setPid(createAbilityReq.getPid());
             cmAbility.setAbilitydeep(createAbilityReq.getAbilitydeep());
         }
         //下级新增
         else {
             cmAbility.setPid(createAbilityReq.getId());
-            cmAbility.setAbilitydeep(createAbilityReq.getAbilitydeep()+1);
+            cmAbility.setAbilitydeep(createAbilityReq.getAbilitydeep() + 1);
         }
         return cmAbilityService.createOneAbility(cmAbility);
-   }
+    }
 
     /**
      * 删除能力——批量删除
      */
-   @PostMapping("/delete")
-   public Result deleteAbilityByIDs(@RequestBody List<String> ids){
-       return cmAbilityService.deleteAbilityByIDs(ids);
-   }
+    @PostMapping("/delete")
+    public Result deleteAbilityByIDs(@RequestBody List<String> ids) {
+        return cmAbilityService.deleteAbilityByIDs(ids);
+    }
 
     /**
      * 升级能力
      */
-   @GetMapping("/upgrade")
-   public Result upgradeOneAbility(@RequestParam(name = "id")String id){
-            return cmAbilityService.upgradeOneAbilityByID(id);
+    @GetMapping("/upgrade")
+    public Result upgradeOneAbility(@RequestParam(name = "id") String id) {
+        return cmAbilityService.upgradeOneAbilityByID(id);
     }
+
     @PostMapping("/update")
-    public Result updateAbility(@RequestBody CmAbility cmAbility){
+    public Result updateAbility(@RequestBody CmAbility cmAbility) {
         return cmAbilityService.updateOneAbility(cmAbility);
     }
 }
