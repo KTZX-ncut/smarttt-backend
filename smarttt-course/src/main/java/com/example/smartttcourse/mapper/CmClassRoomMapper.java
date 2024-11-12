@@ -31,4 +31,10 @@ public interface CmClassRoomMapper {
     String getClassRoomByClassRoomName(@Param("classRoomName") String classRoomName);
     @Select("select courseId from cm_classroom where id = #{classroomID}")
     String getCourseIDByClassroomId(String classroomID);
+
+    String getTermIdByClassroomId(@Param("classroomId") String classroomId);
+
+    String getCourseIdByClassroomId(@Param("classroomId") String classroomId);
+
+    List<String> getClassroomIdByCourseId(@Param("courseId") String courseId);
 }

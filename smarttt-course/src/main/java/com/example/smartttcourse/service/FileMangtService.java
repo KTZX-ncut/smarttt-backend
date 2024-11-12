@@ -6,11 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 
 public interface FileMangtService {
-
-
     String getFilePath(String ObsId, String type, Boolean isClassroom);
-
-    Result uploadfile(MultipartFile file, String Path);
 
     Result getFileList(String obsid, String type);
 

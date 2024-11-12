@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class MinioConfig {
 
-    // minio:9000
+    // minio-server:9000
     private static final String URL = "http://157.0.19.2:10317";
 
     private static final String ACCESSKEY = "minioadmin";

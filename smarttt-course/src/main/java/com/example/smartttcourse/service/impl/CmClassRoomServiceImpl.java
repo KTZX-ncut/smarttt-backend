@@ -70,4 +70,19 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     public String getClassRoomByClassRoomName(String classRoomName) {
         return cmClassRoomMapper.getClassRoomByClassRoomName(classRoomName);
     }
+
+    @Override
+    public String getTermIdByClassroomId(String classroomId) {
+        return cmClassRoomMapper.getTermIdByClassroomId(classroomId);
+    }
+
+    @Override
+    public String getCourseIdByClassroomId(String classroomId) {
+        return cmClassRoomMapper.getCourseIdByClassroomId(classroomId);
+    }
+
+    @Override
+    public List<String> getClassroomIdByCourseId(String courseId) {
+        return cmClassRoomMapper.getClassroomIdByCourseId(courseId);
+    }
 }

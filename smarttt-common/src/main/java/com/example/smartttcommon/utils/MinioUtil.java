@@ -29,10 +29,10 @@ public class MinioUtil {
     }
 
     /**
-     * 创建一个桶
+     * 如果桶不存在，就创建一个桶
      */
     @SneakyThrows
-    public void buildBucket(String bucketName){
+    public void buildBucketIfNotExist(String bucketName){
         if (!this.existBucket(bucketName)){
             minioClient.makeBucket(MakeBucketArgs.builder()
                     .bucket(bucketName).build());
@@ -93,6 +93,10 @@ public class MinioUtil {
                 .bucket(bucketName)
                 .object(objectName).build());
     }
+
+    /**
+     * 获取文件路径
+     */
     @SneakyThrows
     public String getUrl(String bucketName, String objectName){
         return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()

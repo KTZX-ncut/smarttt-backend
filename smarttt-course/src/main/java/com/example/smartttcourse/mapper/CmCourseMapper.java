@@ -18,8 +18,6 @@ public interface CmCourseMapper {
      */
     @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
     List<SimpleCourse> getCourse (Token token);
-
-
     @Select("select id,courseChineseName from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
     List<CourseClassroomReq> getCourseName(Token token);
 
@@ -57,5 +55,8 @@ public interface CmCourseMapper {
     @Select("select cm_course.id,cm_course.courseChineseName from cm_course\n" +
             "where cm_course.id in (select obsid as id from st_roleuser where roleid =#{roleid}  and userid=#{id})")
     List<CourseClassroomReq> getTeacherOtherCourse(Token token);
+
+
+    String getTermIdByCourseId( @Param("courseId") String courseId);
 }
 

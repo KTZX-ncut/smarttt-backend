@@ -26,4 +26,8 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getTermIdByCourseId" parameterType="string" resultType="string">
+        SELECT schooltermId FROM cm_course WHERE id = #{courseId}
+    </select>
 </mapper>

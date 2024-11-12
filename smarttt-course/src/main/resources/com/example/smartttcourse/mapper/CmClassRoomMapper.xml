@@ -46,4 +46,19 @@
             #{id}
         </foreach>
     </delete>
+
+    <!--String getTermIdByClassroomId(String classroomId);-->
+    <select id="getTermIdByClassroomId" resultType="string">
+        SELECT termId FROM cm_classroom
+        WHERE id = #{classroomId}
+    </select>
+
+    <select id="getCourseIdByClassroomId" resultType="string">
+        SELECT courseId FROM cm_classroom
+        WHERE id = #{classroomId}
+    </select>
+    <select id="getClassroomIdByCourseId" resultType="string">
+        SELECT DISTINCT id FROM cm_classroom
+        WHERE courseId = #{courseId}
+    </select>
 </mapper>
