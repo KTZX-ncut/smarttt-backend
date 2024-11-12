@@ -56,4 +56,9 @@ public class CmTermServicelmpl implements CmTermService {
         cmTermMapper.setOtherTerms(id);
         return Result.success();
     }
+
+    @Override
+    public Result getCurrentTerm() {
+        return Result.success(cmTermMapper.getCurrentTerm());
+    }
 }

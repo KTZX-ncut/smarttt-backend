@@ -35,8 +35,10 @@ public class CourseController {
     public Result test(){
         return Result.success();
     }
+
     /**
-     *专业负责人课程管理信息
+     * 专业负责人课程管理信息
+     *
      * @return Result
      */
     @GetMapping
@@ -48,6 +50,7 @@ public class CourseController {
 
     /**
      * 获取全部学期
+     *
      * @return
      */
 
@@ -55,7 +58,13 @@ public class CourseController {
     public Result getAllTerm(){
         return cmTermService.getHistoryTerm();
     }
-    @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
+
+    @GetMapping("/currenttermId")
+    public Result getCurrentTerm() {
+        return cmTermService.getCurrentTerm();
+    }
+
+    @AuthRequired(type = "admin", menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @PostMapping("/create")
     public Result createCourse(@RequestBody CmCourse cmCourse,HttpServletRequest request) {
         Token token = getTokenFromContext();
@@ -74,24 +83,29 @@ public class CourseController {
         Token token = getTokenFromContext();
         return cmCourseService.historyCourseByTerm(termID,token.getObsid());
     }
+
     @PostMapping("/update")
     public Result updateCourse(@RequestBody CmCourse cmCourse){
         return cmCourseService.updateOneCourse(cmCourse);
     }
+
     @GetMapping("/copy")
     public Result copyHistoryCourse(@RequestParam(name = "id")String id){
         return cmCourseService.copyHistoryCourse(id);
     }
+
     @PostMapping("/courseRP")
     public Result courseRPList(){
         String obsID = smObsService.getSchoolObs();
         return smObsService.getObsRPList(obsID);
     }
-    @PostMapping ("/courseRP/delete")
-    public Result deleteCourseRP(@RequestBody StRoleUser stRoleUser){
+
+    @PostMapping("/courseRP/delete")
+    public Result deleteCourseRP(@RequestBody StRoleUser stRoleUser) {
         stRoleUser.setRoleid("516761049-234512f3-7c19-4580-abe2-ebfb1dd8db21");
         return stUsersService.deleteRP(stRoleUser);
     }
+
     @PostMapping("/courseRP/create")
     public Result createCourseRP(@RequestBody List<StRoleUser> stRoleUserList){
         for(StRoleUser stRoleUser:stRoleUserList){

@@ -21,4 +21,6 @@ public interface CmTermService {
     Result updateTermByID(CmTerm cmTerm);
 
     Result getTerms();
+
+    Result getCurrentTerm();
 }

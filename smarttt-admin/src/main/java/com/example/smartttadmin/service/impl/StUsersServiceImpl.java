@@ -103,7 +103,8 @@ public class StUsersServiceImpl implements StUsersService {
      */
     @Override
     public Result getTeaInfor(UserInforReq userInforReq) {
-        Token token = new Token(userInforReq.getId(), userInforReq.getRoleid(), userInforReq.getObsid(), userInforReq.getObsdeep());
+        Token token = new Token(userInforReq.getId(), userInforReq.getRoleid(),
+                userInforReq.getObsid(), userInforReq.getObsdeep());
         UserInfor userInfor = stUsersMapper.getAllUserInfor(userInforReq);
         try{
                 userInfor.setCatelog(userInforReq.getCatelog());
