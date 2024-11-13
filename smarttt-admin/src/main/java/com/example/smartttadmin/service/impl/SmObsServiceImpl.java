@@ -70,6 +70,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         if(smObsList.size()<ids.size())return Result.error(404,"批量删除教学单位出错");
         for(String id:ids){
             smObsMapper.updateBrotherObsOrderNo(id);
+            //  删除pid为当前节点的id的所有节点
+            smObsMapper.deleteObsByPid(id);
+            // 删除当前节点
             smObsMapper.deleteObsByID(id);
         }
         return Result.success();
