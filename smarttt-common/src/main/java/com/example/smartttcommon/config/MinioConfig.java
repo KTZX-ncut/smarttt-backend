@@ -2,6 +2,7 @@ package com.example.smartttcommon.config;
 
 import io.minio.MinioClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,11 +18,20 @@ import org.springframework.context.annotation.Configuration;
 public class MinioConfig {
 
     // minio-server:9000
-    private static final String URL = "http://157.0.19.2:10317";
+    @Value("${minio.url}")
+    private String URL;
 
-    private static final String ACCESSKEY = "minioadmin";
+    @Value("${minio.accessKey}")
+    private String ACCESSKEY;
 
-    private static final String SECRETKEY = "@Dwl1234567890";
+    @Value("${minio.secretKey}")
+    private String SECRETKEY;
+
+    //private static final String URL = "http://157.0.19.2:10317";
+
+    //private static final String ACCESSKEY = "minioadmin";
+
+    //private static final String SECRETKEY = "@Dwl1234567890";
 
     @Bean
     MinioClient minioClient(){
