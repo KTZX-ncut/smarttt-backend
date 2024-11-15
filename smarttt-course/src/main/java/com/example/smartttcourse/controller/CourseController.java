@@ -68,7 +68,7 @@ public class CourseController {
     @PostMapping("/create")
     public Result createCourse(@RequestBody CmCourse cmCourse,HttpServletRequest request) {
         Token token = getTokenFromContext();
-        //SmartAssert.checkExpression(StrUtil.isNotBlank(cmCourse.getSchooltermId()),ResponseEnum.TERM_ID_IS_NOT_BLANK);
+        SmartAssert.checkExpression(StrUtil.isNotBlank(cmCourse.getSchooltermId()),ResponseEnum.TERM_ID_IS_NOT_BLANK);
         cmCourse.setProfessionId(token.getObsid());
         return cmCourseService.createCourse(cmCourse);
     }
