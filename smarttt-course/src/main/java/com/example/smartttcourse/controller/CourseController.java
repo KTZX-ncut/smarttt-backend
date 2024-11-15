@@ -55,6 +55,12 @@ public class CourseController {
     public Result getAllTerm(){
         return cmTermService.getHistoryTerm();
     }
+
+    @GetMapping("/currenttermId")
+    public Result getCurrentTerm() {
+        return cmTermService.getCurrentTerm();
+    }
+
     @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @PostMapping("/create")
     public Result createCourse(@RequestBody CmCourse cmCourse,HttpServletRequest request) {
