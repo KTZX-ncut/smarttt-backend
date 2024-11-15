@@ -54,6 +54,7 @@ public class TeachingProgramHandler implements CourseFileHandler {
             // 课程负责人: params对应的是courseId
             String termId = courseService.getTermIdByCourseId(params);
             if (StrUtil.isBlank(termId)){
+                log.info("TeachingProgramHandler.getBucket:{}",termId);
                 throw new RuntimeException("非法请求：没有该课程！");
             }
             minioUtil.buildBucketIfNotExist(termId);
