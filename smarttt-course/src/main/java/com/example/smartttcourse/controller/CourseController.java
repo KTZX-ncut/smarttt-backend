@@ -1,12 +1,16 @@
 package com.example. smartttcourse.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.example.smartttcourse.Utils.AuthRequired;
 import com.example.smartttcourse.dto.Token;
+import com.example.smartttcourse.exception.res.ResponseEnum;
+import com.example.smartttcourse.exception.utils.SmartAssert;
 import com.example.smartttcourse.pojo.CmCourse;
 import com.example.smartttcourse.pojo.StRoleUser;
 import com.example.smartttcourse.service.CmTermService;
 import com.example.smartttcourse.service.SmObsService;
 import com.example.smartttcourse.service.StUsersService;
+import com.sun.tools.javac.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.service.CmCourseService;
@@ -55,10 +59,12 @@ public class CourseController {
     public Result getAllTerm(){
         return cmTermService.getHistoryTerm();
     }
+
     @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @PostMapping("/create")
     public Result createCourse(@RequestBody CmCourse cmCourse,HttpServletRequest request) {
         Token token = getTokenFromContext();
+        SmartAssert.checkExpression(StrUtil.isNotBlank(cmCourse.getSchooltermId()),ResponseEnum.TERM_ID_IS_NOT_BLANK);
         cmCourse.setProfessionId(token.getObsid());
         return cmCourseService.createCourse(cmCourse);
     }

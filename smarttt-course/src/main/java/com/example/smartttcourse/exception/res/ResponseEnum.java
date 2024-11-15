@@ -20,7 +20,8 @@ public enum ResponseEnum {
     TOKEN_IS_NULL(-712, "token为空"),
     FIELD_IS_NULL(-713, "所要求的字段为空，请检查字段！"),
     USERNAME_NOT_EQ(-714, "有错误信息：学号和姓名不对应"),
-    DATA_NOT_VALIDATE(-715,"数据不合法");
+    DATA_NOT_VALIDATE(-715,"数据不合法"),
+    TERM_ID_IS_NOT_BLANK(-716,"schooltermId不能为空");
     private Integer code;//状态码
     private String message;//消息
 }

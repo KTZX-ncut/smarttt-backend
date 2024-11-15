@@ -36,4 +36,8 @@ public abstract class SmartAssert {
     public static void eq(String usernameInDataSource, String username, ResponseEnum responseEnum) {
         if(!usernameInDataSource.equals(username)) throw new BusinessException(responseEnum);
     }
+
+    public static void checkExpression(boolean flag,ResponseEnum responseEnum){
+        if (!flag) throw new BusinessException(responseEnum);
+    }
 }
