@@ -15,7 +15,7 @@ public interface CmCourseAssessmentMapper {
     @Select("select count(*) from cm_course_target where courseid=#{courseid}")
     int getCourseTargetNum(@Param("courseid") String courseid);
 
-    @Select("select * from cm_course_target where courseid=#{courseid}")
+    @Select("select * from cm_course_target where courseid=#{courseid} order by createTime")
     List<CmCoursetarget> getCourseTarget(@Param("courseid") String courseid);
 
     @Select("select * from cm_course_checkitem where  courseid=#{courseid} order by orderno")

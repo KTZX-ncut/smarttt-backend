@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -27,9 +28,9 @@ public interface CmKwadictMapper {
     /**
      * 新建kwa
      */
-    @Update("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, courseid, datavalue) " +
-            "VALUES (#{id}, #{name}, #{keywordid}, #{abilityid}, #{courseid}, #{datavalue})")
-    void createKwadict(CmKwadict cmKwadict);
+    @Update("INSERT INTO cm_kwadict (id, name, keywordid, abilityid, courseid, datavalue, createTime) " +
+            "VALUES (#{kwa.id}, #{kwa.name}, #{kwa.keywordid}, #{kwa.abilityid}, #{kwa.courseid}, #{kwa.datavalue}, #{createTime})")
+    void createKwadict(@Param("kwa") CmKwadict cmKwadict, @Param("createTime") LocalDateTime createTime);
 
     /**
      * 批量删除kwa
@@ -39,7 +40,7 @@ public interface CmKwadictMapper {
     /**
      * 批量更新kwa
      */
-    void updateKwadictByID(@Param("kwas") List<CmKwadict> kwas);
+    void updateKwadictByID(@Param("kwa") CmKwadict cmKwadict);
 
     /**
      * 通过keywordid和abilityid获取kwa
