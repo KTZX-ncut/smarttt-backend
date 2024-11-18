@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
@@ -40,7 +41,7 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
     @Override
     public Result createKeywords(CmKeywords cmKeywords) {
         cmKeywords.setId(generateEnhancedID("cm_keywords"));
-        cmKeywordsMapper.createKeywords(cmKeywords);
+        cmKeywordsMapper.createKeywords(cmKeywords, LocalDateTime.now());
         return Result.success();
     }
 
@@ -69,7 +70,10 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
             String[] part = oldName.split("-", 2);
             kwa.setName(cmKeywords.getName() + "-" + part[1]);
         });
-        cmKwadictMapper.updateKwadictByID(kwas);
+
+        kwas.forEach(kwa -> {
+            cmKwadictMapper.updateKwadictByID(kwa);
+        });
         return Result.success();
     }
 
