@@ -76,4 +76,8 @@
         </foreach>
     </select>
 
+    <!--void deleteObsByPid( @Param("id") String id);-->
+    <delete id="deleteObsByPid" parameterType="string">
+        DELETE FROM sm_obs WHERE pid = #{id}
+    </delete>
 </mapper>

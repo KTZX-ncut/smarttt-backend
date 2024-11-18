@@ -12,11 +12,13 @@ import java.util.List;
 public interface StUsersMapper {
     /**
      * 用账号密码查找对应的用户
+     *
      * @param loginReq ...
      * @return 用户列表（用于判空）
      */
     @Select("select * from st_users where loginname=#{loginname} and pwd = #{pwd} and catelog = #{catelog}")
     StUsers getStUsersByLoginNameAndPwdAndCatelog(LoginReq loginReq);
+
     @Select("SELECT u.id, u.username, o.obsname\n" +
             "FROM st_roleuser ru\n" +
             "JOIN st_users u ON ru.userid = u.id\n" +
@@ -30,17 +32,23 @@ public interface StUsersMapper {
     void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
 
     @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno})")
-    void createOneSmTeacher(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("jobno")String jobno);
+    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno);
 
     @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno})")
-    void createOneSmStudent(@Param("id")String id, @Param("obsid")String obsid, @Param("usersid")String usersid, @Param("createtime")String createtime,@Param("stuno")String stuno);
+    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno);
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
 
-
-
-    @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
-            "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
+    //@Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
+    //        "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
+    @Select("select COALESCE(cm_term.termname, '默认学期') as currentterm , " +
+            "st_users.username , " +
+            "st_roles.rolename, " +
+            "st_roles.homeurl " +
+            "from st_users " +
+            "join st_roles on st_roles.id = #{roleid} " +
+            " left join cm_term on cm_term.iscurrentterm = 1 " +
+            " where st_users.id = #{id}")
     UserInfor getAllUserInfor(UserInforReq userInforReq);
 
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
@@ -67,6 +75,7 @@ public interface StUsersMapper {
 
     @Select("select rolename,homeurl from st_roles where id = #{id}")
     UserInfor getStudentInfor(String id);
+
     @Select("select id from cm_term where iscurrentterm = 1")
     String getCurrentTerm();
 

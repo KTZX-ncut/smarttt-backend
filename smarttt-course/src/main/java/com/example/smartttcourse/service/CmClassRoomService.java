@@ -16,4 +16,10 @@ public interface CmClassRoomService {
     Result updateOneClassroom(CmClassroom classroom);
 
     String getClassRoomByClassRoomName(String classRoomName);
+
+    String getTermIdByClassroomId(String classroomId);
+
+    String getCourseIdByClassroomId(String classroomId);
+
+    List<String> getClassroomIdByCourseId(String courseId);
 }

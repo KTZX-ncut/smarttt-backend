@@ -55,5 +55,8 @@ public interface CmCourseMapper {
     @Select("select cm_course.id,cm_course.courseChineseName from cm_course\n" +
             "where cm_course.id in (select obsid as id from st_roleuser where roleid =#{roleid}  and userid=#{id})")
     List<CourseClassroomReq> getTeacherOtherCourse(Token token);
+
+
+    String getTermIdByCourseId( @Param("courseId") String courseId);
 }
 

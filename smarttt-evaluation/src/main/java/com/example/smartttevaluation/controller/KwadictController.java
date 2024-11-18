@@ -86,7 +86,7 @@ public class KwadictController {
     /**
      * 更新kwa
      */
-    @PostMapping
+    @PostMapping("/updateKwadict")
     public Result updateKwadict(@RequestBody CmKwadict cmKwadict) {
         return cmKwadictService.updateKwadict(cmKwadict);
     }

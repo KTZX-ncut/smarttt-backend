@@ -8,6 +8,7 @@ import com.example.smartttcourse.mapper.StUsersMapper;
 import com.example.smartttcourse.pojo.CmCourse;
 import com.example.smartttcourse.pojo.StRoleUser;
 import com.example.smartttcourse.service.CmCourseService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,14 @@ public class CmCourseServiceImpl implements CmCourseService {
     @Override
     public Result getTeacherCourse(Token token) {
         return Result.success(cmCourseMapper.getTeacherOtherCourse(token));
+    }
+
+    /**
+     * 根据courseId查出来termId
+     */
+    @Override
+    public String getTermIdByCourseId(String courseId) {
+        return cmCourseMapper.getTermIdByCourseId(courseId);
     }
 
 }

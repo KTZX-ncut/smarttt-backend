@@ -85,6 +85,8 @@ public class CmAbilityServiceImpl implements CmAbilityService {
 
         List<CmAbilityTree> allAbilityTree = cmAbilityMapper.getAllCmAbilityTreeByProId(proId);
 
+        //对能力链表进行流化，之后通过collect方法对这个流里面的数据进行操作，使用lombok减少了代码生成（CmAbilityTree）
+        //
         Map<String, List<CmAbilityTree>> abilityMap = allAbilityTree.stream()
                 .collect(
                         Collectors.groupingBy(CmAbilityTree::getPid,
@@ -97,7 +99,9 @@ public class CmAbilityServiceImpl implements CmAbilityService {
                         ));
         List<CmAbilityTree> rootAbility = abilityMap.get("0"); // 根菜单的pid通常为0
         // 递归构建菜单树
-        buildAbilityTree(rootAbility, abilityMap);
+        if(rootAbility != null){
+            buildAbilityTree(rootAbility,  abilityMap);
+        }
         return Result.success(rootAbility);
     }
 
@@ -114,8 +118,7 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     }
 
     /**
-     * 构建菜单树
-     *
+     *构建菜单树
      * @param parentCmAbility
      * @param AbilityMap
      */

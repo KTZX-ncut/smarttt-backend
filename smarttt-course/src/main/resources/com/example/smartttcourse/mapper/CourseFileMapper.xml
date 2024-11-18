@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttcourse.mapper.CourseFileMapper">
+    <!--String getUserIdentity( @Param("roleid") String roleid);-->
+    <select id="getUserIdentity" resultType="string">
+        SELECT rolename FROM st_roles
+        WHERE id = #{roleid}
+    </select>
+</mapper>

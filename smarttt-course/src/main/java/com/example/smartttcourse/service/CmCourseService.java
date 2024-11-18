@@ -22,5 +22,7 @@ public interface CmCourseService {
     Result updateOneCourse(CmCourse cmCourse);
 
     Result getTeacherCourse(Token token);
+
+    String getTermIdByCourseId(String courseId);
 }
 

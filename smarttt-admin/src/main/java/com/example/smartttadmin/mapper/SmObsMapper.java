@@ -116,4 +116,6 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
 
     @Select("select id from st_level where obsdeep = #{obsdeep}")
     long checkProfession(long obsdeep);
+
+    void deleteObsByPid( @Param("id") String id);
 }

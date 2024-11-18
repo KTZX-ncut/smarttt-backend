@@ -33,6 +33,9 @@ public class FileMangtServiceImpl implements FileMangtService {
     private CmClassRoomMapper cmClassRoomMapper;
     @Autowired
     private CmTermMapper cmTermMapper;
+    @Resource
+    private CourseFileService courseFileService;
+
     @Value("${file.upload-dir}")
     private String uploadDir;
 
@@ -49,8 +52,7 @@ public class FileMangtServiceImpl implements FileMangtService {
 
         return uploadDir+"/"+cmTermMapper.getCurrentTerm()+"/"+obsPath+"/"+type;
     }
-
-    @Override
+    // TODO: delete
     public Result uploadfile(MultipartFile file, String Path) {
         String fileName = Math.random()+file.getOriginalFilename();
 //        CmCourseFile cmCourseFile = new CmCourseFile(generateEnhancedID("cm_course_file"),obsid,fileName,file.getSize(),type, LocalDateTime.now().toString(),null);
