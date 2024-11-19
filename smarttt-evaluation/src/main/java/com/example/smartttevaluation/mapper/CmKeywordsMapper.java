@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -15,15 +16,15 @@ public interface CmKeywordsMapper {
     /**
      * 获取关键字列表
      */
-    @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords where courseid=#{courseid}")
+    @Select("select id, name, datavalue, importantlevelid, remark, courseid from cm_keywords where courseid=#{courseid} order by createTime")
     List<CmKeywords> getKeywords(String courseid);
 
     /**
      * 创建关键字
      */
-    @Update("INSERT INTO cm_keywords (id, name, datavalue, importantlevelid,courseid, remark) " +
-            "VALUES (#{id},#{name},#{datavalue},#{importantlevelid},#{courseid},#{remark})")
-    void createKeywords(CmKeywords cmKeywords);
+    @Update("INSERT INTO cm_keywords (id, name, datavalue, importantlevelid,courseid, remark, createTime) " +
+            "VALUES (#{kw.id},#{kw.name},#{kw.datavalue},#{kw.importantlevelid},#{kw.courseid},#{kw.remark},#{createTime})")
+    void createKeywords(@Param("kw") CmKeywords cmKeywords, @Param("createTime") LocalDateTime createTime);
 
     /**
      * 删除关键字

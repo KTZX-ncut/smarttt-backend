@@ -12,6 +12,7 @@ import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     public Result createKwadict(CmKwadict cmKwadict) {
         cmKwadict.setId(generateEnhancedID("cm_kwadict"));
         cmKwadict.setName(cmKwadict.getKeywordname() + "-" + cmKwadict.getAbilityname());
-        cmKwadictMapper.createKwadict(cmKwadict);
+        cmKwadictMapper.createKwadict(cmKwadict, LocalDateTime.now());
         return Result.success();
     }
 
@@ -69,7 +70,10 @@ public class CmKwadictServiceImpl implements CmKwadictService {
         cmKwadict.setName(cmKwadict.getKeywordname() + "-" + cmKwadict.getAbilityname());
         List<CmKwadict> kwas = new ArrayList<>();
         kwas.add(cmKwadict);
-        cmKwadictMapper.updateKwadictByID(kwas);
+
+        kwas.forEach(kwa -> {
+            cmKwadictMapper.updateKwadictByID(kwa);
+        });
         return Result.success();
     }
 
