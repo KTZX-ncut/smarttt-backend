@@ -12,6 +12,7 @@ import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.pojo.CmCourseFile;
 import com.example.smartttcourse.service.CmClassRoomService;
 import com.example.smartttcourse.service.impl.CourseFileService;
+import io.minio.StatObjectResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListUtils;
@@ -94,18 +95,18 @@ public class LessonPlanHandler implements CourseFileHandler{
         }
         String name = courseFile.getId()+ "." + suffix;
         log.info("------>name: {}",name);
-        minioUtil.upload(file.getInputStream(),bucketName,objectName + name);
+        minioUtil.upload(file.getInputStream(),bucketName,objectName + name,file.getSize());
     }
 
     @Override
-    public InputStream downloadFile(String fileName) {
+    public InputStream downloadFile(String fileName,Long start, Long len) {
         // 拿到文件id
         String fileId = FileUtil.getPrefix(fileName);
         CmCourseFile courseFile = courseFileService.getById(fileId);
 
         String bucketName = courseFile.getBucketName();
         String objectName = courseFile.getObjectName();
-        return minioUtil.download(bucketName,objectName + fileName);
+        return minioUtil.getPartFile(bucketName,objectName + fileName,start,len);
     }
 
     @Override
@@ -145,5 +146,14 @@ public class LessonPlanHandler implements CourseFileHandler{
             return Result.success(list);
         }
         return Result.error("非法请求");
+    }
+
+    @Override
+    public StatObjectResponse getFileInfo(String fileName) {
+        String fileId = FileUtil.getPrefix(fileName);
+        CmCourseFile courseFile = courseFileService.getById(fileId);
+        String bucketName = courseFile.getBucketName();
+        String objectName = courseFile.getObjectName();
+        return minioUtil.getFileInfo(bucketName,objectName + fileName);
     }
 }

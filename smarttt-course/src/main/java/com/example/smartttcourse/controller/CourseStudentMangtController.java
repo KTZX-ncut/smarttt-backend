@@ -10,11 +10,13 @@ import com.example.smartttcourse.exception.utils.SmartAssert;
 import com.example.smartttcourse.pojo.CmClassroomStudent;
 import com.example.smartttcourse.service.CmClassroomStudentService;
 import com.example.smartttcourse.service.SmObsService;
+import org.apache.commons.collections4.SetUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -58,7 +60,10 @@ public class CourseStudentMangtController {
     @Transactional(rollbackFor = Exception.class)
     public Result createStudentClassRoom(@RequestBody List<CreateStudent> createStudentList){
         ArrayList<CmClassroomStudent> list = new ArrayList<>();
-        for (CreateStudent createStudent : createStudentList) {
+        // 对数据去重
+        HashSet<CreateStudent> createStudentHashSet = new HashSet<>();
+        createStudentHashSet.addAll(createStudentList);
+        for (CreateStudent createStudent : createStudentHashSet) {
             CmClassroomStudent classroomStudent = new CmClassroomStudent();
             // 校验字段
             validateCreateStudentClassRoom(createStudent,classroomStudent);
@@ -133,13 +138,13 @@ public class CourseStudentMangtController {
     private static void validateCreateStudentClassRoom(CreateStudent createStudent,CmClassroomStudent classroomStudent){
         // 校验参数
         // 课堂ID，userID，专业名称，班级，班级ID，姓名，登录名称
-        SmartAssert.notEmpty(createStudent.getClassRoomId(),ResponseEnum.PARAM_IS_NOT_NULL);
-        SmartAssert.notEmpty(createStudent.getUsersid(),ResponseEnum.PARAM_IS_NOT_NULL);
-        SmartAssert.notEmpty(createStudent.getProname(),ResponseEnum.PARAM_IS_NOT_NULL);
-        SmartAssert.notEmpty(createStudent.getObsname(),ResponseEnum.PARAM_IS_NOT_NULL);
-        SmartAssert.notEmpty(createStudent.getObsid(),ResponseEnum.PARAM_IS_NOT_NULL);
-        SmartAssert.notEmpty(createStudent.getLoginname(),ResponseEnum.PARAM_IS_NOT_NULL);
-        SmartAssert.notEmpty(createStudent.getUsername(),ResponseEnum.PARAM_IS_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getClassRoomId(),ResponseEnum.CLASSROOM_ID_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getUsersid(),ResponseEnum.USER_ID_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getProname(),ResponseEnum.PRONAME_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getObsname(),ResponseEnum.OBSNAME_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getObsid(),ResponseEnum.OBSID_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getLoginname(),ResponseEnum.LOGIN_NAME_NOT_NULL);
+        SmartAssert.notEmpty(createStudent.getUsername(),ResponseEnum.USERNAME_NOT_NULL);
         // 数据赋值
         classroomStudent.setClassroomId(createStudent.getClassRoomId());
         classroomStudent.setObsId(createStudent.getObsid());

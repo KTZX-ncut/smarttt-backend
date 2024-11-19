@@ -39,9 +39,6 @@ public class FileMangtServiceImpl implements FileMangtService {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @Resource
-    private MinioUtil minioUtil;
-
     @Override
     public String getFilePath(String obsId, String type, Boolean isClassroom) {
         String obsPath = obsId;
@@ -52,26 +49,6 @@ public class FileMangtServiceImpl implements FileMangtService {
 
         return uploadDir+"/"+cmTermMapper.getCurrentTerm()+"/"+obsPath+"/"+type;
     }
-    // TODO: delete
-    public Result uploadfile(MultipartFile file, String Path) {
-        String fileName = Math.random()+file.getOriginalFilename();
-//        CmCourseFile cmCourseFile = new CmCourseFile(generateEnhancedID("cm_course_file"),obsid,fileName,file.getSize(),type, LocalDateTime.now().toString(),null);
-        try{
-              // 测试
-              minioUtil.upload(file.getInputStream(),"test",fileName);
-//            Path directoryPath = Paths.get(Path);
-//            if (!Files.exists(directoryPath)) {
-//                Files.createDirectories(directoryPath);
-//            }
-//            Path filePath = Paths.get(Path,fileName);
-//            Files.copy(file.getInputStream(), filePath);
-
-        }catch (IOException e){
-            return Result.error("上传失败");
-        }
-        return Result.success(fileName);
-    }
-
     @Override
     public Result getFileList(String obsid, String type) {
         List<CmCourseFile> cmCourseFileList = fileMangtMapper.getFileList(obsid,type);

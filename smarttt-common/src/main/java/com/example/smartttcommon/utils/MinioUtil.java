@@ -4,6 +4,7 @@ import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import lombok.SneakyThrows;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -20,11 +21,24 @@ public class MinioUtil {
     @Resource
     private MinioClient minioClient;
 
+
+    /**
+     * 获取文件的信息
+     */
+    @SneakyThrows
+    public StatObjectResponse getFileInfo(String bucketName, String objectName) {
+        return minioClient.statObject(StatObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectName)
+                .build());
+
+    }
+
     /**
      * 判断桶是否存在
      */
     @SneakyThrows
-    public Boolean existBucket(String bucketName){
+    public Boolean existBucket(String bucketName) {
         return minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
     }
 
@@ -32,8 +46,8 @@ public class MinioUtil {
      * 如果桶不存在，就创建一个桶
      */
     @SneakyThrows
-    public void buildBucketIfNotExist(String bucketName){
-        if (!this.existBucket(bucketName)){
+    public void buildBucketIfNotExist(String bucketName) {
+        if (!this.existBucket(bucketName)) {
             minioClient.makeBucket(MakeBucketArgs.builder()
                     .bucket(bucketName).build());
         }
@@ -43,7 +57,7 @@ public class MinioUtil {
      * 列出所有桶
      */
     @SneakyThrows
-    public List<String> getAllBuckets(){
+    public List<String> getAllBuckets() {
         List<Bucket> bucketList = minioClient.listBuckets();
         return bucketList.stream().map(b -> b.name()).collect(Collectors.toList());
     }
@@ -52,11 +66,11 @@ public class MinioUtil {
      * 删除指定桶
      */
     @SneakyThrows
-    public void deleteBucket(String bucketName){
-        if (this.existBucket(bucketName)){
+    public void deleteBucket(String bucketName) {
+        if (this.existBucket(bucketName)) {
             minioClient.removeBucket(RemoveBucketArgs.builder()
-                            .bucket(bucketName)
-                            .build());
+                    .bucket(bucketName)
+                    .build());
         }
     }
 
@@ -65,10 +79,10 @@ public class MinioUtil {
      * 删除一个文件
      */
     @SneakyThrows
-    public void deleteObject(String bucketName,String objectName){
+    public void deleteObject(String bucketName, String objectName) {
         minioClient.removeObject(RemoveObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(objectName)
+                .bucket(bucketName)
+                .object(objectName)
                 .build());
     }
 
@@ -76,11 +90,12 @@ public class MinioUtil {
      * 上传文件
      */
     @SneakyThrows
-    public void upload(InputStream inputStream, String bucketName, String objectName){
+    @Async
+    public void upload(InputStream inputStream, String bucketName, String objectName, Long fileSize) {
         minioClient.putObject(PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
-                .stream(inputStream, -1, 5242889L)
+                .stream(inputStream, fileSize, -1)
                 .build());
     }
 
@@ -88,7 +103,7 @@ public class MinioUtil {
      * 下载文件
      */
     @SneakyThrows
-    public InputStream download(String bucketName, String objectName){
+    public InputStream download(String bucketName, String objectName) {
         return minioClient.getObject(GetObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName).build());
@@ -98,11 +113,24 @@ public class MinioUtil {
      * 获取文件路径
      */
     @SneakyThrows
-    public String getUrl(String bucketName, String objectName){
+    public String getUrl(String bucketName, String objectName) {
         return minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .method(Method.GET)
+                .build());
+    }
+
+    /**
+     * 分片获取文件流
+     */
+    @SneakyThrows
+    public InputStream getPartFile(String bucketName, String objectName, Long start, Long length) {
+        return minioClient.getObject(GetObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectName)
+                .offset(start)
+                .length(length)
                 .build());
     }
 

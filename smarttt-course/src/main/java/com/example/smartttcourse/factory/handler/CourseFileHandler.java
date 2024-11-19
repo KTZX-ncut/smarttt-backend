@@ -1,8 +1,10 @@
 package com.example.smartttcourse.factory.handler;
 
+import com.example.smartttcommon.utils.MinioUtil;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.enums.CourseFileManageEnum;
 import com.example.smartttcourse.exception.res.Result;
+import io.minio.StatObjectResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -37,11 +39,16 @@ public interface CourseFileHandler {
     void uploadFile(MultipartFile file,String bucketName , String objectName,String params);
 
     // 下载文件的能力
-    InputStream downloadFile(String fileName);
+    InputStream downloadFile(String fileName,Long start,Long len);
 
     // 删除文件能力
     void deleteFile(String fileName);
 
     Result getFileList(Token token);
+
+    /**
+     * 获取文件的基本信息
+     */
+    StatObjectResponse getFileInfo(String fileName);
 
 }
