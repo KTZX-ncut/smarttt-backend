@@ -69,8 +69,23 @@ public class CheckitemController {
         return cmCheckitemService.upgradeOneCheckitemByID(id);
     }
 
-    @PostMapping("/changeTask")
-    public Result changeCheckitemTask(@RequestParam String id,@RequestParam String status){
-        return cmCheckitemService.changeCheckitemTask(id, status);
+    @PostMapping("/setTaskTrue")
+    public Result changeCheckitemTaskTrue(@RequestParam String id){
+        return cmCheckitemService.changeCheckitemTaskTrue(id);
+    }
+
+    @PostMapping("/setTaskFalse")
+    public Result changeCheckitemTaskFalse(@RequestParam List<String> ids){
+        return cmCheckitemService.changeCheckitemTaskFalse(ids);
+    }
+
+    @PostMapping("/changeName")
+    public Result changeCheckitemName(@RequestParam String id,@RequestParam String name){
+        return cmCheckitemService.changeCheckitemName(id, name);
+    }
+
+    @PostMapping("/changeRemark")
+    public Result changeCheckitemRemark(@RequestParam String id,@RequestParam String remark){
+        return cmCheckitemService.changeCheckitemRemark(id, remark);
     }
 }
