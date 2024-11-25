@@ -41,15 +41,18 @@ public interface CmCheckitemMapper {
     /**
      *更新兄弟节点考核项顺序号
      */
-    @Update("UPDATE sm_obs o1\n" +
-            "JOIN (SELECT pid, orderno FROM sm_obs WHERE id = #{id}) o2 ON o1.pid = o2.pid\n" +
+    @Update("UPDATE cm_course_checkitem o1\n" +
+            "JOIN (SELECT pid, orderno FROM cm_course_checkitem WHERE id = #{id}) o2 ON o1.pid = o2.pid\n" +
             "SET o1.orderno = o1.orderno - 1\n" +
             "WHERE o1.orderno > o2.orderno;\n")
     void updateBrotherCheckitemOrderNo(String id);
     /**
      *通过id更新一个考核项
      */
-    @Update("update cm_course_checkitem set pid = (select pid from cm_ability where id =(select pid from cm_ability where id = #{id}) ),orderno = #{orderno}")
+    @Update("UPDATE cm_course_checkitem " +
+            "SET pid = (SELECT pid FROM (SELECT pid FROM cm_course_checkitem WHERE id = (SELECT pid FROM cm_course_checkitem WHERE id = #{id})) AS temp), " +
+            "orderno = #{orderno} " +
+            "WHERE id = #{id}")
     void upgradeOneCheckitemByID(@Param("id")String id,@Param("orderno")Long orderno);
     /**
      *通过id获取pid
@@ -63,4 +66,10 @@ public interface CmCheckitemMapper {
 
     @Update("update cm_course_checkitem set task = #{status} where id = #{id}")
     void changeCheckitemTask(@Param("id")String id,@Param("status")String status);
+
+    @Update("update cm_course_checkitem set itemName = #{itemName} where id = #{id}")
+    void changeCheckitemName(@Param("id")String id,@Param("itemName")String itemName);
+
+    @Update("update cm_course_checkitem set remark = #{remark} where id = #{id}")
+    void changeCheckitemRemark(@Param("id")String id,@Param("remark")String remark);
 }
