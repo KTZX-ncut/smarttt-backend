@@ -26,5 +26,17 @@ public interface CmCheckitemService {
     /**
      *更新考核任务
      */
-    Result changeCheckitemTask(String id,String status);
+
+    Result changeCheckitemTaskTrue(String id);
+
+    Result changeCheckitemTaskFalse(List<String> ids);
+    /**
+     *更新考核项名称
+     */
+    Result changeCheckitemName(String id, String name);
+
+    /**
+     *更新备注
+     */
+    Result changeCheckitemRemark(String id,String remark);
 }
