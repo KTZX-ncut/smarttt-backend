@@ -71,9 +71,6 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
                         )
                 ));
         List<CmCheckitemTree> rootCheckitem =  checkitemMap.get("0"); // 根菜单的pid通常为0
-        if(rootCheckitem == null){
-            return Result.success();
-        }
         // 递归构建菜单树
         buildCheckitemTree(rootCheckitem,  checkitemMap);
         for(CmCheckitemTree checkitemTree:rootCheckitem){
@@ -137,8 +134,33 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
     }
 
     @Override
-    public Result changeCheckitemTask(String id,String status){
-        cmCheckitemMapper.changeCheckitemTask(id,status);
+    public Result changeCheckitemTaskTrue(String id){
+        cmCheckitemMapper.changeCheckitemTask(id,"true");
+        String pid = cmCheckitemMapper.getPidByID(id);
+        while(!pid.equals("0")){
+            cmCheckitemMapper.changeCheckitemTask(pid,"true");
+            pid = cmCheckitemMapper.getPidByID(pid);
+        }
+        return Result.success();
+    }
+
+    @Override
+    public Result changeCheckitemTaskFalse(List<String> ids){
+        for(String id:ids){
+            cmCheckitemMapper.changeCheckitemTask(id,"false");
+        }
+        return Result.success();
+    }
+
+    @Override
+    public Result changeCheckitemName(String id, String name){
+        cmCheckitemMapper.changeCheckitemName(id,name);
+        return Result.success();
+    }
+
+    @Override
+    public Result changeCheckitemRemark(String id,String remark){
+        cmCheckitemMapper.changeCheckitemRemark(id,remark);
         return Result.success();
     }
 }
