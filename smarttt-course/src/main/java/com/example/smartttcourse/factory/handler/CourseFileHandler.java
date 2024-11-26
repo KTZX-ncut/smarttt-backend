@@ -1,6 +1,5 @@
 package com.example.smartttcourse.factory.handler;
 
-import com.example.smartttcommon.utils.MinioUtil;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.enums.CourseFileManageEnum;
 import com.example.smartttcourse.exception.res.Result;
