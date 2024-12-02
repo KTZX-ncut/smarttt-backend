@@ -186,10 +186,13 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
         return Result.success();
     }
 
-    public Result associate(Map<String, Object> data) {
+    public Result associate(Map<String, Object> data, String obsId) {
         String checkitemId = (String) data.get("checkitemId");
         List<String> fileIds = (List<String>) data.get("fileIds");
-        cmCourseAssessmentMapper.associate(checkitemId, fileIds);
+        fileIds.forEach(fileId -> {
+            String id = generateEnhancedID("cm_course_assessment_checkitem_file");
+            cmCourseAssessmentMapper.associate(id, checkitemId, obsId, fileId);
+        });
         return Result.success();
     }
 

@@ -22,7 +22,7 @@ public interface CmKwadictMapper {
 //    List<CmKwadict> getKwadict(String obsid);
     @Select("select *, k.name as keywordname, a.name as abilityname from cm_kwadict kwa " +
             "inner join cm_keywords k on k.id = kwa.keywordid " +
-            "inner join cm_ability a on a.id = kwa.abilityid where kwa.courseid=#{obsId}")
+            "inner join cm_ability a on a.id = kwa.abilityid where kwa.courseid=#{obsId} order by kwa.createTime")
     List<CmKwadict> getKwadict(String obsId);
 
     /**

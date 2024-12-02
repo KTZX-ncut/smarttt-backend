@@ -54,7 +54,9 @@ public interface CmCourseAssessmentMapper {
     @Delete("delete from cm_course_assessment_file where obsid=#{obsid} and id=#{id}")
     void deleteFile(CmCourseCheckitemFile cmCourseCheckitemFile);
 
-    void associate(@Param("checkitemId") String checkitemId, @Param("fileIds") List<String> fileIds);
+    @Insert("insert into cm_course_assessment_checkitem_file(id, checkitemId, obsId, fileId) values " +
+            "(#id, #checkitemId, #obsId, #fileId)")
+    void associate(@Param("id") String id, @Param("checkitemId") String checkitemId, @Param("obsId") String obsId, @Param("fileId") String fileId);
 
     void disassociate(@Param("checkitemId") String checkitemId, @Param("fileIds") List<String> fileIds);
 }

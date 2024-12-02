@@ -93,8 +93,10 @@ public class CourseAssessmentController {
      * 关联文件
      */
     @PostMapping("/associate")
-    Result associate(@RequestBody Map<String, Object> data) {
-        return cmAssessmentPlanService.associate(data);
+    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
+    Result associate(@RequestBody Map<String, Object> data, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmAssessmentPlanService.associate(data, token.getObsid());
     }
     /**
      * 取消关联文件
