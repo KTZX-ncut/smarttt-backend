@@ -1,14 +1,9 @@
 package com.example.smartttevaluation.controller;
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.CreateAbilityReq;
 import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmAbility;
-import com.example.smartttevaluation.pojo.CmCourse;
-import com.example.smartttevaluation.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.service.CmAbilityService;
 
 import javax.servlet.http.HttpServletRequest;

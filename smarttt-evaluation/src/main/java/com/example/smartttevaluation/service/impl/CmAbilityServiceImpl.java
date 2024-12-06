@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.pojo.CommonFunctions;

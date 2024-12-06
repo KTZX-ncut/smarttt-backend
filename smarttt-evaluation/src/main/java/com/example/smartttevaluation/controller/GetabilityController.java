@@ -2,7 +2,7 @@ package com.example.smartttevaluation.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.example.smartttevaluation.Utils.AuthRequired;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.service.CmAbilityService;
 import com.example.smartttevaluation.service.CmGetabilityService;

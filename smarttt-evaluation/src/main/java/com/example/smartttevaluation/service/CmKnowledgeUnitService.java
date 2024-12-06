@@ -1,6 +1,6 @@
 package com.example.smartttevaluation.service;
 
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
 

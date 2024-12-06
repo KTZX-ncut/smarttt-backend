@@ -1,6 +1,6 @@
 package com.example.smartttevaluation.Utils;
 
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;

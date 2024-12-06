@@ -1,7 +1,6 @@
 package com.example.smartttevaluation.service;
 
-import com.example.smartttevaluation.dto.Result;
-import com.example.smartttevaluation.dto.Token;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.pojo.CmAbility;
 
 import java.util.List;

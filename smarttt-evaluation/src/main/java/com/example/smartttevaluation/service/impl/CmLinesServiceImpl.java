@@ -1,5 +1,5 @@
 package com.example.smartttevaluation.service.impl;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.CmLinesMapper;
 import com.example.smartttevaluation.pojo.CmLines;
 import com.example.smartttevaluation.service.CmLinesService;

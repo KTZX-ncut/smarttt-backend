@@ -3,7 +3,7 @@ package com.example.smartttevaluation.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.example.smartttevaluation.dto.CmCourseAssessmentTable;
 import com.example.smartttevaluation.pojo.*;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.CmCourseAssessmentMapper;
 import com.example.smartttevaluation.service.CmCourseAssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;

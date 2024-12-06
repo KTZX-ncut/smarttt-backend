@@ -1,12 +1,10 @@
 package com.example.smartttevaluation.service.impl;
 
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.CmCoursetargetMapper;
 import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
 import com.example.smartttevaluation.mapper.CmLinesMapper;
-import com.example.smartttevaluation.pojo.CmGetability;
-import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
