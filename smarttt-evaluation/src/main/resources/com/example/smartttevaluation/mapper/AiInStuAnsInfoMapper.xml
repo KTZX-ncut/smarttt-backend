@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.AiInStuAnsInfoMapper">
+    <resultMap type="com.example.smartttevaluation.pojo.AiInStuAnsInfo" id="AiInStuAnsInfoMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="logid" column="logId" jdbcType="VARCHAR"/>
+        <result property="courseid" column="courseId" jdbcType="VARCHAR"/>
+        <result property="classroomid" column="classroomId" jdbcType="VARCHAR"/>
+        <result property="testid" column="testId" jdbcType="VARCHAR"/>
+        <result property="paperid" column="paperId" jdbcType="VARCHAR"/>
+        <result property="papertype" column="paperType" jdbcType="VARCHAR"/>
+        <result property="libid" column="libId" jdbcType="VARCHAR"/>
+        <result property="stuid" column="stuId" jdbcType="VARCHAR"/>
+        <result property="questiontypeid" column="questionTypeId" jdbcType="VARCHAR"/>
+        <result property="questioncontent" column="questionContent" jdbcType="VARCHAR"/>
+        <result property="difficultlevel" column="difficultLevel" jdbcType="NUMERIC"/>
+        <result property="differencelevel" column="differenceLevel" jdbcType="NUMERIC"/>
+        <result property="guesslevel" column="guessLevel" jdbcType="NUMERIC"/>
+        <result property="kwaid" column="kwaId" jdbcType="VARCHAR"/>
+        <result property="datavalue" column="dataValue" jdbcType="NUMERIC"/>
+        <result property="libscore" column="libScore" jdbcType="INTEGER"/>
+        <result property="libstuscore" column="libStuScore" jdbcType="INTEGER"/>
+        <result property="libanswertime" column="libAnswerTime" jdbcType="INTEGER"/>
+        <result property="createtime" column="createTime" jdbcType="TIMESTAMP"/>
+        <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="getPaperInfoListByIds" parameterType="list" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
+        SELECT id as paperId, createTime
+        FROM pm_testpaper
+        WHERE id in
+        <foreach collection="paperIdList" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getKeyWordIdByCourseId" resultType="com.example.smartttevaluation.vo.KeywordVO">
+        SELECT distinct b.id               as id,
+                        b.name             as keywordName,
+                        b.importantlevelid as importLevel,
+                        b.datavalue        as dataValue
+        FROM cm_kwadict a
+                 JOIN cm_keywords b
+                      ON a.keywordid = b.id
+        WHERE a.courseId = #{courseId}
+    </select>
+
+    <select id="getEvalKeywordScore" resultType="com.example.smartttevaluation.dto.KeywordEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.keywordid as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_kwadict b
+        ON a.kwaId = b.id
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        AND a.stuId = #{stuId}
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.keywordid
+    </select>
+
+    <select id="getAbilityIdByCourseId" resultType="com.example.smartttevaluation.vo.AbilityVO">
+        SELECT distinct b.id             as id,
+                        b.name           as abilityName,
+                        b.importantlevel as importLevel,
+                        b.datavalue      as dataValue
+        FROM cm_kwadict a
+                 JOIN cm_getability b
+                      ON a.abilityid = b.id
+        WHERE a.courseId = #{courseId}
+    </select>
+
+    <select id="getEvalAbilityScore" resultType="com.example.smartttevaluation.dto.AbilityEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.abilityid as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_kwadict b
+        ON a.kwaId = b.id
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        <if test="stuId != null and stuId != '' ">
+            AND a.stuId = #{stuId}
+        </if>
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.abilityid
+    </select>
+
+    <select id="getUnitList" resultType="com.example.smartttevaluation.vo.KnowledgeUnitVO">
+        SELECT distinct id,
+                        pId      as pid,
+                        orderNum,
+                        name     as unitName,
+                        dataValue,
+                        nodeType as type
+        FROM cm_course_unit
+        WHERE courseId = #{courseId}
+    </select>
+
+    <select id="getEvalUnitScore" resultType="com.example.smartttevaluation.dto.UnitEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.unitId as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_course_unit_kwa b
+        ON a.kwaId = b.kwaId
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        AND a.stuId = #{stuId}
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.unitId
+    </select>
+
+    <select id="getTestPaperInfo" resultType="com.example.smartttevaluation.vo.TestPaperInfoVO">
+        SELECT b.id as testId,
+        b.paperId as paperId,
+        b.name as testName,
+        b.paperName as paperName,
+        b.classroomId as classroomId,
+        b.classroomName as classroomName,
+        b.creatorId as creatorId,
+        temp.creator as creator,
+        b.creatTime as createTime
+        FROM cm_classroom a
+        JOIN pm_test b
+        ON a.id = b.classroomId
+        JOIN (SELECT id, username as creator FROM st_users) temp
+        ON temp.id = b.creatorId
+        <where>
+            b.status = 1 <!--只查已经发布的考试-->
+            AND a.courseId = #{courseId}
+            <if test="search != null and search != ''">
+                AND (b.name LIKE CONCAT('%', #{search}, '%')
+                OR b.paperName LIKE CONCAT('%', #{search}, '%')
+                OR b.classroomName LIKE CONCAT('%', #{search}, '%')
+                OR b.creatTime LIKE CONCAT('%', #{search}, '%')
+                OR temp.creator LIKE CONCAT('%', #{search}, '%')
+                )
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getCourseNameByCourseId" resultType="java.lang.String">
+        SELECT courseChineseName as courseName
+        FROM cm_course
+        WHERE id = #{courseId}
+    </select>
+
+    <select id="getCreatorByCreatorId" resultType="java.lang.String">
+        SELECT username as creator
+        FROM st_users
+        WHERE id = #{creatorId}
+    </select>
+
+    <select id="getTestStudentList" resultType="com.example.smartttevaluation.vo.TestStudentVO">
+        SELECT a.userId   as userId,
+               a.proId    as proName,
+               a.obsName  as obsName,
+               a.userName as userName,
+               a.rowNo    as rowNo,
+               b.stuno    as stuNo
+        FROM pm_test_students a
+                 JOIN sm_student b
+                      ON a.userId = b.usersid
+        WHERE a.testId = #{testId}
+        ORDER BY a.rowNo ASC
+    </select>
+
+    <select id="getClassroomList" resultType="com.example.smartttevaluation.vo.ClassroomVO">
+        SELECT id as classroomId,
+        classroomName,
+        termId,
+        courseId,
+        teacherName,
+        creatorName as creator,
+        labTeacher,
+        practiceTeacher
+        FROM cm_classroom
+        <where>
+            <if test="courseId != null and courseId != ''">
+                AND courseId = #{courseId}
+            </if>
+            <if test="classroomName != null and classroomName != ''">
+                AND classroomName LIKE CONCAT('%', #{classroomName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getTermNameByTermId" resultType="java.lang.String">
+        SELECT termname as termName
+        FROM cm_term
+        WHERE id = #{termId}
+    </select>
+
+    <select id="getPaperInfoByTestId" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
+        SELECT id as paperId, createTime
+        FROM pm_testpaper
+        WHERE id = #{testId}
+    </select>
+    <select id="getKeyWordIdByPaperId" resultType="com.example.smartttevaluation.vo.KeywordVO">
+        SELECT b.id AS id,
+        b.name AS keywordName,
+        b.importantlevelid as importLevel,
+        b.datavalue as dataValue
+        FROM (SELECT kwaId, kwaName
+        FROM tm_testquelib_kwa
+        WHERE libId IN (SELECT libId
+        FROM pm_testpaper_questions
+        WHERE paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>)) temp
+        JOIN cm_kwadict a
+        ON a.id = temp.kwaId
+        JOIN cm_keywords b
+        ON b.id = a.keywordid
+    </select>
+
+    <select id="getAbilityByPaperId" resultType="com.example.smartttevaluation.vo.AbilityVO">
+        SELECT b.id as id,
+        b.name as abilityName,
+        b.importantlevel as importLevel,
+        b.datavalue as dataValue
+        FROM (SELECT kwaId, kwaName
+        FROM tm_testquelib_kwa
+        WHERE libId IN (SELECT libId
+        FROM pm_testpaper_questions
+        WHERE paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>)) temp
+        JOIN cm_kwadict a
+        ON a.id = temp.kwaId
+        JOIN cm_getability b
+        ON b.id = a.abilityid
+    </select>
+
+    <select id="getPaperKwaList" resultType="com.example.smartttevaluation.vo.KwaVO">
+        SELECT kwaId as id, datavalue AS dataValue, kwaName FROM tm_testquelib_kwa
+        WHERE libId IN (
+        SELECT libId FROM pm_testpaper_questions
+        WHERE paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        )
+    </select>
+
+    <select id="getEvalKwaScore" resultType="com.example.smartttevaluation.dto.KwaEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.id as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_kwadict b
+        ON a.kwaId = b.id
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        AND a.stuId = #{stuId}
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.id
+    </select>
+
+</mapper>
+
