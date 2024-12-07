@@ -30,18 +30,18 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMapper,CmClassroomStudent> implements CmClassroomStudentService {
+public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMapper, CmClassroomStudent> implements CmClassroomStudentService {
     private final CmClassroomClassroommenuService cmClassroomClassroommenuService;
     private final CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService;
     private final CmClassroomMypracticelistService cmClassroomMypracticelistService;
 
     private final SmStudentService smStudentService;
 
-    private final  SmObsService smObsService;
+    private final SmObsService smObsService;
 
     private final StUsersService stUsersService;
 
-    public CmClassroomStudentServiceImpl(CmClassroomClassroommenuService cmClassroomClassroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomMypracticelistService cmClassroomMypracticelistService, SmStudentService smStudentService,SmObsService smObsService, StUsersService stUsersService) {
+    public CmClassroomStudentServiceImpl(CmClassroomClassroommenuService cmClassroomClassroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomMypracticelistService cmClassroomMypracticelistService, SmStudentService smStudentService, SmObsService smObsService, StUsersService stUsersService) {
         this.cmClassroomClassroommenuService = cmClassroomClassroommenuService;
         this.cmClassroomHomeworkinfoService = cmClassroomHomeworkinfoService;
         this.cmClassroomMypracticelistService = cmClassroomMypracticelistService;
@@ -59,28 +59,28 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         // 1.1 通过stuIds找到UserId
         List userIds = smStudentService.listByIds(stuIds)
                 .stream()
-                .map(t->t.getUsersid())
+                .map(t -> t.getUsersid())
                 .collect(Collectors.toList());
 
-        System.out.println("-------->UserIDs:  " + userIds);
+        log.info("deleteClassRoomStudent.UserIDs:{}", userIds);
         // 从当前表删除
         LambdaQueryWrapper<CmClassroomStudent> classroomStudentLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        classroomStudentLambdaQueryWrapper.in(CmClassroomStudent::getUserId,userIds);
+        classroomStudentLambdaQueryWrapper.in(CmClassroomStudent::getUserId, userIds);
         baseMapper.delete(classroomStudentLambdaQueryWrapper);
         // 2. 从课堂菜单表删除
         LambdaQueryWrapper<CmClassroomClassroommenu> classroomClassroommenuLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        classroomClassroommenuLambdaQueryWrapper.eq(CmClassroomClassroommenu::getClassroomid,classRoomId)
-                        .in(CmClassroomClassroommenu::getStuid,stuIds);
+        classroomClassroommenuLambdaQueryWrapper.eq(CmClassroomClassroommenu::getClassroomid, classRoomId)
+                .in(CmClassroomClassroommenu::getStuid, userIds);
         cmClassroomClassroommenuService.remove(classroomClassroommenuLambdaQueryWrapper);
         // 3. 作业统计信息表
         LambdaQueryWrapper<CmClassroomHomeworkinfo> cmClassroomHomeworkinfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        cmClassroomHomeworkinfoLambdaQueryWrapper.eq(CmClassroomHomeworkinfo::getClassroomid,classRoomId)
-                .in(CmClassroomHomeworkinfo::getStuid,stuIds);
+        cmClassroomHomeworkinfoLambdaQueryWrapper.eq(CmClassroomHomeworkinfo::getClassroomid, classRoomId)
+                .in(CmClassroomHomeworkinfo::getStuid, userIds);
         cmClassroomHomeworkinfoService.remove(cmClassroomHomeworkinfoLambdaQueryWrapper);
         // 4. 作业考试表
         LambdaQueryWrapper<CmClassroomMypracticelist> classroomMypracticelistLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        classroomMypracticelistLambdaQueryWrapper.eq(CmClassroomMypracticelist::getClassroomid,classRoomId)
-                .in(CmClassroomMypracticelist::getStuid,stuIds);
+        classroomMypracticelistLambdaQueryWrapper.eq(CmClassroomMypracticelist::getClassroomid, classRoomId)
+                .in(CmClassroomMypracticelist::getStuid, userIds);
         cmClassroomMypracticelistService.remove(classroomMypracticelistLambdaQueryWrapper);
         return true;
     }
@@ -92,41 +92,41 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         // 1. 从课堂学生表（cm_classroomStudent）里删除
         // 从当前表删除
         LambdaQueryWrapper<CmClassroomStudent> classroomStudentLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        classroomStudentLambdaQueryWrapper.eq(CmClassroomStudent::getClassroomId,classRoomId);
+        classroomStudentLambdaQueryWrapper.eq(CmClassroomStudent::getClassroomId, classRoomId);
         baseMapper.delete(classroomStudentLambdaQueryWrapper);
         // 2. 从课堂菜单表删除
         LambdaQueryWrapper<CmClassroomClassroommenu> classroomClassroommenuLambdaQueryWrapper = new LambdaQueryWrapper<>();
         classroomClassroommenuLambdaQueryWrapper.
-                eq(CmClassroomClassroommenu::getClassroomid,classRoomId);
+                eq(CmClassroomClassroommenu::getClassroomid, classRoomId);
         cmClassroomClassroommenuService.remove(classroomClassroommenuLambdaQueryWrapper);
         // 3. 作业统计信息表
         LambdaQueryWrapper<CmClassroomHomeworkinfo> cmClassroomHomeworkinfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         cmClassroomHomeworkinfoLambdaQueryWrapper.
-                eq(CmClassroomHomeworkinfo::getClassroomid,classRoomId);
+                eq(CmClassroomHomeworkinfo::getClassroomid, classRoomId);
         cmClassroomHomeworkinfoService.remove(cmClassroomHomeworkinfoLambdaQueryWrapper);
         // 4. 作业考试表
         LambdaQueryWrapper<CmClassroomMypracticelist> classroomMypracticelistLambdaQueryWrapper = new LambdaQueryWrapper<>();
         classroomMypracticelistLambdaQueryWrapper.
-                eq(CmClassroomMypracticelist::getClassroomid,classRoomId);
+                eq(CmClassroomMypracticelist::getClassroomid, classRoomId);
         cmClassroomMypracticelistService.remove(classroomMypracticelistLambdaQueryWrapper);
         return true;
     }
 
     @Override
-    public Result getStudentList(String obsid){
+    public Result getStudentList(String obsid) {
         SmartAssert.notEmpty(obsid, ResponseEnum.FIELD_IS_NULL);
 
         // 查cm_classroom_student
         // (单独去join表，因为这个表里没有proName 和 obsName）-> 从sm_obs中拿
         // 从Student表中拿到studentId 和 stuno
         List<StudentInfoDto> studentInfoDtoList = baseMapper.getStudentListByClassRoomId(obsid);
-        log.info("一共{}个学生",studentInfoDtoList.size());
+        log.info("一共{}个学生", studentInfoDtoList.size());
         return Result.success(studentInfoDtoList);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file,String classRoomId) {
+    public List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file, String classRoomId) {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 假设 Excel 文件中只有一个工作表
@@ -140,21 +140,21 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 String stuno = dataFormatter.formatCellValue(row.getCell(0));
                 String username = dataFormatter.formatCellValue(row.getCell(1));
                 String obsName = dataFormatter.formatCellValue(row.getCell(2));
-                SmartAssert.notEmpty(stuno,ResponseEnum.PARAM_IS_NOT_NULL);
-                SmartAssert.notEmpty(username,ResponseEnum.PARAM_IS_NOT_NULL);
+                SmartAssert.notEmpty(stuno, ResponseEnum.PARAM_IS_NOT_NULL);
+                SmartAssert.notEmpty(username, ResponseEnum.PARAM_IS_NOT_NULL);
 
                 CmClassroomStudent classroomStudent = new CmClassroomStudent();
                 classroomStudent.setClassroomId(classRoomId);
                 // userId
                 QueryWrapper<SmStudent> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("stuno",stuno);
+                queryWrapper.eq("stuno", stuno);
                 SmStudent student = smStudentService.getOne(queryWrapper);
                 // 判断班级里面有没有这个学生
                 LambdaQueryWrapper<CmClassroomStudent> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(CmClassroomStudent::getUserId,student.getUsersid())
-                                .eq(CmClassroomStudent::getClassroomId,classRoomId);
+                wrapper.eq(CmClassroomStudent::getUserId, student.getUsersid())
+                        .eq(CmClassroomStudent::getClassroomId, classRoomId);
                 Integer count = baseMapper.selectCount(wrapper);
-                if (count != 0){
+                if (count != 0) {
                     // 说明该班级存在这个学生了,抛出异常
                     throw new RuntimeException();
                 }
@@ -163,13 +163,13 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 classroomStudent.setProName(student.getProname());
                 // 判断username是否合法
                 String usernameInDataSource = stUsersService.getUsernameById(student.getUsersid());
-                SmartAssert.eq(usernameInDataSource,username,ResponseEnum.USERNAME_NOT_EQ);
+                SmartAssert.eq(usernameInDataSource, username, ResponseEnum.USERNAME_NOT_EQ);
                 // username
                 classroomStudent.setUserName(username);
                 // obsName
                 String obsNameInDataSource = smObsService.getById(student.getObsid()).getObsname();
                 // 校验班级是否合法
-                SmartAssert.eq(obsNameInDataSource,obsName,ResponseEnum.DATA_NOT_VALIDATE);
+                SmartAssert.eq(obsNameInDataSource, obsName, ResponseEnum.DATA_NOT_VALIDATE);
                 classroomStudent.setObsName(obsName);
                 // loginname
                 classroomStudent.setLoginname(stUsersService.getloginNameById(student.getUsersid()));
@@ -189,7 +189,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         ArrayList<StudentTree> allObsTree = new ArrayList<>();
         for (SmObs obs : allObs) {
             StudentTree studentTree = new StudentTree();
-            BeanUtils.copyProperties(obs,studentTree);
+            BeanUtils.copyProperties(obs, studentTree);
             allObsTree.add(studentTree);
         }
         Map<String, List<StudentTree>> obsMap = allObsTree.stream()
@@ -203,11 +203,11 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 ));
 
 
-        List<StudentTree> rootObs =  obsMap.get(RootObsID);
+        List<StudentTree> rootObs = obsMap.get(RootObsID);
         // 递归构建菜单树
-        try{
-            buildObsRPTree(rootObs,  obsMap);
-        }catch (NullPointerException e){
+        try {
+            buildObsRPTree(rootObs, obsMap);
+        } catch (NullPointerException e) {
             return Result.error("未找到结果");
         }
 
@@ -219,7 +219,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         for (StudentTree parentObs : parentSmObs) {
             parentObs.setStudentDtos(stUsersService.getAllStudentByObsID(parentObs.getId()));
             //找出pid为父菜单的孩子
-            List<StudentTree> childObs =  obsMap.get(parentObs.getId());
+            List<StudentTree> childObs = obsMap.get(parentObs.getId());
             if (childObs != null) {
                 parentObs.setChildren(childObs);
                 buildObsRPTree(childObs, obsMap);
@@ -227,7 +227,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         }
     }
 
-    public static boolean isEmpty(String o){
+    public static boolean isEmpty(String o) {
         return o == null || "".equals(o);
     }
 }
