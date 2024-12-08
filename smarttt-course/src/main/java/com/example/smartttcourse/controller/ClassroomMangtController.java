@@ -30,6 +30,7 @@ public class ClassroomMangtController {
         System.out.println(token.getObsid());
         return cmClassRoomService.getClassRoomList(token);
     }
+
     @PostMapping("/delete")
     public Result deleteClassroom(@RequestBody List<String> ids){
         return cmClassRoomService.deleteClassroom(ids);

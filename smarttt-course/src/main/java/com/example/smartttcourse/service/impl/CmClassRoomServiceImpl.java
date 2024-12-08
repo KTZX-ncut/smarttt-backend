@@ -1,5 +1,6 @@
 package com.example.smartttcourse.service.impl;
 
+import com.example.smartttcourse.dto.ClassroomReq;
 import com.example.smartttcourse.dto.CourseClassroomReq;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;

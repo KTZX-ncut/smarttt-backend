@@ -14,6 +14,6 @@ public interface CmCourseAssessmentService {
     Result uploadFile(CmCourseCheckitemFile cmCourseCheckitemFile) throws IOException;
     Result getAssociateCheckitems(String fileId, String obsid);
     Result deleteFile(CmCourseCheckitemFile cmCourseCheckitemFile);
-    Result associate(Map<String, Object> data);
+    Result associate(Map<String, Object> data, String obsId);
     Result disassociate(Map<String, Object> data);
 }
