@@ -14,7 +14,7 @@ public interface CmCheckitemService {
     /**
      *批量删除考核项
      */
-    Result deleteCheckitemByIDs(List<String> ids);
+    Result deleteCheckitemByIDs(List<String> ids, String obsId);
     /**
      *更新考核项
      */

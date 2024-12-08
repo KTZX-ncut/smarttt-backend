@@ -2,6 +2,7 @@ package com.example.smartttevaluation.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.smartttevaluation.dto.CmCourseAssessmentTable;
+import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.pojo.*;
 import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.mapper.CmCourseAssessmentMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
 import org.apache.tika.Tika;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
@@ -19,6 +21,8 @@ import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhance
 public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
     @Autowired
     private CmCourseAssessmentMapper cmCourseAssessmentMapper;
+    @Autowired
+    private AttainmentEvaluationMapper attainmentEvaluationMapper;
 
     @Override
     public Result getAssessmentTable(String courseid) {
@@ -179,7 +183,7 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
 
     public Result deleteFile(CmCourseCheckitemFile cmCourseCheckitemFile) {
         List<CmCheckitem> checkitems = cmCourseAssessmentMapper.getAssociateCheckitems(cmCourseCheckitemFile.getId(), cmCourseCheckitemFile.getObsid());
-        if(!checkitems.isEmpty()) {
+        if (!checkitems.isEmpty()) {
             return Result.error("请先取消其与所有考核项的关联");
         }
         cmCourseAssessmentMapper.deleteFile(cmCourseCheckitemFile);

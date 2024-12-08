@@ -20,9 +20,24 @@ public interface CmCheckitemMapper {
     @Delete("delete from cm_course_checkitem where id = #{id}")
     void deleteCheckitemByID(String id);
     /**
+     * 查询此考核项是否有设置分值
+     */
+    @Select("select count(*) from cm_course_assessment where checkitemId = #{checkitemId} and courseId = #{obsId}")
+    int CheckitemHasScore(@Param("checkitemId") String checkitemId, @Param("obsId") String obsId);
+    /**
+     * 查询考核项信息
+     */
+    @Select("select * from cm_course_checkitem where id = #{id}")
+    CmCheckitem getCheckitem(String id);
+    /**
      *批量删除考核项
      */
     void deleteCheckitemByIDs(@Param("ids") List<String> ids);
+    /**
+     * 删除考核项的所有standardScore
+     */
+    @Delete("delete from cm_course_assessment where checkitemId = #{id}")
+    void deleteCheckitemStandardScore(String id);
     /**
      *获取考核项树
      */
