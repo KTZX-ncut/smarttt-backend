@@ -22,7 +22,6 @@ public class UniFieldException {
     @ExceptionHandler(value = BusinessException.class)
     public Result exceptionHandle(BusinessException e){
         log.error(e.getMessage());
-
         return Result.error().msg(e.getMessage()).code(e.getCode());
     }
 

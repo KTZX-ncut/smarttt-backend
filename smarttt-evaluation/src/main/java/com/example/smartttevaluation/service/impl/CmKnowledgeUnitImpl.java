@@ -1,7 +1,7 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.CmKnowledgeUnitTree;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;

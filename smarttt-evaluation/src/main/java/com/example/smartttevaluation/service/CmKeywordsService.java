@@ -1,10 +1,9 @@
 package com.example.smartttevaluation.service;
 
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CmKeywordsService {

@@ -1,13 +1,12 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.CmGetabilityTree;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.CmGetabilityMapper;
 import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmGetability;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmGetabilityService;
-import com.example.smartttevaluation.service.CmKeywordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

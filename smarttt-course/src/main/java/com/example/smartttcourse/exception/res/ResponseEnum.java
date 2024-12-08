@@ -28,8 +28,14 @@ public enum ResponseEnum {
     OBSNAME_NOT_NULL(-710,"班级名称不能为空"),
     OBSID_NOT_NULL(-710,"obsid不能为空"),
     LOGIN_NAME_NOT_NULL(-710,"登录名称不能为空"),
-    USERNAME_NOT_NULL(-710,"username不能为空");
-
+    USERNAME_NOT_NULL(-710,"username不能为空"),
+    WEEK_LE_ZERO_FAIL(-710,"教学周必须大于等于0"),
+    WEEK_FAIL(-710,"教学周不能为空"),
+    COURSE_ID_NOT_NULL(-710,"课程id不能为空"),
+    STUID_IS_NOT_NULL(-710,"学生的userId不能为空"),
+    TEST_ID_NOT_NULL(-710,"考试id(testId)不能为空"),
+    TEST_ID_NOT_VALID(-710,"考试id(testId) 不合法！"),
+    PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!");
 
 
     private Integer code;//状态码

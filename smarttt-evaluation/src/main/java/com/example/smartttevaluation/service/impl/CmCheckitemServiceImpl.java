@@ -2,7 +2,7 @@ package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.dto.CmCheckitemTree;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.dto.TreeStructure;
 import com.example.smartttevaluation.mapper.CmCheckitemMapper;
 import com.example.smartttevaluation.pojo.CmCheckitem;

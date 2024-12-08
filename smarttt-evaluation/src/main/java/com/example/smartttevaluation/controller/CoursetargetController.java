@@ -3,12 +3,10 @@ package com.example.smartttevaluation.controller;
 
 import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.Utils.AuthRequired;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.pojo.CmCoursetarget;
-import com.example.smartttevaluation.pojo.CmCoursetargetUnit;
 
 import com.example.smartttevaluation.service.CmCoursetargetService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
