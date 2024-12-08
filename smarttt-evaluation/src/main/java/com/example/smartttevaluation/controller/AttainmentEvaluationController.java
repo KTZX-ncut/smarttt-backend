@@ -2,8 +2,8 @@ package com.example.smartttevaluation.controller;
 
 import com.example.smartttcourse.Utils.AuthorizationAspect;
 import com.example.smartttevaluation.Utils.AuthRequired;
-import com.example.smartttevaluation.dto.Result;
 import com.example.smartttevaluation.dto.Token;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.service.AttainmentEvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

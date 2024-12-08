@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.smartttcourse.mapper.CmCourseMapper;
 import com.example.smartttcourse.pojo.CmClassroom;
 import com.example.smartttevaluation.dto.ClassroomInfoReq;
-import com.example.smartttevaluation.dto.Result;
+import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.service.AttainmentEvaluationService;
