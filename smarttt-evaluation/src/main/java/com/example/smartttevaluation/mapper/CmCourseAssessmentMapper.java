@@ -1,11 +1,9 @@
 package com.example.smartttevaluation.mapper;
 
-import com.example.smartttevaluation.pojo.CmCheckitem;
-import com.example.smartttevaluation.pojo.CmCourseAssessment;
-import com.example.smartttevaluation.pojo.CmCourseCheckitemFile;
-import com.example.smartttevaluation.pojo.CmCoursetarget;
+import com.example.smartttevaluation.dto.CmAssessmentFile;
+import com.example.smartttevaluation.dto.CmAssessmentStudent;
+import com.example.smartttevaluation.pojo.*;
 import org.apache.ibatis.annotations.*;
-import org.w3c.dom.ls.LSException;
 
 import java.util.List;
 
@@ -39,24 +37,43 @@ public interface CmCourseAssessmentMapper {
     @Update("update cm_course_checkitem set percent=#{percent} where id=#{id} and courseid = #{courseid}")
     void updatePercent(CmCheckitem cmCourseCheckItem);
 
-    @Select("select * from cm_course_assessment_file where obsid=#{obsid} order by createTime")
-    List<CmCourseCheckitemFile> getFiles(String obsid);
+    @Select("select * from pm_testpaper where id in (select paperId from pm_test where classroomId = #{classroomId} and status = 1) order by createTime")
+    List<CmTestpaper> getTestpaper(String classroomId);
 
-    @Select("select fileId from cm_course_assessment_checkitem_file where checkitemId=#{checkitemId}")
-    List<String> getAssociateFileIds(String checkitemId);
+    @Select("select * from cm_course_assessment_file where classroomId = #{classroomId} order by createTime")
+    List<CmAssessmentFile> getCustomFile(String classroomId);
 
-    @Select("select * from cm_course_checkitem where id in (select checkitemId from cm_course_assessment_checkitem_file where fileId=#{fileId}) and courseid=#{obsid}")
-    List<CmCheckitem> getAssociateCheckitems(@Param("fileId") String fileId,@Param("obsid") String obsid);
+    @Select("select su.id, ccafd.rowNo, so.obsname as className, ccafd.stuno, su.username, su.loginname, ccafd.score from cm_course_assessment_filedata ccafd " +
+            "left join cm_course_assessment_file ccaf on ccaf.id = ccafd.fileId " +
+            "left join sm_student ss on ss.stuno = ccafd.stuno " +
+            "left join st_users su on su.id = ss.usersid " +
+            "left join sm_obs so on so.id = ss.obsid " +
+            "where ccafd.fileId = #{fileId} order by ccafd.rowNo")
+    List<CmAssessmentStudent> showExcel(String fileId);
 
-    @Insert("insert into cm_course_assessment_file(id, obsid, fileName, fileData, createTime) values(#{id}, #{obsid}, #{fileName}, #{fileData}, #{createTime})")
-    void uploadFile(CmCourseCheckitemFile cmCourseCheckitemFile);
+    @Select("select fileId as id, type from cm_course_assessment_checkitem_file where checkitemId=#{checkitemId} and classroomId = #{classroomId}")
+    List<CmAssessmentFile> getAssociateFiles(@Param("checkitemId") String checkitemId, @Param("classroomId") String classroomId);
 
-    @Delete("delete from cm_course_assessment_file where obsid=#{obsid} and id=#{id}")
+    @Select("select * from cm_course_checkitem where id in (select checkitemId from cm_course_assessment_checkitem_file where fileId = #{fileId})")
+    List<CmCheckitem> getAssociateCheckitems(@Param("fileId") String fileId, @Param("obsid") String obsid);
+
+    @Insert("insert into cm_course_assessment_file (id, name, createTime, classroomId) values(#{file.id}, #{file.name}, #{file.createTime}, #{classroomId})")
+    void setFileInfo(@Param("file") CmAssessmentFile file, @Param("classroomId") String classroomId);
+
+    @Insert("insert into cm_course_assessment_filedata(id, fileId, stuno, score, rowNo) values(#{id}, #{fileId}, #{stu.stuno}, #{stu.score}, #{stu.rowNo})")
+    void setFileData(@Param("id") String id, @Param("stu") CmAssessmentStudent stu, @Param("fileId") String fileId);
+
+    @Delete("delete from cm_course_assessment_file where classroomId = #{obsid} and id = #{id}")
     void deleteFile(CmCourseCheckitemFile cmCourseCheckitemFile);
 
-    @Insert("insert into cm_course_assessment_checkitem_file(id, checkitemId, obsId, fileId) values " +
-            "(#id, #checkitemId, #obsId, #fileId)")
-    void associate(@Param("id") String id, @Param("checkitemId") String checkitemId, @Param("obsId") String obsId, @Param("fileId") String fileId);
+    @Insert("insert into cm_course_assessment_checkitem_file(id, checkitemId, fileId, classroomId, type) values " +
+            "(#{id}, #{checkitemId}, #{file.id}, #{classroomId}, #{file.type})")
+    void associate(@Param("id") String id, @Param("checkitemId") String checkitemId, @Param("classroomId") String obsId, @Param("file") CmAssessmentFile file);
 
-    void disassociate(@Param("checkitemId") String checkitemId, @Param("fileIds") List<String> fileIds);
+    void disassociate(@Param("checkitemId") String checkitemId, @Param("files") List<CmAssessmentFile> files);
+
+    @Select("select score from cm_course_assessment_filedata ccafd " +
+            "inner join sm_student ss on ss.stuno = ccafd.stuno " +
+            "where ccafd.fileId = #{fileId} and ss.usersid = #{stuId}")
+    float getUploadFileScore(@Param("fileId") String fileId, @Param("stuId") String stuId);
 }

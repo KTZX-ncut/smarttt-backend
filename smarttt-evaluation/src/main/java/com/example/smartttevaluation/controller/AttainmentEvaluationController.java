@@ -8,6 +8,7 @@ import com.example.smartttevaluation.service.AttainmentEvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,10 +33,19 @@ public class AttainmentEvaluationController {
     }
 
     /**
+     * 获取课堂的学生列表
+     */
+    @GetMapping("getClassroomStuList")
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549")
+    public Result getStuListByClassroomId(@RequestParam("classroomId") String classroomId) {
+        return attainmentEvaluationService.getClassroomStuList(classroomId);
+    }
+
+    /**
      * 获取课程下的所有课堂的信息
      */
     @GetMapping("/getClassroomByCourseId")
-    @AuthRequired(type = "admin", menu = "531500340-38af2070-0ce6-4912-9ad3-dfd5959cdd53", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549", isReadOnly = true)
     public Result getClassroomByCourseId(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return attainmentEvaluationService.getClassroomByCourseId(token.getObsid());
@@ -44,7 +54,7 @@ public class AttainmentEvaluationController {
      * 根据课堂id获取课堂信息
      */
     @GetMapping("getClassroomByClassroomId")
-    @AuthRequired(type = "admin", menu = "531500340-38af2070-0ce6-4912-9ad3-dfd5959cdd53", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549", isReadOnly = true)
     public Result getClassroomByClassroomId(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return attainmentEvaluationService.getClassroomByClassroomId(token.getObsid());
@@ -53,18 +63,37 @@ public class AttainmentEvaluationController {
      * 根据课堂id获取课程信息
      */
     @GetMapping("getCourseByClassroomId")
-    @AuthRequired(type = "admin", menu = "531500340-38af2070-0ce6-4912-9ad3-dfd5959cdd53", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549", isReadOnly = true)
     public Result getCourseByClassroomId(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return attainmentEvaluationService.getCourseByClassroomId(token.getObsid());
     }
+
     /**
-     * 任课教师获取课程考核方案表
+     * 计算总评成绩和课程目标达成度
      */
-    @GetMapping("teacherGetAssessmentTable")
-    @AuthRequired(type = "admin", menu = "531500340-38af2070-0ce6-4912-9ad3-dfd5959cdd53", isReadOnly = true)
-    public Result teacherGetAssessmentTable(HttpServletRequest request) {
+    @GetMapping("calc")
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549")
+    public Result calc(HttpServletRequest request) {
         Token token = getTokenFromContext();
-        return attainmentEvaluationService.teacherGetAssessmentTable(token.getObsid());
+        return attainmentEvaluationService.calcTotalScore(token.getObsid());
+    }
+
+    /**
+     * 获取总评成绩
+     */
+    @GetMapping("getTotalScore")
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549")
+    public Result getTotalScore(@RequestParam("classroomId") String classroomId) {
+        return attainmentEvaluationService.getTotalScore(classroomId);
+    }
+
+    /**
+     * 获取课程目标达成度
+     */
+    @GetMapping("getTargetAchievement")
+    @AuthRequired(type = "admin", menu = "531500340-ce704fab-6961-4091-a671-ce8d9e6b6549")
+    public Result getTargetAchievement(@RequestParam("classroomId") String classroomId) {
+        return attainmentEvaluationService.getTargetAchievement(classroomId);
     }
 }
