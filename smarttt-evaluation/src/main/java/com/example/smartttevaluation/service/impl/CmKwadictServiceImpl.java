@@ -76,14 +76,6 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     }
 
     /**
-     * 用于更新关键字或能力时更新对应kwa的名称
-     */
-    public Result updateKwaName(List<CmKwadict> kwas) {
-
-        return Result.success();
-    }
-
-    /**
      * 通过keywordid和abilityid获取kwa
      */
     @Override
@@ -106,5 +98,4 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     public Result getAbilityDict(String courseid) {
         return Result.success(cmKwadictMapper.getAbilityDict(courseid));
     }
-
 }

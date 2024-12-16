@@ -16,7 +16,9 @@ public interface CmGetabilityMapper {
     /**
      *查询能力表
      */
-    @Select("select cm_getability.id,cm_getability.orderno,cm_getability.abilitydeep,cm_ability.levelcode,cm_ability.name,cm_ability.datavalue,cm_ability.importantlevel,cm_ability.remark,cm_getability.courseid from cm_ability,cm_getability where cm_ability.id=cm_getability.id and cm_getability.courseid=#{courseid}")
+    @Select("select ga.id, ga.orderno, ga.abilitydeep, a.levelcode, " +
+            "a.name, ga.importantlevel, a.remark, ga.courseid " +
+            "from cm_ability a,cm_getability ga where a.id = ga.id and ga.courseid=#{courseid}")
     List<CmGetability> getGetability (@Param("courseid") String courseid);
     /**
      *查询能力字典

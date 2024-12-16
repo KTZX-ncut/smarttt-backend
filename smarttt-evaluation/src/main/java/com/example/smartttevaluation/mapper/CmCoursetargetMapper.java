@@ -20,7 +20,10 @@ public interface CmCoursetargetMapper {
     /**
      * 获取课程目标的kwas
      */
-    @Select("select targetKwa.kwaId as id, kwa.name as name from cm_course_target_kwa targetKwa, cm_kwadict kwa " +
+    @Select("select targetKwa.kwaId as id, kwa.name, kwa.abilityid, kwa.keywordid, k.importantlevelid, ga.datavalue from cm_course_target_kwa targetKwa " +
+            "inner join cm_kwadict kwa on kwa.id = targetKwa.kwaId " +
+            "inner join cm_keywords k on k.id = kwa.keywordid " +
+            "inner join cm_getability ga on ga.id = kwa.abilityid " +
             "where obsId = #{obsId} and targetId = #{targetId} and targetKwa.kwaId = kwa.id")
     List<CmKwadict> getKwas(@Param("targetId") String targetId, @Param("obsId") String obsId);
 

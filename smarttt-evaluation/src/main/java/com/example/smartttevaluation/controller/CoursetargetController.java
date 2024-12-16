@@ -29,7 +29,7 @@ public class CoursetargetController {
      *课程目标列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin",menu = "531500340-17a53f15-4a36-4450-abf5-387825a2434a",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-da5dc88e-3ff9-4ed8-a724-c15377d306a3",isReadOnly = true)
     public Result getCoursetarget(HttpServletRequest request){
         Token token = getTokenFromContext();
         return cmCoursetargetService.getCoursetarget(token.getObsid());
