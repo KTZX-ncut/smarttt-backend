@@ -33,7 +33,7 @@ public class StRolesServiceImpl implements StRolesService {
             if(simpleRole.getObsdeep() == -1){
                 String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
                 if(courseName == null){
-                    courseName = cmCourseMapper.getCourseNameByClassroom(simpleRole.getObsid());
+                    courseName = cmCourseMapper.getClassroomName(simpleRole.getObsid());
                 }
                 simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
             }
@@ -103,7 +103,7 @@ public class StRolesServiceImpl implements StRolesService {
             if(simpleRole.getObsdeep() == -1){
                 String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
                 if(courseName == null){
-                    courseName = cmCourseMapper.getCourseNameByClassroom(simpleRole.getObsid());
+                    courseName = cmCourseMapper.getClassroomName(simpleRole.getObsid());
                 }
                 simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
             }
