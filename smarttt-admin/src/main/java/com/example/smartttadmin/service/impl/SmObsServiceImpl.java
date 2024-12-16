@@ -126,6 +126,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
     @Override
     public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) {
+        int loginNameLen = personnelRoster.getLoginname().length();
+        if(loginNameLen<3 || loginNameLen>15)
+            return Result.error("用户名长度在3-15个字符之间");
         List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
         if(obsIDList.isEmpty())
             return Result.error("所属院系/班级输入错误");
