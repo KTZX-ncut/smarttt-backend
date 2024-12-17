@@ -14,7 +14,6 @@ import com.example.smartttevaluation.pojo.CmCoursetarget;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.AttainmentEvaluationService;
 import com.example.smartttevaluation.service.CmCourseAssessmentService;
-import jdk.nashorn.internal.runtime.linker.LinkerCallSite;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
 

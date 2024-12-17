@@ -5,7 +5,6 @@ import com.example.smartttevaluation.dto.ClassroomTargetAchievement;
 import com.example.smartttevaluation.dto.ClassroomTotalScore;
 import com.example.smartttevaluation.dto.CmAssessmentStudent;
 import com.example.smartttevaluation.pojo.CmCourse;
-import com.example.smartttevaluation.pojo.CmKwadict;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
