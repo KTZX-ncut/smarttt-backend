@@ -3,21 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttevaluation.mapper.CmCourseAssessmentMapper">
-    <insert id="associate">
-        insert into cm_course_assessment_checkitem_file (checkitemId, fileId)
-        values
-        <foreach collection="fileIds" item="fileId" separator=",">
-            (#{checkitemId}, #{fileId})
-        </foreach>
-    </insert>
-
     <delete id="disassociate">
         delete from cm_course_assessment_checkitem_file
         where checkitemId = #{checkitemId}
         and fileId in
-        <foreach collection="fileIds" item="fileId" open="(" separator="," close=")">
-            #{fileId}
+        <foreach collection="files" item="file" open="(" separator="," close=")">
+            #{file.id}
         </foreach>
     </delete>
-
 </mapper>

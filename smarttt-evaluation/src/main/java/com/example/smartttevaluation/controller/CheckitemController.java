@@ -58,8 +58,10 @@ public class CheckitemController {
      *删除考核项列表
      */
     @PostMapping("/delete")
-    public Result deleteCheckitemByIDs(@RequestParam List<String> ids){
-        return cmCheckitemService.deleteCheckitemByIDs(ids);
+    @AuthRequired(type = "admin",menu = "531500340-4d66eeda-f440-4994-8998-bc2fcaba3c16")
+    public Result deleteCheckitemByIDs(@RequestParam List<String> ids, HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return cmCheckitemService.deleteCheckitemByIDs(ids, token.getObsid());
     }
     /**
      *更新一个考核项

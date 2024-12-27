@@ -46,7 +46,7 @@ public class CourseAssessmentController {
         return cmAssessmentPlanService.updateAssessmentTable(data, token.getObsid());
     }
     /**
-     * 获取文件列表
+     * 获取课堂的作业实验考试列表
      */
     @GetMapping("/getFileList")
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3", isReadOnly = true)
@@ -54,21 +54,34 @@ public class CourseAssessmentController {
         Token token = getTokenFromContext();
         CmCheckitem cmCheckitem = new CmCheckitem();
         cmCheckitem.setId(checkitemId);
+        // 这里的obsid其实是课堂id，因为任课教师会用这个接口
         cmCheckitem.setCourseid(token.getObsid());
         return cmAssessmentPlanService.getFiles(cmCheckitem);
+    }
+    /**
+     * 预览用户上传的excel表
+     */
+    @GetMapping("showExcel")
+    public Result showExcel(@RequestParam("fileId") String fileId) {
+        return cmAssessmentPlanService.showExcel(fileId);
+    }
+    /**
+     * 获取上传模板
+     */
+    @GetMapping("getUploadTemplate")
+    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3", isReadOnly = true)
+    Result getUploadTemplate(HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmAssessmentPlanService.getUploadTemplate(token.getObsid());
     }
     /**
      * 上传文件
      */
     @PostMapping("/uploadFile")
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
-    Result uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+    Result uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         Token token = getTokenFromContext();
-        CmCourseCheckitemFile cmCourseCheckitemFile = new CmCourseCheckitemFile();
-        cmCourseCheckitemFile.setObsid(token.getObsid());
-        cmCourseCheckitemFile.setFileName(file.getOriginalFilename());
-        cmCourseCheckitemFile.setFileData(file.getBytes());
-        return cmAssessmentPlanService.uploadFile(cmCourseCheckitemFile);
+        return cmAssessmentPlanService.uploadFile(file, token.getObsid());
     }
     /**
      * 删除文件时获取与其关联的考核项列表
@@ -93,8 +106,10 @@ public class CourseAssessmentController {
      * 关联文件
      */
     @PostMapping("/associate")
-    Result associate(@RequestBody Map<String, Object> data) {
-        return cmAssessmentPlanService.associate(data);
+    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
+    Result associate(@RequestBody Map<String, Object> data, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmAssessmentPlanService.associate(data, token.getObsid());
     }
     /**
      * 取消关联文件

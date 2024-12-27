@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 import com.example.smartttevaluation.exception.res.Result;
+import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.mapper.CmCoursetargetMapper;
 import com.example.smartttevaluation.pojo.*;
 import com.example.smartttevaluation.service.CmCoursetargetService;
@@ -16,16 +17,23 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
 
     @Autowired
     private CmCoursetargetMapper cmCoursetargetMapper;
+    @Autowired
+    private AttainmentEvaluationMapper attainmentEvaluationMapper;
     /**
      *获取课程目标
      */
     @Override
     public Result getCoursetarget(String obsId) {
+        // 判断是不是任课教师调用接口
+        if(attainmentEvaluationMapper.getCourseByCourseId(obsId) == null) {
+            obsId = attainmentEvaluationMapper.getCourseByClassroomId(obsId).getId();
+        }
+
         List<CmCoursetarget> targets = cmCoursetargetMapper.getCoursetarget(obsId);
-        targets.forEach(target -> {
+        for(CmCoursetarget target :targets) {
             List<CmKwadict> kwas = cmCoursetargetMapper.getKwas(target.getId(), obsId);
             target.setKwas(kwas);
-        });
+        }
         return Result.success(targets);
     }
     /**

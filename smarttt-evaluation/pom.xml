@@ -166,6 +166,17 @@
             <artifactId>commons-compress</artifactId>
             <version>1.26.0</version> <!-- 或更新到较新的版本 -->
         </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>smarttt-course</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.5.2</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
