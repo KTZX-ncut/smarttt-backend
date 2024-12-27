@@ -37,6 +37,10 @@ public class ClassroomVO {
      */
     private String courseName;
     /**
+     * 所属专业
+     */
+    private String proName;
+    /**
      * 主讲教师
      */
     private String teacherName;

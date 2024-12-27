@@ -61,5 +61,7 @@ public interface AiInStuAnsInfoMapper extends BaseMapper<AiInStuAnsInfo> {
 
     @Select("select begindate  from cm_term where iscurrentterm = 1")
     String getCurrentTermStartTime();
+
+    String getProNameByCourseId(@Param("courseId") String courseId);
 }
 

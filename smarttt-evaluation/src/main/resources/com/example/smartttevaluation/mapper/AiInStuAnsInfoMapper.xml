@@ -272,6 +272,10 @@
         AND a.classroomId = #{classroomId}
         GROUP BY b.id
     </select>
+    <select id="getProNameByCourseId" resultType="java.lang.String">
+        SELECT professionName FROM cm_course
+        WHERE id = #{courseId}
+    </select>
 
 </mapper>
 

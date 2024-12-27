@@ -99,12 +99,15 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         Map<String, String> cache = new HashMap<>();
         List<ClassroomVO> classroomVOList = aiInStuAnsInfoMapper.getClassroomList(courseId, classroomName);
         String courseName = aiInStuAnsInfoMapper.getCourseNameByCourseId(courseId);
+        String proName = aiInStuAnsInfoMapper.getProNameByCourseId(courseId);
         if (StrUtil.isBlank(courseName)) {
             throw new BusinessException("课堂id(courseId)不合法", -710);
         }
         for (ClassroomVO vo : classroomVOList) {
             // 课程名称
             vo.setCourseName(courseName);
+            // 专业
+            vo.setProName(proName);
             // 学期名称
             String termName = cache.get(vo.getTermId());
             if (StrUtil.isBlank(termName)) {
