@@ -1,8 +1,6 @@
 package com.example.smartttevaluation.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.apache.poi.hpsf.Decimal;
 
 /**
  * @author lunSir

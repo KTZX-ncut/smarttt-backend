@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.StuPortraitKeywordMapper">
+
+
+    <insert id="insert" parameterType="java.util.List">
+        INSERT INTO ai_stu_portrait_keyword (keyword_name,
+        datavalue,
+        stu_datavalue,
+        keyword_id,
+        stu_id,
+        classroom_id,
+        course_id,
+        num,
+        import_level)
+        VALUES
+        <foreach collection="keywordList" item="item" index="index" separator=",">
+            (#{item.keywordName}, #{item.dataValue}, #{item.stuDataValue},#{item.id},#{stuId},#{classroomId},#{courseId},#{num},#{item.importLevel})
+        </foreach>
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM ai_stu_portrait_keyword
+        WHERE stu_id = #{stuId}
+          AND classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+    </delete>
+
+    <select id="select" resultType="com.example.smartttevaluation.vo.KeywordVO">
+        SELECT keyword_id as id,
+               keyword_name as keywordName,
+               import_level as importLevel,
+               datavalue as dataValue,
+               stu_datavalue as stuDataValue
+        FROM ai_stu_portrait_keyword
+        WHERE stu_id = #{stuId}
+          AND classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+         AND num = #{num}
+    </select>
+</mapper>

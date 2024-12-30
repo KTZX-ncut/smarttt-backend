@@ -57,7 +57,9 @@
             #{item.paperId}
         </foreach>
         AND a.courseId = #{courseId}
-        AND a.stuId = #{stuId}
+        <if test="stuId != null and stuId != '' ">
+            AND a.stuId = #{stuId}
+        </if>
         AND a.classroomId = #{classroomId}
         GROUP BY b.keywordid
     </select>
@@ -115,7 +117,9 @@
             #{item.paperId}
         </foreach>
         AND a.courseId = #{courseId}
-        AND a.stuId = #{stuId}
+        <if test="stuId != null and stuId != '' ">
+            AND a.stuId = #{stuId}
+        </if>
         AND a.classroomId = #{classroomId}
         GROUP BY b.unitId
     </select>
@@ -207,6 +211,7 @@
         FROM pm_testpaper
         WHERE id = #{testId}
     </select>
+
     <select id="getKeyWordIdByPaperId" resultType="com.example.smartttevaluation.vo.KeywordVO">
         SELECT b.id AS id,
         b.name AS keywordName,
@@ -276,6 +281,43 @@
         SELECT professionName FROM cm_course
         WHERE id = #{courseId}
     </select>
+
+    <select id="getStuIdListByClassroomId" resultType="java.lang.String">
+        SELECT userId FROM cm_classroom_student
+        WHERE classroomId = #{classroomId};
+    </select>
+
+    <select id="getPaperInfoListByClassroomId" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
+        SELECT id as paperId, createTime
+        FROM pm_testpaper
+        WHERE classroomId = #{classroomId}
+              AND status = 1
+    </select>
+    <select id="isExistStudent" resultType="java.lang.String">
+        SELECT id FROM cm_classroom_student
+        WHERE classroomId = #{classroomId}
+            AND userId = #{stuId}
+    </select>
+    <select id="isExistStudentPaperData" resultType="java.lang.String">
+        SELECT id FROM ai_in_stu_ans_info
+        WHERE classroomId = #{classroomId}
+            AND courseId = #{courseId}
+            AND paperId = #{paperId}
+            AND stuId = #{stuId}
+    </select>
+    <select id="getAttendEvalList" resultType="java.lang.Integer">
+        SELECT DISTINCT num
+        FROM ai_stu_portrait_ability
+        WHERE stu_id = #{stuId}
+          AND classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+        ORDER BY num ASC
+    </select>
+    <select id="getCourseIdByClassroomId" resultType="java.lang.String">
+        SELECT courseId FROM cm_classroom
+        WHERE id = #{classroomId}
+    </select>
+
 
 </mapper>
 

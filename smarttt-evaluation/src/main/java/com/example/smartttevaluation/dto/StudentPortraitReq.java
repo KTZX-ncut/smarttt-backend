@@ -22,12 +22,7 @@ public class StudentPortraitReq {
     private String stuId;
 
     /**
-     * 第几周（week >= 0）
+     * 评价次数
      */
-    private Integer week;
-
-    /**
-     * 发送请求的当前时间
-     */
-    private String now;
+    private Integer num;
 }

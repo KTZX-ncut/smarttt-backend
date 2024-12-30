@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttevaluation.Utils.TermUtil;
+import com.example.smartttevaluation.dto.CalculatePortraitReq;
 import com.example.smartttevaluation.dto.PaperInfoDto;
 import com.example.smartttevaluation.dto.StudentPortraitReq;
 import com.example.smartttevaluation.exception.res.ResponseEnum;
@@ -12,16 +13,12 @@ import com.example.smartttevaluation.exception.utils.SmartAssert;
 import com.example.smartttevaluation.pojo.AiInStuAnsInfo;
 import com.example.smartttevaluation.service.AiInStuAnsInfoService;
 import com.example.smartttevaluation.vo.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * 形成型评价模块的相关代码
@@ -32,6 +29,21 @@ public class AiInStuAnsInfoController {
 
     @Resource
     private AiInStuAnsInfoService aiInStuAnsInfoService;
+
+
+    /**
+     * 根据课堂id获取课程id
+     * */
+    @GetMapping("getCourseId")
+    public Result getCourseIdByClassroomId(@RequestParam("classroomId") String classroomId){
+        SmartAssert.checkExpression(StrUtil.isNotBlank(classroomId),ResponseEnum.CLASSROOM_ID_NOT_NULL);
+        String courseId = aiInStuAnsInfoService.getCourseIdByClassroomId(classroomId);
+        if (StrUtil.isBlank(courseId)){
+            return Result.error(-600,"非法的classroomId");
+        }
+        return Result.success(courseId);
+
+    }
 
 
     /**
@@ -71,51 +83,15 @@ public class AiInStuAnsInfoController {
      */
     @GetMapping("/student")
     public Result getStudentPortrait(StudentPortraitReq studentPortraitReq) {
-        SmartAssert.checkExpression(Objects.nonNull(studentPortraitReq.getWeek()), ResponseEnum.WEEK_FAIL);
-        // week >= 0
-        SmartAssert.checkExpression(studentPortraitReq.getWeek() >= 0, ResponseEnum.WEEK_LE_ZERO_FAIL);
         // stuId (userId)  is not null
         SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getStuId()), ResponseEnum.STUID_IS_NOT_NULL);
         SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getClassroomId()), ResponseEnum.CLASSROOM_ID_NOT_NULL);
         SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getCourseId()), ResponseEnum.COURSE_ID_NOT_NULL);
-        // 找到这个学生下的所有试卷 paper
-        QueryWrapper<AiInStuAnsInfo> wrapper = new QueryWrapper<>();
-        wrapper.select("DISTINCT paperId").lambda()
-                .eq(AiInStuAnsInfo::getStuid, studentPortraitReq.getStuId())
-                .eq(AiInStuAnsInfo::getClassroomid, studentPortraitReq.getClassroomId());
-
-        List<String> paperIdList = aiInStuAnsInfoService.list(wrapper).stream()
-                .map(s -> s.getPaperid())
-                .collect(Collectors.toList());
-
-        if (CollectionUtil.isEmpty(paperIdList)) {
-            // 没有发布作业
-            return Result.ok().code(-600).msg("学生还没有作业！");
-        }
-
-        // 获取当前学期的开始时间
-        String beginDate = aiInStuAnsInfoService.getCurrentTermStartTime();
-
-        // 检验本次请求周的合法作业
-        // aiInStuAnsInfoService.getPaperInfoListByIds就是想拿test创建的时间
-        List<PaperInfoDto> paperInfoDtoList = aiInStuAnsInfoService.getPaperInfoListByIds(paperIdList);
-        List<PaperInfoDto> whitePaperIdList = paperInfoDtoList
-                .stream()
-                .filter(t ->{
-                    Long weekNums = TermUtil.getTeachingWeek(beginDate, t.getCreateTime());
-                    Long week = Long.valueOf(studentPortraitReq.getWeek());
-                    return weekNums > 0 && weekNums <= week;
-                })
-                .collect(Collectors.toList());
-        if (CollectionUtil.isEmpty(whitePaperIdList)) {
-            return Result.ok().code(-600).msg("没有可生成的数据");
-        }
-        // 生成数据
-        StudentPortraitVO studentPortraitVO = aiInStuAnsInfoService.
-                getStudentPortrait(whitePaperIdList,
-                        studentPortraitReq.getCourseId(),
-                        studentPortraitReq.getStuId(),
-                        studentPortraitReq.getClassroomId());
+        SmartAssert.checkExpression(Objects.nonNull(studentPortraitReq.getNum()), ResponseEnum.NUM_NOT_NULL);
+        StudentPortraitVO studentPortraitVO =  aiInStuAnsInfoService.getStudentPortrait(studentPortraitReq.getCourseId(),
+                studentPortraitReq.getClassroomId(),
+                studentPortraitReq.getStuId(),
+                studentPortraitReq.getNum());
         return Result.success(studentPortraitVO);
     }
 
@@ -149,47 +125,38 @@ public class AiInStuAnsInfoController {
     public Result getClassroomPortrait(StudentPortraitReq studentPortraitReq) {
         SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getClassroomId()), ResponseEnum.CLASSROOM_ID_NOT_NULL);
         SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getCourseId()), ResponseEnum.COURSE_ID_NOT_NULL);
-        SmartAssert.checkExpression(Objects.nonNull(studentPortraitReq.getWeek()), ResponseEnum.WEEK_FAIL);
-        // week >= 0
-        SmartAssert.checkExpression(studentPortraitReq.getWeek() >= 0, ResponseEnum.WEEK_LE_ZERO_FAIL);
-        // 白名单
-        QueryWrapper<AiInStuAnsInfo> wrapper = new QueryWrapper<>();
-        wrapper.select("DISTINCT paperId").lambda()
-                .eq(AiInStuAnsInfo::getClassroomid, studentPortraitReq.getClassroomId())
-                .eq(AiInStuAnsInfo::getCourseid, studentPortraitReq.getCourseId());
-
-        List<String> paperIdList = aiInStuAnsInfoService.list(wrapper).stream()
-                .map(s -> s.getPaperid())
-                .collect(Collectors.toList());
-        if (CollectionUtil.isEmpty(paperIdList)) {
-            // 没有发布作业
-            return Result.ok().code(-600).msg("还没有作业！");
-        }
-
-        // 获取当前学期的开始时间
-        String beginDate = aiInStuAnsInfoService.getCurrentTermStartTime();
-
-        // 检验本次请求周的合法作业
-        // aiInStuAnsInfoService.getPaperInfoListByIds就是想拿test创建的时间
-        List<PaperInfoDto> paperInfoDtoList = aiInStuAnsInfoService.getPaperInfoListByIds(paperIdList);
-        List<PaperInfoDto> whitePaperIdList = paperInfoDtoList
-                .stream()
-                .filter(t ->{
-                    Long weekNums = TermUtil.getTeachingWeek(beginDate, t.getCreateTime());
-                    Long week = Long.valueOf(studentPortraitReq.getWeek());
-                    return weekNums > 0 && weekNums <= week;
-                })
-                .collect(Collectors.toList());
-        // 检验
-        if (CollectionUtil.isEmpty(whitePaperIdList)) {
-            return Result.ok().code(-600).msg("没有可生成的数据");
-        }
-
-        // 生成数据
-        StudentPortraitVO studentPortraitVO = aiInStuAnsInfoService
-                .getClassroomPortrait(whitePaperIdList,
-                        studentPortraitReq.getCourseId(),
-                        studentPortraitReq.getClassroomId());
+        SmartAssert.checkExpression(Objects.nonNull(studentPortraitReq.getNum()), ResponseEnum.NUM_NOT_NULL);
+        StudentPortraitVO studentPortraitVO =  aiInStuAnsInfoService.getClassroomPortrait(studentPortraitReq.getCourseId(),studentPortraitReq.getClassroomId(),studentPortraitReq.getNum());
         return Result.success(studentPortraitVO);
     }
+
+    /**
+     * 一键计算形成行评价
+     */
+    @PostMapping("/calculate")
+    public Result calculate(@RequestBody CalculatePortraitReq calculatePortraitReq){
+        // 校参
+        SmartAssert.checkExpression(StrUtil.isNotBlank(calculatePortraitReq.getCourseId()),ResponseEnum.COURSE_ID_NOT_NULL);
+        SmartAssert.checkExpression(StrUtil.isNotBlank(calculatePortraitReq.getClassroomId()),ResponseEnum.CLASSROOM_ID_NOT_NULL);
+        // 一键计算算的是：学生的评价分析，课堂的评价分析。（而且不止一次）
+        // 为了更好的扩展，留出了 试卷 和 学生的 口子
+        // 一个学生 16 次循环，假设有120个学生 16 * 120，访问数据库次数耗时。
+        // 一个课堂16次循环。
+        boolean succeed = aiInStuAnsInfoService.calculatePortrait(calculatePortraitReq);
+        return Result.ok().data(succeed).code(200);
+    }
+
+    /**
+     * 获取评价总次数
+     */
+    @GetMapping("/getEvalTotal")
+    public Result getEvalTotal(StudentPortraitReq studentPortraitReq){
+        SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getClassroomId()), ResponseEnum.CLASSROOM_ID_NOT_NULL);
+        SmartAssert.checkExpression(!StrUtil.isBlank(studentPortraitReq.getCourseId()), ResponseEnum.COURSE_ID_NOT_NULL);
+        Integer total = aiInStuAnsInfoService.getEvalTotal(studentPortraitReq.getCourseId(),studentPortraitReq.getClassroomId());
+        SmartAssert.checkExpression(Objects.nonNull(total),ResponseEnum.NO_VALID);
+        return Result.success(total);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.smartttevaluation.vo;
 
 import cn.hutool.core.lang.tree.Tree;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.List;
@@ -10,8 +11,14 @@ import java.util.List;
  * @create 2024-11-28 21:07
  */
 @Data
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class StudentPortraitVO {
     private List<AbilityVO> ability;
     private List<KeywordVO> keyword;
-    private List<Tree<String>> unit;
+    private List<KnowledgeUnitVO> unit;
+    private List<Tree<String>> unitTree;
+    /**
+     * 学生参与评价的次数
+     */
+    private List<Integer> attendEvalList;
 }

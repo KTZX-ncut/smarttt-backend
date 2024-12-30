@@ -5,7 +5,6 @@ import com.example.smartttevaluation.dto.*;
 import com.example.smartttevaluation.pojo.AiInStuAnsInfo;
 import com.example.smartttevaluation.vo.*;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -59,9 +58,23 @@ public interface AiInStuAnsInfoMapper extends BaseMapper<AiInStuAnsInfo> {
                                      @Param("classroomId") String classroomId,
                                      @Param("stuId") String stuId);
 
-    @Select("select begindate  from cm_term where iscurrentterm = 1")
-    String getCurrentTermStartTime();
-
     String getProNameByCourseId(@Param("courseId") String courseId);
+
+    List<String> getStuIdListByClassroomId(@Param("classroomId") String classroomId);
+
+    List<PaperInfoDto> getPaperInfoListByClassroomId(@Param("classroomId") String classroomId);
+
+    String isExistStudent(@Param("stuId") String stuId, @Param("classroomId") String classroomId);
+
+    List<String> isExistStudentPaperData(@Param("classroomId") String classroomId,
+                                         @Param("courseId") String courseId,
+                                         @Param("stuId") String stuId,
+                                         @Param("paperId") String paperId);
+
+    List<Integer> getAttendEvalList(@Param("classroomId") String classroomId,
+                                    @Param("courseId") String courseId,
+                                    @Param("stuId") String stuId);
+
+    String getCourseIdByClassroomId(@Param("classroomId") String classroomId);
 }
 

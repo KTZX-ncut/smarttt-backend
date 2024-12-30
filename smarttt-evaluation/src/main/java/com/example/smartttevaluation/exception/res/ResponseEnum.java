@@ -35,7 +35,9 @@ public enum ResponseEnum {
     STUID_IS_NOT_NULL(-710,"学生的userId不能为空"),
     TEST_ID_NOT_NULL(-710,"考试id(testId)不能为空"),
     TEST_ID_NOT_VALID(-710,"考试id(testId) 不合法！"),
-    PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!");
+    PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!"),
+    NUM_NOT_NULL(-710, "评价次数不能为空"),
+    NO_VALID(-710, "传入的数据不合法");
 
 
     private Integer code;//状态码

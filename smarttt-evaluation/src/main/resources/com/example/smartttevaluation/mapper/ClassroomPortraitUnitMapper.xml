@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.ClassroomPortraitUnitMapper">
+
+
+    <insert id="insert" parameterType="java.util.List">
+        INSERT INTO ai_classroom_portrait_unit (unit_name,
+        datavalue,
+        stu_datavalue,
+        unit_id,
+        classroom_id,
+        course_id,
+        num,
+        `type`,
+        order_num,
+        pid)
+        VALUES
+        <foreach collection="unitList" item="item" index="index" separator=",">
+            (#{item.unitName},
+            #{item.dataValue},
+            #{item.stuDataValue},
+            #{item.id},
+            #{classroomId},
+            #{courseId},
+            #{num},
+            #{item.type},
+            #{item.orderNum},
+            #{item.pid})
+        </foreach>
+    </insert>
+
+
+    <delete id="delete">
+        DELETE FROM ai_classroom_portrait_unit
+        WHERE classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+    </delete>
+
+    <select id="select" resultType="com.example.smartttevaluation.vo.KnowledgeUnitVO">
+        SELECT unit_id as id,
+               unit_name as unitName,
+               datavalue as dataValue,
+               stu_datavalue as stuDataValue,
+               `type`,
+               order_num as orderNum,
+               pid
+        FROM ai_classroom_portrait_unit
+        WHERE classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+          AND num = #{num}
+    </select>
+
+</mapper>
