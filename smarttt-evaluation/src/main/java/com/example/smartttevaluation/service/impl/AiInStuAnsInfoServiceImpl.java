@@ -333,8 +333,6 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         List<KeywordVO> keywordVOList = stuPortraitKeywordMapper.select(courseId,stuId,classroomId,num);
         // 知识单元
         List<KnowledgeUnitVO> knowledgeUnitVOList = stuPortraitUnitMapper.select(courseId,stuId,classroomId,num);
-        // 参与评价次数
-        List<Integer> attendEvalList = aiInStuAnsInfoMapper.getAttendEvalList(classroomId,courseId,stuId);
         TreeNodeConfig treeNodeConfig = new TreeNodeConfig();
         treeNodeConfig.setWeightKey("orderNum");
         treeNodeConfig.setIdKey("id");
@@ -354,7 +352,6 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         studentPortraitVO.setAbility(abilityVOList);
         studentPortraitVO.setKeyword(keywordVOList);
         studentPortraitVO.setUnitTree(treeNodes);
-        studentPortraitVO.setAttendEvalList(attendEvalList);
 
         return studentPortraitVO;
     }
@@ -367,6 +364,20 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
     @Override
     public String getCourseIdByClassroomId(String classroomId) {
         return aiInStuAnsInfoMapper.getCourseIdByClassroomId(classroomId);
+    }
+
+    /**
+     * 获取学生参与评价次数
+     * @param stuId
+     * @param courseId
+     * @param classroomId
+     * @return
+     */
+    @Override
+    public List<Integer> getStudentEvalNums(String stuId, String courseId, String classroomId) {
+        // 参与评价次数
+        List<Integer> attendEvalList = aiInStuAnsInfoMapper.getAttendEvalList(classroomId,courseId,stuId);
+        return attendEvalList;
     }
 
 

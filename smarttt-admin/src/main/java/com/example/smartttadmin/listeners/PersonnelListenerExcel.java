@@ -109,7 +109,7 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
         for (PersonnelExcel personnelExcel : personnelExcelList) {
 
             CateLogEnum cateLogEnum = this.DetermineIdentity(personnelExcel.getCatelog());
-            // 1. obsName通过拿到obsId
+            // 1. obsName通过拿到obsId(校验obsName的合法性)
             QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("obsname",personnelExcel.getObsname());
             List<SmObs> smObsList = new LinkedList<>();
@@ -129,6 +129,10 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
             List<String> stUsersList = usersService.getStUsersByloginName(personnelExcel.getLoginname());
             if (!CollectionUtil.isEmpty(stUsersList)) {
                 throw new RuntimeException("业务异常:"+personnelExcel.getUsername()+"的登录名称已经被注册了");
+            }
+            // 3. 判断loginName是否符合3-15个字符
+            if(personnelExcel.getLoginname().length() < 3 || personnelExcel.getLoginname().length() > 15){
+                throw new RuntimeException("业务异常:"+personnelExcel.getUsername()+"的登录名称("+personnelExcel.getLoginname() + ")的长度需要在3-15个字符之间！");
             }
             PersonnelRoster personnelRoster = ExcelConvert.INSTANCE.personnelExcelToPersonnelRoster(personnelExcel);
             personnelRoster.setObsid(obsIdList.get(0));

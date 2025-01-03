@@ -27,7 +27,7 @@ public enum CateLogEnum {
                 return cateLogEnum;
             }
         }
-        throw new RuntimeException("status不合法，非正常请求！");
+        throw new RuntimeException("身份枚举CateLogEnum中：status不合法，非正常请求！");
     }
 
     public static CateLogEnum getCateLogEnumByIdentity(String identity){
@@ -36,6 +36,6 @@ public enum CateLogEnum {
                 return cateLogEnum;
             }
         }
-        throw new RuntimeException("status不合法，非正常请求！");
+        throw new RuntimeException("身份枚举CateLogEnum中：status不合法，非正常请求！");
     }
 }

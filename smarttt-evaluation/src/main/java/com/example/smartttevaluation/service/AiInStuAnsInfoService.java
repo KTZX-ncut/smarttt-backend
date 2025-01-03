@@ -42,4 +42,6 @@ public interface AiInStuAnsInfoService extends IService<AiInStuAnsInfo> {
     Integer getEvalTotal(String courseId, String classroomId);
 
     String getCourseIdByClassroomId(String classroomId);
+
+    List<Integer> getStudentEvalNums(String stuId, String courseId, String classroomId);
 }

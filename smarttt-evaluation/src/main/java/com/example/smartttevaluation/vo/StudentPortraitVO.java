@@ -17,8 +17,4 @@ public class StudentPortraitVO {
     private List<KeywordVO> keyword;
     private List<KnowledgeUnitVO> unit;
     private List<Tree<String>> unitTree;
-    /**
-     * 学生参与评价的次数
-     */
-    private List<Integer> attendEvalList;
 }

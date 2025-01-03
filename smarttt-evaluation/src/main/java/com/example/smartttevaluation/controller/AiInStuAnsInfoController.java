@@ -157,6 +157,19 @@ public class AiInStuAnsInfoController {
         SmartAssert.checkExpression(Objects.nonNull(total),ResponseEnum.NO_VALID);
         return Result.success(total);
     }
+    /**
+     * 获取学生参与评价次数
+     */
+    @GetMapping("/getStudentEvalNums")
+    public Result getStudentEvalNums(@RequestParam("stuId") String stuId,
+                                     @RequestParam("courseId") String courseId,
+                                     @RequestParam("classroomId") String classroomId){
+        SmartAssert.checkExpression(!StrUtil.isBlank(stuId), ResponseEnum.STUID_IS_NOT_NULL);
+        SmartAssert.checkExpression(!StrUtil.isBlank(courseId), ResponseEnum.COURSE_ID_NOT_NULL);
+        SmartAssert.checkExpression(!StrUtil.isBlank(classroomId), ResponseEnum.CLASSROOM_ID_NOT_NULL);
+        List<Integer> attendEvalList = aiInStuAnsInfoService.getStudentEvalNums(stuId,courseId,classroomId);
+        return Result.success(attendEvalList);
+    }
 
 
 }
