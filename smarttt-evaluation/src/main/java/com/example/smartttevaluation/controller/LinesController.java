@@ -25,7 +25,7 @@ public class LinesController {
      *连线列表
      */
     @GetMapping
-    @AuthRequired(type = "admin",menu = "531500340-ecaa4072-d8ae-4f54-b681-6d42ca75db12",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-8daa7ebc-0b27-4236-b4d6-2e872f771f3a",isReadOnly = true)
     public Result getLines(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmLinesService.getLines(token.getObsid());

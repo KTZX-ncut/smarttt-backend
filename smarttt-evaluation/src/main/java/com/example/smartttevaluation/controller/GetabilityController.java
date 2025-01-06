@@ -33,7 +33,7 @@ public class GetabilityController {
      * 课程能力列表
      */
     @GetMapping
-    @AuthRequired(type = "admin", menu = "531500340-c0fc7d55-5459-433c-ad6a-593856295d51", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-8daa7ebc-0b27-4236-b4d6-2e872f771f3a", isReadOnly = true)
     public Result getGetability(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmGetabilityService.getGetability(token.getObsid());

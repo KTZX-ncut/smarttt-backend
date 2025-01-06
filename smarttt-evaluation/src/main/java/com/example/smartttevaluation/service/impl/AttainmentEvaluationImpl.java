@@ -1,7 +1,7 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.smartttcourse.pojo.CmClassroom;
+import com.example.smartttevaluation.pojo.CmClassroom;
 import com.example.smartttevaluation.dto.*;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
@@ -91,14 +91,6 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
     @Override
     public Result getCourseByClassroomId(String obsId) {
         return Result.success(attainmentEvaluationMapper.getCourseByClassroomId(obsId));
-    }
-
-    @Override
-    public Result   getAssessmentTableByClassroomId(String obsId) {
-        // 获取课程id
-        String courseId;
-        courseId = attainmentEvaluationMapper.getCourseByClassroomId(obsId).getId();
-        return cmCourseAssessmentService.getAssessmentTable(courseId);
     }
 
     @Override

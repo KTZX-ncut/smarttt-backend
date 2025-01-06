@@ -9,7 +9,6 @@ public interface AttainmentEvaluationService {
     Result getClassroomByCourseId(String obsId);
     Result getClassroomByClassroomId(String obsId);
     Result getCourseByClassroomId(String obsId);
-    Result getAssessmentTableByClassroomId(String obsId);
     Result calcTotalScore(String classroomId);
     Result getTotalScore(String classroomId);
     Result getTargetAchievement(String classroomId);

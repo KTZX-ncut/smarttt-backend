@@ -2,8 +2,10 @@ package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.CmGetabilityTree;
 import com.example.smartttevaluation.exception.res.Result;
+import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.mapper.CmGetabilityMapper;
 import com.example.smartttevaluation.pojo.CmAbility;
+import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmGetability;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmGetabilityService;
@@ -18,11 +20,18 @@ public class CmGetabilityServiceImpl implements CmGetabilityService {
 
     @Autowired
     private CmGetabilityMapper cmGetabilityMapper;
+    @Autowired
+    AttainmentEvaluationMapper attainmentEvaluationMapper;
     /**
      *查询能力树
      */
     @Override
     public Result getGetability(String courseid) {
+        // 判断是不是任课教师调用接口
+        CmCourse course = attainmentEvaluationMapper.getCourseByCourseId(courseid);
+        if (course == null) {
+            courseid = attainmentEvaluationMapper.getCourseByClassroomId(courseid).getId();
+        }
         //查询课程id是否存在
         if (cmGetabilityMapper.getNumOfCourseById(courseid) == 0) {
             return Result.error(404, "课程id不存在");
