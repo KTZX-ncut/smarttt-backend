@@ -1,6 +1,5 @@
 package com.example.smartttevaluation.controller;
 
-import com.example.smartttcourse.Utils.AuthorizationAspect;
 import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.exception.res.Result;

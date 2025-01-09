@@ -27,7 +27,7 @@ public class KwadictController {
      * 获取kwa字典
      */
     @GetMapping("")
-    @AuthRequired(type = "admin", menu = "531500340-b1ebad5d-7fa4-4872-ba1f-13df498414c6", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-8daa7ebc-0b27-4236-b4d6-2e872f771f3a", isReadOnly = true)
     public Result getKwadict(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmKwadictService.getKwadict(token.getObsid());

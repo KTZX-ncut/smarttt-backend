@@ -1,10 +1,8 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.exception.res.Result;
-import com.example.smartttevaluation.mapper.CmCoursetargetMapper;
-import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
-import com.example.smartttevaluation.mapper.CmKwadictMapper;
-import com.example.smartttevaluation.mapper.CmLinesMapper;
+import com.example.smartttevaluation.mapper.*;
+import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,19 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     private CmCoursetargetMapper cmCoursetargetMapper;
     @Autowired
     private CmLinesMapper cmLinesMapper;
+    @Autowired
+    private AttainmentEvaluationMapper attainmentEvaluationMapper;
 
     /**
      * 获取kwa
      */
     @Override
     public Result getKwadict(String obsid) {
+        // 判断是不是任课教师调用接口
+        CmCourse course = attainmentEvaluationMapper.getCourseByCourseId(obsid);
+        if (course == null) {
+            obsid = attainmentEvaluationMapper.getCourseByClassroomId(obsid).getId();
+        }
         List<CmKwadict> kwas = cmKwadictMapper.getKwadict(obsid);
         return Result.success(kwas);
     }

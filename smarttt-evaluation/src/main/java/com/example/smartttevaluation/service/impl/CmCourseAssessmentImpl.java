@@ -35,7 +35,8 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
     @Override
     public Result getAssessmentTable(String courseid) {
         // 判断是不是任课教师调用接口
-        if(attainmentEvaluationMapper.getCourseByCourseId(courseid) == null) {
+        CmCourse course = attainmentEvaluationMapper.getCourseByCourseId(courseid);
+        if (course == null) {
             courseid = attainmentEvaluationMapper.getCourseByClassroomId(courseid).getId();
         }
 

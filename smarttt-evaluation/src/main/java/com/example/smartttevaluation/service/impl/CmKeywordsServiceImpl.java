@@ -1,8 +1,10 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.exception.res.Result;
+import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.mapper.CmKeywordsMapper;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
+import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKeywordsService;
@@ -25,6 +27,8 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
     private CmKeywordsMapper cmKeywordsMapper;
     @Autowired
     private CmKwadictMapper cmKwadictMapper;
+    @Autowired
+    private AttainmentEvaluationMapper attainmentEvaluationMapper;
 
     /**
      * 获取关键字
@@ -32,6 +36,11 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
     @Override
     public Result
     getKeywords(String obsId) {
+        // 判断是不是任课教师调用接口
+        CmCourse course = attainmentEvaluationMapper.getCourseByCourseId(obsId);
+        if (course == null) {
+            obsId = attainmentEvaluationMapper.getCourseByClassroomId(obsId).getId();
+        }
         return Result.success(cmKeywordsMapper.getKeywords(obsId));
     }
 

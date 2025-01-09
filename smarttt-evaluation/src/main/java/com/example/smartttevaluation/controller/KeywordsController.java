@@ -30,7 +30,7 @@ public class KeywordsController {
      * 关键字列表
      */
     @GetMapping("")
-    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09", isReadOnly = true)
+    @AuthRequired(type = "admin", menu = "531500340-8daa7ebc-0b27-4236-b4d6-2e872f771f3a", isReadOnly = true)
     public Result getKeywords(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmKeywordsService.getKeywords(token.getObsid());

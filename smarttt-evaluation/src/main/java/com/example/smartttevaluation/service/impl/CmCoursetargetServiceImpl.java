@@ -25,7 +25,8 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
     @Override
     public Result getCoursetarget(String obsId) {
         // 判断是不是任课教师调用接口
-        if(attainmentEvaluationMapper.getCourseByCourseId(obsId) == null) {
+        CmCourse course = attainmentEvaluationMapper.getCourseByCourseId(obsId);
+        if (course == null) {
             obsId = attainmentEvaluationMapper.getCourseByClassroomId(obsId).getId();
         }
 

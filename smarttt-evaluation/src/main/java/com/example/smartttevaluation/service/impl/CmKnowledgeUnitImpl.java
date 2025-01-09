@@ -2,7 +2,9 @@ package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.dto.CmKnowledgeUnitTree;
 import com.example.smartttevaluation.exception.res.Result;
+import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
+import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
 import com.example.smartttevaluation.pojo.CommonFunctions;
@@ -16,9 +18,17 @@ import java.util.*;
 public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
     @Autowired
     private CmKnowledgeUnitMapper cmKnowledgeUnitMapper;
+    @Autowired
+    private AttainmentEvaluationMapper attainmentEvaluationMapper;
 
     @Override
     public Result getKnowledgeUnitList(String courseid) {
+        // 判断是不是任课教师调用接口
+        CmCourse course = attainmentEvaluationMapper.getCourseByCourseId(courseid);
+        if (course == null) {
+            courseid = attainmentEvaluationMapper.getCourseByClassroomId(courseid).getId();
+        }
+
         if (cmKnowledgeUnitMapper.getCourseCountByid(courseid) == 0) {
             return Result.error(404, "课程id不存在");
         }
