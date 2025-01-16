@@ -87,8 +87,8 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
     }
 
     @Override
-    public List<TestPaperInfoVO> getTestPaperInfo(String courseId, String search) {
-        List<TestPaperInfoVO> testPaperInfo = aiInStuAnsInfoMapper.getTestPaperInfo(courseId, search);
+    public List<TestPaperInfoVO> getTestPaperInfo(String courseId, String search, String classroomId) {
+        List<TestPaperInfoVO> testPaperInfo = aiInStuAnsInfoMapper.getTestPaperInfo(courseId, search,classroomId);
 
         // 拿课程名称
         String courseName = aiInStuAnsInfoMapper.getCourseNameByCourseId(courseId);
@@ -167,13 +167,15 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
     }
 
     @Override
-    public StudentPortraitVO calculateClassroomPortrait(List<PaperInfoDto> whitePaperIdList, String courseId, String classroomId) {
+    public StudentPortraitVO calculateClassroomPortrait(List<PaperInfoDto> whitePaperIdList, String courseId, String classroomId,List<String> stuIdList) {
         try {
             log.info("getStudentPortrait:当前线程{}", Thread.currentThread().getName());
             StudentPortraitVO studentPortraitVO = new StudentPortraitVO();
-            CompletableFuture<List<KeywordVO>> keywordVOList = this.getKeyWordList(whitePaperIdList, courseId, null, classroomId);
-            CompletableFuture<List<AbilityVO>> abilityVOList = this.getAbilityList(whitePaperIdList, courseId, null, classroomId);
-            CompletableFuture<List<KnowledgeUnitVO>> knowledgeUnitList = this.getKnowledgeUnitList(whitePaperIdList, courseId, null, classroomId);
+            CompletableFuture<List<KeywordVO>> keywordVOList = this.getClassroomKeyWordList(whitePaperIdList, courseId, stuIdList, classroomId);
+
+
+            CompletableFuture<List<AbilityVO>> abilityVOList = this.getClassroomAbilityList(whitePaperIdList, courseId, stuIdList, classroomId);
+            CompletableFuture<List<KnowledgeUnitVO>> knowledgeUnitList = this.getClassroomKnowledgeUnitList(whitePaperIdList, courseId, stuIdList, classroomId);
             CompletableFuture<Void> future = CompletableFuture.allOf(keywordVOList, abilityVOList, knowledgeUnitList);
             future.thenRun(() -> {
                 try {
@@ -189,7 +191,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             return studentPortraitVO;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BusinessException("系统繁忙，请稍后再试！");
+            throw new BusinessException(e.getMessage());
         }
     }
 
@@ -201,7 +203,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             // 1. 获取参与评价的学生
             List<String> stuIdList = calculatePortraitReq.getStuIdList();
             if(CollectionUtil.isEmpty(stuIdList) || Objects.isNull(stuIdList)){
-                // 入库查询
+                // 入库查询(只查询参与评价的学生)
                 stuIdList = aiInStuAnsInfoMapper.getStuIdListByClassroomId(classroomId);
                 if(CollectionUtil.isEmpty(stuIdList) || Objects.isNull(stuIdList)){
                     throw new BusinessException("该课堂下没有学生，不能计算！",-600);
@@ -217,13 +219,17 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             List<String> paperIdList = calculatePortraitReq.getPaperIdList();
             List<PaperInfoDto> paperInfoDtoList = null;
             if(CollectionUtil.isEmpty(paperIdList) || Objects.isNull(paperIdList)) {
-                // 查询该课堂下已经发布的试卷
+                // 查询配置试卷信息表中的试卷列表
                 paperInfoDtoList = aiInStuAnsInfoMapper.getPaperInfoListByClassroomId(classroomId);
             }else {
+                /**
+                 * 通过试卷的paperId去配置试卷信息表中拿到create_time 和 row
+                 * （create_time留个口子防止以后该改需求按照创建顺序计算）
+                 */
                 paperInfoDtoList = aiInStuAnsInfoMapper.getPaperInfoListByIds(paperIdList);
             }
             if(CollectionUtil.isEmpty(paperInfoDtoList) || Objects.isNull(paperInfoDtoList)){
-                throw new BusinessException("该课堂下还没有发布试卷！", -600);
+                throw new BusinessException("该课堂下还没有发布试卷或者传入的paperList有误", -600);
             }
             // 2.1 排除不参与评价的试卷
             List<String> excludePaperIdList = calculatePortraitReq.getExcludePaperIdList();
@@ -232,7 +238,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
                         .collect(Collectors.toList());
             }
             // 按照创建试卷进行排序（creat_time）
-            paperInfoDtoList = ListUtil.sortByProperty(paperInfoDtoList, "createTime");
+            paperInfoDtoList = ListUtil.sortByProperty(paperInfoDtoList, "row");
 
             // 3. 学生形成行评价
             for (String stuId : stuIdList){
@@ -273,7 +279,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             classroomPortraitUnitMapper.delete(classroomId,courseId);
             for(PaperInfoDto paperInfoDto : paperInfoDtoList){
                 calPaperList.add(paperInfoDto);
-                StudentPortraitVO classroomPortrait = this.calculateClassroomPortrait(calPaperList, courseId, classroomId);
+                StudentPortraitVO classroomPortrait = this.calculateClassroomPortrait(calPaperList, courseId, classroomId,stuIdList);
                 // 保存数据
                 classroomPortraitAbilityMapper.insert(classroomPortrait.getAbility(),calPaperList.size(),classroomId,courseId);
                 classroomPortraitKeywordMapper.insert(classroomPortrait.getKeyword(),calPaperList.size(),classroomId,courseId);
@@ -289,7 +295,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             return true;
         }catch (Exception e){
             log.error(e.getMessage(),e);
-            throw new BusinessException("系统繁忙，请稍后再试",500);
+            throw new BusinessException(e.getMessage(),500);
         }
     }
 
@@ -378,6 +384,11 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         // 参与评价次数
         List<Integer> attendEvalList = aiInStuAnsInfoMapper.getAttendEvalList(classroomId,courseId,stuId);
         return attendEvalList;
+    }
+
+    @Override
+    public boolean modifyStudentDynamicState(String classroomStudentId,Integer dynamicState) {
+        return aiInStuAnsInfoMapper.modifyStudentDynamicState(classroomStudentId,dynamicState);
     }
 
 
@@ -520,7 +531,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
 
 
     /**
-     * 获取课堂keyword数据得分率
+     * 获取课堂学生keyword数据得分率
      */
     private CompletableFuture<List<KeywordVO>> getKeyWordList(List<PaperInfoDto> whitePaperIdList,
                                                              String courseId,
@@ -564,8 +575,54 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         }, portraitTreadPool);
     }
 
+
     /**
-     * 获取课堂ability数据得分率
+     * 获取整个课堂的keyword数据得分率
+     */
+    private CompletableFuture<List<KeywordVO>> getClassroomKeyWordList(List<PaperInfoDto> whitePaperIdList,
+                                                              String courseId,
+                                                              List<String> stuIdList,
+                                                              String classroomId) {
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("getKeyWordList:当前线程{}", Thread.currentThread().getName());
+            // 拿到该课堂所有的keyword
+            List<KeywordVO> keywordVOList = aiInStuAnsInfoMapper.getKeyWordIdByCourseId(courseId);
+            if (CollectionUtil.isEmpty(keywordVOList)) {
+                return new LinkedList<>();
+            }
+            // 计算分数
+            List<KeywordEvalDto> keywordEvalDtoList = aiInStuAnsInfoMapper.getEvalClassroomKeywordScore(whitePaperIdList, courseId, stuIdList, classroomId);
+            Map<String, List<KeywordEvalDto>> map = keywordEvalDtoList.stream()
+                    .collect(Collectors.groupingBy(KeywordEvalDto::getId));
+            // 组装数据
+            for (KeywordVO keywordVO : keywordVOList) {
+                Double dataValue = keywordVO.getDataValue();
+                List<KeywordEvalDto> dtoList = map.get(keywordVO.getId());
+                if (CollectionUtil.isEmpty(dtoList)) {
+                    keywordVO.setStuDataValue(0.00);
+                    continue;
+                }
+                // 有且仅有一个元素
+                KeywordEvalDto keywordEvalDto = dtoList.get(0);
+                // 会自动提升精度
+                if (keywordEvalDto.getAvgLibScore() == 0) {
+                    keywordVO.setStuDataValue(0.00);
+                } else {
+                    Double avgLibStuScore = keywordEvalDto.getAvgLibStuScore();
+                    Double avgLibScore = keywordEvalDto.getAvgLibScore();
+                    //Double cal = (avgLibStuScore / avgLibScore) * dataValue;
+                    Double cal = (avgLibStuScore / avgLibScore);
+                    keywordVO.setStuDataValue(Double.valueOf(NumberUtil.roundStr(cal, 2)));
+                }
+
+            }
+            // 数据组装完成
+            return keywordVOList;
+        }, portraitTreadPool);
+    }
+
+    /**
+     * 获取课堂学生ability数据得分率
      */
     private CompletableFuture<List<AbilityVO>> getAbilityList(List<PaperInfoDto> whitePaperIdList,
                                                              String courseId,
@@ -609,8 +666,57 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         }, portraitTreadPool);
     }
 
+
+
     /**
-     * 获取课堂知识单元数据得分率
+     * 获取课堂ability数据得分率
+     */
+    private CompletableFuture<List<AbilityVO>> getClassroomAbilityList(List<PaperInfoDto> whitePaperIdList,
+                                                              String courseId,
+                                                              List<String> stuIdList, String classroomId) {
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("getAbilityList:当前线程{}", Thread.currentThread().getName());
+            // 拿到该课堂所有的ability
+            List<AbilityVO> abilityVOList = aiInStuAnsInfoMapper.getAbilityIdByCourseId(courseId);
+            if (CollectionUtil.isEmpty(abilityVOList)) {
+                return new LinkedList<>();
+            }
+            // 计算分数
+            List<AbilityEvalDto> abilityEvalDtoList = aiInStuAnsInfoMapper.getEvalClassroomAbilityScore(whitePaperIdList, courseId, stuIdList, classroomId);
+            Map<String, List<AbilityEvalDto>> map = abilityEvalDtoList.stream()
+                    .collect(Collectors.groupingBy(AbilityEvalDto::getId));
+            // 组装数据
+            for (AbilityVO abilityVO : abilityVOList) {
+                Double dataValue = abilityVO.getDataValue();
+                List<AbilityEvalDto> dtoList = map.get(abilityVO.getId());
+                if (CollectionUtil.isEmpty(dtoList)) {
+                    abilityVO.setStuDataValue(0.00);
+                    continue;
+                }
+                // 有且仅有一个元素
+                AbilityEvalDto abilityEvalDto = dtoList.get(0);
+                // 会自动提升精度
+                if (abilityEvalDto.getAvgLibScore() == 0) {
+                    abilityVO.setStuDataValue(0.00);
+                } else {
+                    Double avgLibStuScore = abilityEvalDto.getAvgLibStuScore();
+                    Double avgLibScore = abilityEvalDto.getAvgLibScore();
+                    // TODO: 有可能不用dataValue
+                    // Double cal = (avgLibStuScore / avgLibScore) * dataValue;
+                    Double cal = (avgLibStuScore / avgLibScore);
+                    abilityVO.setStuDataValue(Double.valueOf(NumberUtil.roundStr(cal, 2)));
+                }
+
+            }
+            // 数据组装完成
+            return abilityVOList;
+        }, portraitTreadPool);
+    }
+
+
+
+    /**
+     * 获取课堂学生知识单元数据得分率
      */
     private CompletableFuture<List<KnowledgeUnitVO>> getKnowledgeUnitList(List<PaperInfoDto> whitePaperIdList,
                                                                       String courseId,
@@ -650,4 +756,50 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             return knowledgeUnitVOList;
         }, portraitTreadPool);
     }
+
+
+    /**
+     * 获取课堂知识单元数据得分率
+     */
+    private CompletableFuture<List<KnowledgeUnitVO>> getClassroomKnowledgeUnitList(List<PaperInfoDto> whitePaperIdList,
+                                                                          String courseId,
+                                                                          List<String> stuIdList, String classroomId) {
+        return CompletableFuture.supplyAsync(() -> {
+            // 打印日志
+            log.info("getKnowledgeUnitList:当前线程{}", Thread.currentThread().getName());
+
+            List<KnowledgeUnitVO> knowledgeUnitVOList = aiInStuAnsInfoMapper.getUnitList(courseId);
+            if (CollectionUtil.isEmpty(knowledgeUnitVOList)) {
+                return new LinkedList<>();
+            }
+            List<UnitEvalDto> unitEvalDtoList = aiInStuAnsInfoMapper.getEvalClassroomUnitScore(whitePaperIdList, courseId, stuIdList, classroomId);
+            Map<String, List<UnitEvalDto>> map = unitEvalDtoList.stream()
+                    .collect(Collectors.groupingBy(UnitEvalDto::getId));
+            // 组装数据
+            for (KnowledgeUnitVO knowledgeUnitVO : knowledgeUnitVOList) {
+                Double dataValue = knowledgeUnitVO.getDataValue();
+                List<UnitEvalDto> dtoList = map.get(knowledgeUnitVO.getId());
+                if (CollectionUtil.isEmpty(dtoList)) {
+                    knowledgeUnitVO.setStuDataValue(0.00);
+                    continue;
+                }
+                // 有且仅有一个元素
+                UnitEvalDto unitEvalDto = dtoList.get(0);
+                // 会自动提升精度
+                if (unitEvalDto.getAvgLibScore() == 0) {
+                    knowledgeUnitVO.setStuDataValue(0.00);
+                } else {
+                    Double avgLibStuScore = unitEvalDto.getAvgLibStuScore();
+                    Double avgLibScore = unitEvalDto.getAvgLibScore();
+                    //Double cal = (avgLibStuScore / avgLibScore) * dataValue;
+                    Double cal = (avgLibStuScore / avgLibScore);
+                    knowledgeUnitVO.setStuDataValue(Double.valueOf(NumberUtil.roundStr(cal, 2)));
+                }
+            }
+            return knowledgeUnitVOList;
+        }, portraitTreadPool);
+    }
+
+
 }
+
