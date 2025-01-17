@@ -33,7 +33,7 @@ public interface AiInStuAnsInfoMapper extends BaseMapper<AiInStuAnsInfo> {
                                        @Param("stuId") String stuId,
                                        @Param("classroomId") String classroomId);
 
-    List<TestPaperInfoVO> getTestPaperInfo(@Param("courseId") String courseId, @Param("search") String search);
+    List<TestPaperInfoVO> getTestPaperInfo(@Param("courseId") String courseId, @Param("search") String search,@Param("classroomId") String classroomId);
 
     String getCourseNameByCourseId(@Param("courseId") String courseId);
 
@@ -76,5 +76,22 @@ public interface AiInStuAnsInfoMapper extends BaseMapper<AiInStuAnsInfo> {
                                     @Param("stuId") String stuId);
 
     String getCourseIdByClassroomId(@Param("classroomId") String classroomId);
+
+    List<KeywordEvalDto> getEvalClassroomKeywordScore(@Param("whitePaperIdList") List<PaperInfoDto> whitePaperIdList,
+                                                      @Param("courseId") String courseId,
+                                                      @Param("stuIdList") List<String> stuIdList,
+                                                      @Param("classroomId") String classroomId);
+
+    List<AbilityEvalDto> getEvalClassroomAbilityScore(@Param("whitePaperIdList") List<PaperInfoDto> whitePaperIdList,
+                                                      @Param("courseId") String courseId,
+                                                      @Param("stuIdList") List<String> stuIdList,
+                                                      @Param("classroomId") String classroomId);
+
+    List<UnitEvalDto> getEvalClassroomUnitScore(@Param("whitePaperIdList") List<PaperInfoDto> whitePaperIdList,
+                                                @Param("courseId") String courseId,
+                                                @Param("stuIdList") List<String> stuIdList,
+                                                @Param("classroomId") String classroomId);
+
+    boolean modifyStudentDynamicState(@Param("classroomStudentId") String classroomStudentId,@Param("dynamicState") Integer dynamicState);
 }
 

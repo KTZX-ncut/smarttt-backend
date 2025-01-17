@@ -119,33 +119,28 @@ public class CourseStudentMangtController {
     @PostMapping("/import")
     @Transactional(rollbackFor = Exception.class)
     public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file, @RequestParam("classroomId") String classRoomId) {
-        try {
-            List<CmClassroomStudent> classroomStudentList = cmClassroomStudentService.importClassRoomStudentExcel(file, classRoomId);
-            // 批量插入
-            cmClassroomStudentService.saveBatch(classroomStudentList);
+        List<CmClassroomStudent> classroomStudentList = cmClassroomStudentService.importClassRoomStudentExcel(file, classRoomId);
+        // 批量插入
+        cmClassroomStudentService.saveBatch(classroomStudentList);
 
-            // 更新 homeworkInfo
-            List<CmClassroomHomeworkinfo> homeworkInfoList = classroomStudentList.stream().map((t) -> {
-                CmClassroomHomeworkinfo homeworkInfo = new CmClassroomHomeworkinfo();
-                homeworkInfo.setClassroomid(t.getClassroomId());
-                homeworkInfo.setStuid(t.getUserId());
-                return homeworkInfo;
-            }).collect(Collectors.toList());
-            classroomHomeworkinfoService.saveBatch(homeworkInfoList);
-            // 更新menu
-            List<CmClassroomClassroommenu> classroomMenuList = classroomStudentList.stream().map((t) -> {
-                CmClassroomClassroommenu classroomMenu = new CmClassroomClassroommenu();
-                classroomMenu.setClassroomid(t.getClassroomId());
-                classroomMenu.setStuid(t.getUserId());
-                return classroomMenu;
-            }).collect(Collectors.toList());
+        // 更新 homeworkInfo
+        List<CmClassroomHomeworkinfo> homeworkInfoList = classroomStudentList.stream().map((t) -> {
+            CmClassroomHomeworkinfo homeworkInfo = new CmClassroomHomeworkinfo();
+            homeworkInfo.setClassroomid(t.getClassroomId());
+            homeworkInfo.setStuid(t.getUserId());
+            return homeworkInfo;
+        }).collect(Collectors.toList());
+        classroomHomeworkinfoService.saveBatch(homeworkInfoList);
+        // 更新menu
+        List<CmClassroomClassroommenu> classroomMenuList = classroomStudentList.stream().map((t) -> {
+            CmClassroomClassroommenu classroomMenu = new CmClassroomClassroommenu();
+            classroomMenu.setClassroomid(t.getClassroomId());
+            classroomMenu.setStuid(t.getUserId());
+            return classroomMenu;
+        }).collect(Collectors.toList());
 
-            classroommenuService.saveBatch(classroomMenuList);
-            return Result.success();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Result.error(400, "文件导入失败");
-        }
+        classroommenuService.saveBatch(classroomMenuList);
+        return Result.success();
     }
 
 

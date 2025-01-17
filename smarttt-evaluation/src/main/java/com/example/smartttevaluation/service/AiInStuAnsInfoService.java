@@ -18,7 +18,7 @@ public interface AiInStuAnsInfoService extends IService<AiInStuAnsInfo> {
     StudentPortraitVO calculateStudentPortrait(List<PaperInfoDto> whitePaperIdList,
                                          String courseId, String stuId, String classroomId);
 
-    List<TestPaperInfoVO> getTestPaperInfo(String courseId, String search);
+    List<TestPaperInfoVO> getTestPaperInfo(String courseId, String search,String classroomId);
 
     List<TestStudentVO> getTestStudentList(String testId);
 
@@ -30,7 +30,7 @@ public interface AiInStuAnsInfoService extends IService<AiInStuAnsInfo> {
                                                    String courseId,
                                                    String classroomId);
 
-    StudentPortraitVO calculateClassroomPortrait(List<PaperInfoDto> whitePaperIdList, String courseId, String classroomId);
+    StudentPortraitVO calculateClassroomPortrait(List<PaperInfoDto> whitePaperIdList, String courseId, String classroomId,List<String> stuIdList);
 
 
     boolean calculatePortrait(CalculatePortraitReq calculatePortraitReq);
@@ -44,4 +44,6 @@ public interface AiInStuAnsInfoService extends IService<AiInStuAnsInfo> {
     String getCourseIdByClassroomId(String classroomId);
 
     List<Integer> getStudentEvalNums(String stuId, String courseId, String classroomId);
+
+    boolean modifyStudentDynamicState(String classroomStudentId,Integer dynamicState);
 }

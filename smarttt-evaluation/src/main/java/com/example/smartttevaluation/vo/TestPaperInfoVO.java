@@ -1,12 +1,14 @@
 package com.example.smartttevaluation.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * 获取课程下的 考试/试卷信息 类
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TestPaperInfoVO {
     /**
      * 考试/作业id
@@ -57,5 +59,11 @@ public class TestPaperInfoVO {
      * 提交时间
      */
     private String createTime;
+
+
+    /**
+     * 试卷类型(1作业2考试)
+     */
+    private String catelog;
 
 }

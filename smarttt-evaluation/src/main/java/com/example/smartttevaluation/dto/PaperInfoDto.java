@@ -7,4 +7,5 @@ import lombok.Data;
 public class PaperInfoDto {
     private String paperId;
     private String createTime;
+    private Integer row;
 }
