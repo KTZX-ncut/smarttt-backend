@@ -16,6 +16,7 @@ import com.example.smartttevaluation.service.AiInStuAnsInfoService;
 import com.example.smartttevaluation.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -387,8 +388,13 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
     }
 
     @Override
-    public boolean modifyStudentDynamicState(String classroomStudentId,Integer dynamicState) {
-        return aiInStuAnsInfoMapper.modifyStudentDynamicState(classroomStudentId,dynamicState);
+    @Transactional
+    public boolean modifyStudentDynamicState(List<StudentDynamicStateReq> studentDynamicStateReqList) {
+        Boolean state = true;
+        for (StudentDynamicStateReq studentDynamicStateReq : studentDynamicStateReqList){
+            state = state & aiInStuAnsInfoMapper.modifyStudentDynamicState(studentDynamicStateReq.getClassroomStudentId(),studentDynamicStateReq.getDynamicState());
+        }
+        return state;
     }
 
 
