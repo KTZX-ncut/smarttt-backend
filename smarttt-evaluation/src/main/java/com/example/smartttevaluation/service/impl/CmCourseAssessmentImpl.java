@@ -15,6 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.example.smartttevaluation.Utils.AuthorizationAspect.getLogIdFromContext;
 import static com.example.smartttevaluation.pojo.CommonFunctions.generateEnhancedID;
 
 @Service
@@ -32,6 +36,9 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
     @Autowired
     private AttainmentEvaluationMapper attainmentEvaluationMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(CmCourseAssessmentImpl.class);
+
+
     @Override
     public Result getAssessmentTable(String courseid) {
         // 判断是不是任课教师调用接口
@@ -39,7 +46,8 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
         if (course == null) {
             courseid = attainmentEvaluationMapper.getCourseByClassroomId(courseid).getId();
         }
-
+        String logId = getLogIdFromContext();
+        logger.info("logId:{},最终ID:courseid={}", logId, courseid);
         CmCourseAssessmentTable cmCourseAssessmentTable = new CmCourseAssessmentTable(new ArrayList<>(), new ArrayList<>(), new JSONObject());
         //处理表头部分
         List<CmCheckitem> cmCourseCheckItems = cmCourseAssessmentMapper.getCourseCheckItem(courseid);
