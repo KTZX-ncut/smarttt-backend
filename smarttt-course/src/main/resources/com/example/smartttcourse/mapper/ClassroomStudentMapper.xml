@@ -13,7 +13,9 @@
                s1.obsname obsname,
                s2.obsName proname,
                st.id stuId,
-               st.stuno
+               st.stuno,
+               cs.dynamic_state as dynamicState,
+               cs.reach_state as reachState
         FROM cm_classroom_student cs
         JOIN sm_obs s1
         ON cs.obsId = s1.id

@@ -21,13 +21,16 @@ public class AuthorizationAspect {
     private StMenusMapper stMenusMapper;
 
     private static final ThreadLocal<Token> tokenThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<String> logIdThreadLocal = new ThreadLocal<>();
 
     @Before("@annotation(authRequired) && args(.., request)")
     public void beforeMethodWithAuthRequired(AuthRequired authRequired, HttpServletRequest request) {
         String stringToken = extractTokenFromRequest(request);
+        String logId = extractLogIdFromRequest(request);
         Token token = parseToken(stringToken,TokenSK);
         // 存储 stringToken 到上下文中
         tokenThreadLocal.set(token);
+        logIdThreadLocal.set(logId);
         // 在这里可以执行其他鉴权逻辑
         String type = authRequired.type();
         if ("admin".equals(type)) {
@@ -55,7 +58,20 @@ public class AuthorizationAspect {
         }
         return token;
     }
+    // 从 HTTP 请求中提取出 logId
 
+    public String extractLogIdFromRequest(HttpServletRequest request) {
+        // 从请求头或请求参数中提取出 token
+        String LogId = request.getHeader("logid");
+        if (LogId == null || LogId.isEmpty()) {
+            LogId = request.getParameter("logid");
+        }
+        return LogId;
+    }
+    // 获取上下文中存储的 logId
+    public static String getLogIdFromContext() {
+        return logIdThreadLocal.get();
+    }
     // 获取上下文中存储的 token
     public static Token getTokenFromContext() {
         return tokenThreadLocal.get();

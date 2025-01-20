@@ -55,7 +55,11 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                 .map(smObs_ex -> new TreeStructure(smObs_ex.getId(), smObs_ex.getPid(), smObs_ex.getOrderno()))
                 .collect(Collectors.toList());
         smObs.setLevelcode(generateLevelCode(generateTreeStructureList(treeStructureList,smObs.getId())));
-        smObsMapper.createOneNewObs(smObs);
+        try{
+            smObsMapper.createOneNewObs(smObs);
+        }catch (Exception e){
+            return Result.error(502,"操作错误，或者名称重复");
+        }
         return Result.success();
     }
 

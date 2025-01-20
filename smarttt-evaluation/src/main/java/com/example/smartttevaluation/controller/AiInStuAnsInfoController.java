@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttevaluation.Utils.TermUtil;
 import com.example.smartttevaluation.dto.CalculatePortraitReq;
 import com.example.smartttevaluation.dto.PaperInfoDto;
+import com.example.smartttevaluation.dto.StudentDynamicStateReq;
 import com.example.smartttevaluation.dto.StudentPortraitReq;
+import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.exception.res.ResponseEnum;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.exception.utils.SmartAssert;
@@ -72,9 +74,10 @@ public class AiInStuAnsInfoController {
      */
     @GetMapping("/testPaperInfo")
     public Result getTestPaperInfo(@RequestParam("courseId") String courseId,
-                                   @RequestParam(value = "search", required = false) String search) {
+                                   @RequestParam(value = "search", required = false) String search,
+                                   @RequestParam(value = "classroomId", required = false) String classroomId) {
         SmartAssert.checkExpression(StrUtil.isNotBlank(courseId), ResponseEnum.COURSE_ID_NOT_NULL);
-        List<TestPaperInfoVO> testPaperInfoVOList = aiInStuAnsInfoService.getTestPaperInfo(courseId, search);
+        List<TestPaperInfoVO> testPaperInfoVOList = aiInStuAnsInfoService.getTestPaperInfo(courseId, search,classroomId);
         return Result.success(testPaperInfoVOList);
     }
 
@@ -157,6 +160,7 @@ public class AiInStuAnsInfoController {
         SmartAssert.checkExpression(Objects.nonNull(total),ResponseEnum.NO_VALID);
         return Result.success(total);
     }
+
     /**
      * 获取学生参与评价次数
      */
@@ -172,4 +176,28 @@ public class AiInStuAnsInfoController {
     }
 
 
+    /**
+     * 修改学生是否参与形成性评价的状态
+     * @param studentDynamicStateReq
+     * 接受的是classroom_student表中的id和dynamic_state
+     * @return
+     */
+    @PutMapping("/modifyStudentDynamicState")
+    Result getStudentEvalNums(@RequestBody List<StudentDynamicStateReq> studentDynamicStateReqList){
+        // 检验数据
+        if(Objects.isNull(studentDynamicStateReqList) || studentDynamicStateReqList.size() == 0){
+            return Result.error("studentDynamicStateReqList不能为空");
+        }
+        for (StudentDynamicStateReq studentDynamicStateReq : studentDynamicStateReqList){
+            SmartAssert.checkExpression(!StrUtil.isBlank(studentDynamicStateReq.getClassroomStudentId()),ResponseEnum.CLASSROOM_STUDENT_ID_IS_NOT_NULL);
+            if(studentDynamicStateReq.getDynamicState() == null){
+                throw new BusinessException("dynamicState不能为空");
+            }
+            if(studentDynamicStateReq.getDynamicState() != 0 && studentDynamicStateReq.getDynamicState() != 1){
+                throw new BusinessException("dynamicState参数只能是0或者1");
+            }
+        }
+        boolean state = aiInStuAnsInfoService.modifyStudentDynamicState(studentDynamicStateReqList);
+        return Result.success(state);
+    }
 }

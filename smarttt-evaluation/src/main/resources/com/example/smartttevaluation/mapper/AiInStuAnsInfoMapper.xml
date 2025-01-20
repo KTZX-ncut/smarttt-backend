@@ -25,10 +25,16 @@
         <result property="updatetime" column="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <update id="modifyStudentDynamicState">
+        UPDATE cm_classroom_student
+        SET dynamic_state = #{dynamicState}
+        WHERE id = #{classroomStudentId}
+    </update>
+
     <select id="getPaperInfoListByIds" parameterType="list" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
-        SELECT id as paperId, createTime
-        FROM pm_testpaper
-        WHERE id in
+        SELECT id as paperId, create_time as createTime,`row`
+        FROM ai_calculate_paper
+        WHERE paper_id in
         <foreach collection="paperIdList" separator="," open="(" close=")" item="id">
             #{id}
         </foreach>
@@ -140,8 +146,11 @@
         JOIN (SELECT id, username as creator FROM st_users) temp
         ON temp.id = b.creatorId
         <where>
-            b.status = 1 <!--只查已经发布的考试-->
-            AND a.courseId = #{courseId}
+                b.status = 1 <!--只查已经发布的考试-->
+                AND a.courseId = #{courseId}
+            <if test="classroomId != null and classroomId != ''">
+                AND a.id = #{classroomId}
+            </if>
             <if test="search != null and search != ''">
                 AND (b.name LIKE CONCAT('%', #{search}, '%')
                 OR b.paperName LIKE CONCAT('%', #{search}, '%')
@@ -284,14 +293,14 @@
 
     <select id="getStuIdListByClassroomId" resultType="java.lang.String">
         SELECT userId FROM cm_classroom_student
-        WHERE classroomId = #{classroomId};
+        WHERE classroomId = #{classroomId}
+        AND dynamic_state = 1
     </select>
 
     <select id="getPaperInfoListByClassroomId" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
-        SELECT id as paperId, createTime
-        FROM pm_testpaper
-        WHERE classroomId = #{classroomId}
-              AND status = 1
+        SELECT paper_id as paperId, create_time createTime,`row`
+        FROM ai_calculate_paper
+        WHERE classroom_id = #{classroomId}
     </select>
     <select id="isExistStudent" resultType="java.lang.String">
         SELECT id FROM cm_classroom_student
@@ -316,6 +325,67 @@
     <select id="getCourseIdByClassroomId" resultType="java.lang.String">
         SELECT courseId FROM cm_classroom
         WHERE id = #{classroomId}
+    </select>
+
+
+
+    <!--计算整个课堂的形成行评价-->
+    <select id="getEvalClassroomKeywordScore" resultType="com.example.smartttevaluation.dto.KeywordEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.keywordid as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_kwadict b
+        ON a.kwaId = b.id
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        AND a.stuId IN
+        <foreach collection="stuIdList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.keywordid
+    </select>
+    <select id="getEvalClassroomAbilityScore" resultType="com.example.smartttevaluation.dto.AbilityEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.abilityid as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_kwadict b
+        ON a.kwaId = b.id
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        AND a.stuId IN
+        <foreach collection="stuIdList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.abilityid
+    </select>
+    <select id="getEvalClassroomUnitScore" resultType="com.example.smartttevaluation.dto.UnitEvalDto">
+        SELECT AVG(a.libScore) as avgLibScore,
+        AVG(a.libStuScore) as avgLibStuScore,
+        b.unitId as id
+        FROM ai_in_stu_ans_info a
+        JOIN cm_course_unit_kwa b
+        ON a.kwaId = b.kwaId
+        WHERE a.paperId IN
+        <foreach collection="whitePaperIdList" separator="," open="(" close=")" item="item">
+            #{item.paperId}
+        </foreach>
+        AND a.courseId = #{courseId}
+        AND a.stuId IN
+        <foreach collection="stuIdList" separator="," open="(" close=")" item="item">
+            #{item}
+        </foreach>
+        AND a.classroomId = #{classroomId}
+        GROUP BY b.unitId
     </select>
 
 

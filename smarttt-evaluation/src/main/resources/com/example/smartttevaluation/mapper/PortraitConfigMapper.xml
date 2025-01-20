@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.PortraitConfigMapper">
+
+    <insert id="saveConfPaper" parameterType="java.util.List">
+        INSERT INTO ai_calculate_paper (
+        paper_id,
+        classroom_id,
+        test_id,
+        course_name,
+        classroom_name,
+        paper_name,
+        test_name,
+        catelog,
+        creator,
+        create_time,
+        `row`
+        ) VALUES
+        <foreach collection="calculatePaperList" item="item" separator=",">
+            (
+            #{item.paperId},
+            #{item.classroomId},
+            #{item.testId},
+            #{item.courseName},
+            #{item.classroomName},
+            #{item.paperName},
+            #{item.testName},
+            #{item.catelog},
+            #{item.creator},
+            #{item.createTime},
+            #{item.row}
+            )
+        </foreach>
+    </insert>
+    <update id="updateConfTestInfoListRow">
+        UPDATE ai_calculate_paper
+        SET `row` = #{row}
+        WHERE id = #{id}
+    </update>
+    <delete id="removeConfPaperByIds">
+        DELETE FROM ai_calculate_paper
+        WHERE id IN
+        <foreach collection="idList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <select id="getTestPaperInfo" resultType="com.example.smartttevaluation.vo.TestPaperInfoVO">
+        SELECT a.id as paperId,
+               b.id as testId,
+               b.name as testName,
+               a.name as paperName,
+               a.classroomName as classroomName,
+               a.courseName as courseName,
+               a.creatorId as creatorId,
+               (SELECT username FROM st_users WHERE id = a.creatorId) as creator,
+               a.createTime as createTime,
+               a.catelog as catelog,
+               a.classroomId as classroomId
+        FROM pm_testpaper a
+                 JOIN pm_test b
+                      ON a.id = b.paperId
+        WHERE a.classroomId = #{classroomId}
+          AND a.`status` = 1
+          AND a.locked = 0
+    </select>
+    <select id="getMaxRow" resultType="java.lang.Integer">
+        SELECT MAX(`row`) FROM ai_calculate_paper
+        WHERE classroom_id = #{classroomId}
+    </select>
+    <select id="getConfTestInfoList" resultType="com.example.smartttevaluation.pojo.CalculatePaper">
+        SELECT id,
+               paper_id as paperId,
+               classroom_id as classroomId,
+               test_id as testId,
+               course_name as courseName,
+               classroom_name as classroomName,
+               paper_name as paperName,
+               test_name as testName,
+               catelog,
+               creator,
+               create_time as createTime,
+               `row`
+        FROM ai_calculate_paper
+        WHERE classroom_id = #{classroomId}
+        Order By `row`
+    </select>
+</mapper>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttcourse.dto.StudentInfoDto;
 import com.example.smartttcourse.dto.StudentTree;
+import com.example.smartttcourse.exception.cus.BusinessException;
 import com.example.smartttcourse.exception.res.ResponseEnum;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.exception.utils.SmartAssert;
@@ -149,6 +150,10 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 QueryWrapper<SmStudent> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("stuno", stuno);
                 SmStudent student = smStudentService.getOne(queryWrapper);
+                if(Objects.equals(student, null)){
+                    // 本系统中没有注册这个学生
+                    throw new BusinessException("本系统中没有注册这个学生");
+                }
                 // 判断班级里面有没有这个学生
                 LambdaQueryWrapper<CmClassroomStudent> wrapper = new LambdaQueryWrapper<>();
                 wrapper.eq(CmClassroomStudent::getUserId, student.getUsersid())
@@ -156,7 +161,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 Integer count = baseMapper.selectCount(wrapper);
                 if (count != 0) {
                     // 说明该班级存在这个学生了,抛出异常
-                    throw new RuntimeException();
+                    throw new BusinessException("该班级已经存在" + student.getUsersid() + "了");
                 }
                 classroomStudent.setUserId(student.getUsersid());
                 classroomStudent.setObsId(student.getObsid());
