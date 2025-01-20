@@ -183,15 +183,21 @@ public class AiInStuAnsInfoController {
      * @return
      */
     @PutMapping("/modifyStudentDynamicState")
-    Result getStudentEvalNums(@RequestBody StudentDynamicStateReq studentDynamicStateReq){
-        SmartAssert.checkExpression(!StrUtil.isBlank(studentDynamicStateReq.getClassroomStudentId()), ResponseEnum.CLASSROOM_STUDENT_ID_IS_NOT_NULL);
-        if(studentDynamicStateReq.getDynamicState() == null){
-            throw new BusinessException("dynamicState不能为空");
+    Result getStudentEvalNums(@RequestBody List<StudentDynamicStateReq> studentDynamicStateReqList){
+        // 检验数据
+        if(Objects.isNull(studentDynamicStateReqList) || studentDynamicStateReqList.size() == 0){
+            return Result.error("studentDynamicStateReqList不能为空");
         }
-        if(studentDynamicStateReq.getDynamicState() != 0 && studentDynamicStateReq.getDynamicState() != 1){
-            throw new BusinessException("dynamicState参数只能是0或者1");
+        for (StudentDynamicStateReq studentDynamicStateReq : studentDynamicStateReqList){
+            SmartAssert.checkExpression(!StrUtil.isBlank(studentDynamicStateReq.getClassroomStudentId()),ResponseEnum.CLASSROOM_STUDENT_ID_IS_NOT_NULL);
+            if(studentDynamicStateReq.getDynamicState() == null){
+                throw new BusinessException("dynamicState不能为空");
+            }
+            if(studentDynamicStateReq.getDynamicState() != 0 && studentDynamicStateReq.getDynamicState() != 1){
+                throw new BusinessException("dynamicState参数只能是0或者1");
+            }
         }
-        boolean state = aiInStuAnsInfoService.modifyStudentDynamicState(studentDynamicStateReq.getClassroomStudentId(),studentDynamicStateReq.getDynamicState());
+        boolean state = aiInStuAnsInfoService.modifyStudentDynamicState(studentDynamicStateReqList);
         return Result.success(state);
     }
 }
