@@ -67,5 +67,5 @@ public interface CmCoursetargetMapper {
     /**
      * 根据kwaid删除课程目标的kwa
      */
-    void deleteKwasByKwaIds(@Param("kwaIds") List<String> kwaIds);
+    void deleteTargetKwaByKwaIds(@Param("kwaIds") List<String> kwaIds);
 }

@@ -24,7 +24,7 @@ public interface AttainmentEvaluationMapper {
             "inner join cm_classroom ccla on ccs.classroomId = ccla.id " +
             "inner join cm_course ccou on ccla.courseId = ccou.id " +
             "inner join cm_profession cp on ccou.professionId = cp.obsid " +
-            "where ccs.classroomId = #{classroomId} order by ccs.rowNo")
+            "where ccs.classroomId = #{classroomId} order by st.stuno")
     List<CmAssessmentStudent> getClassroomStuList(String classroomId);
 
     /**

@@ -68,4 +68,10 @@ public interface CmAbilityMapper {
 
     @Select("select * from cm_kwadict where abilityid=#{abilityId}")
     List<CmKwadict> getAllKwaByAbilityId(String abilityId);
+
+    /**
+     * 获取单个能力信息
+     */
+    @Select("select * from cm_ability where id = #{id}")
+    CmAbility getOneAbility(String id);
 }

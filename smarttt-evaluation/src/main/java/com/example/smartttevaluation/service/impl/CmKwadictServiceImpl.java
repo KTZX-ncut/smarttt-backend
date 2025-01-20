@@ -7,6 +7,7 @@ import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.service.CmKwadictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,10 +60,14 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     public Result deleteKwadictByIds(List<String> ids) {
         cmKwadictMapper.deleteKwadictByIds(ids);
         // 删除kwa时同时把知识单元和课程目标以及知识能力图谱的连线中与这个kwa关联的记录删除
-        cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByKwaIds(ids);
-        cmCoursetargetMapper.deleteKwasByKwaIds(ids);
-        cmLinesMapper.deleteLinesByKwaIds(ids);
+        deleteAssociateKwa(ids);
         return Result.success();
+    }
+
+    public void deleteAssociateKwa(List<String> ids) {
+        cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByKwaIds(ids);
+        cmCoursetargetMapper.deleteTargetKwaByKwaIds(ids);
+        cmLinesMapper.deleteLinesByKwaIds(ids);
     }
 
     /**
