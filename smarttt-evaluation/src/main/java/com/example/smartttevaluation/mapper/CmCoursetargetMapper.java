@@ -57,7 +57,9 @@ public interface CmCoursetargetMapper {
     /**
      * 根据课程目标id和kwaid新增课程目标的kwa
      */
-    void createKwasByTargetIdAndKwaId(@Param("cmCoursetarget") CmCoursetarget cmCoursetarget);
+    @Insert("insert into cm_course_target_kwa(id, kwaId, targetId, obsId) values" +
+            "(#{id}, #{kwaId}, #{targetId}, #{courseId})")
+    void createKwasByTargetIdAndKwaId(@Param("id") String id, @Param("kwaId") String kwaId, @Param("targetId") String targetId, @Param("courseId") String courseId);
 
     /**
      * 根据课程目标id和kwaid删除课程目标的kwa

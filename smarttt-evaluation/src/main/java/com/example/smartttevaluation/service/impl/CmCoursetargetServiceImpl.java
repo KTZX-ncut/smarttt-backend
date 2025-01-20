@@ -75,7 +75,12 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
      * 根据课程目标id和kwaid新增课程目标的kwa
      */
     public Result createKwasByTargetIdAndKwaId(CmCoursetarget cmCoursetarget) {
-        cmCoursetargetMapper.createKwasByTargetIdAndKwaId(cmCoursetarget);
+        String targetId = cmCoursetarget.getId();
+        String courseId = cmCoursetarget.getCourseid();
+        for (CmKwadict kwa : cmCoursetarget.getKwas()) {
+            String id = generateEnhancedID("cm_course_target_kwa");
+            cmCoursetargetMapper.createKwasByTargetIdAndKwaId(id, kwa.getId(), targetId, courseId);
+        }
         return Result.success();
     }
 }
