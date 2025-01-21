@@ -16,6 +16,7 @@ import com.example.smartttevaluation.dto.*;
 import com.example.smartttevaluation.mapper.CmAbilityMapper;
 import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -56,12 +57,22 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 批量删除
      */
     @Override
+    @Transactional
     public Result deleteAbilityByIDs(List<String> ids) {
         List<CmAbility> cmAbilityList = cmAbilityMapper.getCmAbilityByIDs(ids);
         if (cmAbilityList.size() < ids.size()) return Result.error(404, "批量删除能力出错");
+        boolean isValid = true;
+        for (String id : ids) {
+            if (cmAbilityMapper.checkKWAByAbilityId(id) != 0) {
+                isValid = false;
+                break;
+            }
+        }
+        if (!isValid) return Result.error("此或其下属能力有课程的kwa使用，禁止删除");
         for (String id : ids) {
             cmAbilityMapper.updateBrotherAbilityOrderNo(id);
             cmAbilityMapper.deleteAbilityByID(id);
+//            cmAbilityMapper.deleteGetabilityById(id);
         }
         return Result.success();
     }

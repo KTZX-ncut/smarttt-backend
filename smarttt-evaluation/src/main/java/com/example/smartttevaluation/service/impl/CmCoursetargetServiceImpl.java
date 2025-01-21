@@ -1,11 +1,13 @@
 package com.example.smartttevaluation.service.impl;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
+import com.example.smartttevaluation.mapper.CmCourseAssessmentMapper;
 import com.example.smartttevaluation.mapper.CmCoursetargetMapper;
 import com.example.smartttevaluation.pojo.*;
 import com.example.smartttevaluation.service.CmCoursetargetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +21,8 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
     private CmCoursetargetMapper cmCoursetargetMapper;
     @Autowired
     private AttainmentEvaluationMapper attainmentEvaluationMapper;
+    @Autowired
+    private CmCourseAssessmentMapper cmCourseAssessmentMapper;
     /**
      *获取课程目标
      */
@@ -57,15 +61,19 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
     /**
      *批量删除课程目标
      */
+    @Override
     public Result deleteCoursetargetByIds(List<String> ids){
         cmCoursetargetMapper.deleteCoursetargetByIds(ids);
         cmCoursetargetMapper.deleteKwasByTargetIds(ids);
+        cmCourseAssessmentMapper.deleteStandardScoreByTargetId(ids);
         return Result.success();
     }
 
     /**
      * 根据课程目标id和kwaid删除课程目标的kwa
      */
+    @Override
+    @Transactional
     public Result deleteKwasByTargetIdAndKwaId(CmCoursetarget cmCoursetarget) {
         cmCoursetargetMapper.deleteKwasByTargetIdAndKwaId(cmCoursetarget);
         return Result.success();
@@ -74,6 +82,7 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
     /**
      * 根据课程目标id和kwaid新增课程目标的kwa
      */
+    @Override
     public Result createKwasByTargetIdAndKwaId(CmCoursetarget cmCoursetarget) {
         String targetId = cmCoursetarget.getId();
         String courseId = cmCoursetarget.getCourseid();

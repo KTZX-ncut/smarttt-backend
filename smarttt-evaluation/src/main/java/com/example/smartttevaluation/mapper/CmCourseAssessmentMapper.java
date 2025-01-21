@@ -76,4 +76,9 @@ public interface CmCourseAssessmentMapper {
             "inner join sm_student ss on ss.stuno = ccafd.stuno " +
             "where ccafd.fileId = #{fileId} and ss.usersid = #{stuId}")
     float getUploadFileScore(@Param("fileId") String fileId, @Param("stuId") String stuId);
+
+    /**
+     * 根据课程目标id删除考核项分数条目
+     */
+    void deleteStandardScoreByTargetId(@Param("ids") List<String> ids);
 }

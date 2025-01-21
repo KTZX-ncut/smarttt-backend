@@ -60,7 +60,7 @@
         and obsId = #{cmCoursetarget.courseid} and targetId = #{cmCoursetarget.id}
     </delete>
 
-    <delete id="deleteKwasByKwaIds">
+    <delete id="deleteTargetKwaByKwaIds">
         delete from cm_course_target_kwa where kwaId in
         <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
             #{kwaId}
