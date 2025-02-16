@@ -39,6 +39,11 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
     @Override
     public Result createOneObs(SmObs smObs) {
+        // 防止新建的机构深度不合法
+        long obsdeep = smObs.getObsdeep();
+        long maxDeep = smObsMapper.checkMaxObsdeep();
+        if(obsdeep > maxDeep) return Result.error("超出最大层级\"" + maxDeep + "\"");
+
         if(smObs.getId() == null|| smObs.getId().isEmpty())smObs.setId(generateEnhancedID("sm_obs"));
         //获取兄弟的最大值,然后+1就是orderno
         long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);

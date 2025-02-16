@@ -3,6 +3,7 @@ package com.example.smartttevaluation.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.smartttevaluation.dto.CalculatePortraitReq;
 import com.example.smartttevaluation.dto.PaperInfoDto;
+import com.example.smartttevaluation.dto.StudentDynamicStateReq;
 import com.example.smartttevaluation.pojo.AiInStuAnsInfo;
 import com.example.smartttevaluation.vo.*;
 
@@ -45,5 +46,5 @@ public interface AiInStuAnsInfoService extends IService<AiInStuAnsInfo> {
 
     List<Integer> getStudentEvalNums(String stuId, String courseId, String classroomId);
 
-    boolean modifyStudentDynamicState(String classroomStudentId,Integer dynamicState);
+    boolean modifyStudentDynamicState(List<StudentDynamicStateReq> studentDynamicStateReqList);
 }

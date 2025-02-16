@@ -17,14 +17,13 @@ public interface AttainmentEvaluationMapper {
     /**
      * 获取课堂中学生的信息
      */
-    @Select("select su.id, ccs.rowNo, st.stuno, su.username, su.loginname, so.obsname as className, cp.proname from cm_classroom_student ccs " +
+    @Select("select su.id, ccs.rowNo, st.stuno, su.username, su.loginname, so.obsname as className, ccs.reach_state as evaluationState from cm_classroom_student ccs " +
             "inner join sm_student st on st.usersid = ccs.userid " +
             "inner join st_users su on su.id = ccs.userId " +
             "inner join sm_obs so on ccs.obsId = so.id " +
             "inner join cm_classroom ccla on ccs.classroomId = ccla.id " +
             "inner join cm_course ccou on ccla.courseId = ccou.id " +
-            "inner join cm_profession cp on ccou.professionId = cp.obsid " +
-            "where ccs.classroomId = #{classroomId} order by ccs.rowNo")
+            "where ccs.classroomId = #{classroomId} order by st.stuno")
     List<CmAssessmentStudent> getClassroomStuList(String classroomId);
 
     /**

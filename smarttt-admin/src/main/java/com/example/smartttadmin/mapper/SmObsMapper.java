@@ -26,8 +26,6 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Delete("delete from sm_obs where id = #{id}")
     void deleteObsByID(String id);
 
-
-
     @Select("select * from sm_obs")
     List<SmObsTree> getAllSmObsTree();
     @Select("select * from sm_obs")
@@ -123,6 +121,12 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     long checkProfession(long obsdeep);
 
     void deleteObsByPid( @Param("id") String id);
+
+    /**
+     * 查询最大的obsdeep
+     */
+    @Select("select max(obsdeep) from st_level")
+    long checkMaxObsdeep();
 
     void deleteObsByIDs(@Param("ids") List<String> ids);
 }

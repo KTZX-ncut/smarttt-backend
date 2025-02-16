@@ -1,7 +1,10 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.exception.res.Result;
+import com.example.smartttevaluation.mapper.CmGetabilityMapper;
+import com.example.smartttevaluation.mapper.CmKeywordsMapper;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
+import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.pojo.CmKwadict;
 import com.example.smartttevaluation.pojo.CommonFunctions;
 import com.example.smartttevaluation.service.CmAbilityService;
@@ -13,6 +16,7 @@ import com.example.smartttevaluation.dto.*;
 import com.example.smartttevaluation.mapper.CmAbilityMapper;
 import com.example.smartttevaluation.pojo.CmAbility;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -22,6 +26,10 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     private CmAbilityMapper cmAbilityMapper;
     @Autowired
     private CmKwadictMapper cmKwadictMapper;
+    @Autowired
+    private CmKeywordsMapper cmKeywordsMapper;
+    @Autowired
+    private CmGetabilityMapper cmGetabilityMapper;
 
 
     /**
@@ -49,12 +57,22 @@ public class CmAbilityServiceImpl implements CmAbilityService {
      * 批量删除
      */
     @Override
+    @Transactional
     public Result deleteAbilityByIDs(List<String> ids) {
         List<CmAbility> cmAbilityList = cmAbilityMapper.getCmAbilityByIDs(ids);
         if (cmAbilityList.size() < ids.size()) return Result.error(404, "批量删除能力出错");
+        boolean isValid = true;
+        for (String id : ids) {
+            if (cmAbilityMapper.checkKWAByAbilityId(id) != 0) {
+                isValid = false;
+                break;
+            }
+        }
+        if (!isValid) return Result.error("此或其下属能力有课程的kwa使用，禁止删除");
         for (String id : ids) {
             cmAbilityMapper.updateBrotherAbilityOrderNo(id);
             cmAbilityMapper.deleteAbilityByID(id);
+//            cmAbilityMapper.deleteGetabilityById(id);
         }
         return Result.success();
     }
@@ -65,12 +83,10 @@ public class CmAbilityServiceImpl implements CmAbilityService {
 
         // 获取与这个能力相关的所有kwa
         List<CmKwadict> kwas = cmAbilityMapper.getAllKwaByAbilityId(cmAbility.getId());
-        kwas.forEach(kwa -> {
-            String oldName = kwa.getName();
-            String[] part = oldName.split("-", 2);
-            // 更新kwa的名称
-            kwa.setName(part[0] + "-" + cmAbility.getName());
-        });
+        for(CmKwadict kwa : kwas) {
+            CmKeywords keyword = cmKeywordsMapper.getOneKeyword(kwa.getKeywordid());
+            kwa.setName(keyword.getName() + "-" + cmAbility.getName());
+        }
         // 更新有关的kwa
         kwas.forEach(kwa -> {
             cmKwadictMapper.updateKwadictByID(kwa);

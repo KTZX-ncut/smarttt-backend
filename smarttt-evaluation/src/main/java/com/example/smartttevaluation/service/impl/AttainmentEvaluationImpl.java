@@ -223,6 +223,7 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
         }
 
         for (CmAssessmentStudent stu : studentList) {
+            if (stu.getEvaluationState() == 0) continue;
             for (CmCoursetarget target : targets) {
                 // 存储当前课程目标的达成度
                 float targetAchievement = 0;
