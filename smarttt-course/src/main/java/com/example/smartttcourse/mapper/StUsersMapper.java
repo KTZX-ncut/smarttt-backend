@@ -45,6 +45,6 @@ public interface StUsersMapper{
     @Select("SELECT loginname FROM st_users WHERE id=#{id}")
     String getloginNameById(@Param("id") String id);
 
-    @Update("update st_roleuser set userid = #{teacherId} where obsid = #{id}")
+    @Update("update st_roleuser set userid = #{teacherId} where obsid = #{id} and roleid = #{remark}")
     void updateClassroomTeacher(CmClassroom classroom);
 }

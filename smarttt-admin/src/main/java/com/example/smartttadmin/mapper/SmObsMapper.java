@@ -62,6 +62,9 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Select("select orderno from sm_obs where pid = #{pid}")
     List<Long> getSmObsListByPid(String pid);
 
+    @Select("select id from sm_obs where pid = #{pid}")
+    List<String> getSmObsIdByPid(String pid);
+
     @Update("UPDATE sm_obs o1\n" +
             "JOIN (SELECT pid, orderno FROM sm_obs WHERE id = #{id}) o2 ON o1.pid = o2.pid\n" +
             "SET o1.orderno = o1.orderno - 1\n" +
@@ -124,4 +127,6 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
      */
     @Select("select max(obsdeep) from st_level")
     long checkMaxObsdeep();
+
+    void deleteObsByIDs(@Param("ids") List<String> ids);
 }
