@@ -22,4 +22,6 @@ public interface CmClassRoomService {
     String getCourseIdByClassroomId(String classroomId);
 
     List<String> getClassroomIdByCourseId(String courseId);
+
+    Result getClassroomListByClassroomId(String classroomId);
 }

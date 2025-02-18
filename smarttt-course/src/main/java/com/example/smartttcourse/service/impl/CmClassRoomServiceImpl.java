@@ -86,4 +86,10 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     public List<String> getClassroomIdByCourseId(String courseId) {
         return cmClassRoomMapper.getClassroomIdByCourseId(courseId);
     }
+
+    @Override
+    public Result getClassroomListByClassroomId(String classroomId) {
+        String courseId = cmClassRoomMapper.getCourseIdByClassroomId(classroomId);
+        return Result.success(cmClassRoomMapper.getClassroomInfo(courseId));
+    }
 }

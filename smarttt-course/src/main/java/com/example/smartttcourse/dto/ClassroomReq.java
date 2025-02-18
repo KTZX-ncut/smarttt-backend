@@ -26,4 +26,7 @@ public class ClassroomReq {
     private long teachTime;
     private long labTime;
     private long practiceTime;
+    private String courseChineseName;
+    private String professionName;
+    private String assistantName;
 }

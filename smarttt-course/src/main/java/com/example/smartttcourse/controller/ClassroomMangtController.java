@@ -61,4 +61,14 @@ public class ClassroomMangtController {
         return smObsService.getObsRPList(obsID);
     }
 
+    /**
+     * 实验教师获取当前课程下所有的实验课堂
+     */
+    @GetMapping("/getClassroomListByClassroomId")
+    @AuthRequired(type = "admin", menu = "531500340-c860b4c0-743a-40cd-a215-c4b22e351531", isReadOnly = true)
+    public Result getClassroomListByClassroomId(HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        String classroomId = token.getObsid();
+        return cmClassRoomService.getClassroomListByClassroomId(classroomId);
+    }
 }
