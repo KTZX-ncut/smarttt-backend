@@ -71,6 +71,7 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
         classroom.setRemark(classroomRoleId);
         stUsersMapper.updateClassroomTeacher(classroom);
         classroom.setRemark(labRoleId);
+        classroom.setTeacherId(classroom.getLabTeacherId());
         stUsersMapper.updateClassroomTeacher(classroom);
         return Result.success();
     }
