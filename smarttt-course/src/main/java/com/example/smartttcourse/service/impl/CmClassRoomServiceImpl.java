@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.example.smartttcourse.Utils.CommonFunctions.classroomRoleId;
-import static com.example.smartttcourse.Utils.CommonFunctions.generateEnhancedID;
+import static com.example.smartttcourse.Utils.CommonFunctions.*;
 
 @Service
 public class CmClassRoomServiceImpl implements CmClassRoomService {
@@ -52,6 +51,11 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
         cmClassRoomMapper.createClassroom(classroom);
         StRoleUser stRoleUser = new StRoleUser(generateEnhancedID("st_roleuser"),classroom.getTeacherId(),classroomRoleId,classroom.getId(),-1, LocalDate.now().toString(),null);
         stUsersMapper.createOneRoleUser(stRoleUser);
+        //新增实验教师角色
+        stRoleUser.setRoleid(labRoleId);
+        stRoleUser.setId(generateEnhancedID("st_roleuser"));
+        stRoleUser.setCreatetime(LocalDate.now().toString());
+        stUsersMapper.createOneRoleUser(stRoleUser);
         return Result.success();
     }
 
@@ -63,6 +67,9 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     @Override
     public Result updateOneClassroom(CmClassroom classroom) {
         cmClassRoomMapper.updateOneClassroom(classroom);
+        classroom.setRemark(classroomRoleId);
+        stUsersMapper.updateClassroomTeacher(classroom);
+        classroom.setRemark(labRoleId);
         stUsersMapper.updateClassroomTeacher(classroom);
         return Result.success();
     }
