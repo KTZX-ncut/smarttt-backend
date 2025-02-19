@@ -3,10 +3,7 @@ package com.example.smartttevaluation.mapper;
 import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmGetability;
 import com.example.smartttevaluation.pojo.CmKwadict;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -33,6 +30,7 @@ public interface CmGetabilityMapper {
      *删除能力
      */
     void deleteGetabilityByIDs(@Param("courseid") String courseid ,@Param("ids") List<String> ids);
+
 /*
     //更新能力
     void updateGetabilityByID(CmGetability cmGetability);

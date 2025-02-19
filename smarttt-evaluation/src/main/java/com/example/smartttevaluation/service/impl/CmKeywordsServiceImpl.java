@@ -2,8 +2,10 @@ package com.example.smartttevaluation.service.impl;
 
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
+import com.example.smartttevaluation.mapper.CmAbilityMapper;
 import com.example.smartttevaluation.mapper.CmKeywordsMapper;
 import com.example.smartttevaluation.mapper.CmKwadictMapper;
+import com.example.smartttevaluation.pojo.CmAbility;
 import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmKeywords;
 import com.example.smartttevaluation.pojo.CmKwadict;
@@ -29,6 +31,8 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
     private CmKwadictMapper cmKwadictMapper;
     @Autowired
     private AttainmentEvaluationMapper attainmentEvaluationMapper;
+    @Autowired
+    private CmAbilityMapper cmAbilityMapper;
 
     /**
      * 获取关键字
@@ -74,11 +78,10 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
         ids.add(cmKeywords.getId());
         List<CmKwadict> kwas = cmKeywordsMapper.getKwaByKeywordsId(ids);
         // 对每个关联的kwa的name字段的keyword部分更新
-        kwas.forEach(kwa -> {
-            String oldName = kwa.getName();
-            String[] part = oldName.split("-", 2);
-            kwa.setName(cmKeywords.getName() + "-" + part[1]);
-        });
+        for(CmKwadict kwa : kwas) {
+            CmAbility ability = cmAbilityMapper.getOneAbility(kwa.getAbilityid());
+            kwa.setName(cmKeywords.getName() + "-" + ability.getName());
+        }
 
         kwas.forEach(kwa -> {
             cmKwadictMapper.updateKwadictByID(kwa);

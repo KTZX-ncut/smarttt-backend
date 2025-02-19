@@ -80,4 +80,10 @@
     <delete id="deleteObsByPid" parameterType="string">
         DELETE FROM sm_obs WHERE pid = #{id}
     </delete>
+    <delete id="deleteObsByIDs">
+        delete from sm_obs where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

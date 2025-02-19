@@ -39,6 +39,11 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
     @Override
     public Result createOneObs(SmObs smObs) {
+        // 防止新建的机构深度不合法
+        long obsdeep = smObs.getObsdeep();
+        long maxDeep = smObsMapper.checkMaxObsdeep();
+        if(obsdeep > maxDeep) return Result.error("超出最大层级\"" + maxDeep + "\"");
+
         if(smObs.getId() == null|| smObs.getId().isEmpty())smObs.setId(generateEnhancedID("sm_obs"));
         //获取兄弟的最大值,然后+1就是orderno
         long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
@@ -72,12 +77,23 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     public Result deleteObssByIDS(List<String> ids) {
         List<SmObs> smObsList = smObsMapper.getSmObsByIDs(ids);
         if(smObsList.size()<ids.size())return Result.error(404,"批量删除教学单位出错");
-        for(String id:ids){
-            smObsMapper.updateBrotherObsOrderNo(id);
-            //  删除pid为当前节点的id的所有节点
-            smObsMapper.deleteObsByPid(id);
-            // 删除当前节点
-            smObsMapper.deleteObsByID(id);
+        //按照从大到小排序
+        try{
+            smObsList.sort((o1, o2) -> Long.compare(o2.getObsdeep(), o1.getObsdeep()));
+            List<String> deleteList = new LinkedList<>();
+            for (SmObs smObs : smObsList){
+                Queue<String> queue = new LinkedList<>();
+                queue.add(smObs.getId());
+                while(!queue.isEmpty()){
+                    String now = queue.poll();
+                    deleteList.add(now);
+                    List<String> childId = smObsMapper.getSmObsIdByPid(now);
+                    queue.addAll(childId);
+                }
+            }
+            smObsMapper.deleteObsByIDs(deleteList);
+        }catch (Exception e){
+            return Result.error("删除错误");
         }
         return Result.success();
     }

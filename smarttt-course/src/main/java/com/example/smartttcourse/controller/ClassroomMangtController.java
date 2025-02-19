@@ -30,7 +30,7 @@ public class ClassroomMangtController {
     @AuthRequired(type = "admin",menu = "531500340-074abac7-fe4c-4908-aa7e-d72dacd94014",isReadOnly = true)
     public Result getClassRoomList(HttpServletRequest request){
         Token token = getTokenFromContext();
-        System.out.println(token.getObsid());
+//        System.out.println(token.getObsid());
         return cmClassRoomService.getClassRoomList(token);
     }
 

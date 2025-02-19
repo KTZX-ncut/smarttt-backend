@@ -44,13 +44,13 @@
         </foreach>
     </delete>
 
-    <insert id="createKwasByTargetIdAndKwaId">
-        insert into cm_course_target_kwa(kwaId, targetId, obsId)
-        values
-        <foreach collection="cmCoursetarget.kwas" item="kwa" separator=",">
-            (#{kwa.id}, #{cmCoursetarget.id}, #{cmCoursetarget.courseid})
-        </foreach>
-    </insert>
+<!--    <insert id="createKwasByTargetIdAndKwaId">-->
+<!--        insert into cm_course_target_kwa(kwaId, targetId, obsId)-->
+<!--        values-->
+<!--        <foreach collection="cmCoursetarget.kwas" item="kwa" separator=",">-->
+<!--            (#{kwa.id}, #{cmCoursetarget.id}, #{cmCoursetarget.courseid})-->
+<!--        </foreach>-->
+<!--    </insert>-->
 
     <delete id="deleteKwasByTargetIdAndKwaId">
         delete from cm_course_target_kwa where kwaId in
@@ -60,7 +60,7 @@
         and obsId = #{cmCoursetarget.courseid} and targetId = #{cmCoursetarget.id}
     </delete>
 
-    <delete id="deleteKwasByKwaIds">
+    <delete id="deleteTargetKwaByKwaIds">
         delete from cm_course_target_kwa where kwaId in
         <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
             #{kwaId}

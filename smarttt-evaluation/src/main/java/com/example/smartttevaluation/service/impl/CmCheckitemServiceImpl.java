@@ -10,6 +10,7 @@ import com.example.smartttevaluation.pojo.CommonFunctions;
 import com.example.smartttevaluation.service.CmCheckitemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +45,7 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
      * 批量删除
      */
     @Override
+    @Transactional
     public Result deleteCheckitemByIDs(List<String> ids, String obsId) {
         List<CmCheckitem> cmCheckitemList = cmCheckitemMapper.getCmCheckitemByIDs(ids);
         if (cmCheckitemList.size() < ids.size()) return Result.error(404, "批量删除出错");
@@ -52,6 +54,7 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
             cmCheckitemMapper.updateBrotherCheckitemOrderNo(id);
             cmCheckitemMapper.deleteCheckitemByID(id);
             cmCheckitemMapper.deleteCheckitemStandardScore(id);
+            cmCheckitemMapper.deleteCheckitemAssociateFileItems(id);
         }
         return Result.success();
     }

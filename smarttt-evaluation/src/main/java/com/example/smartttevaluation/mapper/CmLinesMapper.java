@@ -30,4 +30,8 @@ public interface CmLinesMapper {
      */
     void deleteLinesByKwaIds(@Param("kwaIds") List<String> kwaIds);
 
+    /**
+     * 根据知识单元id和kwaid删除连线
+     */
+    void deleteLinesByUnitIdAndKwaId(@Param("unitId") String unitId, @Param("kwaIds") List<String> kwaIds);
 }
