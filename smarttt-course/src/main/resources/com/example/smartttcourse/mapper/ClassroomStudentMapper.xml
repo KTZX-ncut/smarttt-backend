@@ -26,6 +26,7 @@
         <where>
         cs.classroomId = #{classRoomId}
         </where>
+        ORDER BY st.stuno
     </select>
 
 </mapper>

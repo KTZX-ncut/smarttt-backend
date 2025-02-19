@@ -4,6 +4,7 @@ import com.example.smartttevaluation.dto.CmKnowledgeUnitTree;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
+import com.example.smartttevaluation.mapper.CmLinesMapper;
 import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
@@ -11,6 +12,7 @@ import com.example.smartttevaluation.pojo.CommonFunctions;
 import com.example.smartttevaluation.service.CmKnowledgeUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -20,6 +22,8 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
     private CmKnowledgeUnitMapper cmKnowledgeUnitMapper;
     @Autowired
     private AttainmentEvaluationMapper attainmentEvaluationMapper;
+    @Autowired
+    private CmLinesMapper cmLinesMapper;
 
     @Override
     public Result getKnowledgeUnitList(String courseid) {
@@ -91,6 +95,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success(cmKnowledgeUnitChapters);
     }
 
+    @Override
     //添加一级目录（章）
     public Result insertChapter(CmKnowledgeUnit cmKnowledgeUnit) {
         String t_courseid = cmKnowledgeUnit.getCourseid();
@@ -103,6 +108,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
 
+    @Override
     //添加二级目录（节）
     public Result insertSection(CmKnowledgeUnit cmKnowledgeUnit) {
         String t_courseid = cmKnowledgeUnit.getCourseid();
@@ -120,6 +126,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
 
+    @Override
     //添加知识单元Kwa
     public Result insertKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa) {
         if (cmKnowledgeUnitMapper.getUnitKwaCount(cmKnowledgeUnitKwa) != 0) {
@@ -130,15 +137,19 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
 
+    @Override
+    @Transactional
     //删除UnitKwa
     public Result deleteKnowledgeUnitKwa(String unitid, List<String> kwaids) {
         if (cmKnowledgeUnitMapper.getUnitCountByUnitId(unitid) == 0) {
             return Result.error("单元id不存在");
         }
         cmKnowledgeUnitMapper.deleteKnowledgeUnitKwa(unitid, kwaids);
+        cmLinesMapper.deleteLinesByUnitIdAndKwaId(unitid, kwaids);
         return Result.success();
     }
 
+    @Override
     //删除知识单元
     public Result deleteKnowledgeUnit(String courseid, List<String> unitids) {
         //获取关联的unitids
@@ -161,6 +172,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
 
+    @Override
     //更新知识单元
     public Result updateKnowledgeUnit(CmKnowledgeUnit cmKnowledgeUnit) {
         if (cmKnowledgeUnitMapper.getUnitCountByUnitId(cmKnowledgeUnit.getId()) == 0) {
@@ -170,6 +182,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
 
+    @Override
     //更新Unitkwa
     public Result updateKnowledgeUnitKwa(CmKnowledgeUnitKwa cmKnowledgeUnitKwa) {
         if (cmKnowledgeUnitMapper.getUnitKwaCount(cmKnowledgeUnitKwa) == 0) {
@@ -185,6 +198,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return;
     }
 
+    @Override
     //更新顺序号，实现移动
     public Result updateKnowledgeUnitOrdernum(CmKnowledgeUnit cmKnowledgeUnit, long preOrdernum) {
         long oldOrdernum = cmKnowledgeUnit.getOrdernum();

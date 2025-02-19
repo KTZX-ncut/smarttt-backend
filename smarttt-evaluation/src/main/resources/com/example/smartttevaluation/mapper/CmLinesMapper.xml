@@ -20,4 +20,16 @@
             #{kwaId}
         </foreach>
     </delete>
+
+    <delete id="deleteLinesByUnitIdAndKwaId">
+        delete from cm_lines where (startunitid = #{unitId} or endunitid = #{unitId})
+        and (startkwaid in
+        <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
+            #{kwaId}
+        </foreach>
+        or endkwaid in
+        <foreach collection="kwaIds" item="kwaId" open="(" separator="," close=")">
+            #{kwaId}
+        </foreach>)
+    </delete>
 </mapper>

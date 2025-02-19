@@ -46,4 +46,10 @@ public interface CmKeywordsMapper {
      */
     @Select("Select count(*) from cm_course where id=#{id}")
     long getNumOfCourseById(@Param("id") String id);
+
+    /**
+     * 获取单个关键字信息
+     */
+    @Select("select * from cm_keywords where id = #{id}")
+    CmKeywords getOneKeyword(String id);
 }

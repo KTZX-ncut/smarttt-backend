@@ -39,6 +39,11 @@ public interface CmCheckitemMapper {
     @Delete("delete from cm_course_assessment where checkitemId = #{id}")
     void deleteCheckitemStandardScore(String id);
     /**
+     * 删除与某个考核项有关的所有文件关联项
+     */
+    @Delete("delete from cm_course_assessment_checkitem_file where checkitemId = #{id}")
+    void deleteCheckitemAssociateFileItems(String id);
+    /**
      *获取考核项树
      */
     @Select("select * from cm_course_checkitem where courseid = #{obsid}")

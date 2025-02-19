@@ -42,7 +42,7 @@ public class UnitMangtController {
         }
         smObs.setId(generateEnhancedID("sm_obs"));
         Result result = smObsService.createOneObs(smObs);
-        if(result.getCode()!=200)return Result.error("新建失败");
+        if(result.getCode()!=200)return Result.error(result.getMsg());
         return smObsService.checkSmObs(smObs);
     }
 

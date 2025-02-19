@@ -68,4 +68,22 @@ public interface CmAbilityMapper {
 
     @Select("select * from cm_kwadict where abilityid=#{abilityId}")
     List<CmKwadict> getAllKwaByAbilityId(String abilityId);
+
+    /**
+     * 获取单个能力信息
+     */
+    @Select("select * from cm_ability where id = #{id}")
+    CmAbility getOneAbility(String id);
+
+    /**
+     * 查询某个能力在不在getAbility表中
+     */
+    @Select("select count(*) from cm_kwadict where abilityid = #{id}")
+    int checkKWAByAbilityId(String id);
+
+    /**
+     * 能力字典中删除能力时删除每个课程中的能力
+     */
+    @Delete("delete from cm_getability where id = #{id}")
+    void deleteGetabilityById(String id);
 }

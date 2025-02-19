@@ -16,4 +16,5 @@ public class CmAssessmentStudent {
     private String username;        // 姓名
     private String loginname;       // 登陆用户名
     private float score;            // 成绩
+    private int evaluationState;    // 是否参与形成性/达成性评价，0-不参加，1-参加
 }
