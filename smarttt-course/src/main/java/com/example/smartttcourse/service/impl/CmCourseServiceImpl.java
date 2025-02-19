@@ -1,12 +1,14 @@
 package com.example.smartttcourse.service.impl;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.example.smartttcourse.dto.SimpleCourse;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.mapper.CmTermMapper;
 import com.example.smartttcourse.mapper.StUsersMapper;
 import com.example.smartttcourse.pojo.CmCourse;
 import com.example.smartttcourse.pojo.StRoleUser;
+import com.example.smartttcourse.service.CmClassRoomService;
 import com.example.smartttcourse.service.CmCourseService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.CmCourseMapper;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,6 +33,9 @@ public class CmCourseServiceImpl implements CmCourseService {
     private CmTermMapper cmTermMapper;
     @Autowired
     private StUsersMapper stUsersMapper;
+
+    @Resource
+    private CmClassRoomService cmClassRoomService;
 
     @Override
     public Result getCourse(Token token) {
@@ -53,7 +60,15 @@ public class CmCourseServiceImpl implements CmCourseService {
     }
 
     @Override
+    @Transactional
     public Result deleteCourseByID(List<String> ids) {
+        // 1. 删除课程下的对应的用户角色
+        cmCourseMapper.deleteCourseRoleUser(ids);
+        // 2. 删除课堂下的对应的用户角色
+        List<String> classroomIdList = cmClassRoomService.getClassroomIdByCourseIdList(ids);
+        if(CollectionUtil.isNotEmpty(classroomIdList)){
+            cmClassRoomService.deleteClassroomRoleUser(classroomIdList);
+        }
         cmCourseMapper.deleteCourseByID(ids);
         return Result.success();
     }

@@ -58,5 +58,7 @@ public interface CmCourseMapper {
 
 
     String getTermIdByCourseId( @Param("courseId") String courseId);
+
+    void deleteCourseRoleUser(@Param("courseIdList") List<String> courseIdList);
 }
 

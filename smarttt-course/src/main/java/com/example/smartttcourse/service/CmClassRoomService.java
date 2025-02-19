@@ -3,6 +3,7 @@ package com.example.smartttcourse.service;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.pojo.CmClassroom;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface CmClassRoomService {
     String getCourseIdByClassroomId(String classroomId);
 
     List<String> getClassroomIdByCourseId(String courseId);
+
+    List<String> getClassroomIdByCourseIdList(List<String> courseIdList);
+
+    void deleteClassroomRoleUser(@Param("classroomIdList") List<String> classroomIdList);
 }
