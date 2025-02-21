@@ -38,9 +38,10 @@ public interface CmClassRoomMapper {
 
     List<String> getClassroomIdByCourseId(@Param("courseId") String courseId);
 
-    @Select("select cla.*, course.courseChineseName, pro.proname as professionName from cm_classroom cla " +
-            "inner join cm_course course on course.id = cla.courseId " +
-            "inner join cm_profession pro on course.professionId = pro.obsid     " +
-            "where course.id = #{courseId}")
-    List<ClassroomReq> getClassroomInfo(String courseId);
+    List<String> getClassroomIdByCourseIdList(@Param("courseIdList") List<String> courseIdList);
+
+    void deleteClassroomRoleUser(@Param("classroomIdList") List<String> classroomIdList);
+
+    @Select("select count(*) from cm_classroom where id = #{courseIdOrClassroomId}")
+    Integer countByClassroomId(String courseIdOrClassroomId);
 }

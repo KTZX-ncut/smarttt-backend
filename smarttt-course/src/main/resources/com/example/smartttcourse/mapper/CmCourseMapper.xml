@@ -27,6 +27,13 @@
         </foreach>
     </delete>
 
+    <delete id="deleteCourseRoleUser">
+        DELETE FROM st_roleuser WHERE obsid IN
+        <foreach item="courseId" collection="courseIdList" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+
     <select id="getTermIdByCourseId" parameterType="string" resultType="string">
         SELECT schooltermId FROM cm_course WHERE id = #{courseId}
     </select>

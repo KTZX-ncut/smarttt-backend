@@ -24,5 +24,7 @@ public interface CmCourseService {
     Result getTeacherCourse(Token token);
 
     String getTermIdByCourseId(String courseId);
+
+    Integer countByCourseId(String courseIdOrClassroomId);
 }
 

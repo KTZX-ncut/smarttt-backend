@@ -40,6 +40,9 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
 
     @Override
     public Result deleteClassroom(List<String> ids) {
+        // 删除该课堂对应的用户信息
+        cmClassRoomMapper.deleteClassroomRoleUser(ids);
+        // 删除课堂
         cmClassRoomMapper.deleteClassroom(ids);
         return Result.success();
     }
@@ -71,6 +74,7 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
         classroom.setRemark(classroomRoleId);
         stUsersMapper.updateClassroomTeacher(classroom);
         classroom.setRemark(labRoleId);
+        classroom.setTeacherId(classroom.getLabTeacherId());
         stUsersMapper.updateClassroomTeacher(classroom);
         return Result.success();
     }
@@ -96,8 +100,17 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     }
 
     @Override
-    public Result getClassroomListByClassroomId(String classroomId) {
-        String courseId = cmClassRoomMapper.getCourseIdByClassroomId(classroomId);
-        return Result.success(cmClassRoomMapper.getClassroomInfo(courseId));
+    public List<String> getClassroomIdByCourseIdList(List<String> courseIdList) {
+        return cmClassRoomMapper.getClassroomIdByCourseIdList(courseIdList);
+    }
+
+    @Override
+    public void deleteClassroomRoleUser(List<String> classroomIdList) {
+        cmClassRoomMapper.deleteClassroomRoleUser(classroomIdList);
+    }
+
+    @Override
+    public Integer countByClassroomId(String courseIdOrClassroomId) {
+        return cmClassRoomMapper.countByClassroomId(courseIdOrClassroomId);
     }
 }
