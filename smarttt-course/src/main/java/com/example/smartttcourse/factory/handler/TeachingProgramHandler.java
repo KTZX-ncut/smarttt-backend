@@ -135,7 +135,7 @@ public class TeachingProgramHandler implements CourseFileHandler {
             return Result.success(list);
         }
         // 任课教师和实验教师
-        if (Objects.equals("任课教师",identity) || Objects.equals("实验教师",identity)){
+        if (Objects.equals("任课教师",identity) || Objects.equals("实验教师",identity) || Objects.equals("学生",identity)){
             String courseId = classRoomService.getCourseIdByClassroomId(token.getObsid());
             LambdaQueryWrapper<CmCourseFile> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(CmCourseFile::getObsid,courseId);
