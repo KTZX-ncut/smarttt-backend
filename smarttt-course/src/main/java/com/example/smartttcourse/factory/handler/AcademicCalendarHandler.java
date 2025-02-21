@@ -136,7 +136,7 @@ public class AcademicCalendarHandler implements CourseFileHandler{
             return Result.success(list);
         }
         // 任课教师
-        if (Objects.equals("任课教师",identity)){
+        if (Objects.equals("任课教师",identity) || Objects.equals("实验教师",identity)|| Objects.equals("学生",identity)){
             LambdaQueryWrapper<CmCourseFile> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(CmCourseFile::getObsid,token.getObsid());
             wrapper.eq(CmCourseFile::getType,this.isSupport().getFileName());
