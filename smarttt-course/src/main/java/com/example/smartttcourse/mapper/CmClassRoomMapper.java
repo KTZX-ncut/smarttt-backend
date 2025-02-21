@@ -37,4 +37,11 @@ public interface CmClassRoomMapper {
     String getCourseIdByClassroomId(@Param("classroomId") String classroomId);
 
     List<String> getClassroomIdByCourseId(@Param("courseId") String courseId);
+
+    List<String> getClassroomIdByCourseIdList(@Param("courseIdList") List<String> courseIdList);
+
+    void deleteClassroomRoleUser(@Param("classroomIdList") List<String> classroomIdList);
+
+    @Select("select count(*) from cm_classroom where id = #{courseIdOrClassroomId}")
+    Integer countByClassroomId(String courseIdOrClassroomId);
 }

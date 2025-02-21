@@ -46,6 +46,13 @@
             #{id}
         </foreach>
     </delete>
+    <delete id="deleteClassroomRoleUser">
+        DELETE FROM st_roleuser
+        WHERE obsid IN
+        <foreach item="classroomId" collection="classroomIdList" open="(" separator="," close=")">
+            #{classroomId}
+        </foreach>
+    </delete>
 
     <!--String getTermIdByClassroomId(String classroomId);-->
     <select id="getTermIdByClassroomId" resultType="string">
@@ -60,5 +67,13 @@
     <select id="getClassroomIdByCourseId" resultType="string">
         SELECT DISTINCT id FROM cm_classroom
         WHERE courseId = #{courseId}
+    </select>
+
+    <select id="getClassroomIdByCourseIdList" resultType="java.lang.String">
+        SELECT DISTINCT id FROM cm_classroom
+        WHERE courseId IN
+        <foreach item="courseId" collection="courseIdList" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
     </select>
 </mapper>

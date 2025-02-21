@@ -9,6 +9,8 @@ import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.factory.CourseFileFactory;
 import com.example.smartttcourse.factory.handler.CourseFileHandler;
+import com.example.smartttcourse.service.CmClassRoomService;
+import com.example.smartttcourse.service.CmCourseService;
 import com.example.smartttcourse.service.FileMangtService;
 import io.minio.StatObjectResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,11 @@ public class InstructionalProgramController {
     @Resource
     private CourseFileFactory courseFileFactory;
 
+    @Resource
+    private CmCourseService courseService;
+
+    @Resource
+    private CmClassRoomService classroomService;
 
     @GetMapping
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
@@ -52,20 +59,34 @@ public class InstructionalProgramController {
     }
 
     /**
-     * 只有课程负责人可以上传
      * 教学大纲上传文件
      */
     @PostMapping("/upload")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
     public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
-        String courseId = token.getObsid();
+        String courseIdOrClassroomId = token.getObsid();
+        String courseId = this.confirmCourseId(courseIdOrClassroomId);
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.TEACHING_PROGRAM);
         String bucketName = handler.getBucket(courseId);
         String objectName = handler.buildObjectName(courseId, handler.isSupport().getFileName());
         // 文件上传
         handler.uploadFile(file,bucketName,objectName,courseId);
         return Result.success("上传成功！");
+    }
+
+    private String confirmCourseId(String courseIdOrClassroomId) {
+        if (courseService.countByCourseId(courseIdOrClassroomId) > 0){
+            return courseIdOrClassroomId;
+        }
+        if(classroomService.countByClassroomId(courseIdOrClassroomId) > 0){
+            String courseId = classroomService.getCourseIdByClassroomId(courseIdOrClassroomId);
+            if(StrUtil.isBlank(courseId)){
+                throw new RuntimeException("非法请求：数据库中有脏数据！");
+            }
+            return courseId;
+        }
+        throw new RuntimeException("非法请求: obsid只能是课程id或者课堂id");
     }
 
     /**

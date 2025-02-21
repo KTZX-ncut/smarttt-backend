@@ -1,5 +1,6 @@
 package com.example. smartttcourse.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.smartttcourse.Utils.AuthRequired;
 import com.example.smartttcourse.dto.Token;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromContext;
 
@@ -75,6 +77,9 @@ public class CourseController {
 
     @PostMapping("/delete")
     public Result deleteCourseByID(@RequestBody List<String> ids) {
+        if( Objects.isNull(ids) || CollectionUtil.isEmpty(ids)){
+            return Result.error("课程id列表不能为空");
+        }
         return cmCourseService.deleteCourseByID(ids);
     }
 

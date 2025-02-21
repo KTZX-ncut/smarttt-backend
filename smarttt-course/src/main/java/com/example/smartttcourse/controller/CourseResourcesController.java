@@ -9,6 +9,8 @@ import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.factory.CourseFileFactory;
 import com.example.smartttcourse.factory.handler.CourseFileHandler;
+import com.example.smartttcourse.service.CmClassRoomService;
+import com.example.smartttcourse.service.CmCourseService;
 import com.example.smartttcourse.service.FileMangtService;
 import io.minio.StatObjectResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,11 @@ import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromCo
 public class CourseResourcesController {
     @Resource
     private CourseFileFactory courseFileFactory;
+    @Resource
+    private CmCourseService courseService;
+
+    @Resource
+    private CmClassRoomService classroomService;
     @GetMapping
     @AuthRequired(type = "admin",menu = "531500340-954722d2-76cf-4e64-bdf8-f11ef7ceef23",isReadOnly = true)
     public Result getInstructionalProgram(HttpServletRequest request){
@@ -53,7 +60,8 @@ public class CourseResourcesController {
     @AuthRequired(type = "admin",menu = "531500340-954722d2-76cf-4e64-bdf8-f11ef7ceef23")
     public Result CourseResourceFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
-        String courseId = token.getObsid();
+        String courseIdOrClassroomId = token.getObsid();
+        String courseId = this.confirmCourseId(courseIdOrClassroomId);
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.COURSE_RESOURCES);
         String bucketName = handler.getBucket(courseId);
         String objectName = handler.buildObjectName(courseId, handler.isSupport().getFileName());
@@ -61,6 +69,23 @@ public class CourseResourcesController {
         handler.uploadFile(file,bucketName,objectName,courseId);
         return Result.success("上传成功！");
     }
+
+    private String confirmCourseId(String courseIdOrClassroomId) {
+
+        if (courseService.countByCourseId(courseIdOrClassroomId) > 0){
+            return courseIdOrClassroomId;
+        }
+        if(classroomService.countByClassroomId(courseIdOrClassroomId) > 0){
+            String courseId = classroomService.getCourseIdByClassroomId(courseIdOrClassroomId);
+            if(StrUtil.isBlank(courseId)){
+                throw new RuntimeException("非法请求：数据库中有脏数据！");
+            }
+            return courseId;
+        }
+        throw new RuntimeException("非法请求: obsid只能是课程id或者课堂id");
+
+    }
+
     @GetMapping("/download/{fileName:.+}")
     @AuthRequired(type = "admin", menu = "531500340-954722d2-76cf-4e64-bdf8-f11ef7ceef23",isReadOnly = true)
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
