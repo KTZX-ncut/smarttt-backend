@@ -129,6 +129,11 @@ public class StUsersServiceImpl implements StUsersService {
                 return Result.error("所属院系/班级输入错误");
             personnelRoster.setObsid(obsIDList.get(0));
         }
+        String loginName = personnelRoster.getLoginname();
+        if(loginName != null) {
+            List<String> stUsersList = stUsersMapper.getStUsersByloginName(loginName);
+            if (!stUsersList.isEmpty()) return Result.error("登录名已存在");
+        }
         stUsersMapper.updateUserByID(personnelRoster);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){//学生
             stUsersMapper.updateStudentByID(personnelRoster);
