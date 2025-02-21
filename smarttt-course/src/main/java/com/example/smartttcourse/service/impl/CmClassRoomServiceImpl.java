@@ -108,4 +108,9 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     public void deleteClassroomRoleUser(List<String> classroomIdList) {
         cmClassRoomMapper.deleteClassroomRoleUser(classroomIdList);
     }
+
+    @Override
+    public Integer countByClassroomId(String courseIdOrClassroomId) {
+        return cmClassRoomMapper.countByClassroomId(courseIdOrClassroomId);
+    }
 }

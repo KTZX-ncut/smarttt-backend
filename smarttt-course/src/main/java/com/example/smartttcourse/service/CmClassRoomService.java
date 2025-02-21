@@ -27,4 +27,6 @@ public interface CmClassRoomService {
     List<String> getClassroomIdByCourseIdList(List<String> courseIdList);
 
     void deleteClassroomRoleUser(@Param("classroomIdList") List<String> classroomIdList);
+
+    Integer countByClassroomId(String courseIdOrClassroomId);
 }

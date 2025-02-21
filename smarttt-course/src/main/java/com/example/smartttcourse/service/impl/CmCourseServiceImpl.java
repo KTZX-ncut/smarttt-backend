@@ -114,5 +114,10 @@ public class CmCourseServiceImpl implements CmCourseService {
         return cmCourseMapper.getTermIdByCourseId(courseId);
     }
 
+    @Override
+    public Integer countByCourseId(String courseIdOrClassroomId) {
+        return cmCourseMapper.countByCourseId(courseIdOrClassroomId);
+    }
+
 }
 

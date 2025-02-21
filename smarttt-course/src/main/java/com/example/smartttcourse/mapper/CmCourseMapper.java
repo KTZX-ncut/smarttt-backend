@@ -60,5 +60,8 @@ public interface CmCourseMapper {
     String getTermIdByCourseId( @Param("courseId") String courseId);
 
     void deleteCourseRoleUser(@Param("courseIdList") List<String> courseIdList);
+
+    @Select("select count(*) from cm_course where id = #{courseIdOrClassroomId}")
+    Integer countByCourseId(String courseIdOrClassroomId);
 }
 
