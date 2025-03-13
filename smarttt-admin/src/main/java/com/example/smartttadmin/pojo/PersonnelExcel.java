@@ -21,7 +21,7 @@ public class PersonnelExcel {
     private String loginname;
     @ExcelProperty("密码")
     private String pwd;
-    @ExcelProperty("工号")
+    @ExcelProperty("工号/学号")
     private String personnelno;
     @ExcelProperty("手机号")
     private String phone;
