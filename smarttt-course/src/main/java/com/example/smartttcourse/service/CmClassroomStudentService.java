@@ -23,4 +23,6 @@ public interface CmClassroomStudentService extends IService<CmClassroomStudent>{
     List<CmClassroomStudent> importClassRoomStudentExcel(MultipartFile file,String classRoomId);
 
     Result getObsRPStudentList(String obsID);
+
+    String getStudentLevel();
 }

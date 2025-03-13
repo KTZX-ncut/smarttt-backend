@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public enum ResponseEnum {
-    SUCCESS(0, "成功"),
+    SUCCESS(200, "成功"),
     ERROR(-1, "服务器内部错误"),
     SERVLET_ERROR(-2,"controller上层错误"),
     PARAM_IS_NOT_NULL(-710,"参数为空"),
@@ -35,7 +35,8 @@ public enum ResponseEnum {
     STUID_IS_NOT_NULL(-710,"学生的userId不能为空"),
     TEST_ID_NOT_NULL(-710,"考试id(testId)不能为空"),
     TEST_ID_NOT_VALID(-710,"考试id(testId) 不合法！"),
-    PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!");
+    PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!"),
+    LEVEL_REEOR(-710,"导入的学生所属单位(层级)与现系统不匹配！");
 
 
     private Integer code;//状态码

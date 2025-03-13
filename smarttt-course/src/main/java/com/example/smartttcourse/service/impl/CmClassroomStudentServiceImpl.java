@@ -138,8 +138,11 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
             List<CmClassroomStudent> classroomStudentList = new ArrayList<>();
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
+                // 学号
                 String stuno = dataFormatter.formatCellValue(row.getCell(0));
+                // 姓名
                 String username = dataFormatter.formatCellValue(row.getCell(1));
+                // 所属单位（班级/专业/系/学院）
                 String obsName = dataFormatter.formatCellValue(row.getCell(2));
                 SmartAssert.notEmpty(stuno, ResponseEnum.PARAM_IS_NOT_NULL);
                 SmartAssert.notEmpty(username, ResponseEnum.PARAM_IS_NOT_NULL);
@@ -161,7 +164,7 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 Integer count = baseMapper.selectCount(wrapper);
                 if (count != 0) {
                     // 说明该班级存在这个学生了,抛出异常
-                    throw new BusinessException("该班级已经存在" + student.getUsersid() + "了");
+                    throw new BusinessException("该课堂已经存在" + student.getUsersid() + "这个学生了");
                 }
                 classroomStudent.setUserId(student.getUsersid());
                 classroomStudent.setObsId(student.getObsid());
@@ -173,8 +176,8 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
                 classroomStudent.setUserName(username);
                 // obsName
                 String obsNameInDataSource = smObsService.getById(student.getObsid()).getObsname();
-                // 校验班级是否合法
-                SmartAssert.eq(obsNameInDataSource, obsName, ResponseEnum.DATA_NOT_VALIDATE);
+                // 校验所属层级是否合法
+                SmartAssert.eq(obsNameInDataSource, obsName, ResponseEnum.LEVEL_REEOR);
                 classroomStudent.setObsName(obsName);
                 // loginname
                 classroomStudent.setLoginname(stUsersService.getloginNameById(student.getUsersid()));
@@ -217,6 +220,11 @@ public class CmClassroomStudentServiceImpl extends ServiceImpl<CmClassStudentMap
         }
 
         return Result.success(rootObs);
+    }
+
+    @Override
+    public String getStudentLevel() {
+        return baseMapper.getStudentLevel();
     }
 
 

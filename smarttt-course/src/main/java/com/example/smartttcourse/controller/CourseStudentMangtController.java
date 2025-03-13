@@ -202,4 +202,12 @@ public class CourseStudentMangtController {
         classroomStudent.setCourseScore(createStudent.getCourseScore());
     }
 
+    /**
+     * 获取学生所属层级(班级/专业/系/院)
+     */
+    @GetMapping("/getStudentLevel")
+    public Result getStudentLevel() {
+        String levelName = cmClassroomStudentService.getStudentLevel();
+        return Result.ok().data(levelName);
+    }
 }
