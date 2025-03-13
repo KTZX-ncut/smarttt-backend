@@ -42,14 +42,14 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     List<SmObs> getSmObsByID(String id);
 
     @Select("SELECT u.id AS id,u.username AS username,u.loginname AS loginname,u.phone AS phone,u.status AS status," +
-            "t.obsid AS obsid,o.obsname AS obsname,u.catelog AS catelog\n" +
+            "t.obsid AS obsid,o.obsname AS obsname,u.catelog AS catelog, u.pwd AS pwd, t.jobno AS personnelno, u.remark AS remark\n" +
             "FROM st_users u\n" +
             "JOIN sm_teacher t ON u.id = t.usersid\n" +
             "JOIN sm_obs o ON t.obsid = o.id\n" +
             "WHERE u.catelog = #{catelog} AND t.obsid = #{obsid}")
     List<PersonnelRoster> getTeacherPRByObsIDAndCatelog(@Param("obsid")String obsid,@Param("catelog")String catelog);
     @Select("SELECT u.id AS id,u.username AS username,u.loginname AS loginname,u.phone AS phone,u.status AS status," +
-            "t.obsid AS obsid,o.obsname AS obsname,u.catelog AS catelog\n" +
+            "t.obsid AS obsid,o.obsname AS obsname,u.catelog AS catelog, u.pwd AS pwd, t.stuno AS personnelno, u.remark AS remark\n" +
             "FROM st_users u\n" +
             "JOIN sm_student t ON u.id = t.usersid\n" +
             "JOIN sm_obs o ON t.obsid = o.id\n" +

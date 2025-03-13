@@ -76,7 +76,7 @@ public interface CmAbilityMapper {
     CmAbility getOneAbility(String id);
 
     /**
-     * 查询某个能力在不在getAbility表中
+     * 查询某个能力有没有被kwa使用
      */
     @Select("select count(*) from cm_kwadict where abilityid = #{id}")
     int checkKWAByAbilityId(String id);

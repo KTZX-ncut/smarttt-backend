@@ -21,7 +21,8 @@ public class PersonnelExcel {
     private String loginname;
     @ExcelProperty("密码")
     private String pwd;
-    @ExcelProperty("工号/学号")
+    // 如果导入的是学生，编号就是学号，如果是教师，编号就是工号
+    @ExcelProperty("编号")
     private String personnelno;
     @ExcelProperty("手机号")
     private String phone;

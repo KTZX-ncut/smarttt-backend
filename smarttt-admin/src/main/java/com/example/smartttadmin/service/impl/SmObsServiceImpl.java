@@ -153,7 +153,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         if(obsIDList.isEmpty())
             return Result.error("所属院系/班级输入错误");
         List<String> stUsersList  = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
-        if(!stUsersList.isEmpty())return Result.error("用户名重复");
+        if(!stUsersList.isEmpty())return Result.error("登录名已存在");
         String usersId = generateEnhancedID("st_users");
         personnelRoster.setId(usersId);
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
