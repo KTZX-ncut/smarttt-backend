@@ -191,7 +191,6 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
         }
 
         // 每个课程目标的考核项的分数映射
-        // 要修改：变成某个课程目标的某个kwa的对应考核项总分才合理
         Map<String, Map<String, Integer>> targetCheckitemScore = new HashMap<>();
         // 与每个课程目标的每个kwa有关的考核项的总分映射
         Map<String, Map<String, Integer>> targetKwaCheckitemTotalScore = new HashMap<>();
