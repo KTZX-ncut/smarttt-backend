@@ -25,7 +25,7 @@ public class KnowledgeUnitController {
     private CmKnowledgeUnitService cmKnowledgeUnitService;
     //获取知识单元树
     @GetMapping("/getKnowledgeUnitTree")
-    @AuthRequired(type = "admin",menu = "531500340-8daa7ebc-0b27-4236-b4d6-2e872f771f3a",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-8daa7ebc-0b27-4236-b4d6-2e872f771f3a")
     public Result getKnowledgeUnitList(HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmKnowledgeUnitService.getKnowledgeUnitList(token.getObsid());
