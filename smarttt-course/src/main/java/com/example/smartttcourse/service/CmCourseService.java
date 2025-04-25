@@ -26,5 +26,9 @@ public interface CmCourseService {
     String getTermIdByCourseId(String courseId);
 
     Integer countByCourseId(String courseIdOrClassroomId);
+
+    Result getPreCourseByCode(String termId, String obsId);
+
+    Result copyInfo(String pastId, String obsId);
 }
 

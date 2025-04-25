@@ -85,7 +85,7 @@ public class CourseController {
         return cmCourseService.deleteCourseByID(ids);
     }
 
-    @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
+    @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
     @GetMapping("/history")
     public Result historyCourseByTerm(@RequestParam(name = "id")String termID,HttpServletRequest request) {
         Token token = getTokenFromContext();
@@ -121,4 +121,19 @@ public class CourseController {
         return Result.success();
     }
 
+    // 根据课程号获取历史课程
+    @GetMapping("getPreCourseByCode")
+    @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
+    public Result getPreCourseByCode(@RequestParam("termId") String termId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmCourseService.getPreCourseByCode(termId, token.getObsid());
+    }
+
+    // 复制历史课程的具体内容
+    @PostMapping("/copyCourseInfo")
+    @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
+    public Result copyInfo(@RequestParam("pastId") String pastId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmCourseService.copyInfo(pastId, token.getObsid());
+    }
 }

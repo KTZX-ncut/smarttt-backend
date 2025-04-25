@@ -149,6 +149,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         return Result.success();
     }
 
+    @Transactional
     @Override
     //删除知识单元
     public Result deleteKnowledgeUnit(String courseid, List<String> unitids) {
@@ -162,6 +163,8 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         List<String> all_p_unitids = cmKnowledgeUnitMapper.selectAllPUnitidByUnitids(unitids);
         //删除所有unitids的kwa
         cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByUnitids(all_unitids);
+        // 删除所有unit的连线数据
+        cmKnowledgeUnitMapper.deleteLineByUnitIds(all_unitids);
         //删除unit
         cmKnowledgeUnitMapper.deleteKnowledgeUnitByUnitids(all_unitids);
         //刷新有删除操作的unit

@@ -46,7 +46,8 @@ public interface CmCheckitemMapper {
     /**
      *获取考核项树
      */
-    @Select("select * from cm_course_checkitem where courseid = #{obsid}")
+    @Select("select id, pid, orderno, itemName, itemCode as levelcode, task, remark from cm_course_checkitem " +
+            "where courseid = #{obsid}")
     List<CmCheckitemTree> getAllCmCheckitemTree(String obsid);
     /**
      *获取考核项列表

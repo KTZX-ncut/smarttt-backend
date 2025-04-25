@@ -78,11 +78,11 @@ public class CmAbilityServiceImpl implements CmAbilityService {
     }
 
     @Override
-    public Result updateOneAbility(CmAbility cmAbility) {
-        cmAbilityMapper.updateAbility(cmAbility);
+    public Result updateOneAbility(CmAbility cmAbility, String obsId) {
+        cmAbilityMapper.updateAbility(cmAbility, obsId);
 
         // 获取与这个能力相关的所有kwa
-        List<CmKwadict> kwas = cmAbilityMapper.getAllKwaByAbilityId(cmAbility.getId());
+        List<CmKwadict> kwas = cmAbilityMapper.getAllKwaByAbilityId(cmAbility.getId(), obsId);
         for(CmKwadict kwa : kwas) {
             CmKeywords keyword = cmKeywordsMapper.getOneKeyword(kwa.getKeywordid());
             kwa.setName(keyword.getName() + "-" + cmAbility.getName());

@@ -37,4 +37,84 @@
     <select id="getTermIdByCourseId" parameterType="string" resultType="string">
         SELECT schooltermId FROM cm_course WHERE id = #{courseId}
     </select>
+
+    <insert id="copyKeyword">
+        insert into cm_keywords values
+        <foreach collection="keywords" item="keyword" separator=",">
+            (#{keyword.id}, #{keyword.name}, #{keyword.datavalue}, #{keyword.importantlevelid},
+            #{keyword.remark}, #{keyword.courseid}, NULL, #{keyword.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="copyAbility">
+        insert into cm_getability values
+        <foreach collection="abilities" item="ability" separator=",">
+            (#{ability.id}, #{ability.orderno}, #{ability.abilitydeep}, #{ability.levelcode},
+            #{ability.name}, #{ability.datavalue}, #{ability.importantlevel}, #{ability.remark}, #{ability.courseid})
+        </foreach>
+    </insert>
+
+    <insert id="copyKwa">
+        insert into cm_kwadict values
+        <foreach collection="kwas" item="kwa" separator=",">
+            (#{kwa.id}, #{kwa.name}, #{kwa.keywordid}, #{kwa.abilityid}, #{kwa.courseid}, #{kwa.datavalue},
+            #{kwa.status}, NULL, NULL, NULL, #{kwa.createTime}, NULL)
+        </foreach>
+    </insert>
+
+    <insert id="copyUnit">
+        insert into cm_course_unit values
+        <foreach collection="units" item="unit" separator=",">
+            (#{unit.id}, #{unit.courseid}, #{unit.pid}, #{unit.ordernum}, NULL, #{unit.name},
+            #{unit.type}, NULL, NULL, NULL, NULL, #{unit.datavalue})
+        </foreach>
+    </insert>
+
+    <insert id="copyUnitKwa">
+        insert into cm_course_unit_kwa values
+        <foreach collection="unitKwas" item="unitKwa" separator=",">
+            (#{unitKwa.id}, #{unitKwa.unitid}, #{unitKwa.kwaid}, NULL, NULL, NULL, NULL, NULL, NULL,
+            NULL, NULL, #{unitKwa.status})
+        </foreach>
+    </insert>
+
+    <insert id="copyLine">
+        insert into cm_lines values
+        <foreach collection="lines" item="line" separator=",">
+            (#{line.id}, #{line.startunitid}, #{line.endunitid}, #{line.remark}, #{line.courseid},
+            #{line.startkwaid}, #{line.endkwaid})
+        </foreach>
+    </insert>
+
+    <insert id="copyTarget">
+        insert into cm_course_target values
+        <foreach collection="targets" item="target" separator=",">
+            (#{target.id}, #{target.code}, #{target.name}, #{target.remark}, #{target.courseid},
+            NULL, NULL, NULL, NULL, NULL, #{target.unitname}, #{target.unitid}, #{target.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="copyTargetKwa">
+        insert into cm_course_target_kwa values
+        <foreach collection="targetKwas" item="targetKwa" separator=",">
+            (#{targetKwa.id}, #{targetKwa.kwaId}, #{targetKwa.targetId}, #{targetKwa.obsId})
+        </foreach>
+    </insert>
+
+    <insert id="copyCheckitem">
+        insert into cm_course_checkitem values
+        <foreach collection="checkitems" item="checkitem" separator=",">
+            (#{checkitem.id}, #{checkitem.courseid}, #{checkitem.pid}, #{checkitem.orderno}, #{checkitem.itemName},
+            #{checkitem.itemCode}, #{checkitem.task}, #{checkitem.remark}, #{checkitem.percent})
+        </foreach>
+    </insert>
+
+    <insert id="copyAssessment">
+        insert into cm_course_assessment values
+        <foreach collection="assessments" item="assessment" separator=",">
+            (#{assessment.id}, #{assessment.courseid}, #{assessment.coursetargetId}, #{assessment.checkitemId}, NULL,
+            #{assessment.standardScore}, NULL, NULL)
+        </foreach>
+    </insert>
+
 </mapper>

@@ -1,115 +1,23 @@
-2025-03-31 14:44:56.608 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 10212 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
-2025-03-31 14:44:56.616 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
-2025-03-31 14:44:56.617 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
-2025-03-31 14:44:57.343 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-03-31 14:44:57.350 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-03-31 14:44:57.375 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
-2025-03-31 14:44:57.979 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
-2025-03-31 14:44:57.986 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-03-31 14:44:57.986 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
-2025-03-31 14:44:58.145 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-03-31 14:44:58.145 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1447 ms
-2025-03-31 14:44:58.257 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2025-03-31 14:44:58.366 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
-2025-03-31 14:45:00.065 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
-2025-03-31 14:45:00.074 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 3.936 seconds (JVM running for 5.204)
-2025-03-31 14:47:38.513 === [http-nio-8083-exec-1] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-03-31 14:47:38.513 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-03-31 14:47:38.515 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
-2025-03-31 14:52:49.804 === [http-nio-8083-exec-7] === WARN  === o.s.w.s.m.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'POST' not supported]
-2025-03-31 14:59:33.835 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
-2025-03-31 14:59:33.839 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
-2025-03-31 14:59:41.347 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 8908 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
-2025-03-31 14:59:41.351 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
-2025-03-31 14:59:41.351 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
-2025-03-31 14:59:42.000 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-03-31 14:59:42.002 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-03-31 14:59:42.037 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 0 Redis repository interfaces.
-2025-03-31 14:59:42.646 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
-2025-03-31 14:59:42.654 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-03-31 14:59:42.654 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
-2025-03-31 14:59:42.831 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-03-31 14:59:42.831 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1418 ms
-2025-03-31 14:59:42.953 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2025-03-31 14:59:43.079 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
-2025-03-31 14:59:44.614 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
-2025-03-31 14:59:44.622 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 3.655 seconds (JVM running for 4.583)
-2025-03-31 14:59:47.183 === [http-nio-8083-exec-1] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-03-31 14:59:47.184 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-03-31 14:59:47.184 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
-2025-03-31 15:07:06.495 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
-2025-03-31 15:07:06.499 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
-2025-03-31 15:07:13.178 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 9792 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
-2025-03-31 15:07:13.180 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
-2025-03-31 15:07:13.180 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
-2025-03-31 15:07:13.747 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-03-31 15:07:13.748 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-03-31 15:07:13.771 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
-2025-03-31 15:07:14.266 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
-2025-03-31 15:07:14.273 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-03-31 15:07:14.273 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
-2025-03-31 15:07:14.424 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-03-31 15:07:14.424 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1210 ms
-2025-03-31 15:07:14.532 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2025-03-31 15:07:14.646 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
-2025-03-31 15:07:16.212 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
-2025-03-31 15:07:16.221 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 3.383 seconds (JVM running for 4.346)
-2025-03-31 15:07:18.658 === [http-nio-8083-exec-2] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-03-31 15:07:18.658 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-03-31 15:07:18.659 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2025-03-31 15:11:12.643 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
-2025-03-31 15:11:12.646 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
-2025-03-31 15:11:18.666 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 8296 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
-2025-03-31 15:11:18.668 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
-2025-03-31 15:11:18.669 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
-2025-03-31 15:11:19.219 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-03-31 15:11:19.220 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-03-31 15:11:19.247 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
-2025-03-31 15:11:19.737 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
-2025-03-31 15:11:19.747 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-03-31 15:11:19.748 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
-2025-03-31 15:11:19.921 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-03-31 15:11:19.921 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1220 ms
-2025-03-31 15:11:20.038 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2025-03-31 15:11:20.174 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
-2025-03-31 15:11:21.746 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
-2025-03-31 15:11:21.753 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 3.444 seconds (JVM running for 4.383)
-2025-03-31 15:11:21.862 === [http-nio-8083-exec-1] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-03-31 15:11:21.862 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-03-31 15:11:21.863 === [http-nio-8083-exec-1] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
-2025-03-31 15:28:32.809 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
-2025-03-31 15:28:32.814 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
-2025-03-31 19:23:24.318 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 15716 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
-2025-03-31 19:23:24.328 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
-2025-03-31 19:23:24.329 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
-2025-03-31 19:23:25.688 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-03-31 19:23:25.691 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-03-31 19:23:25.752 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 37 ms. Found 0 Redis repository interfaces.
-2025-03-31 19:23:26.990 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
-2025-03-31 19:23:27.008 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-03-31 19:23:27.009 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
-2025-03-31 19:23:27.396 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-03-31 19:23:27.397 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2992 ms
-2025-03-31 19:23:27.664 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2025-03-31 19:23:27.963 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
-2025-03-31 19:23:32.388 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
-2025-03-31 19:23:32.421 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 8.784 seconds (JVM running for 11.054)
-2025-03-31 19:38:14.024 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
-2025-03-31 19:38:14.026 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
-2025-03-31 19:39:59.589 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 3908 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
-2025-03-31 19:39:59.594 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
-2025-03-31 19:39:59.594 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
-2025-03-31 19:40:00.693 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-03-31 19:40:00.696 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-03-31 19:40:00.756 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 35 ms. Found 0 Redis repository interfaces.
-2025-03-31 19:40:01.856 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
-2025-03-31 19:40:01.872 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-03-31 19:40:01.872 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
-2025-03-31 19:40:02.258 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-03-31 19:40:02.258 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2589 ms
-2025-03-31 19:40:02.494 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
-2025-03-31 19:40:02.738 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
-2025-03-31 19:40:06.869 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
-2025-03-31 19:40:06.885 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 7.954 seconds (JVM running for 9.975)
-2025-03-31 19:42:45.644 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
-2025-03-31 19:42:45.647 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+2025-04-26 01:00:05.358 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Starting SmartttEvaluationApplication using Java 1.8.0_401 on Asuka with PID 8572 (E:\Code\vue_project\smarttt-backend\smarttt-evaluation\target\classes started by zhang in E:\Code\vue_project\smarttt-backend)
+2025-04-26 01:00:05.382 === [main] === DEBUG === c.e.smartttevaluation.SmartttEvaluationApplication - Running with Spring Boot v2.7.6, Spring v5.3.24
+2025-04-26 01:00:05.383 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - The following 1 profile is active: "dev"
+2025-04-26 01:00:07.148 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-04-26 01:00:07.156 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-04-26 01:00:07.215 === [main] === INFO  === o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 33 ms. Found 0 Redis repository interfaces.
+2025-04-26 01:00:08.586 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8083 (http)
+2025-04-26 01:00:08.684 === [main] === INFO  === org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-04-26 01:00:08.685 === [main] === INFO  === org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.69]
+2025-04-26 01:00:09.297 === [main] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-04-26 01:00:09.297 === [main] === INFO  === o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3740 ms
+2025-04-26 01:00:09.683 === [main] === INFO  === c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2025-04-26 01:00:10.035 === [main] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2025-04-26 01:00:15.720 === [main] === INFO  === o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8083 (http) with context path ''
+2025-04-26 01:00:15.745 === [main] === INFO  === c.e.smartttevaluation.SmartttEvaluationApplication - Started SmartttEvaluationApplication in 11.684 seconds (JVM running for 15.636)
+2025-04-26 01:00:53.465 === [http-nio-8083-exec-2] === INFO  === o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-26 01:00:53.465 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-04-26 01:00:53.468 === [http-nio-8083-exec-2] === INFO  === org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-04-26 01:02:28.100 === [http-nio-8083-exec-4] === INFO  === c.e.s.service.impl.CmCourseAssessmentImpl - logId:null,最终ID:courseid=1508003654-ea23b397-4cf0-466a-823d-15288c8f3657
+2025-04-26 01:04:11.806 === [http-nio-8083-exec-4] === INFO  === c.e.s.service.impl.CmCourseAssessmentImpl - logId:null,最终ID:courseid=1508003654-ea23b397-4cf0-466a-823d-15288c8f3657
+2025-04-26 01:05:33.099 === [http-nio-8083-exec-4] === INFO  === c.e.s.service.impl.CmCourseAssessmentImpl - logId:null,最终ID:courseid=1508003654-c8ccba58-c412-479d-abdb-552b7bb8ab06
+2025-04-26 01:06:27.683 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+2025-04-26 01:06:27.691 === [SpringApplicationShutdownHook] === INFO  === com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed

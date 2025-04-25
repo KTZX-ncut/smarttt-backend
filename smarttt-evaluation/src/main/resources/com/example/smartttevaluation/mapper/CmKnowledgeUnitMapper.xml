@@ -50,6 +50,18 @@
             #{id}
         </foreach>
     </delete>
+    <!--批量删除unit的连线数据-->
+    <delete id="deleteLineByUnitIds">
+        delete from cm_lines where startunitid in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        or endunitid in
+        <foreach collection="unitids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
     <update id="flashKnowledgeUnitOrdernum">
         <!--计数-->
         set @num:=#{preOrdernum};
