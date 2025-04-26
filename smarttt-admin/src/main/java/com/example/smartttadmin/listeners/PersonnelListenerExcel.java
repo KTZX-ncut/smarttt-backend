@@ -5,6 +5,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttadmin.Utils.CommonFunctions;
 import com.example.smartttadmin.converts.ExcelConvert;
@@ -116,6 +117,7 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
             if (Objects.equals(CateLogEnum.STUDENT,cateLogEnum)){
                 queryWrapper.eq("obsdeep",studentObsDeep);
                 smObsList = smObsService.list(queryWrapper);
+
             }
             if (Objects.equals(CateLogEnum.TEACHER,cateLogEnum)){
                 queryWrapper.eq("obsdeep",teacherObsDeep);
@@ -134,6 +136,30 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
             if(personnelExcel.getLoginname().length() < 3 || personnelExcel.getLoginname().length() > 15){
                 throw new RuntimeException("业务异常:"+personnelExcel.getUsername()+"的登录名称("+personnelExcel.getLoginname() + ")的长度需要在3-15个字符之间！");
             }
+            // 4. 判断stuno学号是否唯一
+            if (Objects.equals(CateLogEnum.STUDENT,cateLogEnum)){
+                String personnelno = personnelExcel.getPersonnelno();
+                QueryWrapper<SmStudent> stuQueryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("stuno",personnelno);
+                List<SmStudent> studentList = studentService.list(stuQueryWrapper);
+                if(CollectionUtil.isNotEmpty(studentList)){
+                    throw new RuntimeException("业务异常："+personnelExcel.getUsername()+"stuno学号和其他学生重复");
+                }
+
+            }
+            // 5. 判断老师的工号是否唯一
+            if (Objects.equals(CateLogEnum.TEACHER,cateLogEnum)){
+                String personnelno = personnelExcel.getPersonnelno();
+                QueryWrapper<SmTeacher> teacherQueryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("jobno",personnelno);
+                List<SmTeacher> teacherList = teacherService.list(teacherQueryWrapper);
+                if(CollectionUtil.isNotEmpty(teacherList)){
+                    throw new RuntimeException("业务异常："+personnelExcel.getUsername()+"stuno学号和其他学生重复");
+                }
+
+            }
+
+
             PersonnelRoster personnelRoster = ExcelConvert.INSTANCE.personnelExcelToPersonnelRoster(personnelExcel);
             personnelRoster.setObsid(obsIdList.get(0));
             personnelRoster.setId(CommonFunctions.generateEnhancedID("st_users"));
