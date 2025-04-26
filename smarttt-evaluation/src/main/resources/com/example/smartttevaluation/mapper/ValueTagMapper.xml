@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.ValueTagMapper">
+    <insert id="createValue">
+        insert into value_tag(id,`name`,remark,type_id,createtime)
+        values (#{id},#{name},#{remark},#{typeId},#{createTime})
+    </insert>
+    <update id="update">
+        update value_tag
+        <set>
+            <if test="name != null and name != '' ">
+                `name` = #{name},
+            </if>
+            <if test="remark != null and remark != '' ">
+                remark = #{remark},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            createtime = #{createTime}
+        </set>
+        where id = #{id}
+    </update>
+    <update id="bindKwaAndValue">
+        update cm_kwadict
+        set v = #{parse}
+        where id = #{kwaId}
+    </update>
+
+
+    <delete id="deleteValueTagByTypeId">
+        delete from value_tag where type_id in
+        <foreach collection="typeIdList" item="typeId" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+
+
+    <delete id="delete">
+        delete from value_tag where id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="getAllValue" resultType="com.example.smartttevaluation.pojo.ValueTag">
+        select id, `name`, remark,type_id, createtime from value_tag
+    </select>
+    <select id="getValueByTypeId" resultType="com.example.smartttevaluation.pojo.ValueTag">
+        select id, `name`, remark,type_id, createtime
+        from value_tag
+        where type_id = #{typeId}
+    </select>
+    <select id="getValueByName" resultType="java.lang.Integer">
+        select COUNT(*) from value_tag where `name` = #{name}
+    </select>
+
+    <select id="validTagIdAndName" resultType="com.example.smartttevaluation.dto.KwaValueTagBindReq">
+        SELECT id, `name` FROM value_tag WHERE id IN
+        <foreach collection="tagIdList" item="tagId" open="(" separator="," close=")">
+            #{tagId}
+        </foreach>
+    </select>
+    <select id="countKwaByKwaId" resultType="java.lang.Integer">
+        select count(*) from cm_kwadict where id = #{kwaId}
+    </select>
+
+
+</mapper>
