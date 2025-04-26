@@ -22,9 +22,9 @@ public interface CmCoursetargetMapper {
      */
     @Select("select targetKwa.kwaId as id, kwa.name, kwa.abilityid, kwa.keywordid, k.importantlevelid, ga.datavalue from cm_course_target_kwa targetKwa " +
             "inner join cm_kwadict kwa on kwa.id = targetKwa.kwaId " +
-            "inner join cm_keywords k on k.id = kwa.keywordid " +
-            "inner join cm_getability ga on ga.id = kwa.abilityid " +
-            "where obsId = #{obsId} and targetId = #{targetId} and targetKwa.kwaId = kwa.id")
+            "inner join cm_keywords k on k.id = kwa.keywordid and k.courseid = #{obsId} " +
+            "inner join cm_getability ga on ga.id = kwa.abilityid and ga.courseid = #{obsId} " +
+            "where targetKwa.obsId = #{obsId} and targetKwa.targetId = #{targetId}")
     List<CmKwadict> getKwas(@Param("targetId") String targetId, @Param("obsId") String obsId);
 
     /**

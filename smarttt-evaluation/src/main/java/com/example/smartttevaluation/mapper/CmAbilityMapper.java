@@ -63,17 +63,21 @@ public interface CmAbilityMapper {
      */
     List<CmAbility> getCmAbilityByIDs(@Param("ids")List<String> ids);
 
-    @Update("update cm_ability set name = #{name} where id = #{id}")
-    void updateAbility(CmAbility cmAbility);
+    @Update("update cm_ability set name = #{cmAbility.name} " +
+            "where id = #{cmAbility.id} and professionid = #{obsId}")
+    void updateAbility(@Param("cmAbility") CmAbility cmAbility, @Param("obsId") String obsId);
 
-    @Select("select * from cm_kwadict where abilityid=#{abilityId}")
-    List<CmKwadict> getAllKwaByAbilityId(String abilityId);
+    @Select("select kwa.* from cm_kwadict kwa " +
+            "where kwa.abilityid = #{abilityId} " +
+            "and kwa.courseid in " +
+            "(select c.id from cm_course c where c.professionId = #{professionId})")
+    List<CmKwadict> getAllKwaByAbilityId(@Param("abilityId") String abilityId, @Param("professionId") String professionId);
 
     /**
      * 获取单个能力信息
      */
-    @Select("select * from cm_ability where id = #{id}")
-    CmAbility getOneAbility(String id);
+    @Select("select * from cm_ability where id = #{id} and professionid = #{obsId}")
+    CmAbility getOneAbility(@Param("id") String id, @Param("obsId") String obsId);
 
     /**
      * 查询某个能力有没有被kwa使用

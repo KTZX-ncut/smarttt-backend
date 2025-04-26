@@ -76,6 +76,8 @@ public class CmCheckitemServiceImpl implements CmCheckitemService {
                 ));
         List<CmCheckitemTree> rootCheckitem = checkitemMap.get("0"); // 根菜单的pid通常为0
         if (rootCheckitem != null) {
+            // 按照itemCode排序根节点
+            rootCheckitem.sort(Comparator.comparingInt(item -> Integer.parseInt(item.getLevelcode())));
             // 递归构建菜单树
             buildCheckitemTree(rootCheckitem, checkitemMap);
             for (CmCheckitemTree checkitemTree : rootCheckitem) {

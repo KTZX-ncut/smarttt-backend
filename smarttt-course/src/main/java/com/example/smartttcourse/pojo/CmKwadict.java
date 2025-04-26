@@ -1,13 +1,10 @@
-package com.example.smartttevaluation.pojo;
+package com.example.smartttcourse.pojo;
 
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -28,4 +25,5 @@ public class CmKwadict {
     private String importantlevelid;// 重要程度
     private String status;//完成状态
     private String v;// 标签
+    private LocalDateTime createTime;
 }

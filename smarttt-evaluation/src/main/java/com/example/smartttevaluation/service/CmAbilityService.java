@@ -24,5 +24,5 @@ public interface CmAbilityService {
      */
     Result deleteAbilityByIDs(List<String> ids);
 
-    Result updateOneAbility(CmAbility cmAbility);
+    Result updateOneAbility(CmAbility cmAbility, String obsId);
 }

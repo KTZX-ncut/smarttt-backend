@@ -61,11 +61,12 @@ public class CmCoursetargetServiceImpl implements CmCoursetargetService {
     /**
      *批量删除课程目标
      */
+    @Transactional
     @Override
     public Result deleteCoursetargetByIds(List<String> ids){
-        cmCoursetargetMapper.deleteCoursetargetByIds(ids);
         cmCoursetargetMapper.deleteKwasByTargetIds(ids);
         cmCourseAssessmentMapper.deleteStandardScoreByTargetId(ids);
+        cmCoursetargetMapper.deleteCoursetargetByIds(ids);
         return Result.success();
     }
 

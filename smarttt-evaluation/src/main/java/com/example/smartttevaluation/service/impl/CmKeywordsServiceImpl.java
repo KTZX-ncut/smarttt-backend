@@ -71,15 +71,17 @@ public class CmKeywordsServiceImpl implements CmKeywordsService {
      * 更新关键字
      */
     @Override
-    public Result updateKeywords(CmKeywords cmKeywords) {
+    public Result updateKeywords(CmKeywords cmKeywords, String obsId) {
         cmKeywordsMapper.updateKeywordsByID(cmKeywords);
         // 获取与这个关键字关联的kwa
         List<String> ids = new ArrayList<>();
         ids.add(cmKeywords.getId());
         List<CmKwadict> kwas = cmKeywordsMapper.getKwaByKeywordsId(ids);
-        // 对每个关联的kwa的name字段的keyword部分更新
+        // 获取课程对应的专业id
+        obsId = cmKeywordsMapper.getProIdByCourseId(obsId);
+        // 对kwa名称的keywordName部分更新
         for(CmKwadict kwa : kwas) {
-            CmAbility ability = cmAbilityMapper.getOneAbility(kwa.getAbilityid());
+            CmAbility ability = cmAbilityMapper.getOneAbility(kwa.getAbilityid(), obsId);
             kwa.setName(cmKeywords.getName() + "-" + ability.getName());
         }
 

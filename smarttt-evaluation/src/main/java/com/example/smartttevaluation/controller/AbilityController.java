@@ -80,7 +80,9 @@ public class AbilityController {
     }
 
     @PostMapping("/update")
-    public Result updateAbility(@RequestBody CmAbility cmAbility) {
-        return cmAbilityService.updateOneAbility(cmAbility);
+    @AuthRequired(type = "admin", menu = "531500340-fe5bb833-fdd7-4416-81dd-f5b20107540f")
+    public Result updateAbility(@RequestBody CmAbility cmAbility, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmAbilityService.updateOneAbility(cmAbility, token.getObsid());
     }
 }

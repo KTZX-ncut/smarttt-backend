@@ -59,9 +59,9 @@ public class CmKwadictServiceImpl implements CmKwadictService {
     @Override
     @Transactional
     public Result deleteKwadictByIds(List<String> ids) {
-        cmKwadictMapper.deleteKwadictByIds(ids);
         // 删除kwa时同时把知识单元和课程目标以及知识能力图谱的连线中与这个kwa关联的记录删除
         deleteAssociateKwa(ids);
+        cmKwadictMapper.deleteKwadictByIds(ids);
         return Result.success();
     }
 

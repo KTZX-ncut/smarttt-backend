@@ -52,4 +52,10 @@ public interface CmKeywordsMapper {
      */
     @Select("select * from cm_keywords where id = #{id}")
     CmKeywords getOneKeyword(String id);
+
+    /**
+     * 通过课程id获取专业id
+     */
+    @Select("select professionId from cm_course where id = #{courseId}")
+    String getProIdByCourseId(String courseId);
 }

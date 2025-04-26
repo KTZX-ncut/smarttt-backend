@@ -22,7 +22,7 @@ public interface CmKeywordsService {
     /**
      *更新关键字
      */
-    Result updateKeywords(CmKeywords cmKeywords);
+    Result updateKeywords(CmKeywords cmKeywords, String obsId);
     /**
      *通过关键字id获取kwa
      */

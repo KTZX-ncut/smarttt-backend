@@ -40,6 +40,8 @@ public interface CmKnowledgeUnitMapper {
     void deleteKnowledgeUnitKwaByKwaIds(@Param("kwaIds") List<String> kwaIds);
     //批量删除Unit
     void deleteKnowledgeUnitByUnitids(@Param("unitids") List<String> unitids);
+    // 删除所有unit的连线
+    void deleteLineByUnitIds(@Param("unitids") List<String> unitids);
     //更新知识单元
     @Update("update cm_course_unit set name=#{name},nodeType=#{type},dataValue=#{datavalue} where id=#{id}")
     void updateKnowledgeUnit(CmKnowledgeUnit cmKnowledgeUnit);

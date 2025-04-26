@@ -221,6 +221,7 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
             }
         }
 
+        // 计算课程目标达成度
         for (CmAssessmentStudent stu : studentList) {
             if (stu.getEvaluationState() == 0) continue;
             for (CmCoursetarget target : targets) {

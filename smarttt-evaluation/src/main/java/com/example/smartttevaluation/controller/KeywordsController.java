@@ -67,8 +67,10 @@ public class KeywordsController {
      * 更新关键字
      */
     @PostMapping
-    public Result updateKeywords(@RequestBody CmKeywords cmKeywords) {
-        return cmKeywordsService.updateKeywords(cmKeywords);
+    @AuthRequired(type = "admin", menu = "531500340-86816d21-ec0c-4dc6-ad1d-8edea9716d09")
+    public Result updateKeywords(@RequestBody CmKeywords cmKeywords, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmKeywordsService.updateKeywords(cmKeywords, token.getObsid());
     }
 
     @PostMapping("/import")
