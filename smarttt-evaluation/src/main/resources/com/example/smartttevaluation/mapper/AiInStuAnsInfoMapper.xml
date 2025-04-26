@@ -32,7 +32,7 @@
     </update>
 
     <select id="getPaperInfoListByIds" parameterType="list" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
-        SELECT id as paperId, create_time as createTime,`row`
+        SELECT paper_id as paperId, create_time as createTime,`row`
         FROM ai_calculate_paper
         WHERE paper_id in
         <foreach collection="paperIdList" separator="," open="(" close=")" item="id">

@@ -37,8 +37,18 @@ public enum ResponseEnum {
     TEST_ID_NOT_VALID(-710,"考试id(testId) 不合法！"),
     PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!"),
     NUM_NOT_NULL(-710, "评价次数不能为空"),
-    NO_VALID(-710, "传入的数据不合法"), CLASSROOM_STUDENT_ID_IS_NOT_NULL(-710, "classroom_student_id不能为空！");
+    NO_VALID(-710, "传入的数据不合法"), CLASSROOM_STUDENT_ID_IS_NOT_NULL(-710, "classroom_student_id不能为空！"),
+    VALUE_TYPE_NAME_NOT_NULL(-710, "valueType: 值类型名称不能为空"),
+    VALUE_TYPE_NAME_EXIST(-710,"valueType: name已经存在了"),
+    VALUE_TYPE_ID_NOT_NULL(-710, "valueType: id不能为空"),
+    TYPE_ID_IS_NOT_NULL(-710, "valueTag: typeId不能为空"),
+    NAME_IS_NOT_NULL(-710, "valueTag: name不能为空"),
 
+    VALUE_TYPE_ID_NOT_VALID(-710, "valueTag: typeId不合法"),
+    VALUE_TAG_NAME_EXIST(-710,"valueTag: name已经存在了"),
+    VALUE_TAG_ID_IS_NOT_NULL(-710, "valueTag: id不能为空"),
+    VALUE_TAG_ID_NOT_NULL(-710, "valueTag: idList不能为空"),
+    VALUE_TAG_KWA_ID_NOT_VALID(-710, "valueTag绑定kwa: kwaId不合法");
 
     private Integer code;//状态码
     private String message;//消息

@@ -67,7 +67,7 @@ public class TeachingProgramHandler implements CourseFileHandler {
         String objectName = "";
 
         for (String item : params) {
-            objectName += (item + File.separator);
+            objectName += (item + "/");
         }
         log.info("TeachingProgramHandler.buildObjectName.objectName:{}",objectName);
         return objectName;

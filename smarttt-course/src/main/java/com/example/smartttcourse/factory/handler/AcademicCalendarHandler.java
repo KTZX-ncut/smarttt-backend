@@ -66,7 +66,7 @@ public class AcademicCalendarHandler implements CourseFileHandler{
         String coursePlan = params[1];
         // 拿到courseId
         String courseId = classRoomService.getCourseIdByClassroomId(classroomId);
-        String objectName = courseId + File.separator + classroomId + File.separator + coursePlan + File.separator;
+        String objectName = courseId + "/" + classroomId + "/" + coursePlan + "/";
         log.info("AcademicCalendarHandler.buildObjectName.objectName:{}",objectName);
         return objectName;
     }
