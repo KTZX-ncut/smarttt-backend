@@ -19,5 +19,6 @@ public class ValueTag {
     private LocalDateTime createTime;
 
     @TableField("type_id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long typeId;
 }
