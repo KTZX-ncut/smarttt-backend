@@ -188,6 +188,11 @@ public class StUsersServiceImpl implements StUsersService {
 
     @Override
     public Result studentChangePwd(String currenPwd, String newPwd, String id) {
+        String pwd = stUsersMapper.getPwd(id);
+        if (!Objects.equals(pwd, currenPwd)) return Result.error("当前密码不正确");
+        if(Objects.equals(pwd, newPwd)) return Result.error("新旧密码一致");
+
+        stUsersMapper.updatePwd(id, newPwd);
         return Result.success();
     }
 }
