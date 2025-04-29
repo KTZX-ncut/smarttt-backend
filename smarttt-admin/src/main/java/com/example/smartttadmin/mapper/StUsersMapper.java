@@ -86,4 +86,10 @@ public interface StUsersMapper {
     List<String> getStUsersByloginName(String loginname);
 
     void saveBach(@Param("personnelRosterList") List<PersonnelRoster> personnelRosterList);
+
+    @Select("select pwd from st_users where id = #{id}")
+    String getPwd(String id);
+
+    @Insert("update st_users set pwd = #{pwd} where id = #{id}")
+    void updatePwd(@Param("id") String id, @Param("pwd") String pwd);
 }

@@ -175,4 +175,19 @@ public class StUsersServiceImpl implements StUsersService {
     public void saveBach(List<PersonnelRoster> personnelRosterList) {
         stUsersMapper.saveBach(personnelRosterList);
     }
+
+    @Override
+    public Result teacherChangePwd(String currenPwd, String newPwd, String id) {
+        String pwd = stUsersMapper.getPwd(id);
+        if (!Objects.equals(pwd, currenPwd)) return Result.error("当前密码不正确");
+        if(Objects.equals(pwd, newPwd)) return Result.error("新旧密码一致");
+
+        stUsersMapper.updatePwd(id, newPwd);
+        return Result.success();
+    }
+
+    @Override
+    public Result studentChangePwd(String currenPwd, String newPwd, String id) {
+        return Result.success();
+    }
 }

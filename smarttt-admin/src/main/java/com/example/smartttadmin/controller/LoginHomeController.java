@@ -5,6 +5,7 @@ import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.service.StMenusService;
 import com.example.smartttadmin.service.StRolesService;
+import com.example.smartttadmin.service.StUsersService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,8 @@ public class LoginHomeController {
     private StMenusService stMenusService;
    @Autowired
    private StRolesService stRolesService;
+   @Autowired
+   private StUsersService stUsersService;
 
     /**
      * 教师类型用户登录到首页
@@ -68,5 +71,19 @@ public class LoginHomeController {
     public Result switchRole(HttpServletRequest request){
         Token token = getTokenFromContext();
         return stRolesService.switchRole(token.getId());
+    }
+
+    @GetMapping("/teacherChangePwd")
+    @AuthRequired(type = "admin",menu = "531500340-0f2888b9-ecaf-49a7-b175-7ae00e14ae65")
+    public Result teacherChangePwd(@RequestParam String currentPwd, @RequestParam String newPwd, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return stUsersService.teacherChangePwd(currentPwd, newPwd, token.getId());
+    }
+
+    @GetMapping("/studentChangePwd")
+    @AuthRequired(type = "admin",menu = "531500340-a9456c2b-c3f7-41b3-b2c4-1fd8e622dcc6")
+    public Result studentChangePwd(@RequestParam String currentPwd, @RequestParam String newPwd, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return stUsersService.studentChangePwd(currentPwd, newPwd, token.getId());
     }
 }

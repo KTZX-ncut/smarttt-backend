@@ -49,4 +49,8 @@ public interface StUsersService{
     List<String> getStUsersByloginName(String loginname);
 
     void saveBach(List<PersonnelRoster> personnelRosterList);
+
+    Result teacherChangePwd(String currenPwd, String newPwd, String id);
+
+    Result studentChangePwd(String currenPwd, String newPwd, String id);
 }
