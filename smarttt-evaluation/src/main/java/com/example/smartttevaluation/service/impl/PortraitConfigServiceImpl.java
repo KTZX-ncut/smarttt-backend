@@ -55,4 +55,9 @@ public class PortraitConfigServiceImpl implements PortraitConfigService {
         }
         return true;
     }
+
+    @Override
+    public List<TestPaperInfoVO> getTestExperimentPaperInfo(String classroomId) {
+        return portraitConfigMapper.getTestExperimentPaperInfo(classroomId);
+    }
 }

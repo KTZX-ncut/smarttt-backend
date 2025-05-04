@@ -17,8 +17,7 @@ public interface StuPortraitKeywordMapper {
                 @Param("classroomId") String classroomId,
                 @Param("courseId") String courseId);
 
-    void delete(@Param("stuId") String stuId,
-               @Param("classroomId") String classroomId,
+    void delete(@Param("classroomId") String classroomId,
                @Param("courseId") String courseId);
 
     List<KeywordVO> select(@Param("courseId") String courseId,

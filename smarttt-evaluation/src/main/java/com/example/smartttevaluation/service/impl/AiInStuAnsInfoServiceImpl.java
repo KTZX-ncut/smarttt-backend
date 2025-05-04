@@ -196,6 +196,111 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
         }
     }
 
+//    @Override
+//    public boolean calculatePortrait(CalculatePortraitReq calculatePortraitReq) {
+//        try {
+//            String classroomId = calculatePortraitReq.getClassroomId();
+//            String courseId = calculatePortraitReq.getCourseId();
+//            // 1. 获取参与评价的学生
+//            List<String> stuIdList = calculatePortraitReq.getStuIdList();
+//            if(CollectionUtil.isEmpty(stuIdList) || Objects.isNull(stuIdList)){
+//                // 入库查询(只查询参与评价的学生)
+//                stuIdList = aiInStuAnsInfoMapper.getStuIdListByClassroomId(classroomId);
+//                if(CollectionUtil.isEmpty(stuIdList) || Objects.isNull(stuIdList)){
+//                    throw new BusinessException("该课堂下没有学生，不能计算！",-600);
+//                }
+//            }
+//            List<String> excludeStuIdList = calculatePortraitReq.getExcludeStuIdList();
+//            if (!Objects.isNull(excludeStuIdList) && CollectionUtil.isNotEmpty(excludeStuIdList)){
+//                // 排除掉excludeStuIdList下的stuIds
+//                stuIdList = stuIdList.stream().filter(t -> !excludeStuIdList.contains(t)).collect(Collectors.toList());
+//            }
+//
+//            // 2. 获取参与评价的考试/试卷
+//            List<String> paperIdList = calculatePortraitReq.getPaperIdList();
+//            List<PaperInfoDto> paperInfoDtoList = null;
+//            if(CollectionUtil.isEmpty(paperIdList) || Objects.isNull(paperIdList)) {
+//                // 查询配置试卷信息表中的试卷列表
+//                paperInfoDtoList = aiInStuAnsInfoMapper.getPaperInfoListByClassroomId(classroomId);
+//            }else {
+//                /**
+//                 * 通过试卷的paperId去配置试卷信息表中拿到create_time 和 row
+//                 * （create_time留个口子防止以后该改需求按照创建顺序计算）
+//                 */
+//                paperInfoDtoList = aiInStuAnsInfoMapper.getPaperInfoListByIds(paperIdList);
+//            }
+//            if(CollectionUtil.isEmpty(paperInfoDtoList) || Objects.isNull(paperInfoDtoList)){
+//                throw new BusinessException("该课堂下还没有发布试卷或者传入的paperList有误", -600);
+//            }
+//            // 2.1 排除不参与评价的试卷
+//            List<String> excludePaperIdList = calculatePortraitReq.getExcludePaperIdList();
+//            if (!Objects.isNull(excludePaperIdList) && CollectionUtil.isNotEmpty(excludePaperIdList)){
+//                paperInfoDtoList = paperInfoDtoList.stream().filter(t->!excludePaperIdList.contains(t.getPaperId()))
+//                        .collect(Collectors.toList());
+//            }
+//            // 按照创建试卷进行排序（creat_time）
+//            paperInfoDtoList = ListUtil.sortByProperty(paperInfoDtoList, "row");
+//
+//            // 3. 学生形成行评价
+//            for (String stuId : stuIdList){
+//                // 校验stuId的合法性
+//                String exist = aiInStuAnsInfoMapper.isExistStudent(stuId,classroomId);
+//                if (StrUtil.isBlank(exist)){
+//                    // 若stuId 不合法，直接跳过计算
+//                    continue;
+//                }
+//                // 删除之前计算的数据
+//                stuPortraitAbilityMapper.delete(stuId,classroomId,courseId);
+//                stuPortraitKeywordMapper.delete(stuId,classroomId,courseId);
+//                stuPortraitUnitMapper.delete(stuId,classroomId,courseId);
+//
+//                List<PaperInfoDto> calPaperList = new ArrayList<>();
+//                for (PaperInfoDto paperInfoDto : paperInfoDtoList){
+//                    calPaperList.add(paperInfoDto);
+//                    // 校验该学生是否做了本张试卷
+//                    List<String> existStudentPaperData = aiInStuAnsInfoMapper.isExistStudentPaperData(classroomId,courseId,stuId,paperInfoDto.getPaperId());
+//                    if (Objects.isNull(existStudentPaperData) || CollectionUtil.isEmpty(existStudentPaperData)){
+//                        // 若学生没有做该试卷，本次不做评价
+//                        continue;
+//                    }
+//                    // 计算
+//                    StudentPortraitVO studentPortraitVO = this.calculateStudentPortrait(calPaperList, courseId, stuId, classroomId);
+//                    // 入库
+//                    stuPortraitAbilityMapper.insert(studentPortraitVO.getAbility(),calPaperList.size(),stuId,classroomId,courseId);
+//                    stuPortraitKeywordMapper.insert(studentPortraitVO.getKeyword(),calPaperList.size(),stuId,classroomId,courseId);
+//                    stuPortraitUnitMapper.insert(studentPortraitVO.getUnit(),calPaperList.size(),stuId,classroomId,courseId);
+//
+//                }
+//            }
+//            // 4. 计算课堂形成行评价分析
+//            List<PaperInfoDto> calPaperList = new ArrayList<>();
+//            // 清理数据
+//            classroomPortraitAbilityMapper.delete(classroomId,courseId);
+//            classroomPortraitKeywordMapper.delete(classroomId,courseId);
+//            classroomPortraitUnitMapper.delete(classroomId,courseId);
+//            for(PaperInfoDto paperInfoDto : paperInfoDtoList){
+//                calPaperList.add(paperInfoDto);
+//                StudentPortraitVO classroomPortrait = this.calculateClassroomPortrait(calPaperList, courseId, classroomId,stuIdList);
+//                // 保存数据
+//                classroomPortraitAbilityMapper.insert(classroomPortrait.getAbility(),calPaperList.size(),classroomId,courseId);
+//                classroomPortraitKeywordMapper.insert(classroomPortrait.getKeyword(),calPaperList.size(),classroomId,courseId);
+//                classroomPortraitUnitMapper.insert(classroomPortrait.getUnit(),calPaperList.size(),classroomId,courseId);
+//            }
+//            // 5. 记录总评价的次数
+//            Integer id = portraitTotalMapper.selectByCondition(courseId, classroomId);
+//            if(Objects.isNull(id)){
+//                portraitTotalMapper.insert(courseId,classroomId,paperInfoDtoList.size());
+//            }else{
+//                portraitTotalMapper.update(courseId,classroomId,paperInfoDtoList.size());
+//            }
+//            return true;
+//        }catch (Exception e){
+//            log.error(e.getMessage(),e);
+//            throw new BusinessException(e.getMessage(),500);
+//        }
+//    }
+
+
     @Override
     public boolean calculatePortrait(CalculatePortraitReq calculatePortraitReq) {
         try {
@@ -216,7 +321,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
                 stuIdList = stuIdList.stream().filter(t -> !excludeStuIdList.contains(t)).collect(Collectors.toList());
             }
 
-            // 2. 获取参与评价的考试/试卷
+            // 2. 获取参与评价的考试/试卷/实验
             List<String> paperIdList = calculatePortraitReq.getPaperIdList();
             List<PaperInfoDto> paperInfoDtoList = null;
             if(CollectionUtil.isEmpty(paperIdList) || Objects.isNull(paperIdList)) {
@@ -224,7 +329,7 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
                 paperInfoDtoList = aiInStuAnsInfoMapper.getPaperInfoListByClassroomId(classroomId);
             }else {
                 /**
-                 * 通过试卷的paperId去配置试卷信息表中拿到create_time 和 row
+                 * 通过试卷的paperId去配置试卷信息表中拿到create_time ,row 和 catelog
                  * （create_time留个口子防止以后该改需求按照创建顺序计算）
                  */
                 paperInfoDtoList = aiInStuAnsInfoMapper.getPaperInfoListByIds(paperIdList);
@@ -242,6 +347,14 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
             paperInfoDtoList = ListUtil.sortByProperty(paperInfoDtoList, "row");
 
             // 3. 学生形成行评价
+
+            // 删除之前计算的数据
+            stuPortraitAbilityMapper.delete(classroomId,courseId);
+            stuPortraitKeywordMapper.delete(classroomId,courseId);
+            stuPortraitUnitMapper.delete(classroomId,courseId);
+
+            // 获取学生答题日志数据
+
             for (String stuId : stuIdList){
                 // 校验stuId的合法性
                 String exist = aiInStuAnsInfoMapper.isExistStudent(stuId,classroomId);
@@ -249,11 +362,6 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
                     // 若stuId 不合法，直接跳过计算
                     continue;
                 }
-                // 删除之前计算的数据
-                stuPortraitAbilityMapper.delete(stuId,classroomId,courseId);
-                stuPortraitKeywordMapper.delete(stuId,classroomId,courseId);
-                stuPortraitUnitMapper.delete(stuId,classroomId,courseId);
-
                 List<PaperInfoDto> calPaperList = new ArrayList<>();
                 for (PaperInfoDto paperInfoDto : paperInfoDtoList){
                     calPaperList.add(paperInfoDto);
@@ -272,6 +380,8 @@ public class AiInStuAnsInfoServiceImpl extends ServiceImpl<AiInStuAnsInfoMapper,
 
                 }
             }
+
+
             // 4. 计算课堂形成行评价分析
             List<PaperInfoDto> calPaperList = new ArrayList<>();
             // 清理数据

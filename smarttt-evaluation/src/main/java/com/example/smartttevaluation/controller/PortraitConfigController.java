@@ -30,7 +30,12 @@ public class PortraitConfigController {
     @GetMapping("/getTestInfoList")
     public Result getTestInfoList(@RequestParam("classroomId") String classroomId) {
         SmartAssert.checkExpression(StrUtil.isNotBlank(classroomId), ResponseEnum.CLASSROOM_ID_NOT_NULL);
+        // 获取所有的作业
         List<TestPaperInfoVO> testPaperInfoVOList = portraitConfigService.getTestPaperInfo(classroomId);
+        // 获取所有的实验
+        List<TestPaperInfoVO> experimentInfoVOList = portraitConfigService.getTestExperimentPaperInfo(classroomId);
+        // 合并作业和实验
+        testPaperInfoVOList.addAll(experimentInfoVOList);
         List<CalculatePaper> calculatePaperList = portraitConfigService.getConfTestInfoList(classroomId);
         // 获取 calculatePaperList 中的所有 paperId
         Set<String> calculatePaperIds = calculatePaperList.stream()

@@ -15,4 +15,6 @@ public interface PortraitConfigService {
     List<CalculatePaper> getConfTestInfoList(String classroomId);
 
     Boolean updateConfTestInfoListRow(List<CalculatePaper> calculatePaperList);
+
+    List<TestPaperInfoVO> getTestExperimentPaperInfo(String classroomId);
 }

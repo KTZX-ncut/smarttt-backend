@@ -32,7 +32,7 @@
     </update>
 
     <select id="getPaperInfoListByIds" parameterType="list" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
-        SELECT paper_id as paperId, create_time as createTime,`row`
+        SELECT paper_id as paperId, create_time as createTime,`row`,catelog
         FROM ai_calculate_paper
         WHERE paper_id in
         <foreach collection="paperIdList" separator="," open="(" close=")" item="id">
@@ -298,7 +298,7 @@
     </select>
 
     <select id="getPaperInfoListByClassroomId" resultType="com.example.smartttevaluation.dto.PaperInfoDto">
-        SELECT paper_id as paperId, create_time createTime,`row`
+        SELECT paper_id as paperId, create_time createTime,`row`,catelog
         FROM ai_calculate_paper
         WHERE classroom_id = #{classroomId}
     </select>
