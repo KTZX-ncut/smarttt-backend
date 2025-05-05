@@ -24,12 +24,17 @@ public class CalculateEventListener {
     @Async
     @EventListener
     public void handleCalculateRequest(CalculateRequestEvent event) {
-        // 处理业务逻辑
-        log.info("接收到事件：" + event.getCalculatePortraitReq());
-        boolean flag = aiInStuAnsInfoService.calculatePortrait(event.getCalculatePortraitReq());
-        if (!flag){
-            log.error("计算失败:CalculateEventListener.handleCalculateRequest.calculatePortraitReq:{}", JSONUtil.parse(event.getCalculatePortraitReq()));
+        try {
+            // 处理业务逻辑
+            CalculateRequestEvent.taskMap.put(event.getTaskId(), "pedding");
+            log.info("接收到事件：" + event.getCalculatePortraitReq());
+            aiInStuAnsInfoService.calculatePortrait(event.getCalculatePortraitReq());
+            CalculateRequestEvent.taskMap.put(event.getTaskId(), "success");
+        }catch (Exception e){
+            CalculateRequestEvent.taskMap.put(event.getTaskId(), "failed");
+            log.error("计算失败：" + event.getCalculatePortraitReq() + "原因：" + e.getMessage());
         }
+
     }
 
 }

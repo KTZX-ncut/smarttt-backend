@@ -151,9 +151,24 @@ public class AiInStuAnsInfoController {
         // 一个学生 16 次循环，假设有120个学生 16 * 120，访问数据库次数耗时。
         // 一个课堂16次循环。
         // boolean succeed = aiInStuAnsInfoService.calculatePortrait(calculatePortraitReq);
-        return Result.ok().data(true).code(200);
+        return Result.ok().data(calculateRequestEvent.getTaskId()).code(200);
     }
 
+    /**
+     * 查询异步任务完成进度
+     */
+    @GetMapping("/task")
+    public Result getTaskSchedule(@RequestParam("taskId") String taskId){
+        String s = CalculateRequestEvent.taskMap.get(taskId);
+        if (StrUtil.isNotBlank(s)){
+            if ("success".equals(s) || "failed".equals(s)){
+                // 移除该任务
+                CalculateRequestEvent.taskMap.remove(taskId);
+            }
+            return Result.success(s);
+        }
+        return Result.error(-710,"不存在该任务或者该任务已经执行完成");
+    }
     /**
      * 获取评价总次数
      */
