@@ -1,20 +1,18 @@
 package com.example.smartttevaluation.controller;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.smartttevaluation.Utils.TermUtil;
 import com.example.smartttevaluation.dto.CalculatePortraitReq;
 import com.example.smartttevaluation.dto.PaperInfoDto;
 import com.example.smartttevaluation.dto.StudentDynamicStateReq;
 import com.example.smartttevaluation.dto.StudentPortraitReq;
+import com.example.smartttevaluation.event.CalculateRequestEvent;
 import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.exception.res.ResponseEnum;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.exception.utils.SmartAssert;
-import com.example.smartttevaluation.pojo.AiInStuAnsInfo;
 import com.example.smartttevaluation.service.AiInStuAnsInfoService;
 import com.example.smartttevaluation.vo.*;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -31,6 +29,9 @@ public class AiInStuAnsInfoController {
 
     @Resource
     private AiInStuAnsInfoService aiInStuAnsInfoService;
+
+    @Resource
+    private ApplicationEventPublisher  applicationEventPublisher;
 
 
     /**
@@ -141,14 +142,33 @@ public class AiInStuAnsInfoController {
         // 校参
         SmartAssert.checkExpression(StrUtil.isNotBlank(calculatePortraitReq.getCourseId()),ResponseEnum.COURSE_ID_NOT_NULL);
         SmartAssert.checkExpression(StrUtil.isNotBlank(calculatePortraitReq.getClassroomId()),ResponseEnum.CLASSROOM_ID_NOT_NULL);
+
+        // 发布事件
+        CalculateRequestEvent calculateRequestEvent = new CalculateRequestEvent(this, calculatePortraitReq);
+        applicationEventPublisher.publishEvent(calculateRequestEvent);
         // 一键计算算的是：学生的评价分析，课堂的评价分析。（而且不止一次）
         // 为了更好的扩展，留出了 试卷 和 学生的 口子
         // 一个学生 16 次循环，假设有120个学生 16 * 120，访问数据库次数耗时。
         // 一个课堂16次循环。
-        boolean succeed = aiInStuAnsInfoService.calculatePortrait(calculatePortraitReq);
-        return Result.ok().data(succeed).code(200);
+        // boolean succeed = aiInStuAnsInfoService.calculatePortrait(calculatePortraitReq);
+        return Result.ok().data(calculateRequestEvent.getTaskId()).code(200);
     }
 
+    /**
+     * 查询异步任务完成进度
+     */
+    @GetMapping("/task")
+    public Result getTaskSchedule(@RequestParam("taskId") String taskId){
+        String s = CalculateRequestEvent.taskMap.get(taskId);
+        if (StrUtil.isNotBlank(s)){
+            if ("success".equals(s) || "failed".equals(s)){
+                // 移除该任务
+                CalculateRequestEvent.taskMap.remove(taskId);
+            }
+            return Result.success(s);
+        }
+        return Result.error(-710,"不存在该任务或者该任务已经执行完成");
+    }
     /**
      * 获取评价总次数
      */
@@ -178,7 +198,6 @@ public class AiInStuAnsInfoController {
 
     /**
      * 修改学生是否参与形成性评价的状态
-     * @param studentDynamicStateReq
      * 接受的是classroom_student表中的id和dynamic_state
      * @return
      */

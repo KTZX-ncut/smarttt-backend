@@ -19,4 +19,6 @@ public interface PortraitConfigMapper {
     List<CalculatePaper> getConfTestInfoList(@Param("classroomId")String classroomId);
 
     void updateConfTestInfoListRow(@Param("id") Integer id, @Param("row") Integer row);
+
+    List<TestPaperInfoVO> getTestExperimentPaperInfo(@Param("classroomId") String classroomId);
 }

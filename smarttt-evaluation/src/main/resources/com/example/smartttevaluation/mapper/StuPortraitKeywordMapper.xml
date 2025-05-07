@@ -21,8 +21,7 @@
 
     <delete id="delete">
         DELETE FROM ai_stu_portrait_keyword
-        WHERE stu_id = #{stuId}
-          AND classroom_id = #{classroomId}
+        WHERE classroom_id = #{classroomId}
           AND course_id = #{courseId}
     </delete>
 

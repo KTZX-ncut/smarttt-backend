@@ -32,8 +32,7 @@
     </insert>
     <delete id="delete">
         DELETE FROM ai_stu_portrait_unit
-        WHERE stu_id = #{stuId}
-          AND classroom_id = #{classroomId}
+        WHERE classroom_id = #{classroomId}
           AND course_id = #{courseId}
     </delete>
     <select id="select" resultType="com.example.smartttevaluation.vo.KnowledgeUnitVO">

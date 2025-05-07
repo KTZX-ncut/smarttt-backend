@@ -86,4 +86,22 @@
         WHERE classroom_id = #{classroomId}
         Order By `row`
     </select>
+    <select id="getTestExperimentPaperInfo" resultType="com.example.smartttevaluation.vo.TestPaperInfoVO">
+        SELECT a.id as paperId,
+               a.id as testId,
+               a.name as paperName,
+               a.name as testName,
+               a.classroomId as classroomId,
+               (SELECT classroomName FROM cm_classroom WHERE id = a.classroomId) classroomName,
+               (SELECT courseChineseName FROM cm_course
+                WHERE id = (SELECT courseId FROM cm_classroom WHERE id = a.classroomId)
+               ) courseName,
+               publisher as creator,
+               publisherId as creatorId,
+               (SELECT '3' FROM DUAL) as catelog,
+               publishTime as createTime
+        FROM pm_practice a
+        WHERE a.status = 1
+              AND a.classroomId = #{classroomId}
+    </select>
 </mapper>
