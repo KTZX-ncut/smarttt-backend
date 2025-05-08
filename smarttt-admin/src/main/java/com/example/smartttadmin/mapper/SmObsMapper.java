@@ -16,7 +16,10 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
      * 查找学院列表用于教务处的展示（无负责人列表）
      * @return ...
      */
-    @Select("select id,obsname,levelcode,remark from sm_obs where obsdeep=2")
+    @Select("select sm_obs.id,obsname,levelcode,remark from sm_obs " +
+            "left join sm_obs_term\n" +
+            "on sm_obs.id = sm_obs_term.obsid\n" +
+            "where obsdeep=(select obsdeep from st_level where id = 102) and termid = (select id from cm_term where iscurrentterm = 1)")
     List<ObsResponse> getAllCollegeList();
 
     @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
@@ -26,12 +29,22 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Delete("delete from sm_obs where id = #{id}")
     void deleteObsByID(String id);
 
-    @Select("select * from sm_obs")
-    List<SmObsTree> getAllSmObsTree();
-    @Select("select * from sm_obs")
+    @Select("select sm_obs.* from sm_obs \n" +
+            "left join sm_obs_term\n" +
+            "on sm_obs.id = sm_obs_term.obsid\n" +
+            "where termid = #{currentTerm} or termid = 0;")
+    List<SmObsTree> getAllSmObsTree(String currentTerm);
+    @Select("select sm_obs.* from sm_obs \n" +
+            "left join sm_obs_term\n" +
+            "on sm_obs.id = sm_obs_term.obsid\n" +
+            "where termid = (select id from cm_term where iscurrentterm = 1) or termid = 0;")
     List<SmObs> getAllSmObsList();
-    @Select("select * from sm_obs where obsdeep<=3")
-    List<ObsRPTree>getRPTree();
+    @Select("select sm_obs.* from sm_obs \n" +
+            "left join sm_obs_term\n" +
+            "on sm_obs.id = sm_obs_term.obsid\n" +
+            "where termid = (select id from cm_term where iscurrentterm = 1) or termid = 0 \n" +
+            "and obsdeep<=#{obsdeep};")
+    List<ObsRPTree>getRPTree(long obsdeep);
 
     /**
      * 这里需要修改为动态sql
@@ -129,4 +142,13 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     long checkMaxObsdeep();
 
     void deleteObsByIDs(@Param("ids") List<String> ids);
+
+    @Insert("insert into sm_obs_term(id,obsid,termid) values (#{pid},#{id},#{obspath})")
+    void createOneObsTerm(SmObs smObs);
+
+    @Select("select historyobs from sm_student where usersid = #{id}")
+    String getStuHistoryObsByUserId(String id);
+
+    @Select("select historyobs from sm_teacher where usersid = #{id}")
+    String getTeaHistoryObsByUserId(String id);
 }

@@ -6,7 +6,9 @@ import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.CmTermMapper;
 import com.example.smartttcourse.pojo.CmTerm;
 import com.example.smartttcourse.service.CmTermService;
+import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,6 +20,8 @@ public class CmTermServicelmpl implements CmTermService {
 
     @Autowired
     private CmTermMapper cmTermMapper;
+//    @Autowired
+//    private RedisTemplate<String,String> redisTemplate;
 
     @Override
     public Result getHistoryTerm() {
@@ -36,6 +40,7 @@ public class CmTermServicelmpl implements CmTermService {
     @Override
     public Result deleteTermsByID(List<String> ids) {
         cmTermMapper.deleteTermsByIDs(ids);
+        cmTermMapper.deleteObsTermByIDs(ids);
         return Result.success();
     }
 
@@ -59,6 +64,8 @@ public class CmTermServicelmpl implements CmTermService {
     public Result setCurrentTerms(String id) {
         cmTermMapper.setCurrentTerms(id);
         cmTermMapper.setOtherTerms(id);
+//        redisTemplate.opsForValue().set("current_term",id);
+//        redisTemplate.expire("current_term",6, TimeUnit.MINUTES);
         return Result.success();
     }
 

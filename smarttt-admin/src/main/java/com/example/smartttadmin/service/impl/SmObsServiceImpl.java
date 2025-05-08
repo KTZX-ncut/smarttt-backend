@@ -5,19 +5,21 @@ import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StLevelMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
-import com.example.smartttadmin.pojo.CmClass;
-import com.example.smartttadmin.pojo.CmProfession;
-import com.example.smartttadmin.pojo.SmObs;
-import com.example.smartttadmin.pojo.StUsers;
+import com.example.smartttadmin.pojo.*;
 import com.example.smartttadmin.service.SmObsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import springfox.documentation.spring.web.json.Json;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.smartttadmin.Utils.CommonFunctions.*;
+import static com.example.smartttadmin.Utils.JacksonJsonUtil.listToJsonArray;
 
 @Service
 public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements SmObsService {
@@ -27,6 +29,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     private StUsersMapper stUsersMapper;
     @Autowired
     private StLevelMapper stLevelMapper;
+//    @Autowired
+//    private RedisTemplate<String,String> redisTemplate;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public Result getAllCollageList() {
@@ -57,6 +62,11 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         smObs.setLevelcode(generateLevelCode(generateTreeStructureList(treeStructureList,smObs.getId())));
         try{
             smObsMapper.createOneNewObs(smObs);
+            //添加学期标签
+            smObs.setPid(generateEnhancedID("sm_obs_term"));
+            String currentTerm = stUsersMapper.getCurrentTerm();
+            smObs.setObspath(currentTerm);
+            smObsMapper.createOneObsTerm(smObs);
         }catch (Exception e){
             return Result.error(502,"操作错误，或者名称重复");
         }
@@ -100,7 +110,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
     @Override
     public Result getObsTree() {
-        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree();
+        String currentTerm = stUsersMapper.getCurrentTerm();
+        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(currentTerm);
         return Result.success(buildObsTreeByPid(allObsTree,"0"));
     }
     private List<SmObsTree> buildObsTreeByPid(List<SmObsTree> allObsTree,String pid){
@@ -145,7 +156,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) {
+    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException {
         int loginNameLen = personnelRoster.getLoginname().length();
         if(loginNameLen<3 || loginNameLen>15)
             return Result.error("用户名长度在3-15个字符之间");
@@ -158,17 +169,20 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         personnelRoster.setId(usersId);
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
         stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
+        String currentTerm = stUsersMapper.getCurrentTerm();
+        HistoryObs historyObs = new HistoryObs(currentTerm,obsIDList.get(0));
+        List<HistoryObs> historyObsList  = new ArrayList<>();
+        historyObsList.add(historyObs);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){
             stUsersMapper.createOneSmStudent(generateEnhancedID("sm_student"),
-                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
         }
         else {
             stUsersMapper.createOneSmTeacher(generateEnhancedID("sm_teacher"),
-                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
         }
         return Result.success();
     }
-
     /**
      * 教秘-升级
      * @param id
@@ -255,7 +269,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
     @Override
     public Result getObsRPList(String obsid) {
-        List<ObsRPTree> allObsTree = smObsMapper.getRPTree();
+        long teacherDeep = stLevelMapper.getTeacherLevel();
+        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(teacherDeep);
         Map<String, List<ObsRPTree>> obsMap = allObsTree.stream()
                 .collect(Collectors.groupingBy(ObsRPTree::getPid,
                         Collectors.collectingAndThen(

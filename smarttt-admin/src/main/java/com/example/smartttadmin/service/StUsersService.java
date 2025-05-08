@@ -7,6 +7,7 @@ import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public interface StUsersService{
 
     Result deleteRP(StRoleUser stRoleUser);
 
-    Result updateOnePersonnelRoster(PersonnelRoster personnelRoster);
+    Result updateOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException;
 
     Result getStudentByClassID(String id);
 
