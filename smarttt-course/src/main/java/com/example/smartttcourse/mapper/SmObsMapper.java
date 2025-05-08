@@ -15,8 +15,12 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
 
     @Select("select id,obsname,remark from sm_obs where obsdeep = 1")
     SchoolInforReq getSchoolObs();
-    @Select("select * from sm_obs where obsdeep<=3")
-    List<ObsRPTree> getRPTree();
+    @Select("select sm_obs.* from sm_obs \n" +
+            "left join sm_obs_term\n" +
+            "on sm_obs.id = sm_obs_term.obsid\n" +
+            "where termid = (select id from cm_term where iscurrentterm = 1) or termid = 0 \n" +
+            "and obsdeep<=#{obsdeep};")
+    List<ObsRPTree>getRPTree(long obsdeep);
 
     @Select("select obsdeep from sm_obs where id = #{obsid}")
     long getObsdeepByObsid(String obsid);
