@@ -3,7 +3,6 @@ package com.example.smartttadmin.service.impl;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
-import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
@@ -41,7 +40,7 @@ public class StUsersServiceImpl implements StUsersService {
             stRoleUser.setObsdeep(smObsMapper.getObsdeepByObsid(stRoleUser.getObsid()));
             stRoleUser.setCreatetime(LocalDate.now().toString());
             String currentTerm = stUsersMapper.getCurrentTerm();
-            stRoleUser.setBy1(currentTerm);
+            stRoleUser.setTermid(currentTerm);
             stUsersMapper.createOneRoleUser(stRoleUser);
         }catch (NullPointerException e)
         {
@@ -142,7 +141,6 @@ public class StUsersServiceImpl implements StUsersService {
 
         stUsersMapper.updateUserByID(personnelRoster);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){//学生
-
             stUsersMapper.updateStudentByID(changePersonHistoryObs(personnelRoster));
         }else{//老师
             stUsersMapper.updateTeacherByID(changePersonHistoryObs(personnelRoster));

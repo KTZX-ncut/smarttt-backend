@@ -54,7 +54,7 @@ public interface StUsersMapper {
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
     void deletePRByObsIDAndUserID(StRoleUser stRoleUser);
 
-    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime,by1) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime},#{by1})")
+    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime,termid) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime},#{termid})")
     void createOneRoleUser(StRoleUser stRoleUser);
 
     @Select("SELECT u.id, u.username, o.obsname, t.obsid\n" +
@@ -95,4 +95,11 @@ public interface StUsersMapper {
 
     @Insert("update st_users set pwd = #{pwd} where id = #{id}")
     void updatePwd(@Param("id") String id, @Param("pwd") String pwd);
+
+    @Select("select usersid as id from sm_teacher where obsid = #{id}")
+    List<PersonnelRoster> getTeacherByObsid(String id);
+
+    @Select("select usersid as id from sm_student where obsid = #{id}")
+    List<PersonnelRoster> getStudentByObsid(String id);
+
 }

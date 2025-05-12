@@ -32,7 +32,6 @@ public class ProfessionMangtController {
     }
 
     /**
-     * 写死，挂在计算机系，需要修改为token获取
      * @param cmProfession
      * @return
      */

@@ -53,7 +53,8 @@ public class DepartmentMangtController {
     }
 
     @PostMapping("/delete")
-    public Result deleteDepartments(@RequestBody List<String> ids){
+    @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    public Result deleteDepartments(@RequestBody List<String> ids,HttpServletRequest request){
         return smObsService.deleteObssByIDS(ids);
     }
 
@@ -67,12 +68,14 @@ public class DepartmentMangtController {
         return smObsService.getObsRPList(obsID);
     }
     @PostMapping ("/departmentRP/delete")
-    public Result deleteCollageRP(@RequestBody StRoleUser stRoleUser){
+    @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    public Result deleteCollageRP(@RequestBody StRoleUser stRoleUser,HttpServletRequest request){
         stRoleUser.setRoleid("516761049-bac1cf5a-5360-4caa-b062-3e2800bdfd58");
         return stUsersService.deleteRP(stRoleUser);
     }
     @PostMapping("/departmentRP/create")
-    public Result createCollageRP(@RequestBody StRoleUser stRoleUser){
+    @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479")
+    public Result createCollageRP(@RequestBody StRoleUser stRoleUser,HttpServletRequest request){
         stRoleUser.setRoleid("516761049-bac1cf5a-5360-4caa-b062-3e2800bdfd58");
         return stUsersService.createOneRP(stRoleUser);
     }

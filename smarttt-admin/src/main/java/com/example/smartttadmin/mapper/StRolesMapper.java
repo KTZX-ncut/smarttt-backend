@@ -33,7 +33,7 @@ public interface StRolesMapper {
     @Select("select st_roleuser.id,roleid,rolename,obsid,obsdeep \n" +
             "from st_roleuser,st_roles \n" +
             "where st_roleuser.roleid =st_roles.id and userid = #{userid}\n" +
-            "and (st_roleuser.by1 = 0 or st_roleuser.by1 = (select id from cm_term where iscurrentterm = 1))")
+            "and (st_roleuser.termid = 0 or st_roleuser.termid = (select id from cm_term where iscurrentterm = 1))")
     List<SimpleRole> getRolesByUserID(String userid);
 
     /**

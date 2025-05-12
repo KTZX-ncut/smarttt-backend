@@ -20,5 +20,6 @@ public class SmObs {
   private String levelcode;
   private String createtime;
   private String remark;
+  private String termid;
 
 }

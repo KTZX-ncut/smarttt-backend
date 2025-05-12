@@ -21,6 +21,7 @@ public class SmObs {
   private String levelcode;
   private String createtime;
   private String remark;
+  private String termid;
 
   public SmObs(String id, String pid, long obsdeep, String obsname, String remark) {
     this.id = id;

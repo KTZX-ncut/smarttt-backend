@@ -54,7 +54,7 @@ public interface StMenusMapper {
 
 
     @Select("select status from st_rolemenu where roleid = #{roleid} and menuid = #{menuid}")
-    List<String> getStatueInRoleUser(@Param("roleid") String roleid, @Param("menuid") String menu);
+    List<String> getStatueInRoleUser(@Param("roleid") String roleid, @Param("menuid") String menuid);
 
     @Select("select cm_classroom_classroommenu.classroomId as id ,cm_classroom.classroomName from cm_classroom_classroommenu,cm_classroom where cm_classroom.id=classroomId and stuId = #{id}")
     List<CourseListReq> getStudentCourseList(String id);
