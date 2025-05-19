@@ -29,4 +29,14 @@ public interface ValueTagMapper {
     Integer countKwaByKwaId(@Param("kwaId") String kwaId);
 
     Boolean bindKwaAndValue(@Param("kwaId") String kwaId, @Param("parse") String parse);
+
+    String getValueTagListJson(String kwaId);
+
+    void decreaseValueTagCalCount(@Param("ids") List<Long> ids);
+
+    void increaseValueTagCalCount(@Param("newIds") List<Long> newIds);
+
+    List<ValueTag> getValueTagByIdList(@Param("idList") List<Long> idList);
+
+    List<ValueTag> getValueTagByTypeIdList(@Param("typeIdList") List<Long> typeIdList);
 }

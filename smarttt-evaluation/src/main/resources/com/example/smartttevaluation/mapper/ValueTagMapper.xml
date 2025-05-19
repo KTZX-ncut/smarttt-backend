@@ -27,6 +27,24 @@
         where id = #{kwaId}
     </update>
 
+    <update id="decreaseValueTagCalCount">
+        update value_tag
+        set cal_count = cal_count - 1
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="increaseValueTagCalCount">
+        update value_tag
+        set cal_count = cal_count + 1
+        where id in
+        <foreach collection="newIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 
     <delete id="deleteValueTagByTypeId">
         delete from value_tag where type_id in
@@ -64,6 +82,23 @@
     </select>
     <select id="countKwaByKwaId" resultType="java.lang.Integer">
         select count(*) from cm_kwadict where id = #{kwaId}
+    </select>
+    <select id="getValueTagListJson" resultType="java.lang.String">
+        SELECT v FROM cm_kwadict WHERE id = #{kwaId}
+    </select>
+
+    <select id="getValueTagByIdList" resultType="com.example.smartttevaluation.pojo.ValueTag">
+        SELECT id, `name`, remark,type_id, createtime,  cal_count FROM value_tag WHERE id IN
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </select>
+    <select id="getValueTagByTypeIdList" resultType="com.example.smartttevaluation.pojo.ValueTag">
+        SELECT id, `name`, remark,type_id, createtime,  cal_count FROM value_tag WHERE type_id IN
+        <foreach collection="typeIdList" item="typeId" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
     </select>
 
 

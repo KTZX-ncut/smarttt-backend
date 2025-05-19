@@ -66,8 +66,8 @@ public class ValueTypeServiceImpl implements ValueTypeService {
     @Override
     @Transactional
     public Boolean delete(List<Long> idList) {
-        valueTypeMapper.delete(idList);
         valueTagService.deleteValueTagByTypeId(idList);
+        valueTypeMapper.delete(idList);
         return true;
     }
 
