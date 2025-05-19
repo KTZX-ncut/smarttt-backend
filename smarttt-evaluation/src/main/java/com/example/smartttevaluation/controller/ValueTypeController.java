@@ -64,8 +64,12 @@ public class ValueTypeController {
     @DeleteMapping ("/delete")
     public Result deleteValueType(@RequestParam("idList") List<Long> idList){
         SmartAssert.checkExpression(CollectionUtil.isNotEmpty(idList),ResponseEnum.VALUE_TYPE_ID_NOT_NULL);
-        Boolean f = valueTypeService.delete(idList);
-        return Result.success(f);
+        try {
+            Boolean f = valueTypeService.delete(idList);
+            return Result.success(f);
+        }catch (Exception e){
+            return Result.error(-710,e.getMessage());
+        }
     }
 
 }

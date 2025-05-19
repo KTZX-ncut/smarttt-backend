@@ -27,4 +27,10 @@ public interface ValueTagService {
     Integer countKwaByKwaId(String kwaId);
 
     Boolean bindKwaAndValue(KwaBindReq kwaBindReq);
+
+    String getValueTagListJson(String kwaId);
+
+    void decreaseValueTagCalCount(List<Long> ids);
+
+    void increaseValueTagCalCount(List<Long> newIds);
 }
