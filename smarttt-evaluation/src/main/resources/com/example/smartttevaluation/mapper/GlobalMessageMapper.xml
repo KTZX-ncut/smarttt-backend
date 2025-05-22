@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.GlobalMessageMapper">
+    <update id="updateCalPaperName">
+        UPDATE ai_calculate_paper
+        SET paper_name = #{paperName}, test_name = #{testName}
+        WHERE test_id = #{testId}
+    </update>
+    <update id="updateMessageState">
+        UPDATE global_msg
+        SET state = 'complete'
+        WHERE id IN
+        <foreach item="id" collection="messageIdList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <delete id="deleteCalPaper">
+        DELETE FROM ai_calculate_paper
+        WHERE test_id = #{testId}
+    </delete>
+
+
+    <select id="pullMessage" resultType="com.example.smartttevaluation.schedule.entity.EduMessage">
+        SELECT * FROM global_msg
+        WHERE type IN
+        <foreach item="type" collection="typeList" open="(" separator="," close=")">
+            #{type}
+        </foreach>
+        AND state = 'ready'
+    </select>
+
+</mapper>
