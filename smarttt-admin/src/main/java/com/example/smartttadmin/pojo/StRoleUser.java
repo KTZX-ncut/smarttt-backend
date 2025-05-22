@@ -19,6 +19,6 @@ public class StRoleUser {
   private String obsid;
   private long obsdeep;
   private String createtime;
-  private String by1;
+  private String termid;
 
 }

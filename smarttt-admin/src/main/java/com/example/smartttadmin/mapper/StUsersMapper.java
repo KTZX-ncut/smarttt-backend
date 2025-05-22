@@ -31,11 +31,11 @@ public interface StUsersMapper {
             "(#{id},#{username},#{loginname},#{pwd},#{phone},#{status},#{catelog},#{remark},#{createtime})")
     void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
 
-    @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno})")
-    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno);
+    @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno,historyobs) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno},#{historyobs})")
+    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno,@Param("historyobs")String historyobs);
 
-    @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno})")
-    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno);
+    @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno,historyobs) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno},#{historyobs})")
+    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno,@Param("historyobs")String historyobs);
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
 
@@ -54,7 +54,7 @@ public interface StUsersMapper {
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
     void deletePRByObsIDAndUserID(StRoleUser stRoleUser);
 
-    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime})")
+    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime,termid) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime},#{termid})")
     void createOneRoleUser(StRoleUser stRoleUser);
 
     @Select("SELECT u.id, u.username, o.obsname, t.obsid\n" +
@@ -79,6 +79,9 @@ public interface StUsersMapper {
     @Select("select id from cm_term where iscurrentterm = 1")
     String getCurrentTerm();
 
+    @Select("select id,termname from cm_term where iscurrentterm = 1")
+    TermsResponse getCurrentTermName();
+
     @Update("update st_users set phone = 11111111 where loginname =  #{s} ")
     void testTran(String s);
 
@@ -92,4 +95,11 @@ public interface StUsersMapper {
 
     @Insert("update st_users set pwd = #{pwd} where id = #{id}")
     void updatePwd(@Param("id") String id, @Param("pwd") String pwd);
+
+    @Select("select usersid as id from sm_teacher where obsid = #{id}")
+    List<PersonnelRoster> getTeacherByObsid(String id);
+
+    @Select("select usersid as id from sm_student where obsid = #{id}")
+    List<PersonnelRoster> getStudentByObsid(String id);
+
 }

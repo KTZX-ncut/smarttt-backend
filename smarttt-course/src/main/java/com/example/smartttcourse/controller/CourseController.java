@@ -114,7 +114,7 @@ public class CourseController {
         for(StRoleUser stRoleUser:stRoleUserList){
             stRoleUser.setRoleid("516761049-234512f3-7c19-4580-abe2-ebfb1dd8db21");
             Result currentTerm = cmTermService.getCurrentTerm();
-            stRoleUser.setBy1(currentTerm.getData().toString());
+            stRoleUser.setTermid(currentTerm.getData().toString());
             Result result = stUsersService.createOneRP(stRoleUser);
             if(result.getCode()!=200)return Result.error("新增错误");
         }

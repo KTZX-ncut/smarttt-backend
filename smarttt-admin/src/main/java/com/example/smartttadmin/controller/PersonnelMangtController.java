@@ -7,6 +7,7 @@ import com.example.smartttadmin.listeners.PersonnelListenerExcel;
 import com.example.smartttadmin.pojo.PersonnelExcel;
 import com.example.smartttadmin.service.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +56,7 @@ public class PersonnelMangtController {
      * 暂定不用修改，因为批量导入文件是后端来处理
      */
     @PostMapping("/create")
-    public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster){
+    public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster) throws JsonProcessingException {
         return smObsService.createOnePersonnelRoster(personnelRoster);
     }
 
@@ -64,7 +65,7 @@ public class PersonnelMangtController {
         return stUsersService.deleteUsersByIDs(ids);
     }
     @PostMapping("/update")
-    public Result UpdatePersonnalRoster(@RequestBody PersonnelRoster personnelRoster){
+    public Result UpdatePersonnalRoster(@RequestBody PersonnelRoster personnelRoster) throws JsonProcessingException {
         return stUsersService.updateOnePersonnelRoster(personnelRoster);
     }
     /**

@@ -29,4 +29,10 @@
             #{id}
         </foreach>
     </delete>
+    <delete id="deleteObsTermByIDs">
+        delete from sm_obs where termid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

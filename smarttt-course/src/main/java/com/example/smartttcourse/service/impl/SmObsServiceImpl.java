@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttcourse.dto.ObsRPTree;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.SmObsMapper;
+import com.example.smartttcourse.mapper.StLevelMapper;
 import com.example.smartttcourse.mapper.StUsersMapper;
 import com.example.smartttcourse.pojo.SmObs;
 import com.example.smartttcourse.service.SmObsService;
@@ -21,6 +22,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper, SmObs> implements
     private SmObsMapper smObsMapper;
     @Autowired
     private StUsersMapper stUsersMapper;
+    @Autowired
+    private StLevelMapper stLevelMapper;
 
     @Override
     public String getSchoolObs() {
@@ -29,7 +32,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper, SmObs> implements
 
     @Override
     public Result getObsRPList(String obsid) {
-        List<ObsRPTree> allObsTree = smObsMapper.getRPTree();
+        long teacherDeep = stLevelMapper.getTeacherLevel();
+        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(teacherDeep);
         Map<String, List<ObsRPTree>> obsMap = allObsTree.stream()
                 .collect(Collectors.groupingBy(ObsRPTree::getPid,
                         Collectors.collectingAndThen(

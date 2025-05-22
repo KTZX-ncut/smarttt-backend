@@ -7,6 +7,7 @@ import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.CmProfession;
 import com.example.smartttadmin.pojo.SmObs;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public interface SmObsService extends IService<SmObs> {
     Result deleteObssByIDS(List<String> ids);
     Result getObsTree();
     Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
-    Result createOnePersonnelRoster(PersonnelRoster personnelRoster);
+    Result createOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException;
 
     Result upgradeOneObsByID(String id);
 
@@ -60,4 +61,6 @@ public interface SmObsService extends IService<SmObs> {
     Result checkSmObs(SmObs smObs);
 
     List<String> getObsIdByObsName(String obsname);
+
+    Result copyHistoryObs(String copyTerm) throws JsonProcessingException;
 }

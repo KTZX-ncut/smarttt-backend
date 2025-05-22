@@ -3,10 +3,10 @@ package com.example.smartttadmin.service.impl;
 import com.example.smartttadmin.dto.*;
 import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
-import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import com.example.smartttadmin.service.StUsersService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.example.smartttadmin.Utils.CommonFunctions.*;
+import static com.example.smartttadmin.Utils.JacksonJsonUtil.jsonArrayToList;
+import static com.example.smartttadmin.Utils.JacksonJsonUtil.listToJsonArray;
 import static com.example.smartttadmin.Utils.JwtTokenUtils.getToken;
 
 @Service
@@ -37,6 +39,8 @@ public class StUsersServiceImpl implements StUsersService {
             stRoleUser.setId(generateEnhancedID("st_roleuser"));
             stRoleUser.setObsdeep(smObsMapper.getObsdeepByObsid(stRoleUser.getObsid()));
             stRoleUser.setCreatetime(LocalDate.now().toString());
+            String currentTerm = stUsersMapper.getCurrentTerm();
+            stRoleUser.setTermid(currentTerm);
             stUsersMapper.createOneRoleUser(stRoleUser);
         }catch (NullPointerException e)
         {
@@ -122,7 +126,7 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster) {
+    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException {
         if(personnelRoster.getObsname()!=null){
             List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
             if(obsIDList.isEmpty())
@@ -134,16 +138,47 @@ public class StUsersServiceImpl implements StUsersService {
             List<String> stUsersList = stUsersMapper.getStUsersByloginName(loginName);
             if (!stUsersList.isEmpty()) return Result.error("登录名已存在");
         }
+
         stUsersMapper.updateUserByID(personnelRoster);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){//学生
-            stUsersMapper.updateStudentByID(personnelRoster);
+            stUsersMapper.updateStudentByID(changePersonHistoryObs(personnelRoster));
         }else{//老师
-            stUsersMapper.updateTeacherByID(personnelRoster);
+            stUsersMapper.updateTeacherByID(changePersonHistoryObs(personnelRoster));
         }
 
         return Result.success();
     }
+    private  PersonnelRoster changePersonHistoryObs(PersonnelRoster personnelRoster) throws JsonProcessingException {
+        String currentTermId = stUsersMapper.getCurrentTerm();
+        if(personnelRoster.getObsid()!=null){
 
+            String historyObsJson;
+            if(Objects.equals(personnelRoster.getCatelog(), "1")){
+                historyObsJson = smObsMapper.getStuHistoryObsByUserId(personnelRoster.getId());
+            }
+            else{
+                historyObsJson = smObsMapper.getTeaHistoryObsByUserId(personnelRoster.getId());
+            }
+
+            List<HistoryObs> historyObsList = jsonArrayToList(historyObsJson, HistoryObs.class);
+            Boolean isFind = false;
+            for(HistoryObs historyObs : historyObsList){
+                if(Objects.equals(historyObs.getTermId(), currentTermId)){
+                    System.out.println(personnelRoster.getObsid()+"????????????");
+                    historyObs.setObsId(personnelRoster.getObsid());
+                    isFind = true;
+                    break;
+                }
+            }
+            if(!isFind){
+                HistoryObs historyObs = new HistoryObs(currentTermId,personnelRoster.getObsid());
+                historyObsList.add(historyObs);
+            }
+            historyObsJson = listToJsonArray(historyObsList);
+            personnelRoster.setRemark(historyObsJson);
+        }
+        return personnelRoster;
+    }
     @Override
     public Result getStudentByClassID(String id) {
         return Result.success(stUsersMapper.getStudentByID(id));
