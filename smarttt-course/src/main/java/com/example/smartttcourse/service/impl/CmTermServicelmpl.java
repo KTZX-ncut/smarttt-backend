@@ -2,6 +2,7 @@ package com.example.smartttcourse.service.impl;
 
 
 import com.example.smartttcourse.Utils.CommonFunctions;
+import com.example.smartttcourse.Utils.TermTableContextHolder;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.mapper.CmTermMapper;
 import com.example.smartttcourse.pojo.CmTerm;
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,11 +31,20 @@ public class CmTermServicelmpl implements CmTermService {
     }
 
     @Override
+    @Transactional
     public Result createTerms(CmTerm cmTerm) {
         cmTerm.setId(CommonFunctions.generateEnhancedID("cm_term"));
         cmTerm.setCreatetime(LocalDateTime.now().toString());
         cmTerm.setIscurrentterm("0");
         cmTermMapper.createTerms(cmTerm);
+        try{
+            String orderNo = cmTermMapper.getTermNo(cmTerm.getId());
+            TermTableContextHolder.setSuffix(orderNo);
+            cmTermMapper.createNewinfo();
+        } finally {
+            TermTableContextHolder.clear();
+        }
+
         return Result.success();
     }
 
@@ -58,6 +69,11 @@ public class CmTermServicelmpl implements CmTermService {
     @Override
     public Result getCurrentTerm() {
         return Result.success(cmTermMapper.getCurrentTerm());
+    }
+
+    @Override
+    public String getCurrentTermNo() {
+        return cmTermMapper.getCurrentTermNo();
     }
 
     @Override

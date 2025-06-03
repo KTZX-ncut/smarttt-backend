@@ -7,6 +7,7 @@ import com.example.smartttadmin.mapper.StMenusMapper;
 import com.example.smartttadmin.mapper.StRolesMapper;
 import com.example.smartttadmin.pojo.*;
 import com.example.smartttadmin.service.StRolesService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +31,7 @@ public class StRolesServiceImpl implements StRolesService {
     public Result getSimpleRolesList(StUsers stUsers){
         List<SimpleRole> simpleRoleList = stRolesMapper.getRolesByUserID(stUsers.getId());
         for(SimpleRole simpleRole : simpleRoleList){
-            if(simpleRole.getObsdeep() == -1){
-                String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
-                if(courseName == null){
-                    courseName = cmCourseMapper.getClassroomName(simpleRole.getObsid());
-                }
-                simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
-            }
-            else simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
+            dealSimpleRole(simpleRole);
         }
        LoginResponse loginResponse =new LoginResponse(stUsers.getId(),stUsers.getCatelog(),simpleRoleList.size(),simpleRoleList);
        if(simpleRoleList.isEmpty())return Result.error(404,"无可用角色");
@@ -100,16 +94,34 @@ public class StRolesServiceImpl implements StRolesService {
     public Result switchRole(String id) {
         List<SimpleRole> simpleRoleList = stRolesMapper.getRolesByUserID(id);
         for(SimpleRole simpleRole : simpleRoleList){
-            if(simpleRole.getObsdeep() == -1){
-                String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
-                if(courseName == null){
-                    courseName = cmCourseMapper.getClassroomName(simpleRole.getObsid());
-                }
-                simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
-            }
-            else simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
+            dealSimpleRole(simpleRole);
             simpleRole.setId(id);
         }
         return Result.success(simpleRoleList);
+    }
+
+    private void dealSimpleRole(SimpleRole simpleRole) {
+        if(simpleRole.getObsdeep() == -1){
+            String courseName = cmCourseMapper.getCourseName(simpleRole.getObsid());
+            if(courseName == null){
+                courseName = cmCourseMapper.getClassroomName(simpleRole.getObsid());
+            }
+            simpleRole.setRolename(courseName+"-"+simpleRole.getRolename());
+        }
+        else simpleRole.setRolename(dealName(smObsMapper.getObsName(simpleRole),simpleRole.getRolename()));
+    }
+
+    @Override
+    public Result getHistoryRole(String id) {
+        List<TermRoles> termList = stRolesMapper.getTermList(id);
+        for(TermRoles termRoles : termList) {
+            List<SimpleRole> simpleRoleList = stRolesMapper.getHistoryRoles(id,termRoles.getId());
+            for(SimpleRole simpleRole : simpleRoleList){
+                dealSimpleRole(simpleRole);
+                simpleRole.setId(id);
+            }
+            termRoles.setSimpleRoleList(simpleRoleList);
+        }
+        return Result.success(termList);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.smartttadmin.mapper;
 
 import com.example.smartttadmin.dto.SimpleRole;
+import com.example.smartttadmin.dto.TermRoles;
 import com.example.smartttadmin.dto.UserInforReq;
 import com.example.smartttadmin.pojo.StRoleMenu;
 import com.example.smartttadmin.pojo.StRoles;
@@ -56,4 +57,17 @@ public interface StRolesMapper {
             "where st_roles.id = st_roleuser.roleid\n" +
             " and userid = #{id};")
     List<UserInforReq> getRoleList(String id);
+
+    @Select("select DISTINCT termid as id,if(termname is NULL,'全部',termname) as termName from st_roleuser\n" +
+            "left join cm_term\n" +
+            "on cm_term.id = st_roleuser.termid\n" +
+            "where userid = #{id};")
+    List<TermRoles> getTermList(String id);
+
+
+    @Select("select st_roleuser.id,roleid,rolename,obsid,obsdeep \n" +
+            "from st_roleuser,st_roles \n" +
+            "where st_roleuser.roleid =st_roles.id and userid = #{userid}\n" +
+            "and st_roleuser.termid = #{termid}")
+    List<SimpleRole> getHistoryRoles(@Param("userid") String userid, @Param("termid") String termid);
 }

@@ -1,5 +1,6 @@
 package com.example.smartttcourse.mapper;
 
+import com.example.smartttcourse.Utils.DynamicTable;
 import com.example.smartttcourse.pojo.CmTerm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -37,4 +38,15 @@ public interface CmTermMapper {
     List<CmTerm> getHistoryTerms();
 
     void deleteObsTermByIDs(List<String> ids);
+
+    @Select("select orderno from cm_term where id = #{id}")
+    String getTermNo(String id);
+    
+    
+
+    @DynamicTable(isCurrent = false)
+    void createNewinfo();
+
+    @Select("select orderno from cm_term where iscurrentterm = 1")
+    String getCurrentTermNo();
 }

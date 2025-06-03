@@ -22,6 +22,33 @@
         </set>
         where id=#{id}
     </update>
+    <update id="createNewinfo">
+        CREATE TABLE ai_in_stu_ans_info (
+        `id` varchar(64) NOT NULL,
+        `logId` varchar(64) NOT NULL COMMENT '日志表id',
+        `courseId` varchar(64) NOT NULL COMMENT '课程id',
+        `classroomId` varchar(64) NOT NULL COMMENT '课堂id',
+        `testId` varchar(64) NOT NULL COMMENT '考试id',
+        `paperId` varchar(64) NOT NULL COMMENT '试卷id',
+        `paperType` varchar(16) NOT NULL DEFAULT 'def' COMMENT '试卷类型 def=默认',
+        `libId` varchar(64) NOT NULL COMMENT '题目id',
+        `stuId` varchar(64) DEFAULT NULL COMMENT '学生id',
+        `questionTypeId` varchar(16) DEFAULT NULL COMMENT '题型',
+        `questionContent` mediumtext COMMENT '学生答题内容',
+        `difficultLevel` decimal(8,2) DEFAULT NULL COMMENT '题目难度',
+        `differenceLevel` decimal(8,2) DEFAULT NULL COMMENT '题目区分度',
+        `guessLevel` decimal(8,2) DEFAULT NULL COMMENT '题目猜测度',
+        `kwaId` varchar(64) DEFAULT NULL COMMENT 'kwaId',
+        `dataValue` decimal(8,2) DEFAULT NULL COMMENT '题目与kwa关联度',
+        `libScore` int DEFAULT NULL COMMENT '题目的分数',
+        `libStuScore` int DEFAULT NULL COMMENT '题目学生得分',
+        `libAnswerTime` int DEFAULT NULL COMMENT '题目作答时长，单位秒',
+        `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+        `updateTime` datetime DEFAULT NULL COMMENT '修改时间',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `aisai_index_ti_si_li` (`testId`,`libId`,`stuId`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='学生作业试题详细信息日志表,颗粒度为试题维度';
+    </update>
 
     <delete id="deleteTermsByIDs">
         delete from cm_term where id in

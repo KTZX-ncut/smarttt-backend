@@ -22,4 +22,6 @@ public interface CmTermService {
 
     Result getTerms();
     Result getCurrentTerm();
+
+    String getCurrentTermNo();
 }

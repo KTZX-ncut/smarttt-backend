@@ -23,6 +23,12 @@ public class ClassMangtController {
     SmObsService smObsService;
     @Autowired
     StUsersService stUsersService;
+
+    /**
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("")
     @AuthRequired(type = "admin",menu = "531500340-63929fcc-e8f9-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getClassList(HttpServletRequest request){

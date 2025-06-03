@@ -35,4 +35,6 @@ public interface StRolesService {
     Result getRolePurviewList();
 
     Result switchRole(String id);
+
+    Result getHistoryRole(String id);
 }

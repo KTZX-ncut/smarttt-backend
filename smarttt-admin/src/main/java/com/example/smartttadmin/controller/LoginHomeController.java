@@ -73,6 +73,13 @@ public class LoginHomeController {
         return stRolesService.switchRole(token.getId());
     }
 
+    @PostMapping("/history")
+    @AuthRequired(type = "admin",menu = "531500340-0f2888b9-ecaf-49a7-b175-7ae00e14ae65")
+    public Result getHistoryRoles(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return stRolesService.getHistoryRole(token.getId());
+    }
+
     @GetMapping("/teacherChangePwd")
     @AuthRequired(type = "admin",menu = "531500340-0f2888b9-ecaf-49a7-b175-7ae00e14ae65")
     public Result teacherChangePwd(@RequestParam String currentPwd, @RequestParam String newPwd, HttpServletRequest request) {
