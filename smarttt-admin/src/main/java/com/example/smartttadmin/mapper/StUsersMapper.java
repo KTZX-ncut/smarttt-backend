@@ -1,7 +1,6 @@
 package com.example.smartttadmin.mapper;
 
 import com.example.smartttadmin.dto.*;
-import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.pojo.StUsers;
 import org.apache.ibatis.annotations.*;
@@ -102,4 +101,17 @@ public interface StUsersMapper {
     @Select("select usersid as id from sm_student where obsid = #{id}")
     List<PersonnelRoster> getStudentByObsid(String id);
 
+    @Select("SELECT usersid AS id, stuno AS personnelno, loginname, username FROM sm_student " +
+            "LEFT JOIN st_users ON st_users.id = sm_student.usersid " +
+            "WHERE loginname LIKE CONCAT('%', #{inform}, '%') " +
+            "OR username LIKE CONCAT('%', #{inform}, '%') " +
+            "OR stuno LIKE CONCAT('%', #{inform}, '%')")
+    List<PersonnelRoster> getStudentByInform(String inform);
+
+    @Select("SELECT usersid AS id, jobno AS personnelno, loginname, username FROM sm_teacher " +
+            "LEFT JOIN st_users ON st_users.id = sm_teacher.usersid " +
+            "WHERE loginname LIKE CONCAT('%', #{inform}, '%') " +
+            "OR username LIKE CONCAT('%', #{inform}, '%') " +
+            "OR jobno LIKE CONCAT('%', #{inform}, '%')")
+    List<PersonnelRoster> getTeacherByInform(String inform);
 }

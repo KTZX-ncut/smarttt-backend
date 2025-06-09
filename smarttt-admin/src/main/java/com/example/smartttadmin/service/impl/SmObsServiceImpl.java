@@ -362,15 +362,6 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");
         change(smObsTrees,"0");
         return Result.success();
-//        for(SmObs smObs:smObsList){
-//            //移动人员
-//            List<PersonnelRoster> personnelRosterList = stUsersMapper.getTeacherByObsid(oldId);
-//            personnelRosterList.addAll(stUsersMapper.getStudentByObsid(oldId));
-//            for(PersonnelRoster personnelRoster:personnelRosterList){
-//                personnelRoster.setObsid(newId);
-//                stUsersService.updateOnePersonnelRoster(personnelRoster);
-//            }
-//        }
     }
 
     @Transactional

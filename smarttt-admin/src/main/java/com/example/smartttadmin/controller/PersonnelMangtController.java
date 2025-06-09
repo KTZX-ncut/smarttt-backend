@@ -90,7 +90,10 @@ public class PersonnelMangtController {
         } catch (IOException e) {
             return Result.error(-710,"导入文件失败！");
         }
-
+    }
+    @GetMapping("/search")
+    public Result searchPerson(@RequestParam("inform")String inform,@RequestParam("catelog")String catelog){
+        return stUsersService.searchPerson(inform,catelog);
     }
 
 }

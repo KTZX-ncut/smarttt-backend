@@ -230,4 +230,16 @@ public class StUsersServiceImpl implements StUsersService {
         stUsersMapper.updatePwd(id, newPwd);
         return Result.success();
     }
+
+    @Override
+    public Result searchPerson(String inform, String catelog) {
+        List<PersonnelRoster> personnelRosterList = new ArrayList<>();
+        if(Objects.equals(catelog, "1")){//学生
+            personnelRosterList = stUsersMapper.getStudentByInform(inform);
+        }
+        else{
+            personnelRosterList = stUsersMapper.getTeacherByInform(inform);
+        }
+        return Result.success(personnelRosterList);
+    }
 }

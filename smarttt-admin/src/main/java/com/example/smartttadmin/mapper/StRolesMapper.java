@@ -61,7 +61,7 @@ public interface StRolesMapper {
     @Select("select DISTINCT termid as id,if(termname is NULL,'全部',termname) as termName from st_roleuser\n" +
             "left join cm_term\n" +
             "on cm_term.id = st_roleuser.termid\n" +
-            "where userid = #{id};")
+            "where userid = #{id} and iscurrentterm!=1;")
     List<TermRoles> getTermList(String id);
 
 
