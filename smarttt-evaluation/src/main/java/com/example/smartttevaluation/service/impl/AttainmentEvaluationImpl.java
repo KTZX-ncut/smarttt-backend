@@ -154,7 +154,8 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
             }
         }
 
-        return calcTargetAchievement(classroomId, studentList, leafIds, assessmentTable);
+//        return calcTargetAchievement(classroomId, studentList, leafIds, assessmentTable);
+        return calcTargetAchievementWithoutKwa(classroomId, studentList, leafIds, assessmentTable);
     }
 
     public void getLeafAndRoot(Map<String, String> leafAndRootMap, List<CmCheckitem> checkitems, String rootId, List<String> leafIds, int floor) {
@@ -208,7 +209,7 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
                     }
                     // 不为0时再把这个考核项的分数加到课程目标-kwa-考核项总分的映射中
                     Integer score = (Integer) json.get(checkitemId);
-                    if(score == null) score = 0;
+                    if (score == null) score = 0;
                     if (libCount != 0) totalScore += score;
 
                     if (json.get(checkitemId) != null) {
@@ -286,6 +287,76 @@ public class AttainmentEvaluationImpl implements AttainmentEvaluationService {
                 ClassroomTargetAchievement classroomTargetAchievement = new ClassroomTargetAchievement(
                         generateEnhancedID("cm_classroom_target_achievement"), stu.getId(), classroomId,
                         target.getId(), targetAchievement);
+                attainmentEvaluationMapper.setTargetAchievement(classroomTargetAchievement);
+            }
+        }
+        return Result.success();
+    }
+
+    public Result calcTargetAchievementWithoutKwa(String classroomId, List<CmAssessmentStudent> studentList, List<String> leafIds, CmCourseAssessmentTable assessmentTable) {
+        attainmentEvaluationMapper.cleanTargetAchievement(classroomId);
+
+        // 考核项和关联文件的映射
+        Map<String, List<CmAssessmentFile>> checkitemAssociateFiles = new HashMap<>();
+        for (String checkitemId : leafIds) {
+            List<CmAssessmentFile> associateFiles = cmCourseAssessmentMapper.getAssociateFiles(checkitemId, classroomId);
+            checkitemAssociateFiles.put(checkitemId, associateFiles);
+        }
+
+        // 存储每个课程目标的考核项总分
+        Map<String, Integer> targetCheckitemTotalScore = new HashMap<>();
+        for (JSONObject json : assessmentTable.getItems()) {
+            for (String checkitemId : leafIds) {
+                Integer score = (Integer) json.get(checkitemId);
+                if (score != null) {
+                    json.putIfAbsent("totalScore", 0);
+                    Integer checkitemTotalScore = (Integer) json.get("totalScore");
+                    checkitemTotalScore += score;
+                    json.put("totalScore", checkitemTotalScore);
+                }
+            }
+        }
+        for (CmAssessmentStudent stu : studentList) {
+            if (stu.getEvaluationState() == 0) continue;
+            for (JSONObject json : assessmentTable.getItems()) {
+                // 存储当前课程目标的达成度
+                float targetAchievement = 0;
+                for (String checkitemId : leafIds) {
+                    Integer checkitemScore = (Integer) json.get(checkitemId);
+                    if (checkitemScore != null) {
+                        float scoreRatio = 0;
+                        int fileCount = 0;
+                        for (CmAssessmentFile file : checkitemAssociateFiles.get(checkitemId)) {
+                            if (file.getType() == 1) {
+                                fileCount++;
+                                // 当前学生获得的分数
+                                Integer stuScore = attainmentEvaluationMapper.calcStuTestpaperScore(stu.getId(),
+                                        file.getId());
+                                if (stuScore == null) stuScore = 0;
+                                // 满分是多少
+                                Integer fullScore = attainmentEvaluationMapper.calcTestPaperScore(stu.getId(),
+                                        file.getId());
+                                if (fullScore == null) fullScore = 0;
+                                // 计算这个文件的得分率，加到总和里，最后算均值
+                                if (fullScore != 0) scoreRatio += (float) stuScore / fullScore;
+                                fileCount++;
+                            } else if (file.getType() == 4) {
+                                scoreRatio += (float) attainmentEvaluationMapper.getCustomFileStudentScore(stu.getId(),
+                                        file.getId()) / 100;
+                                fileCount++;
+                            }
+                        }
+                        if (fileCount != 0) scoreRatio /= fileCount;
+
+                        Integer checkitemTotalScore = (Integer) json.get("totalScore");
+                        if (checkitemTotalScore != null && checkitemTotalScore != 0) {
+                            targetAchievement += scoreRatio * ((float) checkitemScore / (float) checkitemTotalScore);
+                        }
+                    }
+                }
+                ClassroomTargetAchievement classroomTargetAchievement = new ClassroomTargetAchievement(
+                        generateEnhancedID("cm_classroom_target_achievement"), stu.getId(), classroomId,
+                        (String) json.get("id"), targetAchievement);
                 attainmentEvaluationMapper.setTargetAchievement(classroomTargetAchievement);
             }
         }
