@@ -92,10 +92,12 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
      * 提前校验数据的合法性，这样就可以不用事务
      */
     private List<PersonnelRoster> validate(List<PersonnelExcel> personnelExcelList) {
+        // 拿到当前学期
+        String currentTerm = usersService.getCurrentTerm();
         List<PersonnelRoster> list = new LinkedList<>();
         // 判断老师（学生）的层级是够合法
         List<StLevel> levelList = levelService.list().stream()
-                .filter(t-> Objects.equals(t.getTeacher(),"1") ||Objects.equals(t.getStudent(),"1"))
+                .filter(t-> Objects.equals(t.getTeacher(),"1") || Objects.equals(t.getStudent(),"1"))
                 .collect(Collectors.toList());
         Long teacherObsDeep = null;
         Long studentObsDeep = null;
@@ -111,8 +113,11 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
 
             CateLogEnum cateLogEnum = this.DetermineIdentity(personnelExcel.getCatelog());
             // 1. obsName通过拿到obsId(校验obsName的合法性)
+            // 当前学期
             QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("obsname",personnelExcel.getObsname());
+            queryWrapper.eq("obsname",personnelExcel.getObsname())
+                    .eq("termid",currentTerm);
+
             List<SmObs> smObsList = new LinkedList<>();
             if (Objects.equals(CateLogEnum.STUDENT,cateLogEnum)){
                 queryWrapper.eq("obsdeep",studentObsDeep);
@@ -127,6 +132,7 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
             if (CollectionUtil.isEmpty(obsIdList)) {
                 throw new RuntimeException("业务异常:"+personnelExcel.getUsername()+"的所属院系以及层级不存在或者不匹配！");
             }
+
             // 2. 判断loginName是否唯一（stUsersMapper）
             List<String> stUsersList = usersService.getStUsersByloginName(personnelExcel.getLoginname());
             if (!CollectionUtil.isEmpty(stUsersList)) {
@@ -140,21 +146,20 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
             if (Objects.equals(CateLogEnum.STUDENT,cateLogEnum)){
                 String personnelno = personnelExcel.getPersonnelno();
                 QueryWrapper<SmStudent> stuQueryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("stuno",personnelno);
+                stuQueryWrapper.eq("stuno",personnelno);
                 List<SmStudent> studentList = studentService.list(stuQueryWrapper);
                 if(CollectionUtil.isNotEmpty(studentList)){
                     throw new RuntimeException("业务异常："+personnelExcel.getUsername()+"stuno学号和其他学生重复");
                 }
-
             }
             // 5. 判断老师的工号是否唯一
             if (Objects.equals(CateLogEnum.TEACHER,cateLogEnum)){
                 String personnelno = personnelExcel.getPersonnelno();
                 QueryWrapper<SmTeacher> teacherQueryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("jobno",personnelno);
+                teacherQueryWrapper.eq("jobno",personnelno);
                 List<SmTeacher> teacherList = teacherService.list(teacherQueryWrapper);
                 if(CollectionUtil.isNotEmpty(teacherList)){
-                    throw new RuntimeException("业务异常："+personnelExcel.getUsername()+"stuno学号和其他学生重复");
+                    throw new RuntimeException("业务异常："+personnelExcel.getUsername()+"jobno工号和其他教师重复");
                 }
 
             }

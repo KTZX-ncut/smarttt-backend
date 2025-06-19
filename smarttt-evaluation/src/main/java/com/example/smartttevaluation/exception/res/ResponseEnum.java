@@ -48,7 +48,11 @@ public enum ResponseEnum {
     VALUE_TAG_NAME_EXIST(-710,"valueTag: name已经存在了"),
     VALUE_TAG_ID_IS_NOT_NULL(-710, "valueTag: id不能为空"),
     VALUE_TAG_ID_NOT_NULL(-710, "valueTag: idList不能为空"),
-    VALUE_TAG_KWA_ID_NOT_VALID(-710, "valueTag绑定kwa: kwaId不合法");
+    VALUE_TAG_KWA_ID_NOT_VALID(-710, "valueTag绑定kwa: kwaId不合法"),
+    IDEOLOGY_NAME_IS_NOT_NULL(-710, "ideologyValue: name不能为空"),
+    IDEOLOGY_VALUE_TYPE_NAME_EXIST(-710, "ideologyValue: name已经存在了"),
+    IDEOLOGY_ID_IS_NOT_NULL(-710, "ideologyValue: id不能为空"),
+    IDEOLOGY_ID_LIST_IS_NOT_NULL(-710, "ideologyValue: idList不能为空");
 
     private Integer code;//状态码
     private String message;//消息

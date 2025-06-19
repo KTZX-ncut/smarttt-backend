@@ -54,4 +54,6 @@ public interface StUsersService{
     Result teacherChangePwd(String currenPwd, String newPwd, String id);
 
     Result studentChangePwd(String currenPwd, String newPwd, String id);
+
+    String getCurrentTerm();
 }

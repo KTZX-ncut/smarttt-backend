@@ -230,4 +230,9 @@ public class StUsersServiceImpl implements StUsersService {
         stUsersMapper.updatePwd(id, newPwd);
         return Result.success();
     }
+
+    @Override
+    public String getCurrentTerm() {
+        return stUsersMapper.getCurrentTerm();
+    }
 }
