@@ -17,6 +17,9 @@ public interface StLevelMapper extends BaseMapper<StLevel> {
     @Select("select obsdeep from st_level where teacher = 1")
     long getTeacherLevel();
 
+    @Select("select obsdeep from st_level where id = #{num}")
+    long getObsLevel(String num);
+
 //    @Update("update st_level set levelname = #{levelname} where id =#{id}")
     void updateStLevel(StLevel stLevel);
 

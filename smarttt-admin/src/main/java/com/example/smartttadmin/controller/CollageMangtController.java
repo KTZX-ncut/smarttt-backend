@@ -1,9 +1,13 @@
 package com.example.smartttadmin.controller;
 
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.Token;
+import com.example.smartttadmin.mapper.StLevelMapper;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StRoleUser;
 import com.example.smartttadmin.service.SmObsService;
+import com.example.smartttadmin.service.StLevelService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 
 
 @RestController
@@ -20,9 +25,11 @@ public class CollageMangtController {
     private SmObsService smObsService;
     @Autowired
     private StUsersService stUsersService;
+    @Autowired
+    private StLevelService stLevelService;
     @GetMapping
-    public Result getCollegeList(){
-        return smObsService.getAllCollageList();
+    public Result getCollegeList(@RequestParam("termid")String termid){
+        return smObsService.getAllCollageList(termid);
     }
 
     /**
@@ -32,9 +39,12 @@ public class CollageMangtController {
      * 后续需要把每个字段都补全（修改）
      */
     @PostMapping
-    public Result createNewCollege(@RequestBody SmObs smObs){
-        smObs.setObsdeep(2);
-        smObs.setPid("237675254");
+    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3")
+    public Result createNewCollege(@RequestBody SmObs smObs,HttpServletRequest request){
+        long obsDeep = stLevelService.getObsLevel("102");
+        Token token = getTokenFromContext();
+        smObs.setObsdeep(obsDeep);
+        smObs.setPid(token.getObsid());
         return smObsService.createOneObs(smObs);
     }
 
@@ -59,10 +69,10 @@ public class CollageMangtController {
      */
     @GetMapping("/collageRP")
 //    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
-    public Result CollegeRPList(HttpServletRequest request){
+    public Result CollegeRPList(@RequestParam("termid")String termid, HttpServletRequest request){
         //低于系（当前配置的教师级别）,就回溯到有教师的级别,然后显示级别的所有数据
         String obsID = smObsService.getSchoolObs();
-        return smObsService.getObsRPList(obsID);
+        return smObsService.getObsRPList(termid,obsID);
     }
 
     /**

@@ -54,4 +54,10 @@ public class StLevelServiceImpl extends ServiceImpl<StLevelMapper,StLevel> imple
         }
         return Result.success();
     }
+
+    @Override
+    public long getObsLevel(String number) {
+
+        return stLevelMapper.getObsLevel(number);
+    }
 }

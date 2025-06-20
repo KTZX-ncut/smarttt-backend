@@ -8,4 +8,6 @@ public interface StLevelService extends IService<StLevel> {
     Result getSchoolInfor();
 
     Result updateLevel(StLevel stLevel);
+
+    long getObsLevel(String number);
 }

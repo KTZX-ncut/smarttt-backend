@@ -6,6 +6,7 @@ import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmClass;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
+import com.example.smartttadmin.service.StLevelService;
 import com.example.smartttadmin.service.StUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,8 @@ public class ClassMangtController {
     SmObsService smObsService;
     @Autowired
     StUsersService stUsersService;
+    @Autowired
+    StLevelService stLevelService;
 
     /**
      *
@@ -44,7 +47,8 @@ public class ClassMangtController {
     @PostMapping("/create")
     public Result createOneClass(@RequestBody CmClass cmClass){
         String ID = generateEnhancedID("sm_obs");
-        SmObs smObs = new SmObs(ID, cmClass.getId(), 5,cmClass.getClassname(),cmClass.getRemark());
+        long deep = stLevelService.getObsLevel("105");
+        SmObs smObs = new SmObs(ID, cmClass.getId(), deep,cmClass.getClassname(),cmClass.getRemark());
         Result result = smObsService.createOneObs(smObs);
         if(result.getCode()!=200)return result;
         cmClass.setObsid(ID);
