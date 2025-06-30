@@ -34,8 +34,8 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
     }
 
     @Override
-    public Integer countIdeologyByVname(String vname) {
-        return ideologyValueMapper.countIdeologyByVname(vname);
+    public Integer countIdeologyByVname(String vname,String classroomId) {
+        return ideologyValueMapper.countIdeologyByVname(vname,classroomId);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
         Boolean fuzzyQuery = ideologyValueReq.getFuzzyQuery();
         List<IdeologyValue> ideologyValueList = null;
         IdeologyValue ideologyValue = new IdeologyValue();
+        ideologyValue.setClassroomId(ideologyValueReq.getClassroomId());
         if (StrUtil.isNotBlank(ideologyValueReq.getVname())){
             ideologyValue.setVname(ideologyValueReq.getVname());
         }
@@ -79,5 +80,10 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
     @Override
     public Boolean delIdeologyValueByIdList(List<Long> idList) {
         return ideologyValueMapper.delIdeologyValueByIdList(idList);
+    }
+
+    @Override
+    public Integer countClassroomByClassroomId(String classroomId) {
+        return ideologyValueMapper.countClassroomByClassroomId(classroomId);
     }
 }

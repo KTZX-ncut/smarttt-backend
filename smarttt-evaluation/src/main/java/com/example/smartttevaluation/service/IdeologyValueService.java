@@ -10,7 +10,7 @@ import java.util.List;
 public interface IdeologyValueService {
     Boolean addIdeologyValue(IdeologyValue ideologyValue);
 
-    Integer countIdeologyByVname(String vname);
+    Integer countIdeologyByVname(String vname,String classroomId);
 
     List<IdeologyValue> getIdeologyValueList();
 
@@ -21,4 +21,6 @@ public interface IdeologyValueService {
     Boolean updateIdeologyValue(IdeologyValue ideologyValue);
 
     Boolean delIdeologyValueByIdList(List<Long> idList);
+
+    Integer countClassroomByClassroomId(String classroomId);
 }

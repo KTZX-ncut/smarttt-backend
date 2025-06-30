@@ -4,8 +4,8 @@
 
 
     <insert id="addIdeologyValue">
-        INSERT INTO v_ideology_value(id,vname,remark,create_time,update_time)
-        VALUE(#{id},#{vname},#{remark},#{createTime},#{updateTime})
+        INSERT INTO v_ideology_value(id,vname,remark,classroom_id,create_time,update_time)
+        VALUE(#{id},#{vname},#{remark},#{classroomId},#{createTime},#{updateTime})
     </insert>
     <update id="updateIdeologyValue">
         UPDATE v_ideology_value
@@ -18,7 +18,7 @@
             </if>
             update_time = #{updateTime}
         </set>
-        WHERE id = #{id}
+        WHERE id = #{id} AND classroom_id = #{classroomId}
     </update>
     <delete id="delIdeologyValueByIdList">
         DELETE FROM v_ideology_value WHERE id IN
@@ -27,23 +27,24 @@
         </foreach>
     </delete>
     <select id="countIdeologyByVname" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM v_ideology_value WHERE vname = #{vname}
+        SELECT COUNT(*) FROM v_ideology_value WHERE vname = #{vname} AND classroom_id = #{classroomId}
     </select>
     <select id="getIdeologyValueList" resultType="com.example.smartttevaluation.pojo.IdeologyValue">
-        SELECT id,vname,remark,create_time AS createTime,update_time AS updateTime
+        SELECT id,vname,remark,classroom_id AS classroomId,create_time AS createTime,update_time AS updateTime
         FROM v_ideology_value
     </select>
     <select id="getIdeologyValueById" resultType="com.example.smartttevaluation.pojo.IdeologyValue">
-        SELECT id,vname,remark,create_time AS createTime,update_time AS updateTime
+        SELECT id,vname,remark,classroom_id AS classroomId,create_time AS createTime,update_time AS updateTime
         FROM v_ideology_value
         WHERE id = #{id}
     </select>
     <select id="getIdeologyValueListByCondition" resultType="com.example.smartttevaluation.pojo.IdeologyValue">
-        SELECT id,vname,remark,create_time AS createTime,update_time AS updateTime
+        SELECT id,vname,remark,classroom_id AS classroomId,create_time AS createTime,update_time AS updateTime
         FROM v_ideology_value
         <where>
+            classroom_id = #{classroomId}
             <if test="vname != null || vname == '' ">
-                vname = #{vname}
+                AND vname = #{vname}
             </if>
             <if test="remark != null || remark == '' ">
                 AND remark = #{remark}
@@ -52,15 +53,19 @@
     </select>
     <select id="getIdeologyValueListByFuzzyCondition"
             resultType="com.example.smartttevaluation.pojo.IdeologyValue">
-        SELECT id,vname,remark,create_time AS createTime,update_time AS updateTime
+        SELECT id,vname,remark,classroom_id AS classroomId,create_time AS createTime,update_time AS updateTime
         FROM v_ideology_value
         <where>
+            classroom_id = #{classroomId}
             <if test="vname != null || vname == '' ">
-                vname LIKE CONCAT('%',#{vname},'%')
+                AND vname LIKE CONCAT('%',#{vname},'%')
             </if>
             <if test="remark != null || remark == '' ">
                 AND remark LIKE CONCAT('%',#{remark},'%')
             </if>
         </where>
+    </select>
+    <select id="countClassroomByClassroomId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM cm_classroom WHERE id = #{classroomId}
     </select>
 </mapper>
