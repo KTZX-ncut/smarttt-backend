@@ -14,7 +14,7 @@ import java.util.List;
 public interface SmObsService extends IService<SmObs> {
 
 
-    Result getAllCollageList();
+    Result getAllCollageList(String termid);
 
     /**
      * 新建一个机构（所有的都试用）
@@ -30,9 +30,9 @@ public interface SmObsService extends IService<SmObs> {
      * @return
      */
     Result deleteObssByIDS(List<String> ids);
-    Result getObsTree();
-    Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog);
-    Result createOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException;
+    Result getObsTree(String termid);
+    Result getPersonnelRosterByObsIDAndCatelog(String obsid,String catelog,String termid);
+    Result createOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException;
 
     Result upgradeOneObsByID(String id);
 
@@ -50,7 +50,7 @@ public interface SmObsService extends IService<SmObs> {
 
     Result updateOneObsByID(SmObs smObs);
 
-    Result getObsRPList(String obsid);
+    Result getObsRPList(String termid,String obsid);
 
     String upToTeacherObs(Token token);
 
@@ -59,8 +59,8 @@ public interface SmObsService extends IService<SmObs> {
     String getSchoolObs();
 
     Result checkSmObs(SmObs smObs);
+//
+//    List<String> getObsIdByObsName(String obsname);
 
-    List<String> getObsIdByObsName(String obsname);
-
-    Result copyHistoryObs(String copyTerm) throws JsonProcessingException;
+    Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException;
 }

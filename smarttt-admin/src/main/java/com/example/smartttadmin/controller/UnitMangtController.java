@@ -1,8 +1,10 @@
 package com.example.smartttadmin.controller;
 
 
+import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.CreateUnitsReq;
 import com.example.smartttadmin.dto.Result;
+import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.service.SmObsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 
 /**
@@ -25,12 +29,16 @@ public class UnitMangtController {
     @Autowired
     private SmObsService smObsService;
     @GetMapping
-    Result getObsList(){
-        return smObsService.getObsTree();
+    @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f",isReadOnly = true)
+    Result getObsList(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return smObsService.getObsTree(token.getTermid());
     }
     @PostMapping("/create")
-    Result createByTeachingSecretary(@RequestBody CreateUnitsReq createUnitsReq){
+    @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f")
+    Result createByTeachingSecretary(@RequestBody CreateUnitsReq createUnitsReq,HttpServletRequest request){
         SmObs smObs = createUnitsReq.getSmObs();
+        Token token = getTokenFromContext();
         //同级新增
         if(Objects.equals(createUnitsReq.getType(), "1")){
             smObs.setPid(createUnitsReq.getPid());
@@ -42,6 +50,7 @@ public class UnitMangtController {
             smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
         }
         smObs.setId(generateEnhancedID("sm_obs"));
+        smObs.setTermid(token.getTermid());
         Result result = smObsService.createOneObs(smObs);
         if(result.getCode()!=200)return Result.error(result.getMsg());
         return smObsService.checkSmObs(smObs);
@@ -77,8 +86,10 @@ public class UnitMangtController {
     }
 
     @PostMapping("/copy")
-    public Result copyHistoryObs(@RequestBody String copyTerm) throws JsonProcessingException {
-        return smObsService.copyHistoryObs(copyTerm);
+    @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f")
+    public Result copyHistoryObs(@RequestBody String copyTerm,HttpServletRequest request) throws JsonProcessingException {
+        Token token = getTokenFromContext();
+        return smObsService.copyHistoryObs(copyTerm,token.getTermid());
     }
 }
 

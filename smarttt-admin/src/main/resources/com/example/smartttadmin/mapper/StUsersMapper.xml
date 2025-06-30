@@ -71,6 +71,22 @@
         </set>
         where usersid = #{id}
     </update>
+    <update id="updateTeacherByObsid">
+        update sm_teacher
+        set obsid = "237675254"
+        where obsid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <update id="updateStudentByObsid">
+        update sm_student
+        set obsid = "237675254"
+        where obsid in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
     <delete id="deleteUsersByIDs">
         delete from st_users where id in

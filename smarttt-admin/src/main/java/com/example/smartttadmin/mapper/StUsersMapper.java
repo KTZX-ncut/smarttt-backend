@@ -46,7 +46,7 @@ public interface StUsersMapper {
             "st_roles.homeurl " +
             "from st_users " +
             "join st_roles on st_roles.id = #{roleid} " +
-            " left join cm_term on cm_term.iscurrentterm = 1 " +
+            " left join cm_term on cm_term.id = #{termid} " +
             " where st_users.id = #{id}")
     UserInfor getAllUserInfor(UserInforReq userInforReq);
 
@@ -114,4 +114,7 @@ public interface StUsersMapper {
             "OR username LIKE CONCAT('%', #{inform}, '%') " +
             "OR jobno LIKE CONCAT('%', #{inform}, '%')")
     List<PersonnelRoster> getTeacherByInform(String inform);
+
+    void updateTeacherByObsid(@Param("ids")List<String> ids);
+    void updateStudentByObsid(@Param("ids")List<String> ids);
 }

@@ -45,10 +45,12 @@ public class ClassMangtController {
      * @return
      */
     @PostMapping("/create")
-    public Result createOneClass(@RequestBody CmClass cmClass){
+    @AuthRequired(type = "admin",menu = "531500340-63929fcc-e8f9-11ee-934c-fa163efa1f90")
+    public Result createOneClass(@RequestBody CmClass cmClass,HttpServletRequest request){
+        Token token = getTokenFromContext();
         String ID = generateEnhancedID("sm_obs");
         long deep = stLevelService.getObsLevel("105");
-        SmObs smObs = new SmObs(ID, cmClass.getId(), deep,cmClass.getClassname(),cmClass.getRemark());
+        SmObs smObs = new SmObs(ID, cmClass.getId(), deep,cmClass.getClassname(),cmClass.getRemark(),token.getTermid());
         Result result = smObsService.createOneObs(smObs);
         if(result.getCode()!=200)return result;
         cmClass.setObsid(ID);

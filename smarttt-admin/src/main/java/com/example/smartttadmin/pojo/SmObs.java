@@ -23,12 +23,13 @@ public class SmObs {
   private String remark;
   private String termid;
 
-  public SmObs(String id, String pid, long obsdeep, String obsname, String remark) {
+  public SmObs(String id, String pid, long obsdeep, String obsname, String remark,String termid) {
     this.id = id;
     this.pid = pid;
     this.obsdeep = obsdeep;
     this.obsname = obsname;
     this.remark = remark;
+    this.termid = termid;
   }
 
     public SmObs(CmClass cmClass) {

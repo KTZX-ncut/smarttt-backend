@@ -2,9 +2,7 @@ package com.example.smartttadmin.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttadmin.dto.*;
-import com.example.smartttadmin.mapper.SmObsMapper;
-import com.example.smartttadmin.mapper.StLevelMapper;
-import com.example.smartttadmin.mapper.StUsersMapper;
+import com.example.smartttadmin.mapper.*;
 import com.example.smartttadmin.pojo.*;
 import com.example.smartttadmin.service.SmObsService;
 import com.example.smartttadmin.service.StUsersService;
@@ -29,6 +27,10 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     private StUsersMapper stUsersMapper;
     @Autowired
     private StLevelMapper stLevelMapper;
+    @Autowired
+    private StRolesMapper stRolesMapper;
+    @Autowired
+    private CmCourseMapper cmCourseMapper;
 
     @Autowired
     private StUsersService stUsersService;
@@ -37,8 +39,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Result getAllCollageList() {
-        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList();
+    public Result getAllCollageList(String termid) {
+        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList(termid);
         for( ObsResponse obsResponse : obsResponseList){
             obsResponse.setResponsiblePersonList(stUsersMapper.getRPByObsID(obsResponse.getId()));
         }
@@ -58,7 +60,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
         smObs.setOrderno(orderNoMax+1);
         smObs.setCreatetime(LocalDateTime.now().toString());
-        List<SmObs> smObsList = smObsMapper.getAllSmObsList();
+        List<SmObs> smObsList = smObsMapper.getAllSmObsList(smObs.getTermid());
         smObsList.add(smObs);
         if(smObs.getLevelcode()==null){
             List<TreeStructure> treeStructureList = smObsList.stream()
@@ -66,8 +68,6 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                     .collect(Collectors.toList());
             smObs.setLevelcode(generateLevelCode(generateTreeStructureList(treeStructureList,smObs.getId())));
         }
-        String currentTerm = stUsersMapper.getCurrentTerm();
-        smObs.setTermid(currentTerm);
         try{
             smObsMapper.createOneNewObs(smObs);
             //添加学期标签
@@ -109,6 +109,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                 }
             }
             smObsMapper.deleteObsByIDs(deleteList);
+            stRolesMapper.deleteRolesByObsid(deleteList);
+            stUsersMapper.updateTeacherByObsid(deleteList);
+            stUsersMapper.updateStudentByObsid(deleteList);
         }catch (Exception e){
             return Result.error("删除错误");
         }
@@ -116,9 +119,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getObsTree() {
-        String currentTerm = stUsersMapper.getCurrentTerm();
-        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(currentTerm);
+    public Result getObsTree(String termid) {
+//        String currentTerm = stUsersMapper.getCurrentTerm();
+        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(termid);
         return Result.success(buildObsTreeByPid(allObsTree,"0"));
     }
     private List<SmObsTree> buildObsTreeByPid(List<SmObsTree> allObsTree,String pid){
@@ -138,8 +141,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getPersonnelRosterByObsIDAndCatelog(String obsid, String catelog) {
-        List<SmObs> AllObs = smObsMapper.getAllSmObsList();
+    public Result getPersonnelRosterByObsIDAndCatelog(String obsid, String catelog,String termid) {
+        List<SmObs> AllObs = smObsMapper.getAllSmObsList(termid);
         Map<String, List<SmObs>> obsMap = AllObs.stream()
                 .collect(Collectors.groupingBy(SmObs::getPid));
         List<SmObs> rootObs = obsMap.get(obsid);
@@ -163,11 +166,11 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException {
+    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException {
         int loginNameLen = personnelRoster.getLoginname().length();
         if(loginNameLen<3 || loginNameLen>15)
             return Result.error("用户名长度在3-15个字符之间");
-        List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
+        List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(),termid);
         if(obsIDList.isEmpty())
             return Result.error("所属院系/班级输入错误");
         List<String> stUsersList  = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
@@ -262,22 +265,21 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     public Result updateOneObsByID(SmObs smObs) {
         smObsMapper.updateObs(smObs);
         long levelID = smObsMapper.checkProfession(smObs.getObsdeep());
-//        System.out.println(levelID+"?????????");
         if(levelID == 104){
             CmProfession cmProfession= new CmProfession(smObs);
-            smObsMapper.updateProfession(cmProfession);
+            return updateOneProfession(cmProfession);
         }
         else if(levelID == 105) {
             CmClass cmClass = new CmClass(smObs);
-            smObsMapper.updateClass(cmClass);
+            return updateClass(cmClass);
         }
         return Result.success();
     }
 
     @Override
-    public Result getObsRPList(String obsid) {
+    public Result getObsRPList(String termid,String obsid) {
         long teacherDeep = stLevelMapper.getTeacherLevel();
-        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(teacherDeep);
+        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(termid,teacherDeep);
         Map<String, List<ObsRPTree>> obsMap = allObsTree.stream()
                 .collect(Collectors.groupingBy(ObsRPTree::getPid,
                         Collectors.collectingAndThen(
@@ -318,6 +320,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         try{
             smObsMapper.updateObs(smObs);
             smObsMapper.updateProfession(cmProfession);
+            if(cmProfession.getProname()!=null){
+                cmCourseMapper.updateProfessionName(cmProfession);
+            }
         }catch (NullPointerException e){
             return Result.error("更新失败");
         }
@@ -348,24 +353,25 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         return Result.success();
     }
 
-    @Override
-    public List<String> getObsIdByObsName(String obsname) {
-        return smObsMapper.getObsIDByObsName(obsname);
-    }
+
+//    @Override
+//    public List<String> getObsIdByObsName(String obsname) {
+//        return smObsMapper.getObsIDByObsName(obsname);
+//    }
 
     @Transactional
     @Override
-    public Result copyHistoryObs(String copyTerm) throws JsonProcessingException {
+    public Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException {
         String currentTerm = stUsersMapper.getCurrentTerm();
 //        String historyTerm = getPreTerm(currentTerm);
         List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(copyTerm);
         List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");
-        change(smObsTrees,"0");
+        change(smObsTrees,"0",termid);
         return Result.success();
     }
 
     @Transactional
-    public void change(List<SmObsTree> smObsTrees, String pid) throws JsonProcessingException {
+    public void change(List<SmObsTree> smObsTrees, String pid,String termid) throws JsonProcessingException {
         for(SmObsTree smObsTree:smObsTrees){
             String newId = null;
             SmObs smObs = smObsMapper.getSmObsByID(smObsTree.getId());
@@ -374,17 +380,18 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                 String oldId = smObs.getId();
                 smObs.setId(newId);
                 smObs.setPid(pid);
+                smObs.setTermid(termid);
                 createOneObs(smObs);
                 checkSmObs(smObs);
                 List<PersonnelRoster> personnelRosterList = stUsersMapper.getTeacherByObsid(oldId);
                 personnelRosterList.addAll(stUsersMapper.getStudentByObsid(oldId));
                 for (PersonnelRoster personnelRoster : personnelRosterList) {
                     personnelRoster.setObsid(newId);
-                    stUsersService.updateOnePersonnelRoster(personnelRoster);
+                    stUsersService.updateOnePersonnelRoster(personnelRoster,termid);
                 }
             }
             else newId = smObs.getId();
-            if(smObsTree.getChildren()!=null)change(smObsTree.getChildren(),newId);
+            if(smObsTree.getChildren()!=null)change(smObsTree.getChildren(),newId,termid);
         }
     }
 

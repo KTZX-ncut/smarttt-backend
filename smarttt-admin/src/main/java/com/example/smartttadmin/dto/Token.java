@@ -15,12 +15,13 @@ public class Token {
     private String roleid;
     private String obsid;
     private long obsdeep;
-//    private String termid;
+    private String termid;
 
 
-    public Token(SimpleRole simpleRole) {
+    public Token(SimpleRole simpleRole,String termid) {
         this.roleid = simpleRole.getRoleid();
         this.obsid = simpleRole.getObsid();
         this.obsdeep = simpleRole.getObsdeep();
+        this.termid = termid;
     }
 }

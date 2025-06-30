@@ -15,7 +15,7 @@ public interface StRolesMapper {
      * 在用户表里面加上角色的记录
      * @param stRoles 新建用户的列表
      */
-    @Insert("insert into st_roles(id, rolename, rolecode, remark, homename, homeurl, createtime) values (#{id}, #{rolename}, #{rolecode}, #{remark}, #{homename}, #{homeurl}, #{createtime})")
+    @Insert("insert into st_roles(id, rolename, rolecode, remark, homename, homeurl, createtime,by2) values (#{id}, #{rolename}, #{rolecode}, #{remark}, #{homename}, #{homeurl}, #{createtime},#{by2})")
     void createRoleTable(StRoles stRoles);
 
     /**
@@ -26,7 +26,7 @@ public interface StRolesMapper {
             "values (#{id},#{roleid},#{menuid},#{status},#{createtime})")
     void createRoleMenus(StRoleMenu stRoleMenu);
     /**
-     * 获取一个用户的角色列表
+     * 获取一个用户的角色列表，不用改，就是获取当前的
      * @param userid 用户id
      * @return 简化版角色列表
      */
@@ -41,7 +41,7 @@ public interface StRolesMapper {
      * 全部角色的信息
      * @return 角色的信息列表
      */
-    @Select("select id,rolecode,rolename,homename,homeurl,remark from st_roles")
+    @Select("select id,rolecode,rolename,homename,homeurl,remark,by2 from st_roles")
     List<StRoles> getRoles();
 
     @Select("select id,rolecode,rolename,remark from st_roles")
@@ -70,4 +70,6 @@ public interface StRolesMapper {
             "where st_roleuser.roleid =st_roles.id and userid = #{userid}\n" +
             "and st_roleuser.termid = #{termid}")
     List<SimpleRole> getHistoryRoles(@Param("userid") String userid, @Param("termid") String termid);
+
+    void deleteRolesByObsid(List<String> deleteList);
 }

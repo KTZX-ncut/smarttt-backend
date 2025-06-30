@@ -45,6 +45,7 @@ public class CollageMangtController {
         Token token = getTokenFromContext();
         smObs.setObsdeep(obsDeep);
         smObs.setPid(token.getObsid());
+        smObs.setTermid(token.getTermid());
         return smObsService.createOneObs(smObs);
     }
 

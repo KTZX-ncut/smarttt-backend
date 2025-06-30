@@ -14,4 +14,5 @@ public class Token {
     private String roleid;
     private String obsid;
     private long obsdeep;
+    private String termid;
 }

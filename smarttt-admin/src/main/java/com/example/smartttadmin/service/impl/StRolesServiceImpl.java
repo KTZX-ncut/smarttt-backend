@@ -74,6 +74,7 @@ public class StRolesServiceImpl implements StRolesService {
         stRoles.setId(generateEnhancedID("st_roles"));
         LocalDateTime currentTime = LocalDateTime.now();
         stRoles.setCreatetime(currentTime.toString());
+        stRoles.setBy2("2");
         stRolesMapper.createRoleTable(stRoles);
         List<StMenus> stMenusList = stMenusMapper.getAllMenus();
         for(StMenus stMenus : stMenusList){

@@ -107,8 +107,10 @@ public class StUsersServiceImpl implements StUsersService {
      */
     @Override
     public Result getTeaInfor(UserInforReq userInforReq) {
+        if(userInforReq.getTermid() == null)
+            userInforReq.setTermid(stUsersMapper.getCurrentTerm());
         Token token = new Token(userInforReq.getId(), userInforReq.getRoleid(),
-                userInforReq.getObsid(), userInforReq.getObsdeep());
+                userInforReq.getObsid(), userInforReq.getObsdeep(),userInforReq.getTermid());
         UserInfor userInfor = stUsersMapper.getAllUserInfor(userInforReq);
         try{
                 userInfor.setCatelog(userInforReq.getCatelog());
@@ -126,9 +128,9 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException {
+    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException {
         if(personnelRoster.getObsname()!=null){
-            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
+            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(),termid);
             if(obsIDList.isEmpty())
                 return Result.error("所属院系/班级输入错误");
             personnelRoster.setObsid(obsIDList.get(0));
@@ -189,7 +191,7 @@ public class StUsersServiceImpl implements StUsersService {
         UserInfor userInfor = stUsersMapper.getStudentInfor(StuRoleID);
         userInfor.setCatelog("1");
         userInfor.setUsername(stUsers.getUsername());
-        Token token = new Token(stUsers.getId(),StuRoleID,null,-1);
+        Token token = new Token(stUsers.getId(),StuRoleID,null,-1,stUsersMapper.getCurrentTerm());
         userInfor.setToken(getToken(token,TokenSK));
         return Result.success(userInfor);
     }

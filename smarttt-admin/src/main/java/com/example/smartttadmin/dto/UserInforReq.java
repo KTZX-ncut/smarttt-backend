@@ -14,6 +14,7 @@ public class UserInforReq {
     private String obsid;
     private long obsdeep;
     private String catelog;
+    private String termid;
 
     public UserInforReq(StUsers stUsers) {
         this.id = stUsers.getId();

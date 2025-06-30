@@ -22,6 +22,7 @@ public class JwtTokenUtils {
                 .withClaim("roleid", token.getRoleid())
                 .withClaim("obsid", token.getObsid())
                 .withClaim("obsdeep", token.getObsdeep())
+                .withClaim("termid",token.getTermid())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000)) // 设置过期时间为2小时后
                 .sign(Algorithm.HMAC256(secretKey)); // 签名使用的密钥
     }
@@ -36,6 +37,7 @@ public class JwtTokenUtils {
         token.setRoleid(decodedJWT.getClaim("roleid").asString());
         token.setObsid(decodedJWT.getClaim("obsid").asString());
         token.setObsdeep(decodedJWT.getClaim("obsdeep").asLong());
+        token.setTermid(decodedJWT.getClaim("termid").asString());
         // 返回解析出的 Token 对象
         return token;
     }

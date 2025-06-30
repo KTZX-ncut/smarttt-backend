@@ -18,8 +18,8 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
      * @return ...
      */
     @Select("select id,obsname,levelcode,remark from sm_obs\n" +
-            "where obsdeep=(select obsdeep from st_level where id = 102) and termid = (select id from cm_term where iscurrentterm = 1)")
-    List<ObsResponse> getAllCollegeList();
+            "where obsdeep=(select obsdeep from st_level where id = 102) and termid = #{termid}")
+    List<ObsResponse> getAllCollegeList(String termid);
 
     @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark,termid) " +
             "VALUES (#{id},#{pid},#{orderno},#{obsdeep},#{obsname},#{obspath},#{levelcode},#{createtime},#{remark},#{termid})")
@@ -31,13 +31,14 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Select("select * from sm_obs\n"+
             "where termid = #{currentTerm} or termid = 0;")
     List<SmObsTree> getAllSmObsTree(String currentTerm);
+
     @Select("select * from sm_obs \n" +
-            "where termid = (select id from cm_term where iscurrentterm = 1) or termid = 0;")
-    List<SmObs> getAllSmObsList();
+            "where termid = #{termid} or termid = 0;")
+    List<SmObs> getAllSmObsList(@Param("termid") String termid);
     @Select("select * from sm_obs \n" +
-            "where termid = (select id from cm_term where iscurrentterm = 1) or termid = 0 \n" +
+            "where termid = #{termid} or termid = 0 \n" +
             "and obsdeep<=#{obsdeep};")
-    List<ObsRPTree>getRPTree(long obsdeep);
+    List<ObsRPTree>getRPTree(String termid,long obsdeep);
 
     /**
      * 这里需要修改为动态sql
@@ -62,9 +63,21 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
             "WHERE u.catelog = #{catelog} AND t.obsid = #{obsid} ")
     List<PersonnelRoster> getStudentPRByObsIDAndCatelog(@Param("obsid")String obsid, @Param("catelog")String catelog);
 
-    @Select("select id from sm_obs where obsname = #{obsname} and termid = (select id from cm_term where iscurrentterm = 1)")
-    List<String> getObsIDByObsName(String obsname);
+    /**
+     * 评估一下再改
+     *
+     * @param obsname
+     * @param
+     * @return
+     */
+    @Select("select id from sm_obs where obsname = #{obsname} and termid =#{termid}")
+    List<String> getObsIDByObsName(@Param("obsname") String obsname,@Param("termid")String termid);
 
+    /**
+     * 评估一下再改
+     * @param pid
+     * @return
+     */
     @Select("select orderno from sm_obs\n" +
             "where pid = #{pid} and termid = (select id from cm_term where iscurrentterm = 1)")
     List<Long> getSmObsListByPid(String pid);

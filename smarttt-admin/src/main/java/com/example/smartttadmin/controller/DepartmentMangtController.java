@@ -43,6 +43,7 @@ public class DepartmentMangtController {
         Token token = getTokenFromContext();
         smObs.setObsdeep(token.getObsdeep()+1);
         smObs.setPid(token.getObsid());
+        smObs.setTermid(token.getTermid());
         return smObsService.createOneObs(smObs);
     }
 
@@ -65,7 +66,7 @@ public class DepartmentMangtController {
 //        String obsID = smObsService.getSchoolObs();
         Token token = getTokenFromContext();
         String obsID = token.getObsid();
-        return smObsService.getObsRPList(obsID);
+        return smObsService.getObsRPList(token.getTermid(),obsID);
     }
     @PostMapping ("/departmentRP/delete")
     @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479")
