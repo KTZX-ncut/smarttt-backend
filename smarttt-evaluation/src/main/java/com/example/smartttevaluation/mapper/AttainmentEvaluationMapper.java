@@ -63,23 +63,32 @@ public interface AttainmentEvaluationMapper {
     String getProfessionName(String obsId);
 
     /**
-     * 获取学生某个试卷的分数
+     * 获取某个作业的学生得分
      */
     @Select("select SUM(libStuScore) from ai_in_stu_ans_info where stuId = #{stuId} and paperId = #{paperId}")
     Integer calcStuTestpaperScore(@Param("stuId") String stuId, @Param("paperId") String paperId);
-
     /**
-     * 获取学生某个试卷内特定kwa的题目的总分
+     * 获取某个作业内特定kwa的题目的学生得分
      */
     @Select("select SUM(libStuScore) from ai_in_stu_ans_info where stuId = #{stuId} and paperId = #{paperId} and kwaId = #{kwaId}")
     Integer calcStuTestpaperScoreByKwa(@Param("stuId") String stuId, @Param("paperId") String paperId, @Param("kwaId") String kwaId);
-
     /**
-     * 获取试卷内特定kwa的题目的满分
+     * 获取作业的总分
+     */
+    @Select("select SUM(libScore) from ai_in_stu_ans_info where stuId = #{stuId} and paperId = #{paperId}")
+    Integer calcTestPaperScore(@Param("stuId") String stuId, @Param("paperId") String paperId);
+    /**
+     * 获取作业内特定kwa的题目的总分
      */
     @Select("select SUM(libScore) from ai_in_stu_ans_info where stuId = #{stuId} and paperId = #{paperId} and kwaId = #{kwaId}")
     Integer calcTestPaperScoreByKwa(@Param("stuId") String stuId, @Param("paperId") String paperId, @Param("kwaId") String kwaId);
-
+    /**
+     * 获取用户在考核方案中上传的文件的学生分数
+     */
+    @Select("select score from cm_course_assessment_filedata ccaf " +
+            "left join sm_student s on ccaf.stuno = s.stuno " +
+            "where s.usersid = #{stuId} and ccaf.fileId = #{paperId}")
+    Integer getCustomFileStudentScore(@Param("stuId") String stuId, @Param("paperId") String paperId);
     /**
      * 存储学生总评成绩
      */

@@ -32,7 +32,7 @@ public class MessageSchedule {
     }
 
 
-    @Scheduled(fixedDelay = 2000)
+    @Scheduled(fixedDelay = 10000)
     public void task() {
         log.info("开始执行任务...");
         for (MessageDealler messageDealler : MessageDeallerList){

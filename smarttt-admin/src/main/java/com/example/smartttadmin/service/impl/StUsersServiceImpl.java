@@ -161,9 +161,9 @@ public class StUsersServiceImpl implements StUsersService {
             else{
                 historyObsJson = smObsMapper.getTeaHistoryObsByUserId(personnelRoster.getId());
             }
-
-            List<HistoryObs> historyObsList = jsonArrayToList(historyObsJson, HistoryObs.class);
-            Boolean isFind = false;
+            List<HistoryObs> historyObsList = new ArrayList<>();
+            if(historyObsJson!=null)historyObsList = jsonArrayToList(historyObsJson, HistoryObs.class);
+            boolean isFind = false;
             for(HistoryObs historyObs : historyObsList){
                 if(Objects.equals(historyObs.getTermId(), currentTermId)){
                     System.out.println(personnelRoster.getObsid()+"????????????");
@@ -243,5 +243,10 @@ public class StUsersServiceImpl implements StUsersService {
             personnelRosterList = stUsersMapper.getTeacherByInform(inform);
         }
         return Result.success(personnelRosterList);
+    }
+
+    @Override
+    public String getCurrentTerm() {
+        return stUsersMapper.getCurrentTerm();
     }
 }

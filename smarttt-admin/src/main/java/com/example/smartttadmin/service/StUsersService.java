@@ -56,4 +56,6 @@ public interface StUsersService{
     Result studentChangePwd(String currenPwd, String newPwd, String id);
 
     Result searchPerson(String inform, String catelog);
+
+    String getCurrentTerm();
 }
