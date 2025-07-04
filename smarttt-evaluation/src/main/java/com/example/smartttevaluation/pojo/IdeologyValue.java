@@ -20,5 +20,5 @@ public class IdeologyValue extends BasePojo implements Serializable {
 
     private String remark;
 
-    private String classroomId;
+    private String courseId;
 }
