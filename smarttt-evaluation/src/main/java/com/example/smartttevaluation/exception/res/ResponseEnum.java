@@ -53,8 +53,8 @@ public enum ResponseEnum {
     IDEOLOGY_VALUE_TYPE_NAME_EXIST(-710, "ideologyValue: name已经存在了"),
     IDEOLOGY_ID_IS_NOT_NULL(-710, "ideologyValue: id不能为空"),
     IDEOLOGY_ID_LIST_IS_NOT_NULL(-710, "ideologyValue: idList不能为空"),
-    IDEOLOGY_CLASSROOM_ID_IS_NOT_NULL(-710, "ideologyValue: classroomId不能为空"),
-    CLASSROOM_ID_NOT_VALID(-710, "classroomId不合法,不存在该课堂");
+    IDEOLOGY_COURSE_ID_IS_NOT_NULL(-710, "ideologyValue: courseId不能为空"),
+    COURSE_ID_NOT_VALID(-710, "courseId不合法,不存在该课堂");
 
     private Integer code;//状态码
     private String message;//消息

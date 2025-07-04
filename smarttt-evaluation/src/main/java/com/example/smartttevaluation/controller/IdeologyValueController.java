@@ -37,7 +37,7 @@ public class IdeologyValueController {
      */
     @PostMapping
     public Result getIdeologyValueListByCondition(@RequestBody IdeologyValueReq ideologyValueReq) {
-        SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValueReq.getClassroomId()), ResponseEnum.IDEOLOGY_CLASSROOM_ID_IS_NOT_NULL);
+        SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValueReq.getCourseId()), ResponseEnum.IDEOLOGY_COURSE_ID_IS_NOT_NULL);
         List<IdeologyValue> ideologyValueList = ideologyValueService.getIdeologyValueListByCondition(ideologyValueReq);
         return Result.success(ideologyValueList);
     }
@@ -57,12 +57,12 @@ public class IdeologyValueController {
     @PostMapping("/add")
     public Result addIdeologyValue(@RequestBody IdeologyValue ideologyValue) {
         SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValue.getVname()), ResponseEnum.IDEOLOGY_NAME_IS_NOT_NULL);
-        SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValue.getClassroomId()), ResponseEnum.IDEOLOGY_CLASSROOM_ID_IS_NOT_NULL);
-        // 检查classroomId是否合法
-        Integer classroomCount = ideologyValueService.countClassroomByClassroomId(ideologyValue.getClassroomId());
-        SmartAssert.checkExpression(Objects.equals(classroomCount,1), ResponseEnum.CLASSROOM_ID_NOT_VALID);
-        // vname必须在当前课堂上唯一
-        Integer count = ideologyValueService.countIdeologyByVname(ideologyValue.getVname(), ideologyValue.getClassroomId());
+        SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValue.getCourseId()), ResponseEnum.IDEOLOGY_COURSE_ID_IS_NOT_NULL);
+        // 检查courseId是否合法c
+        Integer courseCount = ideologyValueService.countCourseByCourseId(ideologyValue.getCourseId());
+        SmartAssert.checkExpression(Objects.equals(courseCount,1), ResponseEnum.COURSE_ID_NOT_VALID);
+        // vname必须在当前课程上唯一
+        Integer count = ideologyValueService.countIdeologyByVname(ideologyValue.getVname(), ideologyValue.getCourseId());
         SmartAssert.checkExpression(Objects.equals(count,0), ResponseEnum.IDEOLOGY_VALUE_TYPE_NAME_EXIST);
         return Result.success(ideologyValueService.addIdeologyValue(ideologyValue));
     }
@@ -73,11 +73,11 @@ public class IdeologyValueController {
     @PostMapping("/update")
     public Result updateIdeologyValue(@RequestBody IdeologyValue ideologyValue) {
         SmartAssert.checkExpression(Objects.nonNull(ideologyValue.getId()), ResponseEnum.IDEOLOGY_ID_IS_NOT_NULL);
-        SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValue.getClassroomId()), ResponseEnum.IDEOLOGY_CLASSROOM_ID_IS_NOT_NULL);
-        // 检查classroomId是否合法
-        Integer classroomCount = ideologyValueService.countClassroomByClassroomId(ideologyValue.getClassroomId());
-        SmartAssert.checkExpression(Objects.equals(classroomCount,1), ResponseEnum.CLASSROOM_ID_NOT_VALID);
-        Integer count = ideologyValueService.countIdeologyByVname(ideologyValue.getVname(),ideologyValue.getClassroomId());
+        SmartAssert.checkExpression(StrUtil.isNotBlank(ideologyValue.getCourseId()), ResponseEnum.IDEOLOGY_COURSE_ID_IS_NOT_NULL);
+        // 检查courseId是否合法
+        Integer courseCount = ideologyValueService.countCourseByCourseId(ideologyValue.getCourseId());
+        SmartAssert.checkExpression(Objects.equals(courseCount,1), ResponseEnum.COURSE_ID_NOT_VALID);
+        Integer count = ideologyValueService.countIdeologyByVname(ideologyValue.getVname(),ideologyValue.getCourseId());
         SmartAssert.checkExpression(Objects.equals(count,0), ResponseEnum.IDEOLOGY_VALUE_TYPE_NAME_EXIST);
         return Result.success(ideologyValueService.updateIdeologyValue(ideologyValue));
     }

@@ -13,7 +13,7 @@ import java.util.List;
 public interface IdeologyValueMapper {
     int addIdeologyValue(IdeologyValue ideologyValue);
 
-    Integer countIdeologyByVname(@Param("vname") String vname,@Param("classroomId") String classroomId);
+    Integer countIdeologyByVname(@Param("vname") String vname,@Param("courseId") String courseId);
 
     List<IdeologyValue> getIdeologyValueList();
 
@@ -27,5 +27,5 @@ public interface IdeologyValueMapper {
 
     Boolean delIdeologyValueByIdList(@Param("idList") List<Long> idList);
 
-    Integer countClassroomByClassroomId(@Param("classroomId") String classroomId);
+    Integer countCourseByCourseId(@Param("courseId") String courseId);
 }

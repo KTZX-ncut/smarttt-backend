@@ -34,8 +34,8 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
     }
 
     @Override
-    public Integer countIdeologyByVname(String vname,String classroomId) {
-        return ideologyValueMapper.countIdeologyByVname(vname,classroomId);
+    public Integer countIdeologyByVname(String vname,String courseId) {
+        return ideologyValueMapper.countIdeologyByVname(vname,courseId);
     }
 
     @Override
@@ -53,14 +53,14 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
         Boolean fuzzyQuery = ideologyValueReq.getFuzzyQuery();
         List<IdeologyValue> ideologyValueList = null;
         IdeologyValue ideologyValue = new IdeologyValue();
-        ideologyValue.setClassroomId(ideologyValueReq.getClassroomId());
+        ideologyValue.setCourseId(ideologyValueReq.getCourseId());
         if (StrUtil.isNotBlank(ideologyValueReq.getVname())){
             ideologyValue.setVname(ideologyValueReq.getVname());
         }
         if (StrUtil.isNotBlank(ideologyValueReq.getRemark())){
             ideologyValue.setRemark(ideologyValueReq.getRemark());
         }
-        // if ... 后续好扩展，用实体类去Mapper层查询，做好隔离，提高灵活性
+        // if ... 后续好扩展，用实体类去Mapper层查询，做好隔离，防止实体类被污染
         if (Objects.isNull(fuzzyQuery) || !fuzzyQuery){
             // 不支持模糊查询
             ideologyValueList = ideologyValueMapper.getIdeologyValueListByCondition(ideologyValue);
@@ -83,7 +83,7 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
     }
 
     @Override
-    public Integer countClassroomByClassroomId(String classroomId) {
-        return ideologyValueMapper.countClassroomByClassroomId(classroomId);
+    public Integer countCourseByCourseId(String courseId) {
+        return ideologyValueMapper.countCourseByCourseId(courseId);
     }
 }
