@@ -28,8 +28,10 @@ public class CollageMangtController {
     @Autowired
     private StLevelService stLevelService;
     @GetMapping
-    public Result getCollegeList(@RequestParam("termid")String termid){
-        return smObsService.getAllCollageList(termid);
+    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3",isReadOnly = true)
+    public Result getCollegeList(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return smObsService.getAllCollageList(token.getTermid());
     }
 
     /**
