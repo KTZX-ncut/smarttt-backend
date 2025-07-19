@@ -86,8 +86,6 @@ public class AcademicCalendarHandler implements CourseFileHandler{
         courseFile.setObsid(params);
         courseFile.setBucketName(bucketName);
         courseFile.setObjectName(objectName);
-        // 入库
-        courseFileService.save(courseFile);
         // 打印日志
         if (log.isInfoEnabled()){
             log.info("AcademicCalendarHandler.uploadFile.courseFile:{}", JSONUtil.parse(courseFile));
@@ -95,6 +93,8 @@ public class AcademicCalendarHandler implements CourseFileHandler{
         String name = courseFile.getId()+ "." + suffix;
         log.info("------>name: {}",name);
         minioUtil.upload(file.getInputStream(),bucketName,objectName + name,file.getSize());
+        // 入库
+        courseFileService.save(courseFile);
     }
 
     @Override
