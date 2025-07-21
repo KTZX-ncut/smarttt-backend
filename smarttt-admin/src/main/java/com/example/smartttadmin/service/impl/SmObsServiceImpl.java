@@ -179,8 +179,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         personnelRoster.setId(usersId);
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
         stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
-        String currentTerm = stUsersMapper.getCurrentTerm();
-        HistoryObs historyObs = new HistoryObs(currentTerm,obsIDList.get(0));
+//        String currentTerm = stUsersMapper.getCurrentTerm();
+        HistoryObs historyObs = new HistoryObs(termid,obsIDList.get(0));
         List<HistoryObs> historyObsList  = new ArrayList<>();
         historyObsList.add(historyObs);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){
@@ -362,7 +362,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     @Transactional
     @Override
     public Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException {
-        String currentTerm = stUsersMapper.getCurrentTerm();
+//        String currentTerm = stUsersMapper.getCurrentTerm();
 //        String historyTerm = getPreTerm(currentTerm);
         List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(copyTerm);
         List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");

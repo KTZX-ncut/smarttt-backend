@@ -77,7 +77,9 @@ public class DepartmentMangtController {
     @PostMapping("/departmentRP/create")
     @AuthRequired(type = "admin",menu = "531500340-f47ac10b-58cc-4372-a567-0e02b2c3d479")
     public Result createCollageRP(@RequestBody StRoleUser stRoleUser,HttpServletRequest request){
+        Token token = getTokenFromContext();
         stRoleUser.setRoleid("516761049-bac1cf5a-5360-4caa-b062-3e2800bdfd58");
+        stRoleUser.setTermid(token.getTermid());
         return stUsersService.createOneRP(stRoleUser);
     }
 }

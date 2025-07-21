@@ -15,7 +15,7 @@ public interface CmCourseMapper {
     /**
      * 获取学期信息
      */
-    @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
+    @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId from cm_course where professionId=#{obsid} and schooltermId = #{termid}")
     List<SimpleCourse> getCourse (Token token);
     @Select("select id,courseChineseName from cm_course where professionId=#{obsid} and schooltermId = (select id from cm_term where iscurrentterm = 1)")
     List<CourseClassroomReq> getCourseName(Token token);

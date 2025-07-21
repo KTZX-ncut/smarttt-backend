@@ -50,7 +50,7 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
     @Override
     public Result createOneClassroom(CmClassroom classroom) {
         classroom.setId(generateEnhancedID("cm_classroom"));
-        classroom.setTermId(cmTermMapper.getCurrentTerm());
+//        classroom.setTermId(cmTermMapper.getCurrentTerm());
         cmClassRoomMapper.createClassroom(classroom);
         StRoleUser stRoleUser = new StRoleUser(generateEnhancedID("st_roleuser"),classroom.getTeacherId(),classroomRoleId,classroom.getId(),-1, LocalDate.now().toString(),classroom.getTermId());
         stUsersMapper.createOneRoleUser(stRoleUser);

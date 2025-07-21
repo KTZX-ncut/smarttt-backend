@@ -39,8 +39,8 @@ public class StUsersServiceImpl implements StUsersService {
             stRoleUser.setId(generateEnhancedID("st_roleuser"));
             stRoleUser.setObsdeep(smObsMapper.getObsdeepByObsid(stRoleUser.getObsid()));
             stRoleUser.setCreatetime(LocalDate.now().toString());
-            String currentTerm = stUsersMapper.getCurrentTerm();
-            stRoleUser.setTermid(currentTerm);
+//            String currentTerm = stUsersMapper.getCurrentTerm();
+//            stRoleUser.setTermid(currentTerm);
             stUsersMapper.createOneRoleUser(stRoleUser);
         }catch (NullPointerException e)
         {
@@ -150,6 +150,13 @@ public class StUsersServiceImpl implements StUsersService {
 
         return Result.success();
     }
+
+    /**
+     * 只能支持复制到当前学期
+     * @param personnelRoster
+     * @return
+     * @throws JsonProcessingException
+     */
     private  PersonnelRoster changePersonHistoryObs(PersonnelRoster personnelRoster) throws JsonProcessingException {
         String currentTermId = stUsersMapper.getCurrentTerm();
         if(personnelRoster.getObsid()!=null){

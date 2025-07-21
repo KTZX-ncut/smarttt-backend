@@ -70,8 +70,11 @@ public class ProfessionMangtController {
         return stUsersService.deleteRP(stRoleUser);
     }
     @PostMapping("/professionRP/create")
-    public Result createCollageRP(@RequestBody StRoleUser stRoleUser){
+    @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90")
+    public Result createCollageRP(@RequestBody StRoleUser stRoleUser,HttpServletRequest request){
+        Token token = getTokenFromContext();
         stRoleUser.setRoleid("516761049-916b5c26-ea1d-4f50-8e57-fe7c2e3aaf60");
+        stRoleUser.setTermid(token.getTermid());
         return stUsersService.createOneRP(stRoleUser);
     }
 }

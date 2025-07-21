@@ -90,8 +90,11 @@ public class CollageMangtController {
         return stUsersService.deleteRP(stRoleUser);
     }
     @PostMapping("/collageRP/create")
-    public Result createCollageRP(@RequestBody StRoleUser stRoleUser){
+    @AuthRequired(type = "admin",menu = "531500340-69ed23be-6d75-4e9b-8b27-d287ed22fce3")
+    public Result createCollageRP(@RequestBody StRoleUser stRoleUser,HttpServletRequest request){
         stRoleUser.setRoleid("516761049-de9ae949-6bfb-4314-be59-8b1f3c2626e4");
+        Token token = getTokenFromContext();
+        stRoleUser.setTermid(token.getTermid());
         return stUsersService.createOneRP(stRoleUser);
     }
 }

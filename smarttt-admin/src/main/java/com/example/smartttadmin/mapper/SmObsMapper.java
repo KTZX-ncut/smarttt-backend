@@ -38,7 +38,7 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Select("select * from sm_obs \n" +
             "where termid = #{termid} or termid = 0 \n" +
             "and obsdeep<=#{obsdeep};")
-    List<ObsRPTree>getRPTree(String termid,long obsdeep);
+    List<ObsRPTree>getRPTree(@Param("termid")String termid,@Param("obsdeep")long obsdeep);
 
     /**
      * 这里需要修改为动态sql

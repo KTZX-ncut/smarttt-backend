@@ -45,10 +45,11 @@ public class ClassroomMangtController {
     token获取创建者信息
      */
     @PostMapping("/create")
-    @AuthRequired(type = "admin",menu = "531500340-074abac7-fe4c-4908-aa7e-d72dacd94014",isReadOnly = true)
+    @AuthRequired(type = "admin",menu = "531500340-074abac7-fe4c-4908-aa7e-d72dacd94014")
     public Result createOneClassroom(@RequestBody CmClassroom classroom,HttpServletRequest request){
         Token token = getTokenFromContext();
         classroom.setCreator(token.getId());
+        classroom.setTermId(token.getTermid());
         return cmClassRoomService.createOneClassroom(classroom);
     }
     @PostMapping("/update")
