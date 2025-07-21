@@ -36,7 +36,7 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
             "where termid = #{termid} or termid = 0;")
     List<SmObs> getAllSmObsList(@Param("termid") String termid);
     @Select("select * from sm_obs \n" +
-            "where termid = #{termid} or termid = 0 \n" +
+            "where (termid = #{termid} or termid = 0) \n" +
             "and obsdeep<=#{obsdeep};")
     List<ObsRPTree>getRPTree(@Param("termid")String termid,@Param("obsdeep")long obsdeep);
 

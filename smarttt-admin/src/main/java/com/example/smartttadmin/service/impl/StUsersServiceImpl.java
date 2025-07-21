@@ -129,6 +129,11 @@ public class StUsersServiceImpl implements StUsersService {
 
     @Override
     public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException {
+        if(personnelRoster.getLoginname()!=null){
+            int loginNameLen = personnelRoster.getLoginname().length();
+            if(loginNameLen<3 || loginNameLen>15)
+                return Result.error("用户名长度在3-15个字符之间");
+        }
         if(personnelRoster.getObsname()!=null){
             List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(),termid);
             if(obsIDList.isEmpty())
