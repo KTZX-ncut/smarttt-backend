@@ -26,8 +26,8 @@ public class CmTermServicelmpl implements CmTermService {
 //    private RedisTemplate<String,String> redisTemplate;
 
     @Override
-    public Result getHistoryTerm() {
-        return Result.success(cmTermMapper.getHistoryTerms());
+    public Result getHistoryTerm(String termid) {
+        return Result.success(cmTermMapper.getHistoryTerms(termid));
     }
 
     @Override

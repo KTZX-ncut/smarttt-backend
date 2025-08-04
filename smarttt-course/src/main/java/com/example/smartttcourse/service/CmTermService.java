@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface CmTermService {
 
-    Result getHistoryTerm();
+    Result getHistoryTerm(String termid);
 
     Result createTerms(CmTerm cmTerm);
 

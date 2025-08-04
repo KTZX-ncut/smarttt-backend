@@ -16,6 +16,6 @@ public interface CmCourseMapper {
     @Select("select classroomName from cm_classroom where id = #{obsid}")
     String getClassroomName(String obsid);
 
-    @Update("update cm_course set professionName = #{proname} where professionId = #{id}")
+    @Update("update cm_course set professionName = #{proname} where professionId = #{obsid}")
     void updateProfessionName(CmProfession cmProfession);
 }

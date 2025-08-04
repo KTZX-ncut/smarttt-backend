@@ -58,9 +58,11 @@ public class CourseController {
      * @return
      */
 
+    @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @GetMapping("/allterm")
-    public Result getAllTerm(){
-        return cmTermService.getHistoryTerm();
+    public Result getAllTerm(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return cmTermService.getHistoryTerm(token.getTermid());
     }
 
     @GetMapping("/currenttermId")

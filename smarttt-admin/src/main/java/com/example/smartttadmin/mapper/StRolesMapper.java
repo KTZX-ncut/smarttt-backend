@@ -71,5 +71,5 @@ public interface StRolesMapper {
             "and st_roleuser.termid = #{termid}")
     List<SimpleRole> getHistoryRoles(@Param("userid") String userid, @Param("termid") String termid);
 
-    void deleteRolesByObsid(List<String> deleteList);
+    void deleteRolesByObsid(@Param("ids")List<String> deleteList);
 }

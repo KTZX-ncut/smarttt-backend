@@ -34,8 +34,8 @@ public interface CmTermMapper {
     @Select("select id from cm_term where iscurrentterm = 1")
     String getCurrentTerm();
 
-    @Select("select id,termname from cm_term where iscurrentterm = 0")
-    List<CmTerm> getHistoryTerms();
+    @Select("select id,termname from cm_term where id != #{termid}")
+    List<CmTerm> getHistoryTerms(String termid);
 
     void deleteObsTermByIDs(List<String> ids);
 

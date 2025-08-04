@@ -28,6 +28,12 @@ public class LoginHomeController {
    @Autowired
    private StUsersService stUsersService;
 
+    @PostMapping("/token")
+    @AuthRequired(type = "admin",menu = "531500340-0f2888b9-ecaf-49a7-b175-7ae00e14ae65")
+    public Result getToken(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return Result.success(token);
+    }
     /**
      * 教师类型用户登录到首页
      * @return Result
