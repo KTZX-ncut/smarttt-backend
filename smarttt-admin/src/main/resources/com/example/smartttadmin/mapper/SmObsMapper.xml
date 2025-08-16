@@ -61,6 +61,17 @@
         </set>
         where obsid = #{obsid}
     </update>
+    <update id="updateCourseProfession">
+        update cm_course
+        <set>
+            professionId = "237675254",
+            professionName = ""
+        </set>
+        where professionId in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
     <!--    id: 方法名 resultType：单条记录所封装的类型，全类名-->
 
     <select id="getSmObsByIDs" resultType="com.example.smartttadmin.pojo.SmObs">

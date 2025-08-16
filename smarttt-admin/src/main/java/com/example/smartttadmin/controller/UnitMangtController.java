@@ -34,6 +34,12 @@ public class UnitMangtController {
         Token token = getTokenFromContext();
         return smObsService.getObsTree(token.getTermid());
     }
+    @GetMapping("/student")
+    @AuthRequired(type = "admin",menu = "531500340-e7149e74-4856-4440-8d94-99f915731842",isReadOnly = true)
+    Result getStudentObsList(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        return smObsService.getObsTree(token.getTermid());
+    }
     @PostMapping("/create")
     @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f")
     Result createByTeachingSecretary(@RequestBody CreateUnitsReq createUnitsReq,HttpServletRequest request){

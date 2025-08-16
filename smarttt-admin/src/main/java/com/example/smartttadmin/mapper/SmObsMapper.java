@@ -162,4 +162,6 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Select("select sm_obs.* from sm_obs \n" +
             "where termid = #{historyTerm} ")
     List<SmObs> getAllHistoryObs(String historyTerm);
+
+    void updateCourseProfession(@Param("ids") List<String> deleteList);
 }

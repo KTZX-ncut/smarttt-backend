@@ -112,6 +112,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
             stRolesMapper.deleteRolesByObsid(deleteList);
             stUsersMapper.updateTeacherByObsid(deleteList);
             stUsersMapper.updateStudentByObsid(deleteList);
+            smObsMapper.updateCourseProfession(deleteList);
         }catch (Exception e){
             return Result.error("删除错误");
         }
