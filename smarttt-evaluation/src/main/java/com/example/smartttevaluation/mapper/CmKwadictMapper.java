@@ -20,7 +20,7 @@ public interface CmKwadictMapper {
 //            "inner join cm_keywords k on k.id = kwa.keywordid " +
 //            "inner join cm_ability a on a.id = kwa.abilityid where kwa.courseid = #{obsid}")
 //    List<CmKwadict> getKwadict(String obsid);
-    @Select("select kwa.id, kwa.abilityid, kwa.keywordid, kwa.name, kwa.courseid, kwa.v, " +
+    @Select("select kwa.id, kwa.abilityid, kwa.keywordid, kwa.name, kwa.courseid, " +
             "k.name as keywordname, a.name as abilityname, ga.datavalue as datavalue, k.importantlevelid as importantlevelid " +
             "from cm_kwadict kwa " +
             "inner join cm_keywords k on k.id = kwa.keywordid and k.courseid = kwa.courseid " +

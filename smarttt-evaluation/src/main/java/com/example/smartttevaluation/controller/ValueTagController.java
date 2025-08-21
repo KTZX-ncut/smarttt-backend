@@ -119,9 +119,10 @@ public class ValueTagController {
     }
 
     /**
-     * 绑定kwa 和 v
+     * 绑定kwa 和 v,弃用这个接口
      */
     @PostMapping("/bindKwaAndValue")
+    @Deprecated
     public Result bindKwaAndValue(@RequestBody KwaBindReq kwaBindReq){
         String f = this.validKwaValueTagBindReqList(kwaBindReq.getKwaValueTagBindReqList());
         if(!Objects.equals(f,"OK")){

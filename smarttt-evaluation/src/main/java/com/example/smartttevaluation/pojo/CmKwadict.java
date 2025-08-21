@@ -27,5 +27,4 @@ public class CmKwadict {
     private String datavalue;//数值
     private String importantlevelid;// 重要程度
     private String status;//完成状态
-    private String v;// 标签
 }
