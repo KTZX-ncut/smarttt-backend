@@ -52,11 +52,19 @@ public class PersonnelMangtController {
      * @return
      */
     @GetMapping("/person")
-    @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
+    @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998",isReadOnly = true)
     public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid, @RequestParam(name = "catelog")String catelog,HttpServletRequest request){
         Token token  = getTokenFromContext();
         return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,catelog,token.getTermid());
     }
+
+    @GetMapping("/student")
+    @AuthRequired(type = "admin",menu = "531500340-e7149e74-4856-4440-8d94-99f915731842",isReadOnly = true)
+    public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid,HttpServletRequest request){
+        Token token  = getTokenFromContext();
+        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,"1",token.getTermid());
+    }
+
 
     /**
      * 新建教师/学生
