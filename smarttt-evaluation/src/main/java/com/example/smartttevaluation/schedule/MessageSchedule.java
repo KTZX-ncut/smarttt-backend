@@ -1,6 +1,6 @@
 package com.example.smartttevaluation.schedule;
 
-import com.example.smartttevaluation.schedule.entity.EduMessage;
+import com.example.smartttevaluation.schedule.chain.MessagePuller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,55 +9,49 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * 消息任务处理器
+ * 使用责任链模式处理消息
  */
-@Component
 @Slf4j
 public class MessageSchedule {
 
-    private final List<MessageDealler> MessageDeallerList;
-
-    /**
-     * 事务管理器
-     */
+    private final MessagePuller messagePuller;
     private final PlatformTransactionManager transactionManager;
 
-    public MessageSchedule(List<MessageDealler> MessageDeallerList, PlatformTransactionManager transactionManager) {
-        this.MessageDeallerList = MessageDeallerList;
+    public MessageSchedule(MessagePuller messagePuller, PlatformTransactionManager transactionManager) {
+        this.messagePuller = messagePuller;
         this.transactionManager = transactionManager;
     }
 
-
     @Scheduled(fixedDelay = 10000)
     public void task() {
-        log.info("开始执行任务...");
-        for (MessageDealler messageDealler : MessageDeallerList){
-            // 开启事物
-            TransactionDefinition transactionDefinition =
-                    new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
+        log.info("开始执行消息处理任务...");
+        
+        // 开启事务
+        TransactionDefinition transactionDefinition =
+                new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-            TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
-
-            try {
-                List<EduMessage> messages = messageDealler.pull();
-                messageDealler.process(messages);
-                messageDealler.updateStateToComplete(messages.stream()
-                        .map(EduMessage::getId)
-                        .collect(Collectors.toList()));
-                // 提交事物
+        try {
+            // 使用责任链模式拉取和处理消息
+            boolean result = messagePuller.pullAndProcessMessages();
+            
+            if (result) {
+                // 提交事务
                 transactionManager.commit(transactionStatus);
-            } catch (Exception e) {
-                // 回滚事物
+                log.info("消息处理任务执行成功");
+            } else {
+                // 回滚事务
                 transactionManager.rollback(transactionStatus);
-                e.printStackTrace();
-                log.error("任务执行异常:{}", e.getMessage());
-
+                log.warn("消息处理任务执行失败，已回滚");
             }
+        } catch (Exception e) {
+            // 回滚事务
+            transactionManager.rollback(transactionStatus);
+            log.error("消息处理任务执行异常: {}", e.getMessage(), e);
         }
-        log.info("任务执行结束...");
+        
+        log.info("消息处理任务执行结束...");
     }
 }
