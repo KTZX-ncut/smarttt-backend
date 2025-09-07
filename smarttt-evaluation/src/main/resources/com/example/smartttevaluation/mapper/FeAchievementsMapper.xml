@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.FeAchievementsMapper">
+
+    <!-- 自定义SQL方法可以在这里实现 -->
+
+</mapper>

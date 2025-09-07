@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.FeAssessmentItemsMapper">
+
+    <!-- 查询试卷信息（作业和考试） -->
+    <select id="selectTestPapersByClassroomId" resultType="com.example.smartttevaluation.dto.AssessmentItemDto">
+        SELECT
+            tp.id as typeId,
+            tp.name as itemName,
+            tp.courseId as courseId,
+            tp.classroomId as classroomId,
+            c.courseChineseName as courseName,
+            cl.classroomName as classroomName,
+            CASE
+                WHEN tp.catelog = '1' THEN '作业'
+                WHEN tp.catelog = '2' THEN '考试'
+                ELSE '未知'
+                END as itemType
+        FROM pm_testpaper tp
+                 LEFT JOIN cm_course c ON tp.courseId = c.id
+                 LEFT JOIN cm_classroom cl ON tp.classroomId = cl.id
+        WHERE tp.classroomId = #{classroomId}
+          AND tp.status = 1
+          AND tp.locked = 0
+        ORDER BY tp.createTime DESC
+    </select>
+
+    <!-- 查询实验信息 -->
+    <select id="selectPracticesByClassroomId" resultType="com.example.smartttevaluation.dto.AssessmentItemDto">
+        SELECT
+            pp.id as typeId,
+            pp.name as itemName,
+            pp.classroomId as classroomId,
+            c.id as courseId,
+            c.courseChineseName as courseName,
+            cl.classroomName as classroomName,
+            '实验' as itemType
+        FROM pm_practice pp
+                 LEFT JOIN cm_classroom cl ON pp.classroomId = cl.id
+                 LEFT JOIN cm_course c ON cl.courseId = c.id
+        WHERE pp.classroomId = #{classroomId}
+          AND pp.status = 1
+    </select>
+
+    <!-- 批量删除考核项 -->
+    <delete id="batchDeleteByIds">
+        DELETE FROM fe_assessment_items WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 分页查询考核项 -->
+    <select id="selectWithPage" resultType="com.example.smartttevaluation.pojo.FeAssessmentItems">
+        SELECT * FROM fe_assessment_items
+        <where>
+            <if test="categoryId != null and categoryId != ''">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="courseId != null and courseId != ''">
+                AND course_id = #{courseId}
+            </if>
+            <if test="classroomId != null and classroomId != ''">
+                AND classroom_id = #{classroomId}
+            </if>
+            <if test="objectiveId != null and objectiveId != ''">
+                AND objective_id = #{objectiveId}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        <if test="size != null and size &gt; 0">
+            <if test="current != null and current &gt; 1">
+                LIMIT #{size} OFFSET #{offset}
+            </if>
+            <if test="current == null or current &lt;= 1">
+                LIMIT #{size}
+            </if>
+        </if>
+    </select>
+
+    <!-- 查询考核项总数 -->
+    <select id="countAll" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM fe_assessment_items
+        <where>
+            <if test="categoryId != null and categoryId != ''">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="courseId != null and courseId != ''">
+                AND course_id = #{courseId}
+            </if>
+            <if test="classroomId != null and classroomId != ''">
+                AND classroom_id = #{classroomId}
+            </if>
+            <if test="objectiveId != null and objectiveId != ''">
+                AND objective_id = #{objectiveId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

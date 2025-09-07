@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.FeCourseObjectivesMapper">
+
+    <!-- 根据课程ID查询课程目标列表（支持分页） -->
+    <select id="selectByCourseIdWithPage" resultType="com.example.smartttevaluation.pojo.FeCourseObjectives">
+        SELECT * FROM fe_course_objectives 
+        WHERE course_id = #{courseId}
+        ORDER BY sort_order ASC, created_at ASC
+    </select>
+
+    <!-- 根据课程ID查询课程目标列表（带分页参数） -->
+    <select id="selectByCourseIdWithPageAndLimit" resultType="com.example.smartttevaluation.pojo.FeCourseObjectives">
+        SELECT * FROM fe_course_objectives 
+        WHERE course_id = #{courseId}
+        ORDER BY sort_order ASC, created_at ASC
+        <if test="current != null and current &gt; 1">
+            LIMIT #{size} OFFSET #{offset}
+        </if>
+        <if test="current == null or current &lt;= 1">
+            LIMIT #{size}
+        </if>
+    </select>
+
+    <!-- 根据课程ID查询课程目标总数 -->
+    <select id="countByCourseId" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM fe_course_objectives WHERE course_id = #{courseId}
+    </select>
+
+    <!-- 批量删除课程目标 -->
+    <delete id="batchDeleteByIds">
+        DELETE FROM fe_course_objectives WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据ID更新课程目标 -->
+    <update id="updateById" parameterType="com.example.smartttevaluation.pojo.FeCourseObjectives">
+        UPDATE fe_course_objectives
+        <set>
+            <if test="objectiveName != null and objectiveName != ''">
+                objective_name = #{objectiveName},
+            </if>
+            <if test="objectiveDescription != null">
+                objective_description = #{objectiveDescription},
+            </if>
+            <if test="weight != null">
+                weight = #{weight},
+            </if>
+            <if test="sortOrder != null">
+                sort_order = #{sortOrder},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 搜索课程目标 -->
+    <select id="searchCourseObjectives" resultType="com.example.smartttevaluation.pojo.FeCourseObjectives">
+        SELECT * FROM fe_course_objectives
+        <where>
+            <if test="searchReq.courseId != null and searchReq.courseId != ''">
+                AND course_id = #{searchReq.courseId}
+            </if>
+            <if test="searchReq.objectiveName != null and searchReq.objectiveName != ''">
+                AND objective_name LIKE CONCAT('%', #{searchReq.objectiveName}, '%')
+            </if>
+            <if test="searchReq.objectiveDescription != null and searchReq.objectiveDescription != ''">
+                AND objective_description LIKE CONCAT('%', #{searchReq.objectiveDescription}, '%')
+            </if>
+            <if test="searchReq.minWeight != null">
+                AND weight <![CDATA[ >= ]]> #{searchReq.minWeight}
+            </if>
+            <if test="searchReq.maxWeight != null">
+                AND weight <![CDATA[ <= ]]> #{searchReq.maxWeight}
+            </if>
+        </where>
+        <choose>
+            <when test="searchReq.sortField == 'sortOrder'">
+                ORDER BY sort_order
+                <if test="searchReq.sortOrder == 'desc'">DESC</if>
+                <if test="searchReq.sortOrder == 'asc'">ASC</if>
+                , created_at ASC
+            </when>
+            <when test="searchReq.sortField == 'createdAt'">
+                ORDER BY created_at
+                <if test="searchReq.sortOrder == 'desc'">DESC</if>
+                <if test="searchReq.sortOrder == 'asc'">ASC</if>
+            </when>
+            <when test="searchReq.sortField == 'updatedAt'">
+                ORDER BY updated_at
+                <if test="searchReq.sortOrder == 'desc'">DESC</if>
+                <if test="searchReq.sortOrder == 'asc'">ASC</if>
+            </when>
+            <otherwise>
+                ORDER BY sort_order ASC, created_at ASC
+            </otherwise>
+        </choose>
+        <if test="searchReq.size != null and searchReq.size &gt; 0">
+            <if test="offset != null and offset > 0">
+                LIMIT #{searchReq.size} OFFSET #{offset}
+            </if>
+            <if test="offset == null or offset == 0">
+                LIMIT #{searchReq.size}
+            </if>
+        </if>
+    </select>
+
+    <!-- 搜索课程目标总数 -->
+    <select id="countSearchCourseObjectives" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM fe_course_objectives
+        <where>
+            <if test="searchReq.courseId != null and searchReq.courseId != ''">
+                AND course_id = #{searchReq.courseId}
+            </if>
+            <if test="searchReq.objectiveName != null and searchReq.objectiveName != ''">
+                AND objective_name LIKE CONCAT('%', #{searchReq.objectiveName}, '%')
+            </if>
+            <if test="searchReq.objectiveDescription != null and searchReq.objectiveDescription != ''">
+                AND objective_description LIKE CONCAT('%', #{searchReq.objectiveDescription}, '%')
+            </if>
+            <if test="searchReq.minWeight != null">
+                AND weight <![CDATA[ >= ]]> #{searchReq.minWeight}
+            </if>
+            <if test="searchReq.maxWeight != null">
+                AND weight <![CDATA[ <= ]]> #{searchReq.maxWeight}
+            </if>
+        </where>
+    </select>
+
+</mapper>
