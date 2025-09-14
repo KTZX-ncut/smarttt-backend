@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttevaluation.dto.AssessmentItemDto;
 import com.example.smartttevaluation.mapper.FeAssessmentItemsMapper;
@@ -12,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 考核项表 Service 实现类
@@ -41,10 +40,34 @@ public class FeAssessmentItemsServiceImpl extends ServiceImpl<FeAssessmentItemsM
         // 查询实验信息
         List<AssessmentItemDto> practices = feAssessmentItemsMapper.selectPracticesByClassroomId(classroomId);
 
+        // 查询已经绑定的作业
+        QueryWrapper<FeAssessmentItems> queryWorkWrapper = new QueryWrapper<>();
+        queryWorkWrapper
+                .eq("classroom_id", classroomId)
+                .and(wrapper -> wrapper.eq("item_type", "作业").or().eq("item_type", "考试"));
+        List<FeAssessmentItems> exitTestPaperList = feAssessmentItemsMapper.selectList(queryWorkWrapper);
+
+        queryWorkWrapper = new QueryWrapper<>();
+        queryWorkWrapper.eq("classroom_id", classroomId)
+                .and(wrapper -> wrapper.eq("item_type", "实验"));
+        // 查询已经绑定的实验
+        List<FeAssessmentItems> exitPracticeList = feAssessmentItemsMapper.selectList(queryWorkWrapper);
+        // 根基type_id进行去重作业和考试
+        List<AssessmentItemDto> returnTestPapers = testPapers.stream()
+                .filter(t1 -> exitTestPaperList.stream()
+                        .noneMatch(t2 -> Objects.equals(t2.getTypeId() , t1.getTypeId())))
+                .collect(Collectors.toList());
+
+        // 根基type_id进行去重实验
+        List<AssessmentItemDto> returnPractices = practices.stream()
+                .filter(t1 -> exitPracticeList.stream()
+                        .noneMatch(t2 -> Objects.equals(t2.getTypeId() , t1.getTypeId())))
+                .collect(Collectors.toList());
+
         // 封装返回结果
         Map<String, List<AssessmentItemDto>> result = new HashMap<>();
-        result.put("testPaper", testPapers);
-        result.put("practice", practices);
+        result.put("testPaper", returnTestPapers);
+        result.put("practice", returnPractices);
         
         return result;
     }

@@ -14,6 +14,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
  * 使用责任链模式处理消息
  */
 @Slf4j
+@Component
 public class MessageSchedule {
 
     private final MessagePuller messagePuller;
