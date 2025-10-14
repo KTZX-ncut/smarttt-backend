@@ -1,0 +1,43 @@
+name: 自动化部署构建
+on:
+  push:
+    branches:
+      - main   # 推送到 main 分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 拉取仓库代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ 压缩项目（排除.git等无关文件）
+      - name: Compress source code
+        run: |
+          tar --exclude='.git' --exclude='.github' -czf smarttt-backend.tar.gz .
+
+      # 3️⃣ 上传到服务器
+      - name: Upload tar to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PASSWORD }}
+          port: 22
+          source: "smarttt-backend.tar.gz"
+          target: "/home/smarttt/"  # 上传目标路径
+
+      # 4️⃣ 登录服务器执行解压与部署脚本
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            echo "解压新版本..."
+            tar -xzf app.tar.gz -C /home/pro/smarttt-backend/ --overwrite
+            echo "运行部署脚本..."
