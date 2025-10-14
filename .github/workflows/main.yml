@@ -16,7 +16,7 @@ jobs:
       # 2️⃣ 压缩项目（排除.git等无关文件）
       - name: Compress source code
         run: |
-          tar --exclude='.git' --exclude='.github' -czf smarttt-backend.tar.gz .
+          tar --exclude='.git' --exclude='.github' --warning=no-file-changed -czf smarttt-backend.tar.gz .
 
       # 3️⃣ 上传到服务器
       - name: Upload tar to server
@@ -39,5 +39,5 @@ jobs:
           port: 22
           script: |
             echo "解压新版本..."
-            tar -xzf app.tar.gz -C /home/pro/smarttt-backend/ --overwrite
+            tar -xzf smarttt-backend.tar.gz -C /home/pro/smarttt-backend/ --overwrite
             echo "运行部署脚本..."
