@@ -1,4 +1,5 @@
 name: 自动化部署构建
+
 on:
   push:
     branches:
@@ -22,13 +23,13 @@ jobs:
               --ignore-failed-read \
               -czf smarttt-backend.tar.gz .
 
-      # 3️⃣ 上传到服务器
+      # 3️⃣ 上传到服务器（使用 SSH 私钥）
       - name: Upload tar to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "smarttt-backend.tar.gz"
           target: "/home/smarttt/"  # 上传目标路径
@@ -39,9 +40,10 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
             echo "解压新版本..."
-            tar -xzf smarttt-backend.tar.gz -C /home/pro/smarttt-backend/ --overwrite
+            mkdir -p /home/pro/smarttt-backend
+            tar -xzf /home/smarttt/smarttt-backend.tar.gz -C /home/pro/smarttt-backend/ --overwrite
             echo "运行部署脚本..."
