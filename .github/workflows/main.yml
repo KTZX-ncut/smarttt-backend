@@ -46,7 +46,7 @@ jobs:
             cd /home/smarttt/smarttt-backend
             docker-compose -f docker-compose.service.yml down
             cd ..
-            rm -rf ./smarttt-backend
+            rm -rf ./smarttt-backend/
             echo "解压新版本..."
             mkdir smarttt-backend
             tar -xzf ./smarttt-backend.tar.gz -C ./smarttt-backend/ --overwrite
