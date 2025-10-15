@@ -11,4 +11,4 @@ ADD target/smarttt-evaluation-0.0.1-SNAPSHOT.jar .
 EXPOSE 8083
 
 # 启动命令
-ENTRYPOINT ["java","-jar","/app/smarttt-evaluation-0.0.1-SNAPSHOT.jar","--spring.profiles.active=prod"]
+ENTRYPOINT ["java","-jar","/app/smarttt-evaluation-0.0.1-SNAPSHOT.jar","--spring.profiles.active=dev"]
