@@ -109,6 +109,7 @@ public class AcademicCalendarController {
             InputStream is = handler.downloadFile(fileName,start,len);
             return ResponseEntity.status(HttpStatus.HTTP_PARTIAL).headers(httpHeaders).body(new InputStreamResource(is));
         } catch (Exception e) {
+            log.error("下载文件失败！",e);
             return ResponseEntity.notFound().build();
         }
     }
