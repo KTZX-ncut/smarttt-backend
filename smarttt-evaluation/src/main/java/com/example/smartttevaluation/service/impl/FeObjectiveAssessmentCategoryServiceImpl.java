@@ -31,6 +31,7 @@ public class FeObjectiveAssessmentCategoryServiceImpl implements FeObjectiveAsse
      * @param list 前端传入的目标-类别-分数组
      * @return Map<categoryId, 校验结果>
      */
+
     @Override
     public Map<String, Object> batchSave(List<FeObjectiveAssessmentCategory> list) {
         if (list == null || list.isEmpty()) {
@@ -70,8 +71,8 @@ public class FeObjectiveAssessmentCategoryServiceImpl implements FeObjectiveAsse
             throw new RuntimeException("单个类别数据为空");
         }
 
-        int insertCount = 0, updateCount = 0, skipCount = 0;
         String categoryId = list.get(0).getCategoryId();
+        int successCount = 0;
 
         for (FeObjectiveAssessmentCategory item : list) {
             try {
@@ -79,45 +80,23 @@ public class FeObjectiveAssessmentCategoryServiceImpl implements FeObjectiveAsse
                         || item.getObjectiveId() == null
                         || item.getScore() == null
                         || item.getScore() < 0) {
-                    skipCount++;
                     continue;
                 }
 
-                // 判断是否存在
-                FeObjectiveAssessmentCategory exist = mapper.selectOne(
-                        new QueryWrapper<FeObjectiveAssessmentCategory>()
-                                .eq("category_id", item.getCategoryId())
-                                .eq("objective_id", item.getObjectiveId())
-                );
-
-                if (exist == null) {
-                    // 插入
-                    item.setCreatedAt(LocalDateTime.now());
-                    item.setUpdatedAt(LocalDateTime.now());
-                    mapper.insert(item);
-                    insertCount++;
-                } else {
-                    // 更新（联合主键不能用 updateById）
-                    FeObjectiveAssessmentCategory updateEntity = new FeObjectiveAssessmentCategory();
-                    updateEntity.setScore(item.getScore());
-                    updateEntity.setUpdatedAt(LocalDateTime.now());
-                    mapper.update(updateEntity, new UpdateWrapper<FeObjectiveAssessmentCategory>()
-                            .eq("category_id", item.getCategoryId())
-                            .eq("objective_id", item.getObjectiveId()));
-                    updateCount++;
-                }
+                // ✅ 直接调用 Mapper 的 upsert()
+                mapper.upsert(item);
+                successCount++;
 
             } catch (Exception e) {
                 log.error("❌ 保存失败：categoryId={}, objectiveId={}, err={}",
                         item.getCategoryId(), item.getObjectiveId(), e.getMessage());
-                skipCount++;
             }
         }
 
-        // ✅ 立即校验分数总和
+        // ✅ 校验分数
         validateCategoryTotalScores(Collections.singleton(categoryId));
 
-        log.info("✅ 类别 {} 保存完成：新增 {} 条，更新 {} 条，跳过 {}", categoryId, insertCount, updateCount, skipCount);
+        log.info("✅ 类别 {} 保存完成：成功 {} 条", categoryId, successCount);
     }
 
     /**
@@ -155,4 +134,16 @@ public class FeObjectiveAssessmentCategoryServiceImpl implements FeObjectiveAsse
 
         log.info("✅ 类别校验通过：{}", categoryIds);
     }
+    @Override
+    public List<FeObjectiveAssessmentCategory> listByCondition(String categoryId, String objectiveId) {
+        QueryWrapper<FeObjectiveAssessmentCategory> wrapper = new QueryWrapper<>();
+        if (categoryId != null && !categoryId.trim().isEmpty()) {
+            wrapper.eq("category_id", categoryId);
+        }
+        if (objectiveId != null && !objectiveId.trim().isEmpty()) {
+            wrapper.eq("objective_id", objectiveId);
+        }
+        return mapper.selectList(wrapper);
+    }
+
 }

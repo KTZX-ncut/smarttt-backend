@@ -34,4 +34,22 @@ public class FeObjectiveAssessmentCategoryController {
             return Result.error(-500, e.getMessage());
         }
     }
+
+    /**
+     * ✅ 获取目标-类别分数列表
+     * 可选参数：categoryId、objectiveId
+     */
+    @GetMapping("/list")
+    public Result list(
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String objectiveId
+    ) {
+        try {
+            List<FeObjectiveAssessmentCategory> data = service.listByCondition(categoryId, objectiveId);
+            return Result.success(data);
+        } catch (Exception e) {
+            log.error("获取分数列表失败：{}", e.getMessage(), e);
+            return Result.error(-500, "获取分数失败：" + e.getMessage());
+        }
+    }
 }
