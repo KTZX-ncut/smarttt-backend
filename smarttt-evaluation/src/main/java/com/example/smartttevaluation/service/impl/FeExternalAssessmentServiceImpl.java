@@ -16,6 +16,9 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * 外部考核导入实现类
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,9 +29,11 @@ public class FeExternalAssessmentServiceImpl {
     private final FeExternalAssessmentTaskDetailMapper detailMapper;
 
     /**
-     * 动态识别考核项（从表头读取任务列）
+     * 导入外部考核 Excel 数据，写入数据库并返回导入结果
      */
-    public void importExternalAssessment(MultipartFile file, String classroomId) {
+    public List<Map<String, Object>> importExternalAssessment(MultipartFile file, String classroomId) {
+        List<Map<String, Object>> importResult = new ArrayList<>();
+
         try (InputStream inputStream = file.getInputStream()) {
 
             // 1️⃣ 读取整个表，包括表头
@@ -74,6 +79,7 @@ public class FeExternalAssessmentServiceImpl {
             }
 
             // 5️⃣ 遍历学生数据
+            int successCount = 0;
             for (Map<Integer, String> row : dataRows) {
                 String stuno = row.get(1);
                 String studentName = row.get(2);
@@ -93,14 +99,34 @@ public class FeExternalAssessmentServiceImpl {
                     detail.setStuScore(Double.parseDouble(scoreStr));
                     detail.setFullScore(100.0);
                     detailMapper.insert(detail);
+                    successCount++;
                 }
             }
 
-            log.info("✅ 外部考核动态导入完成 labelId={} classroomId={}", label.getId(), classroomId);
+            log.info("✅ 外部考核动态导入完成 labelId={} classroomId={} 共 {} 条",
+                    label.getId(), classroomId, successCount);
+
+            // ✅ 返回导入结果信息供前端显示
+            Map<String, Object> summary = new HashMap<>();
+            summary.put("labelId", label.getId());
+            summary.put("classroomId", classroomId);
+            summary.put("taskCount", taskMap.size());
+            summary.put("recordCount", successCount);
+            summary.put("status", "成功");
+            summary.put("message", "导入完成");
+
+            importResult.add(summary);
+            return importResult;
 
         } catch (Exception e) {
             log.error("❌ 导入外部考核失败：{}", e.getMessage(), e);
-            throw new RuntimeException("导入外部考核失败：" + e.getMessage());
+
+            Map<String, Object> err = new HashMap<>();
+            err.put("status", "失败");
+            err.put("message", e.getMessage());
+            importResult.add(err);
+
+            return importResult; // 返回错误信息供前端展示
         }
     }
 }
