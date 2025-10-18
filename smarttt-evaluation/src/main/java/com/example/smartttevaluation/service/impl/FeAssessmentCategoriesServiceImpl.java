@@ -48,6 +48,16 @@ public class FeAssessmentCategoriesServiceImpl extends ServiceImpl<FeAssessmentC
         if (assessmentCategory.getScore() < 0 || assessmentCategory.getScore() > 100) {
             throw new RuntimeException("类别分数必须在0-100之间");
         }
+
+        // 校验分数（必填字段）
+        if (assessmentCategory.getPercent() == null) {
+            throw new RuntimeException("百分占比不能为空");
+        }
+
+        // 校验分数范围
+        if (assessmentCategory.getScore() < 0 || assessmentCategory.getScore() > 1) {
+            throw new RuntimeException("百分占比必须在0-1之间");
+        }
         
         // 设置创建时间和更新时间
         LocalDateTime now = LocalDateTime.now();

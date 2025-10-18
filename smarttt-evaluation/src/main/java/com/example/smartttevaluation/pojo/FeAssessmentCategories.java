@@ -46,6 +46,9 @@ public class FeAssessmentCategories {
     @TableField("score")
     private Integer score;
 
+    @TableField("percent")
+    private Double percent;
+
     /**
      * 创建时间
      */
