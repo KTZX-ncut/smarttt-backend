@@ -55,7 +55,7 @@ public class FeAssessmentCategoriesServiceImpl extends ServiceImpl<FeAssessmentC
         }
 
         // 校验分数范围
-        if (assessmentCategory.getScore() < 0 || assessmentCategory.getScore() > 1) {
+        if (assessmentCategory.getPercent() < 0 || assessmentCategory.getPercent() > 1) {
             throw new RuntimeException("百分占比必须在0-1之间");
         }
         
