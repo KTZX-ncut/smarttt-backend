@@ -135,6 +135,11 @@ public class FeAssessmentCategoriesServiceImpl extends ServiceImpl<FeAssessmentC
                 throw new RuntimeException("类别分数必须在0-100之间");
             }
         }
+        if(assessmentCategory.getPercent() != null){
+            if (assessmentCategory.getPercent() < 0 || assessmentCategory.getPercent() > 1) {
+                throw new RuntimeException("百分占比必须在0-1之间");
+            }
+        }
         
         // 设置更新时间
         assessmentCategory.setUpdatedAt(LocalDateTime.now());

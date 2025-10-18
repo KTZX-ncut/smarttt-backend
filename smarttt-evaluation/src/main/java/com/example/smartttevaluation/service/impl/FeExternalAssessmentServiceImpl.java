@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -47,6 +48,8 @@ public class FeExternalAssessmentServiceImpl {
             FeExternalAssessmentTask task = new FeExternalAssessmentTask();
             task.setLabelId(externalLabelId);
             task.setExAssessmentName(externalAssessmentName);
+            task.setCreatedAt(LocalDateTime.now());
+            task.setUpdatedAt(LocalDateTime.now());
             taskMapper.insert(task);
             // 创建外部考核任务详情
             for (ExternalAssessmentExcel po : list){

@@ -38,6 +38,9 @@
             <if test="categoryName != null and categoryName != ''">
                 category_name = #{categoryName},
             </if>
+            <if test="percent != null">
+                percent = #{percent},
+            </if>
             <if test="categoryDescription != null">
                 category_description = #{categoryDescription},
             </if>
