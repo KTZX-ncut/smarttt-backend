@@ -1,9 +1,8 @@
 package com.example.smartttevaluation.service.impl;
 
-import com.alibaba.excel.EasyExcel;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.smartttadmin.pojo.SmStudent;
+import com.example.smartttevaluation.pojo.SmStudent;
 import com.example.smartttevaluation.service.StudentService;
 import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.pojo.CmClassroomStudent;
