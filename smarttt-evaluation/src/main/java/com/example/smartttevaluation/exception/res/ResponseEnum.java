@@ -23,6 +23,7 @@ public enum ResponseEnum {
     DATA_NOT_VALIDATE(-715,"数据不合法"),
     TERM_ID_IS_NOT_BLANK(-716,"schooltermId不能为空"),
     CLASSROOM_ID_NOT_NULL(-710,"课堂id不能为空"),
+    CLASSROOM_ID_NOT_EXIST(-710,"课堂id不存在"),
     USER_ID_NOT_NULL(-710,"用户id不能为空"),
     PRONAME_NOT_NULL(-710,"专业名称不能为空"),
     OBSNAME_NOT_NULL(-710,"班级名称不能为空"),

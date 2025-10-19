@@ -1,6 +1,7 @@
 package com.example.smartttevaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttevaluation.dto.AssessmentItemDto;
 import com.example.smartttevaluation.mapper.FeAssessmentItemsMapper;
@@ -125,7 +126,7 @@ public class FeAssessmentItemsServiceImpl extends ServiceImpl<FeAssessmentItemsM
     }
 
     @Override
-    public com.baomidou.mybatisplus.extension.plugins.pagination.Page<FeAssessmentItems> getAssessmentItemsWithPage(Long current, Long size, 
+    public Page<FeAssessmentItems> getAssessmentItemsWithPage(Long current, Long size,
                                                                                                                     String categoryId, String courseId, 
                                                                                                                     String classroomId, String objectiveId) {
         // 设置默认值
@@ -137,8 +138,8 @@ public class FeAssessmentItemsServiceImpl extends ServiceImpl<FeAssessmentItemsM
         }
 
         // 创建分页对象
-        com.baomidou.mybatisplus.extension.plugins.pagination.Page<FeAssessmentItems> page = 
-            new com.baomidou.mybatisplus.extension.plugins.pagination.Page<>(current, size);
+        Page<FeAssessmentItems> page =
+            new Page<>(current, size);
 
         try {
             // 计算偏移量

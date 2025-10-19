@@ -71,6 +71,12 @@ public class FeAssessmentItems {
     private String typeId;
 
     /**
+     * 来源（0:作业，1:实验，2：外部）
+     */
+    @TableField("source")
+    private Integer source;
+
+    /**
      * 展示顺序（支持拖动调整）
      */
     @TableField("sort_order")

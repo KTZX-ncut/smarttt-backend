@@ -1,6 +1,106 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.smartttevaluation.mapper.ReachEvaluationMapper">
+    <insert id="insertAchievement">
+        INSERT INTO fe_achievements(id,course_id,achievement_score, objective_id, user_id, classroom_id, created_at, updated_at)
+        VALUES (#{id}, #{courseId}, #{reachScore}, #{objectiveId}, #{userId}, #{classroomId}, NOW(), NOW())
+    </insert>
+    <insert id="insertCategoryAchievement">
+        INSERT INTO fe_assessment_category_achievements(id,assessment_category_id, course_id, achievement_score, user_id, classroom_id, created_at, updated_at)
+        VALUES (#{id},#{categoryId}, #{courseId}, #{reachScore}, #{userId}, #{classroomId}, NOW(), NOW())
+    </insert>
+    <update id="updateAchievement">
+        UPDATE fe_achievements
+        SET achievement_score = #{reachScore},
+            updated_at   = NOW()
+        WHERE objective_id = #{objectiveId}
+          AND user_id = #{userId}
+          AND classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+    </update>
+    <update id="updateCategoryAchievement">
+        UPDATE fe_assessment_category_achievements
+        SET achievement_score = #{reachScore},
+            updated_at   = NOW()
+        WHERE assessment_category_id = #{categoryId}
+          AND user_id = #{userId}
+          AND classroom_id = #{classroomId}
+          AND course_id = #{courseId}
+    </update>
 
 
+    <select id="getCourseIdByClassroomId" resultType="java.lang.String">
+        SELECT courseId
+        FROM cm_classroom
+        WHERE id = #{classroomId}
+    </select>
+    <select id="searchReachEvaluationData" resultType="com.example.smartttevaluation.dto.ReachEvaluationDto">
+        SELECT SUM(libStuScore) as stuScore, SUM(libScore) as fullScore
+        FROM ai_in_stu_ans_info
+        WHERE paperId = #{typeId}
+          AND stuId = #{userId}
+    </select>
+    <select id="getStuNoByUserId" resultType="java.lang.String">
+        SELECT stuno
+        FROM sm_student
+        WHERE usersid = #{userId}
+    </select>
+    <select id="searchExternalData" resultType="com.example.smartttevaluation.dto.ReachEvaluationDto">
+        SELECT stu_score as stuScore, full_score as fullScore
+        FROM fe_external_assessment_task_detail
+        WHERE ex_assessment_task_id = #{typeId}
+          AND stuno = #{stuNo}
+    </select>
+    <select id="getObjectiveScore" resultType="java.lang.Double">
+        SELECT score
+        FROM fe_objective_assessment_category
+        WHERE objective_id = #{objectiveId}
+          AND category_id = #{categoryId}
+    </select>
+    <select id="searchReachEvaluationResultCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM fe_achievements
+        WHERE user_id = #{userId}
+          AND classroom_id = #{classroomId}
+          AND objective_id = #{objectiveId}
+    </select>
+
+    <select id="searchReachCategoryEvaluationResultCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM fe_assessment_category_achievements
+        WHERE user_id = #{userId}
+          AND classroom_id = #{classroomId}
+          AND assessment_category_id = #{categoryId}
+    </select>
+    <select id="getReachCategoryEvaluation" resultType="com.example.smartttevaluation.vo.ReachCategoryEvaluationVO">
+        SELECT a.user_id as userId,
+               a.assessment_category_id as assessmentCategoryId,
+               b.category_name as assessmentCategoryName,
+               b.percent as percent,
+               a.achievement_score as achievementScore
+               FROM fe_assessment_category_achievements a
+               LEFT JOIN fe_assessment_categories b
+               ON a.assessment_category_id = b.id
+        WHERE a.classroom_id = #{classroomId}
+    </select>
+    <select id="getStudentNameByUserId" resultType="java.lang.String">
+        SELECT userName
+        FROM cm_classroom_student
+        WHERE userId = #{userId}
+    </select>
+    <select id="getReachObjectiveEvaluation" resultType="com.example.smartttevaluation.vo.ReachObjectiveEvaluationVO">
+        SELECT a.user_id as userId,
+               a.objective_id as objectiveId,
+               b.objective_name as objectiveName,
+               a.achievement_score as achievementScore
+               FROM fe_achievements a
+               LEFT JOIN fe_course_objectives b
+               ON a.objective_id = b.id
+        WHERE a.classroom_id = #{classroomId}
+    </select>
+    <select id="getUserIdList" resultType="java.lang.String">
+        SELECT userId
+        FROM cm_classroom_student
+        WHERE classroomId = #{classroomId}
+    </select>
 </mapper>
