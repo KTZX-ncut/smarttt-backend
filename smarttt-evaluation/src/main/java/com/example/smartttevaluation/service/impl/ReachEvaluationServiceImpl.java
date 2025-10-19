@@ -139,7 +139,9 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
                     reachScore += reachScoreRate * objectiveScore;
                 }
                 // 归100分制
-                reachScore = reachScore / assessmentItemFullScore * 100;
+                if (assessmentItemFullScore != 0){
+                    reachScore = reachScore / assessmentItemFullScore * 100;
+                }
                 // 入库
                 this.saveOrUpdateObjectiveEvaluation(reachScore,courseObjectives.getId(),classroomStudent.getUserId(),classroomId,courseId);
             }
