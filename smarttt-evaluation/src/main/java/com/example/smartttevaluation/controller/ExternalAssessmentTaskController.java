@@ -36,7 +36,7 @@ public class ExternalAssessmentTaskController {
             // 过滤
             List<String> typeIdList = feAssessmentItemsService.getAllTypeIdList();
             list = list.stream()
-                    .filter(t -> typeIdList.contains(t.getId()))
+                    .filter(t -> !typeIdList.contains(t.getId()))
                     .collect(Collectors.toList());
         }
         return Result.success(list);
