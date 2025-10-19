@@ -97,6 +97,7 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
         for (CmClassroomStudent classroomStudent : classroomStudentList){
             for (FeCourseObjectives courseObjectives : courseObjectivesList){
                 Double reachScore = 0.0;
+                Double assessmentItemFullScore = 0.0;
                 for (FeAssessmentCategories category : categoriesList){
                     // 获取本课程目标下的本考核类型下的所有考核项
                     List<FeAssessmentItems> assessmentItemsList = feAssessmentItemsMapper.selectList(new QueryWrapper<FeAssessmentItems>()
@@ -134,8 +135,11 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
                     Double reachScoreRate = stuScore / fullScore;
                     // 获取绑定在本考核类型下课程目标分数
                     Double objectiveScore = reachEvaluationMapper.getObjectiveScore(courseObjectives.getId(),category.getId());
+                    assessmentItemFullScore += objectiveScore;
                     reachScore += reachScoreRate * objectiveScore;
                 }
+                // 归100分制
+                reachScore = reachScore / assessmentItemFullScore * 100;
                 // 入库
                 this.saveOrUpdateObjectiveEvaluation(reachScore,courseObjectives.getId(),classroomStudent.getUserId(),classroomId,courseId);
             }
