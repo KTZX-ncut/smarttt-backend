@@ -168,4 +168,9 @@ public class FeAssessmentItemsServiceImpl extends ServiceImpl<FeAssessmentItemsM
             throw new RuntimeException("查询考核项失败: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<String> getAllTypeIdList() {
+        return feAssessmentItemsMapper.selectTypeIdList();
+    }
 }

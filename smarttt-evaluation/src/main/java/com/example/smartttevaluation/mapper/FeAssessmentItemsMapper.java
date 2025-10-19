@@ -66,4 +66,6 @@ public interface FeAssessmentItemsMapper extends BaseMapper<FeAssessmentItems> {
                   @Param("courseId") String courseId,
                   @Param("classroomId") String classroomId,
                   @Param("objectiveId") String objectiveId);
+
+    List<String> selectTypeIdList();
 }

@@ -96,5 +96,8 @@
             </if>
         </where>
     </select>
+    <select id="selectTypeIdList" resultType="java.lang.String">
+        SELECT type_id FROM fe_assessment_items
+    </select>
 
 </mapper>

@@ -197,8 +197,8 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
      * 处理考核项目类型为实验/作业的数据
      */
     private ReachEvaluationDto dealLaboratoryAndWorkData(String typeId,String userId){
-        ReachEvaluationDto reachEvaluationDto = reachEvaluationMapper.searchReachEvaluationData(typeId,userId);
-        if (reachEvaluationDto == null) reachEvaluationDto = new ReachEvaluationDto();
+        ReachEvaluationDto reachEvaluationDto = new ReachEvaluationDto();
+        reachEvaluationDto = reachEvaluationMapper.searchReachEvaluationData(typeId,userId);
         return reachEvaluationDto;
     }
 

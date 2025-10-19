@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.smartttevaluation.dto.AssessmentItemDto;
 import com.example.smartttevaluation.pojo.FeAssessmentItems;
@@ -43,7 +44,9 @@ public interface FeAssessmentItemsService extends IService<FeAssessmentItems> {
      * @param objectiveId 目标ID
      * @return 分页结果
      */
-    com.baomidou.mybatisplus.extension.plugins.pagination.Page<FeAssessmentItems> getAssessmentItemsWithPage(Long current, Long size, 
-                                                                                                            String categoryId, String courseId, 
-                                                                                                            String classroomId, String objectiveId);
+    Page<FeAssessmentItems> getAssessmentItemsWithPage(Long current, Long size,
+                                                       String categoryId, String courseId,
+                                                       String classroomId, String objectiveId);
+
+    List<String> getAllTypeIdList();
 }

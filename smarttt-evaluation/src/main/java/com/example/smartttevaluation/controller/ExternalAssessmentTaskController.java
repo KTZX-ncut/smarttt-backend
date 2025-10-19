@@ -6,11 +6,13 @@ import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.exception.utils.SmartAssert;
 import com.example.smartttevaluation.pojo.FeExternalAssessmentTask;
 import com.example.smartttevaluation.service.ExternalAssessmentTaskService;
+import com.example.smartttevaluation.service.FeAssessmentItemsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author lunSir
@@ -23,10 +25,21 @@ public class ExternalAssessmentTaskController {
 
     private final ExternalAssessmentTaskService externalAssessmentTaskService;
 
+    private final FeAssessmentItemsService feAssessmentItemsService;
+
     @GetMapping("/list/{labelId}")
-    public Result getExternalAssessmentTaskList(@PathVariable("labelId") String labelId){
+    public Result getExternalAssessmentTaskList(@PathVariable("labelId") String labelId,
+                                                @RequestParam(value = "filter",required = false) Boolean filter){
         SmartAssert.notEmpty(labelId, ResponseEnum.PARAM_IS_NOT_NULL);
-        return Result.success(externalAssessmentTaskService.list(new LambdaQueryWrapper<FeExternalAssessmentTask>().eq(FeExternalAssessmentTask::getLabelId,labelId)));
+        List<FeExternalAssessmentTask> list = externalAssessmentTaskService.list(new LambdaQueryWrapper<FeExternalAssessmentTask>().eq(FeExternalAssessmentTask::getLabelId, labelId));
+        if (!Objects.isNull(filter) && Objects.equals(filter,true)) {
+            // 过滤
+            List<String> typeIdList = feAssessmentItemsService.getAllTypeIdList();
+            list = list.stream()
+                    .filter(t -> typeIdList.contains(t.getId()))
+                    .collect(Collectors.toList());
+        }
+        return Result.success(list);
     }
 
 }
