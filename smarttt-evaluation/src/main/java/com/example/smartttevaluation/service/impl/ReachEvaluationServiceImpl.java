@@ -206,9 +206,10 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
      * 处理考核项目类型为外部的数据
      */
     private ReachEvaluationDto dealExternalData(String typeId,String userId){
+        ReachEvaluationDto reachEvaluationDto = new ReachEvaluationDto();
         // 获取学号
         String stuNo = reachEvaluationMapper.getStuNoByUserId(userId);
-        ReachEvaluationDto reachEvaluationDto = reachEvaluationMapper.searchExternalData(typeId,stuNo);
+        reachEvaluationDto = reachEvaluationMapper.searchExternalData(typeId,stuNo);
         return reachEvaluationDto;
     }
 
