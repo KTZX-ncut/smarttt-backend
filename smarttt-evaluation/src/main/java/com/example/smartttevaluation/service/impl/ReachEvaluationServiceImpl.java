@@ -197,8 +197,8 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
      * 处理考核项目类型为实验/作业的数据
      */
     private ReachEvaluationDto dealLaboratoryAndWorkData(String typeId,String userId){
-        ReachEvaluationDto reachEvaluationDto = new ReachEvaluationDto();
-        reachEvaluationDto = reachEvaluationMapper.searchReachEvaluationData(typeId,userId);
+        ReachEvaluationDto reachEvaluationDto = reachEvaluationMapper.searchReachEvaluationData(typeId,userId);
+        if (reachEvaluationDto == null) reachEvaluationDto = new ReachEvaluationDto();
         return reachEvaluationDto;
     }
 
@@ -206,10 +206,10 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
      * 处理考核项目类型为外部的数据
      */
     private ReachEvaluationDto dealExternalData(String typeId,String userId){
-        ReachEvaluationDto reachEvaluationDto = new ReachEvaluationDto();
         // 获取学号
         String stuNo = reachEvaluationMapper.getStuNoByUserId(userId);
-        reachEvaluationDto = reachEvaluationMapper.searchExternalData(typeId,stuNo);
+        ReachEvaluationDto reachEvaluationDto = reachEvaluationMapper.searchExternalData(typeId,stuNo);
+        if (reachEvaluationDto == null) reachEvaluationDto = new ReachEvaluationDto();
         return reachEvaluationDto;
     }
 
