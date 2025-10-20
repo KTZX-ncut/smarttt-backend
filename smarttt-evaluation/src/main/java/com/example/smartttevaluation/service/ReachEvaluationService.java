@@ -1,6 +1,7 @@
 package com.example.smartttevaluation.service;
 
 
+import com.example.smartttevaluation.dto.StudentReachStateReq;
 import com.example.smartttevaluation.pojo.CmClassroomStudent;
 import com.example.smartttevaluation.pojo.FeAssessmentCategories;
 import com.example.smartttevaluation.pojo.FeCourseObjectives;
@@ -27,4 +28,6 @@ public interface ReachEvaluationService {
     List<ReachObjectiveEvaluationVO> getReachObjectiveEvaluation(String classroomId);
 
     List<String> getUserIdList(String classroomId);
+
+    boolean modifyStudentReachState(List<StudentReachStateReq> studentReachStateReqList);
 }

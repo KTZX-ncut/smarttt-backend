@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.example.smartttevaluation.dto.ReachEvaluationDto;
+import com.example.smartttevaluation.dto.StudentDynamicStateReq;
+import com.example.smartttevaluation.dto.StudentReachStateReq;
 import com.example.smartttevaluation.mapper.FeAssessmentItemsMapper;
 import com.example.smartttevaluation.mapper.ReachEvaluationMapper;
 import com.example.smartttevaluation.pojo.CmClassroomStudent;
@@ -47,6 +49,12 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
 
         // 每个学生/每个考核类型/每个目标/每个考核项(实验和作业要做数据处理数据结构)
         for (CmClassroomStudent classroomStudent : classroomStudentList){
+            if (Objects.equals(classroomStudent.getReachState(), 0)){
+                // 当前学生不参与达成性评价
+                // 删除学生之前的达成性评价信息
+                reachEvaluationMapper.deleteReachCategoryEvaluation(classroomStudent.getUserId(),classroomId);
+                continue;
+            }
             for (FeAssessmentCategories category : categoriesList){
                 Double reachScore = 0.0;
                 for (FeCourseObjectives courseObjectives : courseObjectivesList){
@@ -95,6 +103,12 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
 
         // 每个学生/每个目标/每个考核类型/每个考核项(实验和作业要做数据处理数据结构)
         for (CmClassroomStudent classroomStudent : classroomStudentList){
+            if (Objects.equals(classroomStudent.getReachState(), 0)){
+                // 当前学生不参与达成性评价
+                // 删除学生之前的达成性评价信息
+                reachEvaluationMapper.deleteReachObjectiveEvaluation(classroomStudent.getUserId(),classroomId);
+                continue;
+            }
             for (FeCourseObjectives courseObjectives : courseObjectivesList){
                 Double reachScore = 0.0;
                 Double assessmentItemFullScore = 0.0;
@@ -172,6 +186,15 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
     @Override
     public List<String> getUserIdList(String classroomId) {
         return reachEvaluationMapper.getUserIdList(classroomId);
+    }
+
+    @Override
+    public boolean modifyStudentReachState(List<StudentReachStateReq> studentReachStateReqList) {
+        Boolean state = true;
+        for (StudentReachStateReq studentReachStateReq : studentReachStateReqList){
+            state = state & reachEvaluationMapper.modifyStudentDynamicState(studentReachStateReq.getClassroomStudentId(),studentReachStateReq.getReachState());
+        }
+        return state;
     }
 
     private void saveOrUpdateObjectiveEvaluation(Double reachScore, String ObjectiveId, String userId, String classroomId,String courseId) {

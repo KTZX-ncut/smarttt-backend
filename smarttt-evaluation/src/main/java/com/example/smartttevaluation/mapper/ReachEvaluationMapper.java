@@ -61,4 +61,10 @@ public interface ReachEvaluationMapper {
     List<ReachObjectiveEvaluationVO> getReachObjectiveEvaluation(@Param("classroomId") String classroomId);
 
     List<String> getUserIdList(@Param("classroomId") String classroomId);
+
+    void deleteReachObjectiveEvaluation(@Param("userId") String userId, @Param("classroomId") String classroomId);
+
+    void deleteReachCategoryEvaluation(@Param("userId") String userId, @Param("classroomId") String classroomId);
+
+    Boolean modifyStudentDynamicState(@Param("classroomStudentId") String classroomStudentId, @Param("reachState") Integer reachState);
 }

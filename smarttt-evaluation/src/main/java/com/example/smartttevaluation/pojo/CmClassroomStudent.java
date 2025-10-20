@@ -34,7 +34,7 @@ public class CmClassroomStudent {
   @TableField(value = "courseScore")
   private double courseScore;
   @TableField(value = "dynamic_state")
-  private Integer dynamic_state;
+  private Integer dynamicState;
   @TableField(value = "reach_state")
-  private Integer reach_state;
+  private Integer reachState;
 }

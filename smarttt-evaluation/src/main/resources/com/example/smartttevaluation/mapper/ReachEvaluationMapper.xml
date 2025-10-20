@@ -27,6 +27,22 @@
           AND classroom_id = #{classroomId}
           AND course_id = #{courseId}
     </update>
+    <update id="modifyStudentDynamicState">
+        UPDATE cm_classroom_student
+        SET reach_state = #{reachState}
+        WHERE id = #{classroomStudentId}
+    </update>
+    <delete id="deleteReachObjectiveEvaluation">
+        DELETE FROM fe_achievements
+        WHERE user_id = #{userId}
+          AND classroom_id = #{classroomId}
+    </delete>
+
+    <delete id="deleteReachCategoryEvaluation">
+        DELETE FROM fe_assessment_category_achievements
+        WHERE user_id = #{userId}
+          AND classroom_id = #{classroomId}
+    </delete>
 
 
     <select id="getCourseIdByClassroomId" resultType="java.lang.String">

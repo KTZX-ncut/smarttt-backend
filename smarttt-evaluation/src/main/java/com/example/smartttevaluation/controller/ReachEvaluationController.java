@@ -3,6 +3,9 @@ package com.example.smartttevaluation.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.smartttevaluation.dto.StudentDynamicStateReq;
+import com.example.smartttevaluation.dto.StudentReachStateReq;
+import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.exception.res.ResponseEnum;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.exception.utils.SmartAssert;
@@ -16,12 +19,10 @@ import com.example.smartttevaluation.service.ReachEvaluationService;
 import com.example.smartttevaluation.vo.ReachCategoryEvaluationVO;
 import com.example.smartttevaluation.vo.ReachObjectiveEvaluationVO;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -90,5 +91,30 @@ public class ReachEvaluationController {
     public Result getStudentNameByUserId(@RequestParam("classroomId") String classroomId) {
         List<String> userIdList = reachEvaluationService.getUserIdList(classroomId);
         return Result.ok().code(200).data(userIdList);
+    }
+
+
+    /**
+     * 修改学生是否参与达成性评价的状态
+     * 接受的是classroom_student表中的id和reach_state
+     * @return
+     */
+    @PutMapping("/modifyStudentReachState")
+    Result getStudentEvalNums(@RequestBody List<StudentReachStateReq> studentReachStateReqList){
+        // 检验数据
+        if(Objects.isNull(studentReachStateReqList) || studentReachStateReqList.size() == 0){
+            return Result.error("studentReachStateReqList不能为空");
+        }
+        for (StudentReachStateReq studentReachStateReq : studentReachStateReqList){
+            SmartAssert.checkExpression(!StrUtil.isBlank(studentReachStateReq.getClassroomStudentId()),ResponseEnum.CLASSROOM_STUDENT_ID_IS_NOT_NULL);
+            if(studentReachStateReq.getReachState() == null){
+                throw new BusinessException("reachState不能为空");
+            }
+            if(studentReachStateReq.getReachState() != 0 && studentReachStateReq.getReachState() != 1){
+                throw new BusinessException("reachState参数只能是0或者1");
+            }
+        }
+        boolean state = reachEvaluationService.modifyStudentReachState(studentReachStateReqList);
+        return Result.success(state);
     }
 }
