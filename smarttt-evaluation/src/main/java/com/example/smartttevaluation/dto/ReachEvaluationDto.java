@@ -10,11 +10,11 @@ public class ReachEvaluationDto {
     /**
      * 学生得分
      */
-    private Integer stuScore;
+    private Double stuScore;
     
 
     /**
      * 试卷总分
      */
-    private Integer fullScore;
+    private Double fullScore;
 }

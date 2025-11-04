@@ -23,7 +23,7 @@ public class BusinessException extends RuntimeException {
      * @param message 错误消息
      */
     public BusinessException(String message) {
-        this.message = message;
+        this(message,-710);
     }
 
     /**

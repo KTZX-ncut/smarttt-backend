@@ -3,6 +3,7 @@ package com.example.smartttevaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttevaluation.pojo.SmStudent;
+import com.example.smartttevaluation.service.FeExternalAssessmentService;
 import com.example.smartttevaluation.service.StudentService;
 import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.pojo.CmClassroomStudent;
@@ -28,7 +29,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FeExternalAssessmentServiceImpl {
+public class FeExternalAssessmentServiceImpl implements FeExternalAssessmentService {
 
     private final FeExternalAssessmentTaskLabelMapper labelMapper;
     private final FeExternalAssessmentTaskMapper taskMapper;

@@ -15,9 +15,9 @@ public class ExternalAssessmentTaskDetail {
 
     private String studentName;
 
-    private Integer stuScore;
+    private Double stuScore;
 
-    private String fullScore;
+    private Double fullScore;
 
     private String createdAt;
 

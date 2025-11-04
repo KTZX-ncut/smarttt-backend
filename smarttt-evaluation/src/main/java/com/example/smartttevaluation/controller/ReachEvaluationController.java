@@ -3,7 +3,6 @@ package com.example.smartttevaluation.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.smartttevaluation.dto.StudentDynamicStateReq;
 import com.example.smartttevaluation.dto.StudentReachStateReq;
 import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.exception.res.ResponseEnum;
