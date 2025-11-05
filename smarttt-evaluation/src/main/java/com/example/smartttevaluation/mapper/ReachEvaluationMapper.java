@@ -67,4 +67,6 @@ public interface ReachEvaluationMapper {
     void deleteReachCategoryEvaluation(@Param("userId") String userId, @Param("classroomId") String classroomId);
 
     Boolean modifyStudentDynamicState(@Param("classroomStudentId") String classroomStudentId, @Param("reachState") Integer reachState);
+
+    Double getObjectivePercent(@Param("categoryId") String categoryId);
 }

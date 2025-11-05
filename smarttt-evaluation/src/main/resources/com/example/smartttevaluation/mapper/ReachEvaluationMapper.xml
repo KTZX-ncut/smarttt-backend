@@ -119,4 +119,8 @@
         FROM cm_classroom_student
         WHERE classroomId = #{classroomId}
     </select>
+    <select id="getObjectivePercent" resultType="java.lang.Double">
+        SELECT percent FROM fe_assessment_categories
+        WHERE id = #{categoryId}
+    </select>
 </mapper>

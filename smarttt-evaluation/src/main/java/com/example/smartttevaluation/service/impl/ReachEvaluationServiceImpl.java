@@ -47,6 +47,70 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
                           String classroomId,
                           String courseId) {
 
+        // 每个学生/每个目标/每个考核类型/每个考核项(实验和作业要做数据处理数据结构)
+        for (CmClassroomStudent classroomStudent : classroomStudentList){
+            if (Objects.equals(classroomStudent.getReachState(), 0)){
+                // 当前学生不参与达成性评价
+                // 删除学生之前的达成性评价信息
+                reachEvaluationMapper.deleteReachObjectiveEvaluation(classroomStudent.getUserId(),classroomId);
+                continue;
+            }
+            for (FeCourseObjectives courseObjectives : courseObjectivesList){
+                Double reachScore = 0.0;
+                Double assessmentItemFullScore = 0.0;
+                for (FeAssessmentCategories category : categoriesList){
+                    // 获取本课程目标下的本考核类型下的所有考核项
+                    List<FeAssessmentItems> assessmentItemsList = feAssessmentItemsMapper.selectList(new QueryWrapper<FeAssessmentItems>()
+                            .eq("category_id", category.getId())
+                            .eq("classroom_id", classroomId)
+                            .eq("objective_id", courseObjectives.getId()));
+                    ArrayList<ReachEvaluationDto> reachEvaluationDtoArrayList = new ArrayList<>();
+                    for (FeAssessmentItems assessmentItems : assessmentItemsList){
+                        switch (assessmentItems.getSource()){
+                            case 0:
+                            case 1: {
+                                // 实验/作业
+                                ReachEvaluationDto reachEvaluationDto = this.dealLaboratoryAndWorkData(assessmentItems.getTypeId(),classroomStudent.getUserId());
+                                reachEvaluationDtoArrayList.add(reachEvaluationDto);
+                                break;
+                            }
+                            case 2:{
+                                // 外部考核
+                                ReachEvaluationDto reachEvaluationDto = this.dealExternalData(assessmentItems.getTypeId(),classroomStudent.getUserId());
+                                reachEvaluationDtoArrayList.add(reachEvaluationDto);
+                                break;
+                            }
+                        }
+                    }
+                    Double stuScore = 0.0;
+                    Double fullScore = 0.0;
+                    for (ReachEvaluationDto reachEvaluationDto : reachEvaluationDtoArrayList){
+                        stuScore += reachEvaluationDto.getStuScore() == null ? 0 : reachEvaluationDto.getStuScore();
+                        fullScore += reachEvaluationDto.getFullScore() == null ? 0 : reachEvaluationDto.getFullScore();
+                    }
+                    if (fullScore == 0 || fullScore == null){
+                        // 该学生还没有参与在本目标下的考核类型下所有考核项
+                        continue;
+                    }
+                    Double reachScoreRate = stuScore / fullScore;
+                    // 获取绑定在本考核类型下课程目标分数
+                    Double objectiveScore = reachEvaluationMapper.getObjectiveScore(courseObjectives.getId(),category.getId());
+                    // 获取绑定在本课程目标下的考核类型的比例
+                    Double percent = reachEvaluationMapper.getObjectivePercent(category.getId());
+                    objectiveScore = objectiveScore * percent;
+                    assessmentItemFullScore += objectiveScore;
+                    reachScore += reachScoreRate * objectiveScore;
+                }
+                // 归100分制
+                if (assessmentItemFullScore != 0){
+                    reachScore = reachScore / assessmentItemFullScore * 100;
+                }
+                // 入库
+                this.saveOrUpdateObjectiveEvaluation(reachScore,courseObjectives.getId(),classroomStudent.getUserId(),classroomId,courseId);
+            }
+        }
+
+
         // 每个学生/每个考核类型/每个目标/每个考核项(实验和作业要做数据处理数据结构)
         for (CmClassroomStudent classroomStudent : classroomStudentList){
             if (Objects.equals(classroomStudent.getReachState(), 0)){
@@ -101,65 +165,6 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
             }
         }
 
-        // 每个学生/每个目标/每个考核类型/每个考核项(实验和作业要做数据处理数据结构)
-        for (CmClassroomStudent classroomStudent : classroomStudentList){
-            if (Objects.equals(classroomStudent.getReachState(), 0)){
-                // 当前学生不参与达成性评价
-                // 删除学生之前的达成性评价信息
-                reachEvaluationMapper.deleteReachObjectiveEvaluation(classroomStudent.getUserId(),classroomId);
-                continue;
-            }
-            for (FeCourseObjectives courseObjectives : courseObjectivesList){
-                Double reachScore = 0.0;
-                Double assessmentItemFullScore = 0.0;
-                for (FeAssessmentCategories category : categoriesList){
-                    // 获取本课程目标下的本考核类型下的所有考核项
-                    List<FeAssessmentItems> assessmentItemsList = feAssessmentItemsMapper.selectList(new QueryWrapper<FeAssessmentItems>()
-                            .eq("category_id", category.getId())
-                            .eq("classroom_id", classroomId)
-                            .eq("objective_id", courseObjectives.getId()));
-                    ArrayList<ReachEvaluationDto> reachEvaluationDtoArrayList = new ArrayList<>();
-                    for (FeAssessmentItems assessmentItems : assessmentItemsList){
-                        switch (assessmentItems.getSource()){
-                            case 0:
-                            case 1: {
-                                // 实验/作业
-                                ReachEvaluationDto reachEvaluationDto = this.dealLaboratoryAndWorkData(assessmentItems.getTypeId(),classroomStudent.getUserId());
-                                reachEvaluationDtoArrayList.add(reachEvaluationDto);
-                                break;
-                            }
-                            case 2:{
-                                // 外部考核
-                                ReachEvaluationDto reachEvaluationDto = this.dealExternalData(assessmentItems.getTypeId(),classroomStudent.getUserId());
-                                reachEvaluationDtoArrayList.add(reachEvaluationDto);
-                                break;
-                            }
-                        }
-                    }
-                    Double stuScore = 0.0;
-                    Double fullScore = 0.0;
-                    for (ReachEvaluationDto reachEvaluationDto : reachEvaluationDtoArrayList){
-                        stuScore += reachEvaluationDto.getStuScore() == null ? 0 : reachEvaluationDto.getStuScore();
-                        fullScore += reachEvaluationDto.getFullScore() == null ? 0 : reachEvaluationDto.getFullScore();
-                    }
-                    if (fullScore == 0 || fullScore == null){
-                        // 该学生还没有参与在本目标下的考核类型下所有考核项
-                        continue;
-                    }
-                    Double reachScoreRate = stuScore / fullScore;
-                    // 获取绑定在本考核类型下课程目标分数
-                    Double objectiveScore = reachEvaluationMapper.getObjectiveScore(courseObjectives.getId(),category.getId());
-                    assessmentItemFullScore += objectiveScore;
-                    reachScore += reachScoreRate * objectiveScore;
-                }
-                // 归100分制
-                if (assessmentItemFullScore != 0){
-                    reachScore = reachScore / assessmentItemFullScore * 100;
-                }
-                // 入库
-                this.saveOrUpdateObjectiveEvaluation(reachScore,courseObjectives.getId(),classroomStudent.getUserId(),classroomId,courseId);
-            }
-        }
 
     }
 
