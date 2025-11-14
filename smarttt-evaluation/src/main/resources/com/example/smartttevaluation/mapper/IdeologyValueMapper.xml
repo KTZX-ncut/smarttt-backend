@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.IdeologyValueMapper">
+
+
+    <insert id="createFirstLevelNode">
+        INSERT INTO v_ideology_value (id, vname, course_id, parent_id, leaf, level, create_time, update_time)
+        VALUES (#{id},'未命名节点',#{courseId},NULL,0,1,NOW(),NOW());
+    </insert>
+
+    <insert id="addSameLevelNode">
+        INSERT INTO v_ideology_value (id, vname, course_id, parent_id, leaf, level, create_time, update_time)
+        VALUES (#{id},'未命名节点',#{ideologyValue.courseId},#{ideologyValue.parentId},#{ideologyValue.leaf},#{ideologyValue.level},NOW(),NOW());
+    </insert>
+
+    <insert id="addSubLevelNode">
+        INSERT INTO v_ideology_value (id, vname, course_id, parent_id, leaf, level, create_time, update_time)
+        VALUES (#{id},'未命名节点',#{ideologyValue.courseId},#{ideologyValue.id},1,#{ideologyValue.level},NOW(),NOW());
+    </insert>
+
+    <update id="modifyValueName">
+        UPDATE v_ideology_value
+        SET vname = #{ideologyValue.vname}
+        WHERE id = #{ideologyValue.id}
+    </update>
+    <delete id="deleteNode">
+        DELETE FROM v_ideology_value
+        WHERE id = #{id}
+    </delete>
+    <select id="selectAllNode" resultType="com.example.smartttevaluation.pojo.IdeologyValue">
+        SELECT
+            id, parent_id AS parentId, vname, remark,
+            course_id AS courseId, leaf,
+            level, create_time AS createTime, update_time AS updateTime
+        FROM v_ideology_value
+        ORDER BY level ASC, parent_id ASC, id ASC
+    </select>
+    <select id="selectById" resultType="com.example.smartttevaluation.pojo.IdeologyValue">
+        SELECT
+            id, parent_id AS parentId, vname, remark,
+            course_id AS courseId, leaf,
+            level, create_time AS createTime, update_time AS updateTime
+        FROM v_ideology_value
+        WHERE id = #{id}
+    </select>
+
+</mapper>

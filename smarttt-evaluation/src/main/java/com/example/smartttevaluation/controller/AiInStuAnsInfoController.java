@@ -150,7 +150,7 @@ public class AiInStuAnsInfoController {
         // 为了更好的扩展，留出了 试卷 和 学生的 口子
         // 一个学生 16 次循环，假设有120个学生 16 * 120，访问数据库次数耗时。
         // 一个课堂16次循环。
-        // boolean succeed = aiInStuAnsInfoService.calculatePortrait(calculatePortraitReq);
+        boolean succeed = aiInStuAnsInfoService.calculatePortrait(calculatePortraitReq);
         return Result.ok().data(calculateRequestEvent.getTaskId()).code(200);
     }
 

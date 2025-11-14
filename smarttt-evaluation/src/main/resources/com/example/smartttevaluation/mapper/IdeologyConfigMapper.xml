@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.smartttevaluation.mapper.IdeologyConfigMapper">
+    <insert id="saveConfPaper" parameterType="java.util.List">
+        INSERT INTO ideology_calculate_paper (
+        paper_id,
+        classroom_id,
+        test_id,
+        course_name,
+        classroom_name,
+        paper_name,
+        test_name,
+        catelog,
+        creator,
+        create_time,
+        `row`
+        ) VALUES
+        <foreach collection="calculatePaperList" item="item" separator=",">
+            (
+            #{item.paperId},
+            #{item.classroomId},
+            #{item.testId},
+            #{item.courseName},
+            #{item.classroomName},
+            #{item.paperName},
+            #{item.testName},
+            #{item.catelog},
+            #{item.creator},
+            #{item.createTime},
+            #{item.row}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="getConfTestInfoList" resultType="com.example.smartttevaluation.pojo.IdeologyCalculatePaper">
+        SELECT id,
+               paper_id as paperId,
+               classroom_id as classroomId,
+               test_id as testId,
+               course_name as courseName,
+               classroom_name as classroomName,
+               paper_name as paperName,
+               test_name as testName,
+               catelog,
+               creator,
+               create_time as createTime,
+               `row`
+        FROM ideology_calculate_paper
+        WHERE classroom_id = #{classroomId}
+        Order By `row`
+    </select>
+
+    <select id="getMaxRow" resultType="java.lang.Integer">
+        SELECT MAX(`row`) FROM ideology_calculate_paper
+        WHERE classroom_id = #{classroomId}
+    </select>
+
+    <delete id="removeConfPaperByIds">
+        DELETE FROM ideology_calculate_paper
+        WHERE id IN
+        <foreach collection="idList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <update id="updateConfTestInfoListRow">
+        UPDATE ideology_calculate_paper
+        SET `row` = #{row}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

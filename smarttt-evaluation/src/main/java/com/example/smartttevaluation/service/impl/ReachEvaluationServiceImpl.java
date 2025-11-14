@@ -194,6 +194,7 @@ public class ReachEvaluationServiceImpl implements ReachEvaluationService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean modifyStudentReachState(List<StudentReachStateReq> studentReachStateReqList) {
         Boolean state = true;
         for (StudentReachStateReq studentReachStateReq : studentReachStateReqList){

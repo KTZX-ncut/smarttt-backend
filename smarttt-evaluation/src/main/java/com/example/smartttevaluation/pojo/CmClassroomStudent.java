@@ -37,4 +37,7 @@ public class CmClassroomStudent {
   private Integer dynamicState;
   @TableField(value = "reach_state")
   private Integer reachState;
+
+  @TableField(value = "ideology_state")
+  private Integer ideologyState;
 }

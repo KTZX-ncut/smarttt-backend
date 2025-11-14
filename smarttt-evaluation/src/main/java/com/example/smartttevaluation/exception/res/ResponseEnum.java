@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public enum ResponseEnum {
-    SUCCESS(0, "成功"),
+    SUCCESS(200, "成功"),
     ERROR(-1, "服务器内部错误"),
     SERVLET_ERROR(-2,"controller上层错误"),
     PARAM_IS_NOT_NULL(-710,"参数为空"),
@@ -38,7 +38,8 @@ public enum ResponseEnum {
     TEST_ID_NOT_VALID(-710,"考试id(testId) 不合法！"),
     PAPER_ID_NOT_NULL(-710,"试卷id(paperId) 不能为空!"),
     NUM_NOT_NULL(-710, "评价次数不能为空"),
-    NO_VALID(-710, "传入的数据不合法"), CLASSROOM_STUDENT_ID_IS_NOT_NULL(-710, "classroom_student_id不能为空！"),
+    NO_VALID(-710, "传入的数据不合法"),
+    CLASSROOM_STUDENT_ID_IS_NOT_NULL(-710, "classroom_student_id不能为空！"),
     VALUE_TYPE_NAME_NOT_NULL(-710, "valueType: 值类型名称不能为空"),
     VALUE_TYPE_NAME_EXIST(-710,"valueType: name已经存在了"),
     VALUE_TYPE_ID_NOT_NULL(-710, "valueType: id不能为空"),
@@ -55,7 +56,10 @@ public enum ResponseEnum {
     IDEOLOGY_ID_IS_NOT_NULL(-710, "ideologyValue: id不能为空"),
     IDEOLOGY_ID_LIST_IS_NOT_NULL(-710, "ideologyValue: idList不能为空"),
     IDEOLOGY_COURSE_ID_IS_NOT_NULL(-710, "ideologyValue: courseId不能为空"),
-    COURSE_ID_NOT_VALID(-710, "courseId不合法,不存在该课堂");
+    COURSE_ID_NOT_VALID(-710, "courseId不合法,不存在该课堂"),
+    ADD_SUB_LEVEL_NODE_VALID(-710,"下级新增的节点不能超过两级"),
+    NO_STUDENT_EVALUATION(-710,"该学生没有参与评价或者没有同步计算评价"),
+    NO_CLASSROOM_EVALUATION(-710,"该课堂没有参与评价或者没有同步计算评价");
 
     private Integer code;//状态码
     private String message;//消息

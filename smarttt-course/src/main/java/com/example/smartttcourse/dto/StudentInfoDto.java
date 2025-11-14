@@ -18,4 +18,6 @@ public class StudentInfoDto extends CmClassroomStudent {
     Integer dynamicState;
     // 是否参与达成性评价（0不参与，1参与）
     Integer reachState;
+    // 是否参与反馈性评价（0不参与，1参与）
+    Integer ideologyState;
 }

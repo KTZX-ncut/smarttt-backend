@@ -15,7 +15,8 @@
                st.id stuId,
                st.stuno,
                cs.dynamic_state as dynamicState,
-               cs.reach_state as reachState
+               cs.reach_state as reachState,
+               cs.ideology_state as ideologyState
         FROM cm_classroom_student cs
         JOIN sm_obs s1
         ON cs.obsId = s1.id
