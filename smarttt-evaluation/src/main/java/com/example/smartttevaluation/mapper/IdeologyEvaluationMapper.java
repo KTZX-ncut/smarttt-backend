@@ -2,6 +2,7 @@ package com.example.smartttevaluation.mapper;
 
 
 import com.example.smartttevaluation.dto.IdeologyEvalDto;
+import com.example.smartttevaluation.dto.StudentIdeologyEvalDto;
 import com.example.smartttevaluation.pojo.ClassroomIdeologyEvaluation;
 import com.example.smartttevaluation.pojo.IdeologyCalculatePaper;
 import com.example.smartttevaluation.pojo.IdeologyValue;
@@ -43,4 +44,8 @@ public interface IdeologyEvaluationMapper {
     List<StudentIdeologyEvaluation> getIdeologyEvaluationByUserId(@Param("userId") String userId, @Param("classroomId") String classroomId);
 
     List<ClassroomIdeologyEvaluation> getIdeologyEvaluationByClassroomId(@Param("classroomId") String classroomId);
+
+    List<StudentIdeologyEvaluation> getAllStuIdeologyEvaluation(@Param("classroomId") String classroomId);
+
+    List<StudentIdeologyEvalDto> getAllEvalStu(@Param("classroomId") String classroomId);
 }

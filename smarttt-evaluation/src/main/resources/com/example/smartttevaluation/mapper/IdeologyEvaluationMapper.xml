@@ -97,4 +97,29 @@
         FROM classroom_ideology_achievements
         WHERE classroom_id = #{classroomId}
     </select>
+    <select id="getAllStuIdeologyEvaluation"
+            resultType="com.example.smartttevaluation.pojo.StudentIdeologyEvaluation">
+        SELECT id,
+               user_id AS userId,
+               course_id AS courseId,
+               v_id AS vId,
+               classroom_id AS classroomId,
+               value_count AS valueCount,
+               created_at AS createdAt,
+               updated_at AS updatedAt
+        FROM student_ideology_achievements
+        WHERE classroom_id = #{classroomId}
+    </select>
+    <select id="getAllEvalStu" resultType="com.example.smartttevaluation.dto.StudentIdeologyEvalDto">
+        SELECT a.userId AS userId,
+               b.stuno AS stuno,
+               c.username AS studentName
+        FROM cm_classroom_student a
+                 JOIN sm_student b
+                      ON a.userId = b.usersid
+                 JOIN st_users c
+                      ON c.id = a.userId
+        WHERE a.classroomId = #{classroomId}
+          AND a.ideology_state = 1
+    </select>
 </mapper>

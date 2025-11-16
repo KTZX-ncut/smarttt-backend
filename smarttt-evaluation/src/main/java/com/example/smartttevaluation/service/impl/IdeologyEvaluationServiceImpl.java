@@ -2,6 +2,7 @@ package com.example.smartttevaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.example.smartttevaluation.dto.IdeologyEvalDto;
+import com.example.smartttevaluation.dto.StudentIdeologyEvalDto;
 import com.example.smartttevaluation.dto.StudentIdeologyStateReq;
 import com.example.smartttevaluation.mapper.IdeologyEvaluationMapper;
 import com.example.smartttevaluation.pojo.*;
@@ -117,5 +118,15 @@ public class IdeologyEvaluationServiceImpl implements IdeologyEvaluationService 
     @Override
     public List<ClassroomIdeologyEvaluation> getIdeologyEvaluationByClassroomId(String classroomId) {
         return ideologyEvaluationMapper.getIdeologyEvaluationByClassroomId(classroomId);
+    }
+
+    @Override
+    public List<StudentIdeologyEvaluation> getAllStuIdeologyEvaluation(String classroomId) {
+        return ideologyEvaluationMapper.getAllStuIdeologyEvaluation(classroomId);
+    }
+
+    @Override
+    public List<StudentIdeologyEvalDto> getAllEvalStu(String classroomId) {
+        return ideologyEvaluationMapper.getAllEvalStu(classroomId);
     }
 }
