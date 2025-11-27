@@ -2,11 +2,10 @@ package com.example.smartttevaluation.mapper;
 
 
 import com.example.smartttevaluation.dto.IdeologyEvalDto;
+import com.example.smartttevaluation.dto.PaperIdeologyEvaluationDto;
+import com.example.smartttevaluation.dto.PaperQuestionDto;
 import com.example.smartttevaluation.dto.StudentIdeologyEvalDto;
-import com.example.smartttevaluation.pojo.ClassroomIdeologyEvaluation;
-import com.example.smartttevaluation.pojo.IdeologyCalculatePaper;
-import com.example.smartttevaluation.pojo.IdeologyValue;
-import com.example.smartttevaluation.pojo.StudentIdeologyEvaluation;
+import com.example.smartttevaluation.pojo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -48,4 +47,32 @@ public interface IdeologyEvaluationMapper {
     List<StudentIdeologyEvaluation> getAllStuIdeologyEvaluation(@Param("classroomId") String classroomId);
 
     List<StudentIdeologyEvalDto> getAllEvalStu(@Param("classroomId") String classroomId);
+
+    void deletePaperIdeologyEvaluation(@Param("classroomId") String classroomId);
+
+    String getPaperType(@Param("paperId") String paperId);
+
+    List<String> getQuestionListInPractice(@Param("paperId") String paperId);
+
+    List<String> getQuestionListInPaper(@Param("paperId") String paperId);
+
+    List<IdeologyEvalDto> getQuestionInfoList(@Param("questionId") String questionId,
+                                              @Param("paperId") String paperId,
+                                              @Param("studentList") List<CmClassroomStudent> studentList,
+                                              @Param("classroomId") String classroomId);
+
+    void insertPaperIdeologyEvaluation(@Param("id") String id,
+                                       @Param("courseId") String courseId,
+                                       @Param("classroomId") String classroomId,
+                                       @Param("paperId") String paperId,
+                                       @Param("questionId") String questionId,
+                                       @Param("vId") String vid,
+                                       @Param("paperType") String paperType,
+                                       @Param("vCount") Integer vCount);
+
+    PaperIdeologyEvaluationDto getPaperIdeologyEvaluation(@Param("classroomId") String classroomId, @Param("paperId") String paperId);
+
+    List<PaperQuestionDto> getPaperIdeologyQuestionList(@Param("classroomId") String classroomId, @Param("paperId") String paperId);
+
+    List<PaperQuestionDto> getPracticeIdeologyQuestionList(@Param("classroomId") String classroomId,@Param("paperId") String paperId);
 }

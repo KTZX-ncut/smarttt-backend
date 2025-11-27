@@ -1,13 +1,12 @@
 package com.example.smartttevaluation.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.example.smartttevaluation.dto.IdeologyEvalDto;
-import com.example.smartttevaluation.dto.StudentIdeologyEvalDto;
-import com.example.smartttevaluation.dto.StudentIdeologyStateReq;
+import com.example.smartttevaluation.dto.*;
 import com.example.smartttevaluation.mapper.IdeologyEvaluationMapper;
 import com.example.smartttevaluation.pojo.*;
 import com.example.smartttevaluation.service.IdeologyEvaluationService;
-import com.example.smartttevaluation.service.IdeologyValueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +38,51 @@ public class IdeologyEvaluationServiceImpl implements IdeologyEvaluationService 
 
     @Override
     public void calculate(List<CmClassroomStudent> classroomStudentList, List<IdeologyCalculatePaper> paperList, String classroomId, String courseId,List<IdeologyValue> ideologyValueList) {
+
+        // 算考核任务的v，精确到题目。。。。。。。。。。。。。
+        ideologyEvaluationMapper.deletePaperIdeologyEvaluation(classroomId);
+        List<CmClassroomStudent> studentList = classroomStudentList.stream().filter(s -> s.getIdeologyState() == 1).collect(Collectors.toList());
+        for (IdeologyCalculatePaper paper : paperList){
+            // 获取这个试卷是实验还是作业
+            String paperType = ideologyEvaluationMapper.getPaperType(paper.getPaperId());
+            // 拿到试卷下的题目ID
+            List<String> questionIdList = null;
+            if ("def".equals(paperType)){
+                questionIdList = ideologyEvaluationMapper.getQuestionListInPaper(paper.getPaperId());
+            }else {
+                questionIdList = ideologyEvaluationMapper.getQuestionListInPractice(paper.getPaperId());
+            }
+            for (String questionId : questionIdList){
+                // 去日志表中获取这个题目的信息
+                String paperId = paper.getPaperId();
+                List<IdeologyEvalDto> questionInfoList = ideologyEvaluationMapper.getQuestionInfoList(questionId,paperId,studentList,classroomId);
+                List<String> subjectType = Arrays.asList("previewReport", "defence", "report", "video", "image", "reportTemplate", "guideBook", "0205", "0206");
+                List<String> objectType = Arrays.asList("0201", "0202", "0203", "0204");
+                Integer vCount = 0;
+                String vid = null;
+                for (IdeologyEvalDto ideologyEvalDto : questionInfoList){
+                    vid = ideologyEvalDto.getVId();
+                    // 主观题
+                    if (subjectType.contains(ideologyEvalDto.getQuestionTypeId())){
+                        Double stuScore = ideologyEvalDto.getStuScore();
+                        Double fullScore = ideologyEvalDto.getFullScore();
+                        Double rate = stuScore / fullScore;
+                        if (rate >= 0.6) vCount ++;
+                    }else if (objectType.contains(ideologyEvalDto.getQuestionTypeId())){
+                        // 客观题
+                        Double stuScore = ideologyEvalDto.getStuScore();
+                        Double fullScore = ideologyEvalDto.getFullScore();
+                        if (stuScore.equals(fullScore)) vCount ++;
+                    }else continue;
+                }
+                // 没有一个学生做这一个题
+                if (StrUtil.isBlank(vid)) continue;
+                // 入库
+                String id = IdWorker.getIdStr();
+                ideologyEvaluationMapper.insertPaperIdeologyEvaluation(id,courseId,classroomId,paperId,questionId,vid,paperType,vCount);
+            }
+
+        }
         // 计算学生的思政评价
         for (CmClassroomStudent classroomStudent : classroomStudentList){
             ideologyEvaluationMapper.deleteStudentIdeologyEvaluation(classroomStudent.getUserId(),classroomId);
@@ -128,5 +172,20 @@ public class IdeologyEvaluationServiceImpl implements IdeologyEvaluationService 
     @Override
     public List<StudentIdeologyEvalDto> getAllEvalStu(String classroomId) {
         return ideologyEvaluationMapper.getAllEvalStu(classroomId);
+    }
+
+    @Override
+    public PaperIdeologyEvaluationDto getPaperIdeologyEvaluation(String classroomId, String paperId) {
+        // 组装数据
+        PaperIdeologyEvaluationDto paperIdeologyEvaluationDto = ideologyEvaluationMapper.getPaperIdeologyEvaluation(classroomId,paperId);
+        if (Objects.isNull(paperIdeologyEvaluationDto)) return null;
+        List<PaperQuestionDto> questionList = null;
+        if (paperIdeologyEvaluationDto != null && paperIdeologyEvaluationDto.getPaperType().equals("def")){
+            questionList = ideologyEvaluationMapper.getPaperIdeologyQuestionList(classroomId,paperId);
+        }else {
+            questionList = ideologyEvaluationMapper.getPracticeIdeologyQuestionList(classroomId,paperId);
+        }
+        paperIdeologyEvaluationDto.setQuestionList(questionList);
+        return paperIdeologyEvaluationDto;
     }
 }

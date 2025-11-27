@@ -2,12 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.smartttevaluation.mapper.IdeologyEvaluationMapper">
     <insert id="insertStudentIdeologyEvaluation">
-        INSERT INTO student_ideology_achievements(id,user_id,course_id,v_id,classroom_id,value_count,created_at,updated_at)
-        VALUES(#{id},#{userId},#{courseId},#{vId},#{classroomId},#{vCount},NOW(),NOW())
+        INSERT INTO student_ideology_achievements(id, user_id, course_id, v_id, classroom_id, value_count, created_at,
+                                                  updated_at)
+        VALUES (#{id}, #{userId}, #{courseId}, #{vId}, #{classroomId}, #{vCount}, NOW(), NOW())
     </insert>
     <insert id="insertClassroomIdeologyEvaluation">
-        INSERT INTO classroom_ideology_achievements(id,course_id,v_id,classroom_id,value_count,created_at,updated_at)
-        VALUES(#{id},#{courseId},#{vId},#{classroomId},#{vCount},NOW(),NOW())
+        INSERT INTO classroom_ideology_achievements(id, course_id, v_id, classroom_id, value_count,created_at,
+                                                    updated_at)
+        VALUES (#{id}, #{courseId}, #{vId}, #{classroomId}, #{vCount}, NOW(), NOW())
+    </insert>
+    <insert id="insertPaperIdeologyEvaluation">
+        INSERT INTO paper_ideology_achievement(id, paper_id, classroom_id,course_id, v_id,lib_id, value_count,paper_type, created_at, updated_at)
+        VALUES (#{id}, #{paperId}, #{classroomId},#{courseId}, #{vId},#{questionId}, #{vCount}, #{paperType},NOW(), NOW())
     </insert>
 
 
@@ -17,102 +23,111 @@
         WHERE id = #{classroomStudentId}
     </update>
     <delete id="deleteStudentIdeologyEvaluation">
-        DELETE FROM student_ideology_achievements
-        WHERE user_id = #{userId} AND classroom_id = #{classroomId}
+        DELETE
+        FROM student_ideology_achievements
+        WHERE user_id = #{userId}
+          AND classroom_id = #{classroomId}
     </delete>
     <delete id="deleteClassroomIdeologyEvaluation">
-        DELETE FROM classroom_ideology_achievements
+        DELETE
+        FROM classroom_ideology_achievements
+        WHERE classroom_id = #{classroomId}
+    </delete>
+    <delete id="deletePaperIdeologyEvaluation">
+        DELETE
+        FROM paper_ideology_achievement
         WHERE classroom_id = #{classroomId}
     </delete>
     <select id="getPaperList" resultType="com.example.smartttevaluation.pojo.IdeologyCalculatePaper">
-        SELECT
-        id,
-        paper_id AS paperId,
-        classroom_id AS classroomId,
-        test_id AS testId,
-        course_name AS courseName,
-        classroom_name AS classroomName,
-        paper_name AS paperName,
-        test_name AS testName,
-        catelog,
-        creator,
-        create_time AS createTime,
-        `row`
-        FROM
-        ideology_calculate_paper
+        SELECT id,
+               paper_id       AS paperId,
+               classroom_id   AS classroomId,
+               test_id        AS testId,
+               course_name    AS courseName,
+               classroom_name AS classroomName,
+               paper_name     AS paperName,
+               test_name      AS testName,
+               catelog,
+               creator,
+               create_time    AS createTime,
+               `row`
+        FROM ideology_calculate_paper
         WHERE classroom_id = #{classroomId}
     </select>
     <select id="getQuestionInfo" resultType="com.example.smartttevaluation.dto.IdeologyEvalDto">
         SELECT v_id AS vId,
-               libScore AS fullScore,
-               libStuScore AS stuScore,
-               questionTypeId AS questionTypeId
+        libScore AS fullScore,
+        libStuScore AS stuScore,
+        questionTypeId AS questionTypeId
         FROM ai_in_stu_ans_info
         WHERE stuId = #{userId}
-          AND classroomId = #{classroomId}
-          AND v_id = #{vId}
-          AND paperId IN
-              <foreach collection="paperIdList" item="paperId" open="(" separator="," close=")">
-                #{paperId}
-              </foreach>
+        AND classroomId = #{classroomId}
+        AND v_id = #{vId}
+        AND paperId IN
+        <foreach collection="paperIdList" item="paperId" open="(" separator="," close=")">
+            #{paperId}
+        </foreach>
     </select>
     <select id="getQuestionInfoClassroom" resultType="com.example.smartttevaluation.dto.IdeologyEvalDto">
         SELECT v_id AS vId,
-               libScore AS fullScore,
-               libStuScore AS stuScore,
-               questionTypeId AS questionTypeId
+        libScore AS fullScore,
+        libStuScore AS stuScore,
+        questionTypeId AS questionTypeId
         FROM ai_in_stu_ans_info
         WHERE classroomId = #{classroomId}
-          AND v_id = #{vId}
-          AND paperId IN
-              <foreach collection="paperIdList" item="paperId" open="(" separator="," close=")">
-                #{paperId}
-              </foreach>
+        AND v_id = #{vId}
+        AND paperId IN
+        <foreach collection="paperIdList" item="paperId" open="(" separator="," close=")">
+            #{paperId}
+        </foreach>
     </select>
     <select id="getCourseIdByClassroomId" resultType="java.lang.String">
-        SELECT courseId FROM cm_classroom
+        SELECT courseId
+        FROM cm_classroom
         WHERE id = #{classroomId}
     </select>
-    <select id="getIdeologyEvaluationByUserId" resultType="com.example.smartttevaluation.pojo.StudentIdeologyEvaluation">
+    <select id="getIdeologyEvaluationByUserId"
+            resultType="com.example.smartttevaluation.pojo.StudentIdeologyEvaluation">
         SELECT id,
-               user_id AS userId,
-               course_id AS courseId,
-               v_id AS vId,
+               user_id      AS userId,
+               course_id    AS courseId,
+               v_id         AS vId,
                classroom_id AS classroomId,
-               value_count AS valueCount,
-               created_at AS createdAt,
-               updated_at AS updatedAt
+               value_count  AS valueCount,
+               created_at   AS createdAt,
+               updated_at   AS updatedAt
         FROM student_ideology_achievements
-        WHERE user_id = #{userId} AND classroom_id = #{classroomId}
+        WHERE user_id = #{userId}
+          AND classroom_id = #{classroomId}
     </select>
     <select id="getIdeologyEvaluationByClassroomId"
             resultType="com.example.smartttevaluation.pojo.ClassroomIdeologyEvaluation">
         SELECT id,
-               course_id AS courseId,
-               v_id AS vId,
+               course_id    AS courseId,
+               v_id         AS vId,
                classroom_id AS classroomId,
-               value_count AS valueCount,
-               created_at AS createdAt,
-               updated_at AS updatedAt
+               value_count  AS valueCount,
+               created_at   AS createdAt,
+               updated_at   AS updatedAt
         FROM classroom_ideology_achievements
         WHERE classroom_id = #{classroomId}
     </select>
     <select id="getAllStuIdeologyEvaluation"
             resultType="com.example.smartttevaluation.pojo.StudentIdeologyEvaluation">
         SELECT id,
-               user_id AS userId,
-               course_id AS courseId,
-               v_id AS vId,
+               user_id      AS userId,
+               course_id    AS courseId,
+               v_id         AS vId,
                classroom_id AS classroomId,
-               value_count AS valueCount,
-               created_at AS createdAt,
-               updated_at AS updatedAt
+               value_count  AS valueCount,
+               created_at   AS createdAt,
+               updated_at   AS updatedAt
         FROM student_ideology_achievements
         WHERE classroom_id = #{classroomId}
     </select>
     <select id="getAllEvalStu" resultType="com.example.smartttevaluation.dto.StudentIdeologyEvalDto">
-        SELECT a.userId AS userId,
-               b.stuno AS stuno,
+        SELECT a.userId   AS userId,
+               b.stuno    AS stuno,
                c.username AS studentName
         FROM cm_classroom_student a
                  JOIN sm_student b
@@ -121,5 +136,83 @@
                       ON c.id = a.userId
         WHERE a.classroomId = #{classroomId}
           AND a.ideology_state = 1
+    </select>
+    <select id="getPaperType" resultType="java.lang.String">
+        SELECT DISTINCT paperType
+        FROM ai_in_stu_ans_info
+        WHERE paperId = #{paperId}
+    </select>
+    <select id="getQuestionListInPractice" resultType="java.lang.String">
+        SELECT id
+        FROM pm_practice_item
+        WHERE practiceId = #{paperId}
+    </select>
+    <select id="getQuestionListInPaper" resultType="java.lang.String">
+        SELECT libId FROM pm_testpaper_questions
+        WHERE paperId = #{paperId}
+    </select>
+    <select id="getQuestionInfoList" resultType="com.example.smartttevaluation.dto.IdeologyEvalDto">
+        SELECT v_id AS vId,
+        libScore AS fullScore,
+        libStuScore AS stuScore,
+        questionTypeId AS questionTypeId
+        FROM ai_in_stu_ans_info
+        WHERE stuId IN
+        <foreach collection="studentList" item="student" open="(" separator="," close=")">
+            #{student.userId}
+        </foreach>
+        AND classroomId = #{classroomId}
+        AND paperId = #{paperId}
+        AND libId = #{questionId}
+    </select>
+    <select id="getPaperIdeologyEvaluation"
+            resultType="com.example.smartttevaluation.dto.PaperIdeologyEvaluationDto">
+        SELECT DISTINCT
+            a.paper_id AS paperId,
+            a.paper_type AS paperType,
+            b.paper_name AS paperName
+        FROM paper_ideology_achievement a
+                 JOIN ideology_calculate_paper b
+                      ON a.paper_id = b.paper_id
+        WHERE a.paper_id = #{paperId} AND a.classroom_id = #{classroomId}
+    </select>
+    <select id="getPaperIdeologyQuestionList" resultType="com.example.smartttevaluation.dto.PaperQuestionDto">
+        SELECT a.lib_id AS questionId,
+               b.content AS questionContent,
+               b.title AS questionTitle,
+               a.value_count AS valueCount,
+               a.v_id AS valueId,
+               c.valueTypeId AS valueTypeId,
+               c.valueTypeName AS valueTypeName,
+               c.valueName AS valueName
+        FROM paper_ideology_achievement a
+                 LEFT JOIN tm_testquelib b ON a.lib_id = b.id
+                 LEFT JOIN (SELECT b.vname AS valueName, b.id AS valueId,a.id AS valueTypeId, a.vname AS valueTypeName FROM v_ideology_value a
+                                                                                                                                JOIN v_ideology_value b
+                                                                                                                                     ON b.parent_id = a.id) AS c
+                           ON c.valueId = a.v_id
+        WHERE a.paper_type = 'def'
+          AND a.paper_id = #{paperId}
+          AND a.classroom_id = #{classroomId}
+    </select>
+    <select id="getPracticeIdeologyQuestionList"
+            resultType="com.example.smartttevaluation.dto.PaperQuestionDto">
+        SELECT a.lib_id AS questionId,
+               b.itemName AS questionContent,
+               b.itemName AS questionTitle,
+               a.value_count AS valueCount,
+               a.v_id AS valueId,
+               c.valueTypeId AS valueTypeId,
+               c.valueTypeName AS valueTypeName,
+               c.valueName AS valueName
+        FROM paper_ideology_achievement a
+                 LEFT JOIN pm_practice_item b ON a.lib_id = b.id
+                 LEFT JOIN (SELECT b.vname AS valueName, b.id AS valueId,a.id AS valueTypeId, a.vname AS valueTypeName FROM v_ideology_value a
+                                                                                                                                JOIN v_ideology_value b
+                                                                                                                                     ON b.parent_id = a.id) AS c
+                           ON c.valueId = a.v_id
+        WHERE a.paper_type = 'practice'
+          AND a.paper_id = #{paperId}
+          AND a.classroom_id = #{classroomId}
     </select>
 </mapper>

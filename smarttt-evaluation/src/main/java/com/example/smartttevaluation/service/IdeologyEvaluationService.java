@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service;
 
+import com.example.smartttevaluation.dto.PaperIdeologyEvaluationDto;
 import com.example.smartttevaluation.dto.StudentIdeologyEvalDto;
 import com.example.smartttevaluation.dto.StudentIdeologyStateReq;
 import com.example.smartttevaluation.pojo.*;
@@ -22,4 +23,6 @@ public interface IdeologyEvaluationService {
     List<StudentIdeologyEvaluation> getAllStuIdeologyEvaluation(String classroomId);
 
     List<StudentIdeologyEvalDto> getAllEvalStu(String classroomId);
+
+    PaperIdeologyEvaluationDto getPaperIdeologyEvaluation(String classroomId, String paperId);
 }

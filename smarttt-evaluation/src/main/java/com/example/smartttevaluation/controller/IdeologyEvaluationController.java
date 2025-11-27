@@ -9,10 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttevaluation.Utils.AuthRequired;
-import com.example.smartttevaluation.dto.IdeologyEvalDto;
-import com.example.smartttevaluation.dto.StudentIdeologyEvalDto;
-import com.example.smartttevaluation.dto.StudentIdeologyStateReq;
-import com.example.smartttevaluation.dto.Token;
+import com.example.smartttevaluation.dto.*;
 import com.example.smartttevaluation.exception.cus.BusinessException;
 import com.example.smartttevaluation.exception.res.ResponseEnum;
 import com.example.smartttevaluation.exception.res.Result;
@@ -306,5 +303,23 @@ public class IdeologyEvaluationController {
         }
 
         return Result.ok().data(studentIdeologyEvalDtoList).msg("查询成功！");
+    }
+
+    @GetMapping("/getPaperIdeologyEvaluation")
+    Result getPaperIdeologyEvaluation(@RequestParam("classroomId") String classroomId,@RequestParam("paperId") String paperId){
+        PaperIdeologyEvaluationDto paperIdeologyEvaluationDto = ideologyEvaluationService.getPaperIdeologyEvaluation(classroomId,paperId);
+        return Result.ok().data(paperIdeologyEvaluationDto).msg("查询成功！");
+    }
+
+    @GetMapping("/getAllPaperIdeologyEvaluation")
+    Result getAllPaperIdeologyEvaluation(@RequestParam("classroomId") String classroomId){
+        List<PaperIdeologyEvaluationDto> paperIdeologyEvaluationDtoList = new ArrayList<>();
+        // 获取试卷配置信息
+        List<IdeologyCalculatePaper> paperList = ideologyEvaluationService.getPaperList(classroomId);
+        for (IdeologyCalculatePaper paper : paperList){
+            PaperIdeologyEvaluationDto paperIdeologyEvaluationDto = ideologyEvaluationService.getPaperIdeologyEvaluation(classroomId,paper.getPaperId());
+            paperIdeologyEvaluationDtoList.add(paperIdeologyEvaluationDto);
+        }
+        return Result.ok().data(paperIdeologyEvaluationDtoList).msg("查询成功！");
     }
 }
