@@ -19,4 +19,10 @@ public interface GlobalMessageMapper {
                             @Param("complete") String complete);
 
     void deleteCalPaper(@Param("testId") String testId);
+
+    void deleteIdeologyPaper(@Param("testId") String testId);
+
+    void updateIdeologyPaperName(@Param("testId") String testId,
+                                 @Param("paperName") String paperName,
+                                 @Param("testName") String testName);
 }

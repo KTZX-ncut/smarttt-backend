@@ -14,8 +14,18 @@
             #{id}
         </foreach>
     </update>
+    <update id="updateIdeologyPaperName">
+        UPDATE ideology_calculate_paper
+        SET paper_name = #{paperName}, test_name = #{testName}
+        WHERE test_id = #{testId}
+    </update>
     <delete id="deleteCalPaper">
         DELETE FROM ai_calculate_paper
+        WHERE test_id = #{testId}
+    </delete>
+
+    <delete id="deleteIdeologyPaper">
+        DELETE FROM ideology_calculate_paper
         WHERE test_id = #{testId}
     </delete>
 
