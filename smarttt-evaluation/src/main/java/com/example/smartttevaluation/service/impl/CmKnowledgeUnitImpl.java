@@ -5,9 +5,11 @@ import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.mapper.AttainmentEvaluationMapper;
 import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
 import com.example.smartttevaluation.mapper.CmLinesMapper;
+import com.example.smartttevaluation.mapper.CmCourseUnitVValueMapper;
 import com.example.smartttevaluation.pojo.CmCourse;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
+import com.example.smartttevaluation.pojo.CmCourseUnitVValue;
 import com.example.smartttevaluation.pojo.CommonFunctions;
 import com.example.smartttevaluation.service.CmKnowledgeUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
     private AttainmentEvaluationMapper attainmentEvaluationMapper;
     @Autowired
     private CmLinesMapper cmLinesMapper;
+    @Autowired
+    private CmCourseUnitVValueMapper cmCourseUnitVValueMapper;
 
     @Override
     public Result getKnowledgeUnitList(String courseid) {
@@ -44,10 +48,13 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
             //获取章id
             String t_ChapterId = t_Chapter.getId();
             //创建一级目录对象
-            CmKnowledgeUnitTree t_cmKnowledgeUnitChapter = new CmKnowledgeUnitTree(t_ChapterId, t_Chapter.getName(), t_Chapter.getType(), t_Chapter.getDatavalue(), t_Chapter.getOrdernum(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            CmKnowledgeUnitTree t_cmKnowledgeUnitChapter = new CmKnowledgeUnitTree(t_ChapterId, t_Chapter.getName(), t_Chapter.getType(), t_Chapter.getDatavalue(), t_Chapter.getOrdernum(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             // 获取章的kwa，并设置kwa的名字
             List<CmKnowledgeUnitKwa> chapterKwas = cmKnowledgeUnitMapper.getKnowledgeUnitKwa(t_ChapterId);
             t_cmKnowledgeUnitChapter.setKwas(chapterKwas);
+            // 获取章的v值，并设置v值的名字
+            List<CmCourseUnitVValue> chapterVValues = cmCourseUnitVValueMapper.getKnowledgeUnitVValue(t_ChapterId);
+            t_cmKnowledgeUnitChapter.setVValues(chapterVValues);
 
             //将一级目录对象加入根列表
             cmKnowledgeUnitChapters.add(t_cmKnowledgeUnitChapter);
@@ -55,6 +62,8 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
             List<CmKnowledgeUnitTree> t_cmKnowledgeUnitSections = t_cmKnowledgeUnitChapter.getChildren();
             //创建章的kwa映射关系
             Map<String, CmKnowledgeUnitKwa> map_kwaid_to_kwa = new HashMap<>();
+            //创建章的v值映射关系
+            Map<String, CmCourseUnitVValue> map_vid_to_vvalue = new HashMap<>();
             //获取二级目录
             List<CmKnowledgeUnit> t_Sections = cmKnowledgeUnitMapper.getSection(t_ChapterId, t_Chapter.getType());
 
@@ -62,9 +71,11 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
             for (CmKnowledgeUnit t_Section : t_Sections) {
                 //获取当前节的kwa的列表
                 List<CmKnowledgeUnitKwa> t_cmKnowledgekwas = cmKnowledgeUnitMapper.getKnowledgeUnitKwa(t_Section.getId());
+                //获取当前节的v值的列表
+                List<CmCourseUnitVValue> t_cmKnowledgeVValues = cmCourseUnitVValueMapper.getKnowledgeUnitVValue(t_Section.getId());
                 //创建该二级目录对象
                 CmKnowledgeUnitTree t_cmKnowledgeUnitSection = new CmKnowledgeUnitTree(t_Section.getId(), t_Section.getName(), t_Section.getType(), t_Section.getDatavalue(), t_Section.getOrdernum(), new ArrayList<>(), new ArrayList<>()
-                        , new ArrayList<>());
+                        , new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
                 //将该对象添加到相应一级目录的节列表
                 t_cmKnowledgeUnitSections.add(t_cmKnowledgeUnitSection);
                 for (CmKnowledgeUnitKwa t_kwa : t_cmKnowledgekwas) {
@@ -88,6 +99,27 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
 
                 }
                 t_cmKnowledgeUnitSection.setKwas(t_cmKnowledgekwas);
+                //处理v值
+                for (CmCourseUnitVValue t_vvalue : t_cmKnowledgeVValues) {
+                    //当前vid是否存在章中
+                    if (map_vid_to_vvalue.containsKey(t_vvalue.getVid()) == false) {
+                        //不存在，新增
+                        CmCourseUnitVValue t_chapterVValue = new CmCourseUnitVValue("0", t_ChapterId, t_vvalue.getVid(), t_vvalue.getName(), t_vvalue.getParentId(),t_vvalue.getVname(), t_vvalue.getStatus(),  t_vvalue.getLevel());
+                        //存到章v值列表
+                        t_cmKnowledgeUnitChapter.getChildren_vValues().add(t_chapterVValue);
+                        //创建映射关系
+                        map_vid_to_vvalue.put(t_vvalue.getVid(), t_chapterVValue);
+                    } else {
+                        //存在，处理status
+                        //获取章的status
+                        int t_status = map_vid_to_vvalue.get(t_vvalue.getVid()).getStatus();
+                        //都为完成时才算完成
+                        t_status = t_status & t_vvalue.getStatus();
+                        //更新status
+                        map_vid_to_vvalue.get(t_vvalue.getVid()).setStatus(t_status);
+                    }
+                }
+                t_cmKnowledgeUnitSection.setVValues(t_cmKnowledgeVValues);
             }
         }
 
@@ -163,6 +195,8 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
         List<String> all_p_unitids = cmKnowledgeUnitMapper.selectAllPUnitidByUnitids(unitids);
         //删除所有unitids的kwa
         cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByUnitids(all_unitids);
+        //删除所有unitids的v值
+        cmCourseUnitVValueMapper.deleteKnowledgeUnitVValueByUnitids(all_unitids);
         // 删除所有unit的连线数据
         cmKnowledgeUnitMapper.deleteLineByUnitIds(all_unitids);
         //删除unit
@@ -237,5 +271,37 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
 
         cmKnowledgeUnitMapper.updateKnowledgeUnitOrdernum(t_id, newOrdernum);
         return Result.success();
+    }
+
+    @Override
+    //添加知识单元V值
+    public Result insertKnowledgeUnitVValue(CmCourseUnitVValue cmCourseUnitVValue) {
+        if (cmCourseUnitVValueMapper.getUnitVValueCount(cmCourseUnitVValue) != 0) {
+            return Result.error("该v值已存在");
+        }
+        cmCourseUnitVValue.setId(CommonFunctions.generateEnhancedID("cm_course_unit_v_values"));
+        cmCourseUnitVValueMapper.insertKnowledgeUnitVValue(cmCourseUnitVValue);
+        return Result.success();
+    }
+
+    @Override
+    @Transactional
+    //删除UnitVValue
+    public Result deleteKnowledgeUnitVValue(String unitid, List<String> vids) {
+        if (cmKnowledgeUnitMapper.getUnitCountByUnitId(unitid) == 0) {
+            return Result.error("单元id不存在");
+        }
+        cmCourseUnitVValueMapper.deleteKnowledgeUnitVValue(unitid, vids);
+        return Result.success();
+    }
+
+    @Override
+    // 查询某知识单元已绑定的v值列表
+    public Result getKnowledgeUnitVValues(String unitid) {
+        if (cmKnowledgeUnitMapper.getUnitCountByUnitId(unitid) == 0) {
+            return Result.error("单元id不存在");
+        }
+        List<CmCourseUnitVValue> list = cmCourseUnitVValueMapper.getKnowledgeUnitVValue(unitid);
+        return Result.success(list);
     }
 }

@@ -2,7 +2,7 @@ package com.example.smartttevaluation.dto;
 
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
-import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
+import com.example.smartttevaluation.pojo.CmCourseUnitVValue;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +22,7 @@ public class CmKnowledgeUnitTree {
     long ordernum;
     List<CmKnowledgeUnitKwa> kwas;
     List<CmKnowledgeUnitKwa> children_kwas;
+    List<CmCourseUnitVValue> vValues;
+    List<CmCourseUnitVValue> children_vValues;
     List<CmKnowledgeUnitTree> children;
 }

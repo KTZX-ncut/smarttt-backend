@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttevaluation.mapper.CmCourseUnitVValueMapper">
+    <!--批量删除单元中的v值-->
+    <delete id="deleteKnowledgeUnitVValue">
+        delete from cm_course_unit_v_values where unitId=#{unitid} and vId in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--批量删除unit下v值-->
+    <delete id="deleteKnowledgeUnitVValueByUnitids">
+        delete from cm_course_unit_v_values where unitId in
+        <foreach item="id" collection="unitids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
+
