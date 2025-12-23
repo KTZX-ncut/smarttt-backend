@@ -104,7 +104,7 @@ public class CmKnowledgeUnitImpl implements CmKnowledgeUnitService {
                     //当前vid是否存在章中
                     if (map_vid_to_vvalue.containsKey(t_vvalue.getVid()) == false) {
                         //不存在，新增
-                        CmCourseUnitVValue t_chapterVValue = new CmCourseUnitVValue("0", t_ChapterId, t_vvalue.getVid(), t_vvalue.getName(), t_vvalue.getParentId(),t_vvalue.getVname(), t_vvalue.getStatus(),  t_vvalue.getLevel());
+                        CmCourseUnitVValue t_chapterVValue = new CmCourseUnitVValue("0", t_ChapterId, t_vvalue.getVid(), t_vvalue.getName(), t_vvalue.getVname(), t_vvalue.getParentId(), t_vvalue.getLevel(), t_vvalue.getStatus());
                         //存到章v值列表
                         t_cmKnowledgeUnitChapter.getChildren_vValues().add(t_chapterVValue);
                         //创建映射关系
