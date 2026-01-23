@@ -5,6 +5,7 @@ import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.CmKnowledgeUnitKwa;
+import com.example.smartttevaluation.pojo.CmCourseUnitVValue;
 import com.example.smartttevaluation.service.CmKnowledgeUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +79,22 @@ public class KnowledgeUnitController {
     @PostMapping("/updateKnowledgeUnitOrdernum")
     public Result updateKnowledgeUnitOrdernum(@RequestParam("preOrdernum") long preOrdernum,@RequestBody CmKnowledgeUnit cmKnowledgeUnit) {
         return cmKnowledgeUnitService.updateKnowledgeUnitOrdernum(cmKnowledgeUnit,preOrdernum);
+    }
+    //插入知识单元v值
+    @PostMapping("/insertKnowledgeUnitVValue")
+    public Result insertKnowledgeUnitVValue(@RequestBody CmCourseUnitVValue cmCourseUnitVValue) {
+        return cmKnowledgeUnitService.insertKnowledgeUnitVValue(cmCourseUnitVValue);
+    }
+    //批量删除v值
+    @PostMapping("/deleteKnowledgeUnitVValue")
+    public Result deleteKnowledgeUnitVValue(@RequestParam("unitid") String unitid,@RequestBody List<String> vids) {
+        return cmKnowledgeUnitService.deleteKnowledgeUnitVValue(unitid,vids);
+    }
+
+    // 查询某知识单元已绑定的v值列表
+    @GetMapping("/getKnowledgeUnitVValues")
+    public Result getKnowledgeUnitVValues(@RequestParam("unitid") String unitid) {
+        return cmKnowledgeUnitService.getKnowledgeUnitVValues(unitid);
     }
 
 }
