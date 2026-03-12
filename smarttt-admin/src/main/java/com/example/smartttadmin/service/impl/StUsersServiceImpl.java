@@ -38,8 +38,6 @@ public class StUsersServiceImpl implements StUsersService {
     @Autowired
     private SmObsMapper smObsMapper;
     @Autowired
-    private SmObsService smObsService;
-    @Autowired
     private StLevelMapper stLevelMapper;
     @Autowired
     private StudentService studentService;
@@ -296,10 +294,6 @@ public class StUsersServiceImpl implements StUsersService {
             return Result.error("所属院系不能为空！");
         }
         
-        QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("obsname", personnelRoster.getObsname())
-                    .eq("termid", termid);
-        
         // 根据分类（学生/教师）校验层级
         String catelog = personnelRoster.getCatelog();
         if (catelog == null) {
@@ -324,22 +318,23 @@ public class StUsersServiceImpl implements StUsersService {
             }
         }
         
+        // 使用 smObsMapper 查询符合条件的 obs
+        List<SmObs> smObsList;
         if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
             if (studentObsDeep == null) {
                 return Result.error("系统配置错误：未找到学生层级配置！");
             }
-            queryWrapper.eq("obsdeep", studentObsDeep);
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, termid);
         } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
             if (teacherObsDeep == null) {
                 return Result.error("系统配置错误：未找到教师层级配置！");
             }
-            queryWrapper.eq("obsdeep", teacherObsDeep);
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, termid);
+        } else {
+            return Result.error("无效的人员分类！");
         }
         
-        List<SmObs> smObsList = smObsService.list(queryWrapper);
-        List<String> obsIdList = smObsList.stream().map(SmObs::getId).collect(java.util.stream.Collectors.toList());
-        
-        if (CollUtil.isEmpty(obsIdList)) {
+        if (CollUtil.isEmpty(smObsList)) {
             return Result.error("所属院系或层级不匹配：'" + personnelRoster.getObsname() + "' 不存在或者层级配置不正确！");
         }
         

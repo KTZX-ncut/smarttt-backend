@@ -163,5 +163,14 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
             "where termid = #{historyTerm} ")
     List<SmObs> getAllHistoryObs(String historyTerm);
 
+    /**
+     * 根据 obsname 和 obsdeep 查询 SmObs 列表
+     * @param obsname 组织名称
+     * @param obsdeep 组织层级
+     * @param termid 学期 ID
+     * @return SmObs 列表
+     */
+    List<SmObs> getObsByObsNameAndDeep(@Param("obsname") String obsname, @Param("obsdeep") Long obsdeep, @Param("termid") String termid);
+
     void updateCourseProfession(@Param("ids") List<String> deleteList);
 }

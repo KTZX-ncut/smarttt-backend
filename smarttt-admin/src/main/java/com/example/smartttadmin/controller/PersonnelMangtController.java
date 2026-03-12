@@ -8,6 +8,7 @@ import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.enums.CateLogEnum;
 import com.example.smartttadmin.listeners.PersonnelListenerExcel;
+import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.pojo.PersonnelExcel;
 import com.example.smartttadmin.pojo.SmObs;
 import com.example.smartttadmin.pojo.StLevel;
@@ -37,6 +38,8 @@ public class PersonnelMangtController {
     private SmObsService smObsService;
     @Autowired
     private StUsersService stUsersService;
+    @Autowired
+    private SmObsMapper smObsMapper;
 
     @Resource
     private StudentService studentService;
@@ -90,11 +93,7 @@ public class PersonnelMangtController {
         }
         
         // 校验通过后，设置 obsid 并创建
-        // 根据 obsname 获取 obsid
-        QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("obsname", personnelRoster.getObsname())
-                    .eq("termid", token.getTermid());
-        
+        // 根据 obsname 和层级获取 obsid
         CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
         List<StLevel> levelList = levelService.list().stream()
                 .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
@@ -111,13 +110,13 @@ public class PersonnelMangtController {
             }
         }
         
+        List<SmObs> smObsList;
         if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
-            queryWrapper.eq("obsdeep", studentObsDeep);
-        } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
-            queryWrapper.eq("obsdeep", teacherObsDeep);
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, token.getTermid());
+        } else {
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, token.getTermid());
         }
         
-        List<SmObs> smObsList = smObsService.list(queryWrapper);
         if (!smObsList.isEmpty()) {
             personnelRoster.setObsid(smObsList.get(0).getId());
         }
