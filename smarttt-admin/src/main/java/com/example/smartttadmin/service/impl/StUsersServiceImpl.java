@@ -1,10 +1,17 @@
 package com.example.smartttadmin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttadmin.dto.*;
+import com.example.smartttadmin.enums.CateLogEnum;
 import com.example.smartttadmin.mapper.SmObsMapper;
+import com.example.smartttadmin.mapper.StLevelMapper;
 import com.example.smartttadmin.mapper.StUsersMapper;
-import com.example.smartttadmin.pojo.StRoleUser;
-import com.example.smartttadmin.pojo.StUsers;
+import com.example.smartttadmin.pojo.*;
+import com.example.smartttadmin.service.SmObsService;
+import com.example.smartttadmin.service.StLevelService;
+import com.example.smartttadmin.service.StudentService;
+import com.example.smartttadmin.service.TeacherService;
 import com.example.smartttadmin.service.StUsersService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.poi.ss.usermodel.*;
@@ -16,10 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.smartttadmin.Utils.CommonFunctions.*;
 import static com.example.smartttadmin.Utils.JacksonJsonUtil.jsonArrayToList;
@@ -32,6 +37,16 @@ public class StUsersServiceImpl implements StUsersService {
     private StUsersMapper stUsersMapper;
     @Autowired
     private SmObsMapper smObsMapper;
+    @Autowired
+    private SmObsService smObsService;
+    @Autowired
+    private StLevelMapper stLevelMapper;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
+    private StLevelService levelService;
 
     @Override
     public Result createOneRP(StRoleUser stRoleUser) {
@@ -65,7 +80,7 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public List<PersonnelRoster> importTeacherAndStudentExcel(MultipartFile file) {
+    public List<PersonnelRoster> importTeacherAndStudentExcel(MultipartFile file) throws IOException {
         try (InputStream inputStream = file.getInputStream()) {
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet sheet = workbook.getSheetAt(0); // 假设 Excel 文件中只有一个工作表
@@ -260,5 +275,96 @@ public class StUsersServiceImpl implements StUsersService {
     @Override
     public String getCurrentTerm() {
         return stUsersMapper.getCurrentTerm();
+    }
+
+    @Override
+    public Result validatePersonnelRoster(PersonnelRoster personnelRoster, String termid) {
+        // 1. 校验登录名称长度（3-15 个字符）
+        if (personnelRoster.getLoginname() == null || personnelRoster.getLoginname().length() < 3 
+            || personnelRoster.getLoginname().length() > 15) {
+            return Result.error("登录名称长度必须在 3-15 个字符之间！");
+        }
+
+        // 2. 校验登录名称是否唯一
+        List<String> stUsersList = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
+        if (!CollUtil.isEmpty(stUsersList)) {
+            return Result.error("登录名称 '" + personnelRoster.getLoginname() + "' 已经被注册！");
+        }
+
+        // 3. 校验所属院系的合法性
+        if (personnelRoster.getObsname() == null) {
+            return Result.error("所属院系不能为空！");
+        }
+        
+        QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("obsname", personnelRoster.getObsname())
+                    .eq("termid", termid);
+        
+        // 根据分类（学生/教师）校验层级
+        String catelog = personnelRoster.getCatelog();
+        if (catelog == null) {
+            return Result.error("人员分类不能为空！");
+        }
+        
+        CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(catelog));
+        
+        // 获取学生和教师的层级配置
+        List<StLevel> levelList = levelService.list().stream()
+                .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
+                .collect(Collectors.toList());
+        
+        Long teacherObsDeep = null;
+        Long studentObsDeep = null;
+        for (StLevel stLevel : levelList) {
+            if (Objects.equals(stLevel.getStudent(), "1")) {
+                studentObsDeep = stLevel.getObsdeep();
+            }
+            if (Objects.equals(stLevel.getTeacher(), "1")) {
+                teacherObsDeep = stLevel.getObsdeep();
+            }
+        }
+        
+        if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
+            if (studentObsDeep == null) {
+                return Result.error("系统配置错误：未找到学生层级配置！");
+            }
+            queryWrapper.eq("obsdeep", studentObsDeep);
+        } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
+            if (teacherObsDeep == null) {
+                return Result.error("系统配置错误：未找到教师层级配置！");
+            }
+            queryWrapper.eq("obsdeep", teacherObsDeep);
+        }
+        
+        List<SmObs> smObsList = smObsService.list(queryWrapper);
+        List<String> obsIdList = smObsList.stream().map(SmObs::getId).collect(java.util.stream.Collectors.toList());
+        
+        if (CollUtil.isEmpty(obsIdList)) {
+            return Result.error("所属院系或层级不匹配：'" + personnelRoster.getObsname() + "' 不存在或者层级配置不正确！");
+        }
+        
+        // 4. 校验编号（学号/工号）的唯一性
+        if (personnelRoster.getPersonnelno() == null || personnelRoster.getPersonnelno().trim().isEmpty()) {
+            return Result.error("编号（学号/工号）不能为空！");
+        }
+        
+        if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
+            QueryWrapper<SmStudent> stuQueryWrapper = new QueryWrapper<>();
+            stuQueryWrapper.eq("stuno", personnelRoster.getPersonnelno());
+            List<SmStudent> studentList = studentService.list(stuQueryWrapper);
+            if (CollUtil.isNotEmpty(studentList)) {
+                return Result.error("学号 '" + personnelRoster.getPersonnelno() + "' 已存在！");
+            }
+        } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
+            QueryWrapper<SmTeacher> teacherQueryWrapper = new QueryWrapper<>();
+            teacherQueryWrapper.eq("jobno", personnelRoster.getPersonnelno());
+            List<SmTeacher> teacherList = teacherService.list(teacherQueryWrapper);
+            if (CollUtil.isNotEmpty(teacherList)) {
+                return Result.error("工号 '" + personnelRoster.getPersonnelno() + "' 已存在！");
+            }
+        }
+        
+        // 所有校验通过
+        return Result.success();
     }
 }

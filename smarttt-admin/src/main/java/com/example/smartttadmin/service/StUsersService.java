@@ -57,4 +57,12 @@ public interface StUsersService{
     Result searchPerson(String inform, String catelog);
 
     String getCurrentTerm();
+
+    /**
+     * 校验单个人员数据的合法性
+     * @param personnelRoster 人员数据
+     * @param termid 学期 ID
+     * @return 校验结果
+     */
+    Result validatePersonnelRoster(PersonnelRoster personnelRoster, String termid);
 }

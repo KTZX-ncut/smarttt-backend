@@ -1,12 +1,16 @@
 package com.example.smartttadmin.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
+import com.example.smartttadmin.enums.CateLogEnum;
 import com.example.smartttadmin.listeners.PersonnelListenerExcel;
 import com.example.smartttadmin.pojo.PersonnelExcel;
+import com.example.smartttadmin.pojo.SmObs;
+import com.example.smartttadmin.pojo.StLevel;
 import com.example.smartttadmin.service.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,6 +22,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 
@@ -38,6 +44,7 @@ public class PersonnelMangtController {
     private TeacherService teacherService;
     @Resource
     private StLevelService levelService;
+    
     @GetMapping
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998",isReadOnly = true)
     public Result getSmObsTree(HttpServletRequest request){
@@ -70,13 +77,52 @@ public class PersonnelMangtController {
      * 新建教师/学生
      * @param personnelRoster
      * @return
-     * 暂定不用修改，因为批量导入文件是后端来处理
      */
     @PostMapping("/create")
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
     public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-        return smObsService.createOnePersonnelRoster(personnelRoster,token.getTermid());
+        
+        // 先校验数据的合法性
+        Result validateResult = stUsersService.validatePersonnelRoster(personnelRoster, token.getTermid());
+        if (!validateResult.getCode().equals(200)) {
+            return validateResult;
+        }
+        
+        // 校验通过后，设置 obsid 并创建
+        // 根据 obsname 获取 obsid
+        QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("obsname", personnelRoster.getObsname())
+                    .eq("termid", token.getTermid());
+        
+        CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
+        List<StLevel> levelList = levelService.list().stream()
+                .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
+                .collect(Collectors.toList());
+        
+        Long teacherObsDeep = null;
+        Long studentObsDeep = null;
+        for (StLevel stLevel : levelList) {
+            if (Objects.equals(stLevel.getStudent(), "1")) {
+                studentObsDeep = stLevel.getObsdeep();
+            }
+            if (Objects.equals(stLevel.getTeacher(), "1")) {
+                teacherObsDeep = stLevel.getObsdeep();
+            }
+        }
+        
+        if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
+            queryWrapper.eq("obsdeep", studentObsDeep);
+        } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
+            queryWrapper.eq("obsdeep", teacherObsDeep);
+        }
+        
+        List<SmObs> smObsList = smObsService.list(queryWrapper);
+        if (!smObsList.isEmpty()) {
+            personnelRoster.setObsid(smObsList.get(0).getId());
+        }
+        
+        return smObsService.createOnePersonnelRoster(personnelRoster, token.getTermid());
     }
 
     @PostMapping("/delete")
