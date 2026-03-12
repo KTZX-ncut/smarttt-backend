@@ -57,4 +57,8 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
         return ideologyValueMapper.selectById(id);
     }
 
+    @Override
+    public List<IdeologyValue> selectValueTypes(String courseId) {
+        return ideologyValueMapper.selectValueTypes(courseId);
+    }
 }

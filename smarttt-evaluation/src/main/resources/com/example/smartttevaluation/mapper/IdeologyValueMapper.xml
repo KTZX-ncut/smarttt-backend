@@ -44,4 +44,14 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectValueTypes" resultType="com.example.smartttevaluation.pojo.IdeologyValue">
+        SELECT
+            id, parent_id AS parentId, vname, remark,
+            course_id AS courseId, leaf,
+            level, create_time AS createTime, update_time AS updateTime
+        FROM v_ideology_value
+        WHERE course_id = #{courseId} AND level = 1
+        ORDER BY id ASC
+    </select>
+
 </mapper>

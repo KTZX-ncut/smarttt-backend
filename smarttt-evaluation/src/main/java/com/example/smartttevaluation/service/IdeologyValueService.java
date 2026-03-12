@@ -21,4 +21,9 @@ public interface IdeologyValueService {
     List<IdeologyValue> selectAllNode(String courseId);
 
     IdeologyValue selectById(String id);
+
+    /**
+     * 获取 V 类型列表（一级节点）
+     */
+    List<IdeologyValue> selectValueTypes(String courseId);
 }

@@ -134,4 +134,16 @@ public class IdeologyValueController {
         });
         return Result.ok().data(treeList);
     }
+
+    /**
+     * 获取 V 类型列表（一级节点）
+     */
+    @GetMapping("/type")
+    @AuthRequired
+    public Result selectValueTypes(HttpServletRequest request){
+        Token token = getTokenFromContext();
+        String courseId = token.getObsid();
+        List<IdeologyValue> ideologyValueList = ideologyValueService.selectValueTypes(courseId);
+        return Result.ok().data(ideologyValueList);
+    }
 }
