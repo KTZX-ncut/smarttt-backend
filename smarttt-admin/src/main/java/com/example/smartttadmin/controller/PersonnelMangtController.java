@@ -85,7 +85,52 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
     public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-        return smObsService.createOnePersonnelRoster(personnelRoster,token.getTermid());
+
+        // 先校验数据的合法性
+        Result validateResult = stUsersService.validatePersonnelRoster(personnelRoster, token.getTermid());
+        if (!validateResult.getCode().equals(200)) {
+            return validateResult;
+        }
+
+        // 校验通过后，设置 obsid 并创建
+        // 根据 obsname 获取 obsid
+        QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("obsname", personnelRoster.getObsname())
+                .eq("termid", token.getTermid());
+
+        // 根据 obsname 和层级获取 obsid
+        CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
+        List<StLevel> levelList = levelService.list().stream()
+                .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
+                .collect(Collectors.toList());
+
+        Long teacherObsDeep = null;
+        Long studentObsDeep = null;
+        for (StLevel stLevel : levelList) {
+            if (Objects.equals(stLevel.getStudent(), "1")) {
+                studentObsDeep = stLevel.getObsdeep();
+            }
+            if (Objects.equals(stLevel.getTeacher(), "1")) {
+                teacherObsDeep = stLevel.getObsdeep();
+            }
+        }
+
+        List<SmObs> smObsList;
+        if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
+            queryWrapper.eq("obsdeep", studentObsDeep);
+        } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
+            queryWrapper.eq("obsdeep", teacherObsDeep);
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, token.getTermid());
+        } else {
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, token.getTermid());
+        }
+
+         smObsList = smObsService.list(queryWrapper);
+        if (!smObsList.isEmpty()) {
+            personnelRoster.setObsid(smObsList.get(0).getId());
+        }
+
+        return smObsService.createOnePersonnelRoster(personnelRoster, token.getTermid());
     }
 
     @PostMapping("/delete")
