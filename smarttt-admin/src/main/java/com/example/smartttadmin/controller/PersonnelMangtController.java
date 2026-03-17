@@ -85,43 +85,7 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
     public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-        
-        // 先校验数据的合法性
-        Result validateResult = stUsersService.validatePersonnelRoster(personnelRoster, token.getTermid());
-        if (!validateResult.getCode().equals(200)) {
-            return validateResult;
-        }
-        
-        // 校验通过后，设置 obsid 并创建
-        // 根据 obsname 和层级获取 obsid
-        CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
-        List<StLevel> levelList = levelService.list().stream()
-                .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
-                .collect(Collectors.toList());
-        
-        Long teacherObsDeep = null;
-        Long studentObsDeep = null;
-        for (StLevel stLevel : levelList) {
-            if (Objects.equals(stLevel.getStudent(), "1")) {
-                studentObsDeep = stLevel.getObsdeep();
-            }
-            if (Objects.equals(stLevel.getTeacher(), "1")) {
-                teacherObsDeep = stLevel.getObsdeep();
-            }
-        }
-        
-        List<SmObs> smObsList;
-        if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
-            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, token.getTermid());
-        } else {
-            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, token.getTermid());
-        }
-        
-        if (!smObsList.isEmpty()) {
-            personnelRoster.setObsid(smObsList.get(0).getId());
-        }
-        
-        return smObsService.createOnePersonnelRoster(personnelRoster, token.getTermid());
+        return smObsService.createOnePersonnelRoster(personnelRoster,token.getTermid());
     }
 
     @PostMapping("/delete")
@@ -132,6 +96,85 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
     public Result UpdatePersonnalRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
+        
+        // 如果需要更新 obsname，则进行层级校验
+        if (personnelRoster.getObsname() != null && !personnelRoster.getObsname().isEmpty()) {
+            // 获取学生和教师的层级配置
+            List<StLevel> levelList = levelService.list().stream()
+                    .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
+                    .collect(Collectors.toList());
+            
+            Long teacherObsDeep = null;
+            Long studentObsDeep = null;
+            for (StLevel stLevel : levelList) {
+                if (Objects.equals(stLevel.getStudent(), "1")) {
+                    studentObsDeep = stLevel.getObsdeep();
+                }
+                if (Objects.equals(stLevel.getTeacher(), "1")) {
+                    teacherObsDeep = stLevel.getObsdeep();
+                }
+            }
+            
+            // 根据人员分类校验层级
+            CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
+            List<SmObs> smObsList;
+            
+            if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
+                // 学生必须挂在班级层级 (obsdeep=5)
+                smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, token.getTermid());
+                
+                // 额外校验：学生的班级必须属于某个专业（即班级的父节点必须是专业，obsdeep=4）
+                if (!smObsList.isEmpty()) {
+                    SmObs classObs = smObsList.get(0);
+                    // 检查班级的父节点是否为专业 (obsdeep=4)
+                    if (classObs.getPid() != null) {
+                        SmObs parentObs = smObsMapper.getSmObsByID(classObs.getPid());
+                        if (parentObs == null || parentObs.getObsdeep() != 4) {
+                            return Result.error("学生只能分配到专业下面的班级！");
+                        }
+                        
+                        // 校验是否是同一个学院的学生
+                        // 1. 获取学生原来的 obsid
+                        SmObs oldClassObs = smObsMapper.getObsByStuID(personnelRoster.getId());
+                        if (oldClassObs != null && oldClassObs.getId() != null) {
+                            // 2. 获取原班级的父节点（专业）
+                            SmObs oldParentObs = smObsMapper.getSmObsByID(oldClassObs.getPid());
+                            if (oldParentObs != null) {
+                                // 3. 获取原专业的父节点（学院）
+                                SmObs oldCollegeObs = smObsMapper.getSmObsByID(oldParentObs.getPid());
+                                
+                                // 4. 获取新班级的父节点（专业）的父节点（学院）
+                                SmObs newCollegeObs = null;
+                                if (parentObs.getPid() != null) {
+                                    newCollegeObs = smObsMapper.getSmObsByID(parentObs.getPid());
+                                }
+                                
+                                // 5. 比较新旧学院是否一致
+                                if (oldCollegeObs != null && newCollegeObs != null) {
+                                    if (!Objects.equals(oldCollegeObs.getId(), newCollegeObs.getId())) {
+                                        return Result.error("学生不能跨学院调整班级！当前学院：" + 
+                                                oldCollegeObs.getObsname() + "，目标学院：" + newCollegeObs.getObsname());
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        return Result.error("班级所属的专业不存在！");
+                    }
+                }
+            } else {
+                // 教师层级校验
+                smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, token.getTermid());
+            }
+            
+            if (smObsList.isEmpty()) {
+                return Result.error("所属院系/班级不存在或者层级不匹配！");
+            }
+            
+            // 校验通过，设置 obsid
+            personnelRoster.setObsid(smObsList.get(0).getId());
+        }
+        
         return stUsersService.updateOnePersonnelRoster(personnelRoster,token.getTermid());
     }
     /**
