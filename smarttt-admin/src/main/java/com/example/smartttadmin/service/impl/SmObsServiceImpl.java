@@ -416,6 +416,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
                     // 验证插入是否成功（通过影响行数）
                     // 注意：这里假设 createOneObs 返回 int，如果不返回可以改其他验证方式
+                    SmObs justInserted = smObsMapper.getSmObsByID(newId);
+                    String kk =  justInserted != null ? "找到" : "未找到";
+                    log.debug("立即查询结果：{}"+kk);
                 } catch (DataAccessException e) {
                     log.debug("创建机构记录失败：id=" + newId + "，错误=" + e.getMessage());
                     throw new RuntimeException("创建机构记录失败，ID=" + newId, e);
@@ -423,7 +426,6 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                     log.debug("创建机构记录发生未知异常：id=" + newId + "，错误=" + e.getMessage());
                     throw new RuntimeException("创建机构记录异常，ID=" + newId, e);
                 }
-
                 try {
                     checkSmObs(smObs);
                     log.debug("成功创建新子机构记录：id=" + newId);
