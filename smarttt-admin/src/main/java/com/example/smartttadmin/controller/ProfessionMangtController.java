@@ -38,8 +38,14 @@ public class ProfessionMangtController {
     @PostMapping("/create")
     @AuthRequired(type = "admin", menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90")
     public Result createOneProfession(@RequestBody CmProfession cmProfession, HttpServletRequest request){
-        String ID = generateEnhancedID("sm_obs");
         Token token = getTokenFromContext();
+        
+        // 校验：只有 obsdeep=3 的用户才能创建专业
+        if (token.getObsdeep() != 3) {
+            return Result.error("只有系层级才能创建教师！");
+        }
+        
+        String ID = generateEnhancedID("sm_obs");
         SmObs smObs = new SmObs(ID, token.getObsid(), token.getObsdeep()+1,cmProfession.getProname(),cmProfession.getRemark(), token.getTermid());
         Result result = smObsService.createOneObs(smObs);
         if(result.getCode() != 200)return result;

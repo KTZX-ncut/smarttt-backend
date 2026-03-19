@@ -236,28 +236,19 @@ public class CourseStudentMangtController {
             return Result.error("系统错误：未找到当前学期！");
         }
             
-        // 2. 获取学生的层级深度配置
-        List<StLevel> levelList = stLevelMapper.selectList(null).stream()
-                .filter(t -> Objects.equals(t.getStudent(), "1"))
-                .collect(Collectors.toList());
-            
-        Long studentObsDeep = null;
-        for (StLevel stLevel : levelList) {
-            if (Objects.equals(stLevel.getStudent(), "1")) {
-                studentObsDeep = stLevel.getObsdeep();
-                break;
-            }
-        }
-            
-        if (studentObsDeep == null) {
-            return Result.error("系统配置错误：未找到学生层级配置！");
-        }
-            
-        // 3. 根据 obsname 和层级深度查询，验证所属院系是否存在且层级正确
-        List<SmObs> smObsList = smObsMapper.getObsByObsNameAndDeep(obsname, studentObsDeep, currentTermId);
+        // 2. 根据 obsname 查询组织信息（不限制层级深度）
+        List<SmObs> smObsList = smObsMapper.selectList(new LambdaQueryWrapper<SmObs>()
+                .eq(SmObs::getObsname, obsname)
+                .eq(SmObs::getTermid, currentTermId));
             
         if (smObsList.isEmpty()) {
-            return Result.error("所属院系或层级不匹配：'" + obsname + "' 不存在或者层级配置不正确！");
+            return Result.error("所属院系不存在：'" + obsname + "'");
+        }
+        
+        // 3. 校验组织的 obsdeep 必须等于 5
+        SmObs matchedObs = smObsList.get(0);
+        if (!Objects.equals(matchedObs.getObsdeep(), 5)) {
+            return Result.error("学生只能创建在 obsdeep=5 的组织下！当前组织 '" + obsname + "' 的层级深度为 " + matchedObs.getObsdeep() + "。");
         }
             
         // 所有校验通过

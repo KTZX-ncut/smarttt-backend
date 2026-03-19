@@ -177,32 +177,6 @@ public class PersonnelMangtController {
                         if (parentObs == null || parentObs.getObsdeep() != 4) {
                             return Result.error("学生只能分配到专业下面的班级！");
                         }
-                        
-                        // 校验是否是同一个学院的学生
-                        // 1. 获取学生原来的 obsid
-                        SmObs oldClassObs = smObsMapper.getObsByStuID(personnelRoster.getId());
-                        if (oldClassObs != null && oldClassObs.getId() != null) {
-                            // 2. 获取原班级的父节点（专业）
-                            SmObs oldParentObs = smObsMapper.getSmObsByID(oldClassObs.getPid());
-                            if (oldParentObs != null) {
-                                // 3. 获取原专业的父节点（学院）
-                                SmObs oldCollegeObs = smObsMapper.getSmObsByID(oldParentObs.getPid());
-                                
-                                // 4. 获取新班级的父节点（专业）的父节点（学院）
-                                SmObs newCollegeObs = null;
-                                if (parentObs.getPid() != null) {
-                                    newCollegeObs = smObsMapper.getSmObsByID(parentObs.getPid());
-                                }
-                                
-                                // 5. 比较新旧学院是否一致
-                                if (oldCollegeObs != null && newCollegeObs != null) {
-                                    if (!Objects.equals(oldCollegeObs.getId(), newCollegeObs.getId())) {
-                                        return Result.error("学生不能跨学院调整班级！当前学院：" + 
-                                                oldCollegeObs.getObsname() + "，目标学院：" + newCollegeObs.getObsname());
-                                    }
-                                }
-                            }
-                        }
                     } else {
                         return Result.error("班级所属的专业不存在！");
                     }
