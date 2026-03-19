@@ -9,6 +9,7 @@ import com.example.smartttadmin.service.StUsersService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -372,28 +373,101 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Transactional
-    public void change(List<SmObsTree> smObsTrees, String pid,String termid) throws JsonProcessingException {
-        for(SmObsTree smObsTree:smObsTrees){
+    public void change(List<SmObsTree> smObsTrees, String pid, String termid) throws JsonProcessingException {
+        log.debug("开始执行机构变更操作，参数：pid=" + pid + "，termid=" + termid + "，机构数量=" + (smObsTrees != null ? String.valueOf(smObsTrees.size()) : "0"));
+
+        if (smObsTrees == null || smObsTrees.isEmpty()) {
+            log.debug("机构列表为空，直接返回");
+            return;
+        }
+
+        for (SmObsTree smObsTree : smObsTrees) {
             String newId = null;
+
+            if (smObsTree == null) {
+                log.debug("SmObsTree对象为null，跳过处理");
+                continue;
+            }
+
+            log.debug("处理机构：id=" + smObsTree.getId() + "，name=" + smObsTree.getObsname());
+
             SmObs smObs = smObsMapper.getSmObsByID(smObsTree.getId());
-            if(!Objects.equals(pid, "0")) {
+
+            if (smObs == null) {
+                log.debug("未找到对应的SmObs记录：id=" + smObsTree.getId());
+                throw new RuntimeException("未找到ID为 " + smObsTree.getId() + " 的机构记录");
+            }
+
+            if (!Objects.equals(pid, "0")) {
                 newId = generateEnhancedID("sm_obs");
                 String oldId = smObs.getId();
+
+                log.debug("更新机构ID：oldId=" + oldId + "，newId=" + newId + "，pid=" + pid);
+
                 smObs.setId(newId);
                 smObs.setPid(pid);
                 smObs.setTermid(termid);
-                createOneObs(smObs);
-                checkSmObs(smObs);
-                List<PersonnelRoster> personnelRosterList = stUsersMapper.getTeacherByObsid(oldId);
-                personnelRosterList.addAll(stUsersMapper.getStudentByObsid(oldId));
+                smObs.setObsname(smObs.getObsname());
+
+                // 1. 创建新机构记录
+                try {
+                    createOneObs(smObs);
+                    log.debug("成功创建新机构记录：id=" + newId);
+
+                    // 验证插入是否成功（通过影响行数）
+                    // 注意：这里假设 createOneObs 返回 int，如果不返回可以改其他验证方式
+                } catch (DataAccessException e) {
+                    log.debug("创建机构记录失败：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建机构记录失败，ID=" + newId, e);
+                } catch (Exception e) {
+                    log.debug("创建机构记录发生未知异常：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建机构记录异常，ID=" + newId, e);
+                }
+
+                try {
+                    checkSmObs(smObs);
+                    log.debug("成功创建新子机构记录：id=" + newId);
+
+                    // 验证插入是否成功（通过影响行数）
+                    // 注意：这里假设 createOneObs 返回 int，如果不返回可以改其他验证方式
+                } catch (DataAccessException e) {
+                    log.debug("创建子机构记录失败：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建机构记录失败，ID=" + newId, e);
+                } catch (Exception e) {
+                    log.debug("创建子机构记录发生未知异常：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建子机构记录异常，ID=" + newId, e);
+                }
+                ;
+
+                // 2. 处理人员关联
+                List<PersonnelRoster> teacherList = stUsersMapper.getTeacherByObsid(oldId);
+                List<PersonnelRoster> studentList = stUsersMapper.getStudentByObsid(oldId);
+
+                List<PersonnelRoster> personnelRosterList = new ArrayList<>();
+                personnelRosterList.addAll(teacherList);
+                personnelRosterList.addAll(studentList);
+
+                log.debug("找到人员记录：oldId=" + oldId + "，教师=" + teacherList.size() + "，学生=" + studentList.size() + "，总数=" + personnelRosterList.size());
+
+                int successCount = 0;
                 for (PersonnelRoster personnelRoster : personnelRosterList) {
                     personnelRoster.setObsid(newId);
-                    stUsersService.updateOnePersonnelRoster(personnelRoster,termid);
+                    stUsersService.updateOnePersonnelRoster(personnelRoster, termid);
+
                 }
+                log.debug("人员关联更新完成，共更新" + personnelRosterList.size() + "条，成功验证" + successCount + "条");
+            } else {
+                newId = smObs.getId();
+                log.debug("pid为0，保持原机构ID：" + newId);
             }
-            else newId = smObs.getId();
-            if(smObsTree.getChildren()!=null)change(smObsTree.getChildren(),newId,termid);
+
+            if (smObsTree.getChildren() != null && !smObsTree.getChildren().isEmpty()) {
+                log.debug("开始处理子节点：parentId=" + newId + "，子节点数量=" + smObsTree.getChildren().size());
+                change(smObsTree.getChildren(), newId, termid);
+                log.debug("子节点处理完成：parentId=" + newId);
+            }
         }
+        log.debug("机构变更操作完成：pid=" + pid + "，termid=" + termid);
     }
 
     private String getPreTerm(String currentTerm) {
