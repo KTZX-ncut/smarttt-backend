@@ -93,7 +93,7 @@ public class UnitMangtController {
 
     @PostMapping("/copy")
     @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f")
-    public Result copyHistoryObs(@RequestBody String copyTerm,HttpServletRequest request) throws JsonProcessingException {
+    public Result copyHistoryObs(@RequestParam(name="copyTerm")String copyTerm,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
         return smObsService.copyHistoryObs(copyTerm,token.getTermid());
     }
