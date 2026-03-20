@@ -3,6 +3,8 @@ package com.example. smartttcourse.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.example.smartttcourse.Utils.AuthRequired;
+import com.example.smartttcourse.Utils.CommonFunctions;
+import com.example.smartttcourse.Utils.JwtTokenUtils;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.exception.res.ResponseEnum;
 import com.example.smartttcourse.exception.utils.SmartAssert;
@@ -58,10 +60,11 @@ public class CourseController {
      * @return
      */
 
-    @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
+    // @AuthRequired(type = "admin",menu = "531500340-0ee32ded-100b-4505-95c4-65d5e9b3d93c")
     @GetMapping("/allterm")
     public Result getAllTerm(HttpServletRequest request){
-        Token token = getTokenFromContext();
+        String strToken = request.getHeader("token");
+        Token token = JwtTokenUtils.parseToken(strToken, CommonFunctions.TokenSK);
         return cmTermService.getHistoryTerm(token.getTermid());
     }
 
