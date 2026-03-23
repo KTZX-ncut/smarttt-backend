@@ -95,10 +95,10 @@ public interface StUsersMapper {
     @Insert("update st_users set pwd = #{pwd} where id = #{id}")
     void updatePwd(@Param("id") String id, @Param("pwd") String pwd);
 
-    @Select("select usersid as id from sm_teacher where obsid = #{id}")
+    @Select("select usersid as id,2 as catelog from sm_teacher where obsid = #{id}")
     List<PersonnelRoster> getTeacherByObsid(String id);
 
-    @Select("select usersid as id from sm_student where obsid = #{id}")
+    @Select("select usersid as id,1 as catelog from sm_student where obsid = #{id}")
     List<PersonnelRoster> getStudentByObsid(String id);
 
     @Select("SELECT usersid AS id, stuno AS personnelno, loginname, username FROM sm_student " +

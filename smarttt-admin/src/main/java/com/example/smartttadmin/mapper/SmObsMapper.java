@@ -164,4 +164,8 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     List<SmObs> getAllHistoryObs(String historyTerm);
 
     void updateCourseProfession(@Param("ids") List<String> deleteList);
+
+    void deleteClassByIDs(@Param("ids") List<String> ids);
+
+    void deleteProfessionByIDs(@Param("ids") List<String> ids);
 }

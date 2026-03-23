@@ -109,6 +109,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                     queue.addAll(childId);
                 }
             }
+            smObsMapper.deleteClassByIDs(deleteList);
+            smObsMapper.deleteProfessionByIDs(deleteList);
             smObsMapper.deleteObsByIDs(deleteList);
             stRolesMapper.deleteRolesByObsid(deleteList);
             stUsersMapper.updateTeacherByObsid(deleteList);
@@ -442,6 +444,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                 ;
 
                 // 2. 处理人员关联
+//                没有catelog
                 List<PersonnelRoster> teacherList = stUsersMapper.getTeacherByObsid(oldId);
                 List<PersonnelRoster> studentList = stUsersMapper.getStudentByObsid(oldId);
 
