@@ -171,9 +171,23 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         int loginNameLen = personnelRoster.getLoginname().length();
         if(loginNameLen<3 || loginNameLen>15)
             return Result.error("用户名长度在3-15个字符之间");
-        List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(),termid);
-        if(obsIDList.isEmpty())
-            return Result.error("所属院系/班级输入错误");
+
+        List<SmObs> smObsList;
+        if (Objects.equals(personnelRoster.getCatelog(), "1")) { // 学生
+            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(), termid);
+            if (obsIDList.isEmpty()) {
+                return Result.error("所属院系/班级输入错误");
+            }
+            personnelRoster.setObsid(obsIDList.get(0));
+        } else { // 教师
+            // 教师只能在系下新增，控制 obsdeep=3
+            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), 3L, termid);
+            if (smObsList.isEmpty()) {
+                return Result.error("教师只能在系下新增(层级不匹配)！");
+            }
+            personnelRoster.setObsid(smObsList.get(0).getId());
+        }
+
         List<String> stUsersList  = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
         if(!stUsersList.isEmpty())return Result.error("登录名已存在");
         String usersId = generateEnhancedID("st_users");
@@ -181,16 +195,16 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
         stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
 //        String currentTerm = stUsersMapper.getCurrentTerm();
-        HistoryObs historyObs = new HistoryObs(termid,obsIDList.get(0));
+        HistoryObs historyObs = new HistoryObs(termid,personnelRoster.getObsid());
         List<HistoryObs> historyObsList  = new ArrayList<>();
         historyObsList.add(historyObs);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){
             stUsersMapper.createOneSmStudent(generateEnhancedID("sm_student"),
-                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
+                    personnelRoster.getObsid(),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
         }
         else {
             stUsersMapper.createOneSmTeacher(generateEnhancedID("sm_teacher"),
-                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
+                    personnelRoster.getObsid(),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
         }
         return Result.success();
     }
