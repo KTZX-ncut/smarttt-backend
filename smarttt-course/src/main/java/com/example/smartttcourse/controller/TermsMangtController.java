@@ -39,7 +39,7 @@ public class TermsMangtController {
     }
 
     /**
-     * 删除学期
+     * 删除学期，缺少删除班级和专业，以及学期相关的其它信息
      * @param ids
      * @return
      */

@@ -33,6 +33,7 @@
             course_id AS courseId, leaf,
             level, create_time AS createTime, update_time AS updateTime
         FROM v_ideology_value
+        WHERE course_id = #{courseId}
         ORDER BY level ASC, parent_id ASC, id ASC
     </select>
     <select id="selectById" resultType="com.example.smartttevaluation.pojo.IdeologyValue">

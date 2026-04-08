@@ -173,4 +173,8 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     List<SmObs> getObsByObsNameAndDeep(@Param("obsname") String obsname, @Param("obsdeep") Long obsdeep, @Param("termid") String termid);
 
     void updateCourseProfession(@Param("ids") List<String> deleteList);
+
+    void deleteClassByIDs(@Param("ids") List<String> ids);
+
+    void deleteProfessionByIDs(@Param("ids") List<String> ids);
 }

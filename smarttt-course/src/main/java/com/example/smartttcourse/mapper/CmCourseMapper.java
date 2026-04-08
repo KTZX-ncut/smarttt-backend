@@ -26,7 +26,12 @@ public interface CmCourseMapper {
 
     void deleteCourseByID(@Param("ids") List<String> ids);
 
-    @Select("select id,courseChineseName, courseEnglishName, courseCode, professionName,professionId  from cm_course where schooltermId = #{termID} and professionId = #{obsid}")
+    @Select("SELECT c.id, c.courseChineseName, c.courseEnglishName, c.courseCode, " +
+            "c.professionName, c.professionId " +
+            "FROM cm_course c " +
+            "INNER JOIN cm_profession p ON c.professionId = p.obsid " +
+            "WHERE c.schooltermId = #{termID} " +
+            "AND p.procode = (SELECT procode FROM cm_profession WHERE obsid = #{obsid})")
     List<SimpleCourse> historyCourseByTerm(@Param("termID") String termID,@Param("obsid") String obsid);
 
     @Select("select termname from cm_term where id = #{schooltermId}")
