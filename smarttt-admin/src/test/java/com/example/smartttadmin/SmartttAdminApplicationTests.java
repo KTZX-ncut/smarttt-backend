@@ -2,6 +2,7 @@ package com.example.smartttadmin;
 
 import com.example.smartttadmin.pojo.StMenus;
 import com.example.smartttadmin.pojo.StRoleMenu;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +29,7 @@ class SmartttAdminApplicationTests {
 
     }
     @Test
+    @Disabled("手动执行用，平时别自动跑")
     void createMenus() {
         String roleMenuID = generateEnhancedID("st_menus");
         mapper.createStMenus(new StMenus(roleMenuID,"复制往届课程","531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35","11",
