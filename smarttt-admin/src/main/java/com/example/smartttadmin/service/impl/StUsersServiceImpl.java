@@ -128,14 +128,14 @@ public class StUsersServiceImpl implements StUsersService {
     }
 
     @Override
-    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException {
+    public Result updateOnePersonnelRoster(PersonnelRoster personnelRoster){
         if(personnelRoster.getLoginname()!=null){
             int loginNameLen = personnelRoster.getLoginname().length();
             if(loginNameLen<3 || loginNameLen>15)
                 return Result.error("用户名长度在3-15个字符之间");
         }
         if(personnelRoster.getObsname()!=null){
-            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(),termid);
+            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
             if(obsIDList.isEmpty())
                 return Result.error("所属院系/班级输入错误");
             personnelRoster.setObsid(obsIDList.get(0));
@@ -148,51 +148,14 @@ public class StUsersServiceImpl implements StUsersService {
 
         stUsersMapper.updateUserByID(personnelRoster);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){//学生
-            stUsersMapper.updateStudentByID(changePersonHistoryObs(personnelRoster));
+            stUsersMapper.updateStudentByID(personnelRoster);
         }else{//老师
-            stUsersMapper.updateTeacherByID(changePersonHistoryObs(personnelRoster));
+            stUsersMapper.updateTeacherByID(personnelRoster);
         }
 
         return Result.success();
     }
 
-    /**
-     * 只能支持复制到当前学期
-     * @param personnelRoster
-     * @return
-     * @throws JsonProcessingException
-     */
-    private  PersonnelRoster changePersonHistoryObs(PersonnelRoster personnelRoster) throws JsonProcessingException {
-        String currentTermId = stUsersMapper.getCurrentTerm();
-        if(personnelRoster.getObsid()!=null){
-
-            String historyObsJson;
-            if(Objects.equals(personnelRoster.getCatelog(), "1")){
-                historyObsJson = smObsMapper.getStuHistoryObsByUserId(personnelRoster.getId());
-            }
-            else{
-                historyObsJson = smObsMapper.getTeaHistoryObsByUserId(personnelRoster.getId());
-            }
-            List<HistoryObs> historyObsList = new ArrayList<>();
-            if(historyObsJson!=null)historyObsList = jsonArrayToList(historyObsJson, HistoryObs.class);
-            boolean isFind = false;
-            for(HistoryObs historyObs : historyObsList){
-                if(Objects.equals(historyObs.getTermId(), currentTermId)){
-                    System.out.println(personnelRoster.getObsid()+"????????????");
-                    historyObs.setObsId(personnelRoster.getObsid());
-                    isFind = true;
-                    break;
-                }
-            }
-            if(!isFind){
-                HistoryObs historyObs = new HistoryObs(currentTermId,personnelRoster.getObsid());
-                historyObsList.add(historyObs);
-            }
-            historyObsJson = listToJsonArray(historyObsList);
-            personnelRoster.setRemark(historyObsJson);
-        }
-        return personnelRoster;
-    }
     @Override
     public Result getStudentByClassID(String id) {
         return Result.success(stUsersMapper.getStudentByID(id));

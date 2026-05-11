@@ -31,14 +31,13 @@ public class UnitMangtController {
     @GetMapping
     @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f",isReadOnly = true)
     Result getObsList(HttpServletRequest request){
-        Token token = getTokenFromContext();
-        return smObsService.getObsTree(token.getTermid());
+        return smObsService.getObsTree();
     }
     @GetMapping("/student")
     @AuthRequired(type = "admin",menu = "531500340-e7149e74-4856-4440-8d94-99f915731842",isReadOnly = true)
     Result getStudentObsList(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return smObsService.getObsTree(token.getTermid());
+        return smObsService.getObsTree();
     }
     @PostMapping("/create")
     @AuthRequired(type = "admin",menu = "531500340-155d2725-4be7-4e83-9ac0-88552a02023f")
@@ -56,7 +55,6 @@ public class UnitMangtController {
             smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
         }
         smObs.setId(generateEnhancedID("sm_obs"));
-        smObs.setTermid(token.getTermid());
         Result result = smObsService.createOneObs(smObs);
         if(result.getCode()!=200)return Result.error(result.getMsg());
         return smObsService.checkSmObs(smObs);

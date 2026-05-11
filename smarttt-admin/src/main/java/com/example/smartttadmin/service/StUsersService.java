@@ -38,7 +38,7 @@ public interface StUsersService{
 
     Result deleteRP(StRoleUser stRoleUser);
 
-    Result updateOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException;
+    Result updateOnePersonnelRoster(PersonnelRoster personnelRoster);
 
     Result getStudentByClassID(String id);
 

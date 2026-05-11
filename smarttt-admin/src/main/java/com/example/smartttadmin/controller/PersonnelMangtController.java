@@ -42,7 +42,7 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998",isReadOnly = true)
     public Result getSmObsTree(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return smObsService.getObsTree(token.getTermid());
+        return smObsService.getObsTree();
     }
 
     /**
@@ -55,14 +55,14 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998",isReadOnly = true)
     public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid, @RequestParam(name = "catelog")String catelog,HttpServletRequest request){
         Token token  = getTokenFromContext();
-        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,catelog,token.getTermid());
+        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,catelog);
     }
 
     @GetMapping("/student")
     @AuthRequired(type = "admin",menu = "531500340-e7149e74-4856-4440-8d94-99f915731842",isReadOnly = true)
     public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid,HttpServletRequest request){
         Token token  = getTokenFromContext();
-        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,"1",token.getTermid());
+        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,"1");
     }
 
 
@@ -76,7 +76,7 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
     public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-        return smObsService.createOnePersonnelRoster(personnelRoster,token.getTermid());
+        return smObsService.createOnePersonnelRoster(personnelRoster);
     }
 
     @PostMapping("/delete")
@@ -87,7 +87,7 @@ public class PersonnelMangtController {
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
     public Result UpdatePersonnalRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-        return stUsersService.updateOnePersonnelRoster(personnelRoster,token.getTermid());
+        return stUsersService.updateOnePersonnelRoster(personnelRoster);
     }
     /**
      * excel表格导入教师或者学生

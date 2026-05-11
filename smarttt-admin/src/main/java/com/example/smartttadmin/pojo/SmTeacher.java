@@ -16,5 +16,4 @@ public class SmTeacher {
   private String title;
   private String oftenclassroomid;
   private String createtime;
-  private String historyobs;
 }

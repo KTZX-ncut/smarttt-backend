@@ -30,11 +30,11 @@ public interface StUsersMapper {
             "(#{id},#{username},#{loginname},#{pwd},#{phone},#{status},#{catelog},#{remark},#{createtime})")
     void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
 
-    @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno,historyobs) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno},#{historyobs})")
-    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno,@Param("historyobs")String historyobs);
+    @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno})")
+    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno);
 
-    @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno,historyobs) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno},#{historyobs})")
-    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno,@Param("historyobs")String historyobs);
+    @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno})")
+    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno);
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
 
