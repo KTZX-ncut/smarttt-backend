@@ -38,16 +38,16 @@ public interface StUsersMapper {
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
 
-    @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
-            "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
-//    @Select("select COALESCE(cm_term.termname, '默认学期') as currentterm , " +
-//            "st_users.username , " +
-//            "st_roles.rolename, " +
-//            "st_roles.homeurl " +
-//            "from st_users " +
-//            "join st_roles on st_roles.id = #{roleid} " +
-//            " left join cm_term on cm_term.id = #{termid} " +
-//            " where st_users.id = #{id}")
+//    @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
+//            "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
+    @Select("select COALESCE(cm_term.termname, '默认学期') as currentterm , " +
+            "st_users.username , " +
+            "st_roles.rolename, " +
+            "st_roles.homeurl " +
+            "from st_users " +
+            "join st_roles on st_roles.id = #{roleid} " +
+            " left join cm_term on cm_term.id = #{termid} " +
+            " where st_users.id = #{id}")
     UserInfor getAllUserInfor(UserInforReq userInforReq);
 
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
