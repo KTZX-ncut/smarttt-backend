@@ -1,0 +1,59 @@
+name: 自动化部署构建-稳定版本
+
+on:
+  release:
+    types:
+      - published
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 拉取仓库代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2️⃣ 压缩项目（排除.git/.github，并忽略文件变化导致的错误）
+      - name: Compress source code
+        run: |
+          tar --exclude='.git' \
+              --exclude='.github' \
+              --warning=no-file-changed \
+              --ignore-failed-read \
+              -czf smarttt-backend.tar.gz .
+
+      # 3️⃣ 上传到服务器（使用 SSH 私钥）
+      - name: Upload tar to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "smarttt-backend.tar.gz"
+          target: "/home/smarttt/"  # 上传目标路径
+
+      # 4️⃣ 登录服务器执行解压与部署脚本
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/smarttt/smarttt-backend
+            docker-compose -f docker-compose.service.yml down
+            cd ..
+            rm -rf ./smarttt-backend/
+            echo "解压新版本..."
+            mkdir smarttt-backend
+            tar -xzf ./smarttt-backend.tar.gz -C ./smarttt-backend/ --overwrite
+            rm -rf ./smarttt-backend.tar.gz
+            echo "运行部署脚本..."
+            cd /home/pro
+            ./smarttt-backend.sh
+            docker restart nginx_mainsystem
