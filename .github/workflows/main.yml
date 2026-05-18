@@ -26,7 +26,7 @@ jobs:
 
       # 3️⃣ 上传到服务器（使用 SSH 私钥）
       - name: Upload tar to server
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.HOST120 }}
           username: ${{ secrets.USERNAME120 }}
