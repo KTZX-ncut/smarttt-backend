@@ -34,7 +34,7 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     @Select("select * from sm_obs")
     List<SmObs> getAllSmObsList();
     @Select("select * from sm_obs \n" +
-            "and obsdeep<=#{obsdeep};")
+            "where obsdeep<=#{obsdeep};")
     List<ObsRPTree>getRPTree(@Param("obsdeep")long obsdeep);
 
     /**
