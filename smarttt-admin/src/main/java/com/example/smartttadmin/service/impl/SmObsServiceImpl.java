@@ -376,6 +376,11 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         return obs.getPid();
     }
 
+    @Override
+    public List<ProfessionResponse> getAllProfessionListA() {
+        return smObsMapper.getAllProfessionListA();
+    }
+
     @Transactional
     public void change(List<SmObsTree> smObsTrees, String pid, String termid) throws JsonProcessingException {
         log.debug("开始执行机构变更操作，参数：pid=" + pid + "，termid=" + termid + "，机构数量=" + (smObsTrees != null ? String.valueOf(smObsTrees.size()) : "0"));

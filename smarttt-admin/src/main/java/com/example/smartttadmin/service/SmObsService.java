@@ -2,6 +2,7 @@ package com.example.smartttadmin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.smartttadmin.dto.PersonnelRoster;
+import com.example.smartttadmin.dto.ProfessionResponse;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmClass;
@@ -65,4 +66,6 @@ public interface SmObsService extends IService<SmObs> {
     Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException;
 
     String getPisById(String obsid);
+
+    List<ProfessionResponse> getAllProfessionListA();
 }

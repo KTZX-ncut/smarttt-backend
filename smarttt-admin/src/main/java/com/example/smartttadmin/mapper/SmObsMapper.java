@@ -152,4 +152,7 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
     void deleteClassByIDs(@Param("ids") List<String> ids);
 
     void deleteProfessionByIDs(@Param("ids") List<String> ids);
+
+    @Select("SELECT obsid AS id,proname,procode,reachpercent,remark FROM cm_profession")
+    List<ProfessionResponse> getAllProfessionListA();
 }

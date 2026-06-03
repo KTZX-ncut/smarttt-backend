@@ -2,6 +2,7 @@ package com.example.smartttadmin.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.example.smartttadmin.Utils.AuthRequired;
+import com.example.smartttadmin.dto.ProfessionResponse;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
 import com.example.smartttadmin.pojo.CmProfession;
@@ -27,17 +28,22 @@ import static com.example.smartttadmin.Utils.CommonFunctions.generateEnhancedID;
 public class ProfessionMangtController {
     @Autowired
     private SmObsService smObsService;
+
+
     @Autowired
     private StUsersService stUsersService;
     @GetMapping("")
     @ApiOperation(value = "获取专业列表", notes = "根据当前 token 的组织节点查询其下属专业列表。")
     @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getProfessionList(HttpServletRequest request){
-        Token token = getTokenFromContext();
-        // 获取学院的obsid
-        String pid = smObsService.getPisById(token.getObsid());
-        if (StrUtil.isEmpty(pid)) return Result.error("obsid不合法");
-        return smObsService.getAllProfessionList(pid);
+
+        List<ProfessionResponse> list = smObsService.getAllProfessionListA();
+//        Token token = getTokenFromContext();
+//        // 获取学院的obsid
+//        String pid = smObsService.getPisById(token.getObsid());
+//        if (StrUtil.isEmpty(pid)) return Result.error("obsid不合法");
+        //return smObsService.getAllProfessionList(pid);
+        return Result.success(list);
     }
 
     /**
