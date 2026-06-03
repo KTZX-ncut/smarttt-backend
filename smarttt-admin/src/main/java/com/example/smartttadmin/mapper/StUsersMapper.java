@@ -118,6 +118,6 @@ public interface StUsersMapper {
     void updateTeacherByObsid(@Param("ids")List<String> ids);
     void updateStudentByObsid(@Param("ids")List<String> ids);
 
-    @Select("select COUNT(1) FROM st_roleuser WHERE obsid=#{obsid} AND userid=#{userid} )")
+    @Select("select COUNT(1) FROM st_roleuser WHERE obsid=#{obsid} AND userid=#{userid}")
     Integer coutRoleUserByObsidAndUserid(@Param("obsid") String obsid, @Param("userid") String userid);
 }
