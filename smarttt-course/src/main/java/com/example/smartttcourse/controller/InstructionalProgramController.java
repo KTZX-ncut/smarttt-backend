@@ -12,6 +12,9 @@ import com.example.smartttcourse.factory.handler.CourseFileHandler;
 import com.example.smartttcourse.service.CmClassRoomService;
 import com.example.smartttcourse.service.CmCourseService;
 import com.example.smartttcourse.service.FileMangtService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.minio.StatObjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,7 @@ import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromCo
 @RestController
 @RequestMapping("/coursemangt/instructionalprogram")
 @Slf4j
+@Api(tags = "7. 教学大纲", description = "教学大纲文件的查询、上传、下载和删除接口")
 public class InstructionalProgramController {
     @Resource
     private CourseFileFactory courseFileFactory;
@@ -51,6 +55,7 @@ public class InstructionalProgramController {
     private CmClassRoomService classroomService;
 
     @GetMapping
+    @ApiOperation(value = "获取教学大纲文件列表", notes = "查询当前课程或课堂上下文下的教学大纲文件列表。")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
     public Result getInstructionalProgram(HttpServletRequest request){
         Token token = getTokenFromContext();
@@ -61,9 +66,10 @@ public class InstructionalProgramController {
     /**
      * 教学大纲上传文件
      */
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    @ApiOperation(value = "上传教学大纲文件", notes = "向当前课程或课堂上下文上传教学大纲文件。")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
-    public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
+    public Result TeachingProgramFileUpload(@ApiParam(value = "教学大纲文件", required = true) @RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
         String courseIdOrClassroomId = token.getObsid();
         String courseId = this.confirmCourseId(courseIdOrClassroomId);
@@ -93,8 +99,9 @@ public class InstructionalProgramController {
      * 下载
      */
     @GetMapping("/download/{fileName:.+}")
+    @ApiOperation(value = "下载教学大纲文件", notes = "按文件名下载教学大纲文件，支持分片 Range 下载。")
     @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public ResponseEntity<InputStreamResource> downloadFile(@ApiParam(value = "文件名", required = true, example = "teaching-program.pdf") @PathVariable String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception {
         try {
             CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.TEACHING_PROGRAM);
             StatObjectResponse fileInfo = handler.getFileInfo(fileName);
@@ -150,8 +157,9 @@ public class InstructionalProgramController {
      * @return
      */
     @GetMapping("/delete/{fileName:.+}")
+    @ApiOperation(value = "删除教学大纲文件", notes = "按文件名删除教学大纲文件。")
     @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
-    public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
+    public Result DeleteFile(@ApiParam(value = "文件名", required = true, example = "teaching-program.pdf") @PathVariable String fileName, HttpServletRequest request) {
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.TEACHING_PROGRAM);
         handler.deleteFile(fileName);
         return Result.success("删除成功！");

@@ -12,6 +12,9 @@ import com.example.smartttcourse.service.CmClassroomClassroommenuService;
 import com.example.smartttcourse.service.CmClassroomHomeworkinfoService;
 import com.example.smartttcourse.service.CmClassroomStudentService;
 import com.example.smartttcourse.service.SmObsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/coursemangt/classroommangt/student")
 @Slf4j
+@Api(tags = "6. 课堂学生管理", description = "课堂学生名单、导入、删除和层级查询接口")
 public class CourseStudentMangtController {
 
     private final CmClassroomStudentService cmClassroomStudentService;
@@ -52,12 +56,14 @@ public class CourseStudentMangtController {
      * 查询学生列表
      */
     @GetMapping("/list")
-    public Result getStudentList(@RequestParam("obsid") String obsid) {
+    @ApiOperation(value = "查询课堂学生列表", notes = "按课堂或组织节点 ID 查询学生列表。")
+    public Result getStudentList(@ApiParam(value = "课堂或组织节点 ID", required = true, example = "classroom-001") @RequestParam("obsid") String obsid) {
         return cmClassroomStudentService.getStudentList(obsid);
     }
 
 
     @GetMapping("/studentRP")
+    @ApiOperation(value = "获取学生负责人候选列表", notes = "查询学生负责人或课堂学生候选人员列表。")
     public Result StudentRPList() {
         String obsID = smObsService.getSchoolObs();
         return cmClassroomStudentService.getObsRPStudentList(obsID);
@@ -71,7 +77,8 @@ public class CourseStudentMangtController {
      */
     @PostMapping("/create")
     @Transactional(rollbackFor = Exception.class)
-    public Result createStudentClassRoom(@RequestBody List<CreateStudent> createStudentList) {
+    @ApiOperation(value = "将学生加入课堂", notes = "批量将学生加入指定课堂，并同步生成对应的作业和菜单记录。")
+    public Result createStudentClassRoom(@ApiParam(value = "学生加入课堂请求列表", required = true) @RequestBody List<CreateStudent> createStudentList) {
         ArrayList<CmClassroomStudent> list = new ArrayList<>();
         // 对数据去重
         HashSet<CreateStudent> createStudentHashSet = new HashSet<>();
@@ -116,9 +123,10 @@ public class CourseStudentMangtController {
      * @param file
      * @return
      */
-    @PostMapping("/import")
+    @PostMapping(value = "/import", consumes = "multipart/form-data")
     @Transactional(rollbackFor = Exception.class)
-    public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file, @RequestParam("classroomId") String classRoomId) {
+    @ApiOperation(value = "Excel 导入课堂学生", notes = "上传 Excel 文件并批量导入学生到指定课堂。")
+    public Result importTeacherAndStudent(@ApiParam(value = "Excel 文件", required = true) @RequestParam("file") MultipartFile file, @ApiParam(value = "课堂 ID", required = true, example = "classroom-001") @RequestParam("classroomId") String classRoomId) {
         List<CmClassroomStudent> classroomStudentList = cmClassroomStudentService.importClassRoomStudentExcel(file, classRoomId);
         // 批量插入
         cmClassroomStudentService.saveBatch(classroomStudentList);
@@ -151,7 +159,8 @@ public class CourseStudentMangtController {
      * @return
      */
     @DeleteMapping("/delete")
-    public Result deleteStudents(@RequestParam("stuIds") List<String> stuIds, @RequestParam("classRoomId") String classRoomId) {
+    @ApiOperation(value = "删除课堂中的指定学生", notes = "按学生 ID 列表从指定课堂中删除学生。")
+    public Result deleteStudents(@ApiParam(value = "学生 ID 列表", required = true) @RequestParam("stuIds") List<String> stuIds, @ApiParam(value = "课堂 ID", required = true, example = "classroom-001") @RequestParam("classRoomId") String classRoomId) {
         if (stuIds == null || stuIds.isEmpty() || classRoomId == null) {
             return Result.error(600, "非法请求");
         }
@@ -170,7 +179,8 @@ public class CourseStudentMangtController {
      * @return
      */
     @DeleteMapping("/deleteAll")
-    public Result deleteAllStudent(@RequestParam("classRoomId") String classRoomId) {
+    @ApiOperation(value = "删除课堂中的全部学生", notes = "删除指定课堂 ID 下的所有学生记录。")
+    public Result deleteAllStudent(@ApiParam(value = "课堂 ID", required = true, example = "classroom-001") @RequestParam("classRoomId") String classRoomId) {
         if (classRoomId == null || "".equals(classRoomId)) {
             return Result.error(600, "非法请求");
         }
@@ -206,6 +216,7 @@ public class CourseStudentMangtController {
      * 获取学生所属层级(班级/专业/系/院)
      */
     @GetMapping("/getStudentLevel")
+    @ApiOperation(value = "获取学生所属层级", notes = "返回学生在组织结构中的层级名称，例如班级、专业、系或学院。")
     public Result getStudentLevel() {
         String levelName = cmClassroomStudentService.getStudentLevel();
         return Result.ok().data(levelName);

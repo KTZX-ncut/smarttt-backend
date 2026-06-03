@@ -1,5 +1,7 @@
 package com.example.smartttcourse.exception.res;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "Result", description = "课程模块统一响应对象")
 public class Result {
+    @ApiModelProperty(value = "业务状态码，200 表示成功，其他值表示失败或异常", example = "200")
     private Integer code;//响应码，1 代表成功; 0 代表失败
+    @ApiModelProperty(value = "响应消息", example = "success")
     private String msg;  //响应信息 描述字符串
+    @ApiModelProperty(value = "业务数据体，结构随接口不同而变化")
     private Object data; //返回的数据
 
     //增删改 成功响应
