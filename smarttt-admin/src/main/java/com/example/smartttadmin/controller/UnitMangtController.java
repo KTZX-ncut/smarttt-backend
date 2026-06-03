@@ -53,13 +53,19 @@ public class UnitMangtController {
         Token token = getTokenFromContext();
         //同级新增
         if(Objects.equals(createUnitsReq.getType(), "1")){
-            smObs.setPid(createUnitsReq.getPid());
-            smObs.setObsdeep(createUnitsReq.getObsdeep());
+            if (Objects.equals(createUnitsReq.getObsdeep(),2L)){
+                smObs.setPid(createUnitsReq.getPid());
+                smObs.setObsdeep(createUnitsReq.getObsdeep());
+            }
+            else return Result.error("只允许创建学院！！！");
         }
         //下级新增
         else {
-            smObs.setPid(createUnitsReq.getId());
-            smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
+            if (Objects.equals(createUnitsReq.getObsdeep(),1L)){
+                smObs.setPid(createUnitsReq.getId());
+                smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
+            }else return Result.error("只允许创建学院！！！");
+
         }
         smObs.setId(generateEnhancedID("sm_obs"));
         Result result = smObsService.createOneObs(smObs);
