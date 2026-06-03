@@ -1,5 +1,6 @@
 package com.example.smartttadmin.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
@@ -33,7 +34,10 @@ public class ProfessionMangtController {
     @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
     public Result getProfessionList(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return smObsService.getAllProfessionList(token.getObsid());
+        // 获取学院的obsid
+        String pid = smObsService.getPisById(token.getObsid());
+        if (StrUtil.isEmpty(pid)) return Result.error("obsid不合法");
+        return smObsService.getAllProfessionList(pid);
     }
 
     /**

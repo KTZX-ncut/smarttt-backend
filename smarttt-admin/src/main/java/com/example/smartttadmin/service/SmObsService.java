@@ -63,4 +63,6 @@ public interface SmObsService extends IService<SmObs> {
 //    List<String> getObsIdByObsName(String obsname);
 
     Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException;
+
+    String getPisById(String obsid);
 }

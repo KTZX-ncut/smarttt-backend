@@ -370,6 +370,12 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         return Result.success();
     }
 
+    @Override
+    public String getPisById(String obsid) {
+        SmObs obs = smObsMapper.selectById(obsid);
+        return obs.getPid();
+    }
+
     @Transactional
     public void change(List<SmObsTree> smObsTrees, String pid, String termid) throws JsonProcessingException {
         log.debug("开始执行机构变更操作，参数：pid=" + pid + "，termid=" + termid + "，机构数量=" + (smObsTrees != null ? String.valueOf(smObsTrees.size()) : "0"));

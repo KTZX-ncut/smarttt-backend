@@ -55,5 +55,5 @@ jobs:
             echo "运行部署脚本..."
             cd /home/pro
             ./smarttt-backend.sh
-            docker restart nginx-server
+            docker restart nginx-ui
             
