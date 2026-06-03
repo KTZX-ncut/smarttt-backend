@@ -57,4 +57,6 @@ public interface StUsersService{
     Result searchPerson(String inform, String catelog);
 
     String getCurrentTerm();
+
+    Integer coutRoleUserByObsidAndUserid(String obsid, String userid);
 }

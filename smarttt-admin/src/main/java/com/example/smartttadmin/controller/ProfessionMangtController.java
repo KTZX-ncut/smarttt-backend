@@ -32,6 +32,7 @@ public class ProfessionMangtController {
 
     @Autowired
     private StUsersService stUsersService;
+
     @GetMapping("")
     @ApiOperation(value = "获取专业列表", notes = "根据当前 token 的组织节点查询其下属专业列表。")
     @AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90",isReadOnly = true)
@@ -94,6 +95,12 @@ public class ProfessionMangtController {
     //@AuthRequired(type = "admin",menu = "531500340-910116aa-e8f8-11ee-934c-fa163efa1f90")
     public Result createCollageRP(@ApiParam(value = "负责人角色绑定信息", required = true) @RequestBody StRoleUser stRoleUser,HttpServletRequest request){
         Token token = getTokenFromContext();
+        String obsid = stRoleUser.getObsid();
+        String userid = stRoleUser.getUserid();
+        Integer c = stUsersService.coutRoleUserByObsidAndUserid(obsid,userid);
+        if(c > 0){
+            return Result.error("重复绑定");
+        }
         stRoleUser.setRoleid("516761049-916b5c26-ea1d-4f50-8e57-fe7c2e3aaf60");
         //stRoleUser.setTermid(token.getTermid());
         return stUsersService.createOneRP(stRoleUser);

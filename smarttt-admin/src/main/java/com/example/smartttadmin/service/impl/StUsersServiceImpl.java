@@ -224,4 +224,9 @@ public class StUsersServiceImpl implements StUsersService {
     public String getCurrentTerm() {
         return stUsersMapper.getCurrentTerm();
     }
+
+    @Override
+    public Integer coutRoleUserByObsidAndUserid(String obsid, String userid) {
+        return stUsersMapper.coutRoleUserByObsidAndUserid(obsid,userid);
+    }
 }
