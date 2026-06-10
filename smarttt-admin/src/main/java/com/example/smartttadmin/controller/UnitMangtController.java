@@ -57,14 +57,14 @@ public class UnitMangtController {
                 smObs.setPid(createUnitsReq.getPid());
                 smObs.setObsdeep(createUnitsReq.getObsdeep());
             }
-            else return Result.error("只允许创建学院！！！");
+            else return Result.error("只允许创建专业！！！");
         }
         //下级新增
         else {
             if (Objects.equals(createUnitsReq.getObsdeep(),1L)){
                 smObs.setPid(createUnitsReq.getId());
                 smObs.setObsdeep(createUnitsReq.getObsdeep()+1);
-            }else return Result.error("只允许创建学院！！！");
+            }else return Result.error("只允许创建专业！！！");
 
         }
         smObs.setId(generateEnhancedID("sm_obs"));
