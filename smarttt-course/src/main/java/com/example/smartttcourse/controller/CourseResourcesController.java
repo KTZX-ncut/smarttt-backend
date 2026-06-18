@@ -3,15 +3,18 @@ package com.example.smartttcourse.controller;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.smartttcourse.Utils.AuthRequired;
 import com.example.smartttcourse.enums.CourseFileManageEnum;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.factory.CourseFileFactory;
 import com.example.smartttcourse.factory.handler.CourseFileHandler;
+import com.example.smartttcourse.pojo.CmCourseFile;
 import com.example.smartttcourse.service.CmClassRoomService;
 import com.example.smartttcourse.service.CmCourseService;
 import com.example.smartttcourse.service.FileMangtService;
+import com.example.smartttcourse.service.impl.CourseFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -53,6 +56,9 @@ public class CourseResourcesController {
 
     @Resource
     private CmClassRoomService classroomService;
+
+    @Resource
+    private CourseFileService courseFileService;
     @GetMapping
     @ApiOperation(value = "获取课程资源文件列表", notes = "查询当前课程或课堂上下文下的课程资源文件列表。")
     @AuthRequired(type = "admin",menu = "531500340-954722d2-76cf-4e64-bdf8-f11ef7ceef23",isReadOnly = true)
@@ -152,5 +158,35 @@ public class CourseResourcesController {
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.COURSE_RESOURCES);
         handler.deleteFile(fileName);
         return Result.success("删除成功！");
+    }
+
+    @PostMapping("/copy")
+    @ApiOperation(value = "复制历史课程资源", notes = "将历史课程的课程资源文件记录引用复制到当前课程（共享同一文件）。")
+    @AuthRequired(type = "admin", menu = "531500340-954722d2-76cf-4e64-bdf8-f11ef7ceef23")
+    public Result copyFromPastCourse(@ApiParam(value = "历史课程 ID", required = true) @RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        String currentCourseId = this.confirmCourseId(token.getObsid());
+        LambdaQueryWrapper<CmCourseFile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CmCourseFile::getObsid, pastCourseId)
+               .eq(CmCourseFile::getType, CourseFileManageEnum.COURSE_RESOURCES.getFileName());
+        java.util.List<CmCourseFile> pastFiles = courseFileService.list(wrapper);
+        if (pastFiles.isEmpty()) return Result.success("历史课程无课程资源文件");
+        LambdaQueryWrapper<CmCourseFile> delWrapper = new LambdaQueryWrapper<>();
+        delWrapper.eq(CmCourseFile::getObsid, currentCourseId)
+                  .eq(CmCourseFile::getType, CourseFileManageEnum.COURSE_RESOURCES.getFileName());
+        courseFileService.remove(delWrapper);
+        for (CmCourseFile f : pastFiles) {
+            CmCourseFile newFile = new CmCourseFile();
+            newFile.setObsid(currentCourseId);
+            newFile.setFilename(f.getFilename());
+            newFile.setSize(f.getSize());
+            newFile.setType(f.getType());
+            newFile.setCreatetime(java.time.LocalDateTime.now().toString());
+            newFile.setRemark(f.getRemark());
+            newFile.setObjectName(f.getObjectName());
+            newFile.setBucketName(f.getBucketName());
+            courseFileService.save(newFile);
+        }
+        return Result.success("复制成功！");
     }
 }

@@ -159,4 +159,12 @@ public class CourseController {
         Token token = getTokenFromContext();
         return cmCourseService.copyInfo(pastId, token.getObsid());
     }
+
+    @PostMapping("/copyFormative")
+    @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
+    @ApiOperation(value = "复制形成性评价建模", notes = "将历史课程的形成性评价建模（关键字、能力、基本教学目标、知识单元）复制到当前课程。")
+    public Result copyFormative(@ApiParam(value = "历史课程 ID", required = true) @RequestParam("pastId") String pastId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmCourseService.copyFormative(pastId, token.getObsid());
+    }
 }
