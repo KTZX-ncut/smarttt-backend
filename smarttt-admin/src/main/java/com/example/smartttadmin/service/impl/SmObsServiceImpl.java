@@ -9,6 +9,7 @@ import com.example.smartttadmin.service.StUsersService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Result getAllCollageList(String termid) {
-        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList(termid);
+    public Result getAllCollageList() {
+        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList();
         for( ObsResponse obsResponse : obsResponseList){
             obsResponse.setResponsiblePersonList(stUsersMapper.getRPByObsID(obsResponse.getId()));
         }
@@ -60,7 +61,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
         smObs.setOrderno(orderNoMax+1);
         smObs.setCreatetime(LocalDateTime.now().toString());
-        List<SmObs> smObsList = smObsMapper.getAllSmObsList(smObs.getTermid());
+        List<SmObs> smObsList = smObsMapper.getAllSmObsList();
         smObsList.add(smObs);
         if(smObs.getLevelcode()==null){
             List<TreeStructure> treeStructureList = smObsList.stream()
@@ -108,6 +109,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                     queue.addAll(childId);
                 }
             }
+            smObsMapper.deleteClassByIDs(deleteList);
+            smObsMapper.deleteProfessionByIDs(deleteList);
             smObsMapper.deleteObsByIDs(deleteList);
             stRolesMapper.deleteRolesByObsid(deleteList);
             stUsersMapper.updateTeacherByObsid(deleteList);
@@ -120,9 +123,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getObsTree(String termid) {
+    public Result getObsTree() {
 //        String currentTerm = stUsersMapper.getCurrentTerm();
-        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(termid);
+        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree();
         return Result.success(buildObsTreeByPid(allObsTree,"0"));
     }
     private List<SmObsTree> buildObsTreeByPid(List<SmObsTree> allObsTree,String pid){
@@ -142,8 +145,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getPersonnelRosterByObsIDAndCatelog(String obsid, String catelog,String termid) {
-        List<SmObs> AllObs = smObsMapper.getAllSmObsList(termid);
+    public Result getPersonnelRosterByObsIDAndCatelog(String obsid, String catelog) {
+        List<SmObs> AllObs = smObsMapper.getAllSmObsList();
         Map<String, List<SmObs>> obsMap = AllObs.stream()
                 .collect(Collectors.groupingBy(SmObs::getPid));
         List<SmObs> rootObs = obsMap.get(obsid);
@@ -167,44 +170,26 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException {
+    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException {
         int loginNameLen = personnelRoster.getLoginname().length();
         if(loginNameLen<3 || loginNameLen>15)
             return Result.error("用户名长度在3-15个字符之间");
-
-        List<SmObs> smObsList;
-        if (Objects.equals(personnelRoster.getCatelog(), "1")) { // 学生
-            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(), termid);
-            if (obsIDList.isEmpty()) {
-                return Result.error("所属院系/班级输入错误");
-            }
-            personnelRoster.setObsid(obsIDList.get(0));
-        } else { // 教师
-            // 教师只能在系下新增，控制 obsdeep=3
-            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), 3L, termid);
-            if (smObsList.isEmpty()) {
-                return Result.error("教师只能在系下新增(层级不匹配)！");
-            }
-            personnelRoster.setObsid(smObsList.get(0).getId());
-        }
-
+        List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
+        if(obsIDList.isEmpty())
+            return Result.error("所属院系/班级输入错误");
         List<String> stUsersList  = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
         if(!stUsersList.isEmpty())return Result.error("登录名已存在");
         String usersId = generateEnhancedID("st_users");
         personnelRoster.setId(usersId);
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
         stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
-//        String currentTerm = stUsersMapper.getCurrentTerm();
-        HistoryObs historyObs = new HistoryObs(termid,personnelRoster.getObsid());
-        List<HistoryObs> historyObsList  = new ArrayList<>();
-        historyObsList.add(historyObs);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){
             stUsersMapper.createOneSmStudent(generateEnhancedID("sm_student"),
-                    personnelRoster.getObsid(),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
         }
         else {
             stUsersMapper.createOneSmTeacher(generateEnhancedID("sm_teacher"),
-                    personnelRoster.getObsid(),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
         }
         return Result.success();
     }
@@ -292,9 +277,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getObsRPList(String termid,String obsid) {
+    public Result getObsRPList(String obsid) {
         long teacherDeep = stLevelMapper.getTeacherLevel();
-        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(termid,teacherDeep);
+        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(teacherDeep);
         Map<String, List<ObsRPTree>> obsMap = allObsTree.stream()
                 .collect(Collectors.groupingBy(ObsRPTree::getPid,
                         Collectors.collectingAndThen(
@@ -379,35 +364,121 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     public Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException {
 //        String currentTerm = stUsersMapper.getCurrentTerm();
 //        String historyTerm = getPreTerm(currentTerm);
-        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(copyTerm);
-        List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");
-        change(smObsTrees,"0",termid);
+//        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(copyTerm);
+//        List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");
+//        change(smObsTrees,"0",termid);
         return Result.success();
     }
 
+    @Override
+    public String getPisById(String obsid) {
+        SmObs obs = smObsMapper.selectById(obsid);
+        return obs.getPid();
+    }
+
+    @Override
+    public List<ProfessionResponse> getAllProfessionListA() {
+        return smObsMapper.getAllProfessionListA();
+    }
+
     @Transactional
-    public void change(List<SmObsTree> smObsTrees, String pid,String termid) throws JsonProcessingException {
-        for(SmObsTree smObsTree:smObsTrees){
+    public void change(List<SmObsTree> smObsTrees, String pid, String termid) throws JsonProcessingException {
+        log.debug("开始执行机构变更操作，参数：pid=" + pid + "，termid=" + termid + "，机构数量=" + (smObsTrees != null ? String.valueOf(smObsTrees.size()) : "0"));
+
+        if (smObsTrees == null || smObsTrees.isEmpty()) {
+            log.debug("机构列表为空，直接返回");
+            return;
+        }
+
+        for (SmObsTree smObsTree : smObsTrees) {
             String newId = null;
+
+            if (smObsTree == null) {
+                log.debug("SmObsTree对象为null，跳过处理");
+                continue;
+            }
+
+            log.debug("处理机构：id=" + smObsTree.getId() + "，name=" + smObsTree.getObsname());
+
             SmObs smObs = smObsMapper.getSmObsByID(smObsTree.getId());
-            if(!Objects.equals(pid, "0")) {
+
+            if (smObs == null) {
+                log.debug("未找到对应的SmObs记录：id=" + smObsTree.getId());
+                throw new RuntimeException("未找到ID为 " + smObsTree.getId() + " 的机构记录");
+            }
+
+            if (!Objects.equals(pid, "0")) {
                 newId = generateEnhancedID("sm_obs");
                 String oldId = smObs.getId();
+
+                log.debug("更新机构ID：oldId=" + oldId + "，newId=" + newId + "，pid=" + pid);
+
                 smObs.setId(newId);
                 smObs.setPid(pid);
-                smObs.setTermid(termid);
-                createOneObs(smObs);
-                checkSmObs(smObs);
-                List<PersonnelRoster> personnelRosterList = stUsersMapper.getTeacherByObsid(oldId);
-                personnelRosterList.addAll(stUsersMapper.getStudentByObsid(oldId));
+                smObs.setObsname(smObs.getObsname());
+
+                // 1. 创建新机构记录
+                try {
+                    createOneObs(smObs);
+                    log.debug("成功创建新机构记录：id=" + newId);
+
+                    // 验证插入是否成功（通过影响行数）
+                    // 注意：这里假设 createOneObs 返回 int，如果不返回可以改其他验证方式
+                    SmObs justInserted = smObsMapper.getSmObsByID(newId);
+                    String kk =  justInserted != null ? "找到" : "未找到";
+                    log.debug("立即查询结果：{}"+kk);
+                } catch (DataAccessException e) {
+                    log.debug("创建机构记录失败：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建机构记录失败，ID=" + newId, e);
+                } catch (Exception e) {
+                    log.debug("创建机构记录发生未知异常：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建机构记录异常，ID=" + newId, e);
+                }
+                try {
+                    checkSmObs(smObs);
+                    log.debug("成功创建新子机构记录：id=" + newId);
+
+                    // 验证插入是否成功（通过影响行数）
+                    // 注意：这里假设 createOneObs 返回 int，如果不返回可以改其他验证方式
+                } catch (DataAccessException e) {
+                    log.debug("创建子机构记录失败：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建机构记录失败，ID=" + newId, e);
+                } catch (Exception e) {
+                    log.debug("创建子机构记录发生未知异常：id=" + newId + "，错误=" + e.getMessage());
+                    throw new RuntimeException("创建子机构记录异常，ID=" + newId, e);
+                }
+                ;
+
+                // 2. 处理人员关联
+//                没有catelog
+                List<PersonnelRoster> teacherList = stUsersMapper.getTeacherByObsid(oldId);
+                List<PersonnelRoster> studentList = stUsersMapper.getStudentByObsid(oldId);
+
+                List<PersonnelRoster> personnelRosterList = new ArrayList<>();
+                personnelRosterList.addAll(teacherList);
+                personnelRosterList.addAll(studentList);
+
+                log.debug("找到人员记录：oldId=" + oldId + "，教师=" + teacherList.size() + "，学生=" + studentList.size() + "，总数=" + personnelRosterList.size());
+
+                int successCount = 0;
                 for (PersonnelRoster personnelRoster : personnelRosterList) {
                     personnelRoster.setObsid(newId);
-                    stUsersService.updateOnePersonnelRoster(personnelRoster,termid);
+                    stUsersService.updateOnePersonnelRoster(personnelRoster);
+
                 }
+                log.debug("人员关联更新完成，共更新" + personnelRosterList.size() + "条，成功验证" + successCount + "条");
+            } else {
+                newId = smObs.getId();
+                log.debug("pid为0，保持原机构ID：" + newId);
             }
-            else newId = smObs.getId();
-            if(smObsTree.getChildren()!=null)change(smObsTree.getChildren(),newId,termid);
+
+            if (smObsTree.getChildren() != null && !smObsTree.getChildren().isEmpty()) {
+                log.debug("开始处理子节点：parentId=" + newId + "，子节点数量=" + smObsTree.getChildren().size());
+                change(smObsTree.getChildren(), newId, termid);
+                log.debug("子节点处理完成：parentId=" + newId);
+            }
         }
+        log.debug("机构变更操作完成：pid=" + pid + "，termid=" + termid);
     }
 
     private String getPreTerm(String currentTerm) {

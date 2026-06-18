@@ -11,4 +11,4 @@ ADD target/smarttt-admin-0.0.1-SNAPSHOT.jar .
 EXPOSE 8080
 
 # 启动命令
-ENTRYPOINT ["java","-jar","/app/smarttt-admin-0.0.1-SNAPSHOT.jar","--spring.profiles.active=dev"]
+ENTRYPOINT ["java","-jar","/app/smarttt-admin-0.0.1-SNAPSHOT.jar"]

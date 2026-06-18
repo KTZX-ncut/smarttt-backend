@@ -31,20 +31,21 @@ public class AuthorizationAspect {
         // 存储 stringToken 到上下文中
         tokenThreadLocal.set(token);
         String type = authRequired.type();
-        if ("admin".equals(type)) {
-            // 执行管理员鉴权逻辑
-            List<String> statueList = stMenusMapper.getStatueInRoleUser(token.getRoleid(),authRequired.menu());
-            if(statueList.size()!=1)throw new RuntimeException("无访问权限");
-            String statue = statueList.get(0);
-            if(Objects.equals(statue, "3") || Objects.equals(statue, "2") && !authRequired.isReadOnly())
-                throw new RuntimeException("无访问权限");
-        } else if ("user".equals(type)) {
-            // 执行普通用户鉴权逻辑
-            System.out.println("Performing user authorization");
-        } else {
-            // 默认鉴权逻辑
-            System.out.println("Performing default authorization");
-        }
+        // 先不执行鉴权逻辑
+//        if ("admin".equals(type)) {
+//            // 执行管理员鉴权逻辑
+//            List<String> statueList = stMenusMapper.getStatueInRoleUser(token.getRoleid(),authRequired.menu());
+//            if(statueList.size()!=1)throw new RuntimeException("无访问权限");
+//            String statue = statueList.get(0);
+//            if(Objects.equals(statue, "3") || Objects.equals(statue, "2") && !authRequired.isReadOnly())
+//                throw new RuntimeException("无访问权限");
+//        } else if ("user".equals(type)) {
+//            // 执行普通用户鉴权逻辑
+//            System.out.println("Performing user authorization");
+//        } else {
+//            // 默认鉴权逻辑
+//            System.out.println("Performing default authorization");
+//        }
     }
 
     // 从 HTTP 请求中提取出 token

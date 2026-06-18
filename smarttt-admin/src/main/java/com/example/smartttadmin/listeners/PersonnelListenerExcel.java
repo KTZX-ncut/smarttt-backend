@@ -113,16 +113,12 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
 
             CateLogEnum cateLogEnum = this.DetermineIdentity(personnelExcel.getCatelog());
             // 1. obsName通过拿到obsId(校验obsName的合法性)
-            // 当前学期
             QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("obsname",personnelExcel.getObsname())
-                    .eq("termid",currentTerm);
-
+            queryWrapper.eq("obsname",personnelExcel.getObsname());
             List<SmObs> smObsList = new LinkedList<>();
             if (Objects.equals(CateLogEnum.STUDENT,cateLogEnum)){
                 queryWrapper.eq("obsdeep",studentObsDeep);
                 smObsList = smObsService.list(queryWrapper);
-
             }
             if (Objects.equals(CateLogEnum.TEACHER,cateLogEnum)){
                 queryWrapper.eq("obsdeep",teacherObsDeep);

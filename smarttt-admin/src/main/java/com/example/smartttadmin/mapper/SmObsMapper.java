@@ -18,27 +18,24 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
      * @return ...
      */
     @Select("select id,obsname,levelcode,remark from sm_obs\n" +
-            "where obsdeep=(select obsdeep from st_level where id = 102) and termid = #{termid}")
-    List<ObsResponse> getAllCollegeList(String termid);
+            "where obsdeep=(select obsdeep from st_level where id = 102)")
+    List<ObsResponse> getAllCollegeList();
 
-    @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark,termid) " +
-            "VALUES (#{id},#{pid},#{orderno},#{obsdeep},#{obsname},#{obspath},#{levelcode},#{createtime},#{remark},#{termid})")
+    @Insert("INSERT INTO sm_obs (id,pid,orderno,obsdeep,obsname,obspath,levelcode,createtime,remark) " +
+            "VALUES (#{id},#{pid},#{orderno},#{obsdeep},#{obsname},#{obspath},#{levelcode},#{createtime},#{remark})")
     void createOneNewObs(SmObs smObs);
 
     @Delete("delete from sm_obs where id = #{id}")
     void deleteObsByID(String id);
 
-    @Select("select * from sm_obs\n"+
-            "where termid = #{currentTerm} or termid = 0;")
-    List<SmObsTree> getAllSmObsTree(String currentTerm);
+    @Select("select * from sm_obs")
+    List<SmObsTree> getAllSmObsTree();
 
+    @Select("select * from sm_obs")
+    List<SmObs> getAllSmObsList();
     @Select("select * from sm_obs \n" +
-            "where termid = #{termid} or termid = 0;")
-    List<SmObs> getAllSmObsList(@Param("termid") String termid);
-    @Select("select * from sm_obs \n" +
-            "where (termid = #{termid} or termid = 0) \n" +
-            "and obsdeep<=#{obsdeep};")
-    List<ObsRPTree>getRPTree(@Param("termid")String termid,@Param("obsdeep")long obsdeep);
+            "where obsdeep<=#{obsdeep};")
+    List<ObsRPTree>getRPTree(@Param("obsdeep")long obsdeep);
 
     /**
      * 这里需要修改为动态sql
@@ -70,8 +67,8 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
      * @param
      * @return
      */
-    @Select("select id from sm_obs where obsname = #{obsname} and termid =#{termid}")
-    List<String> getObsIDByObsName(@Param("obsname") String obsname,@Param("termid")String termid);
+    @Select("select id from sm_obs where obsname = #{obsname}")
+    List<String> getObsIDByObsName(@Param("obsname") String obsname);
 
     /**
      * 评估一下再改
@@ -79,7 +76,7 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
      * @return
      */
     @Select("select orderno from sm_obs\n" +
-            "where pid = #{pid} and termid = (select id from cm_term where iscurrentterm = 1)")
+            "where pid = #{pid}")
     List<Long> getSmObsListByPid(String pid);
 
     @Select("select id from sm_obs where pid = #{pid}")
@@ -150,27 +147,12 @@ public interface SmObsMapper extends BaseMapper<SmObs> {
 
     void deleteObsByIDs(@Param("ids") List<String> ids);
 
-//    @Insert("insert into sm_obs_term(id,obsid,termid) values (#{pid},#{id},#{obspath})")
-//    void createOneObsTerm(SmObs smObs);
-
-    @Select("select historyobs from sm_student where usersid = #{id}")
-    String getStuHistoryObsByUserId(String id);
-
-    @Select("select historyobs from sm_teacher where usersid = #{id}")
-    String getTeaHistoryObsByUserId(String id);
-
-    @Select("select sm_obs.* from sm_obs \n" +
-            "where termid = #{historyTerm} ")
-    List<SmObs> getAllHistoryObs(String historyTerm);
-
-    /**
-     * 根据 obsname 和 obsdeep 查询 SmObs 列表
-     * @param obsname 组织名称
-     * @param obsdeep 组织层级
-     * @param termid 学期 ID
-     * @return SmObs 列表
-     */
-    List<SmObs> getObsByObsNameAndDeep(@Param("obsname") String obsname, @Param("obsdeep") Long obsdeep, @Param("termid") String termid);
-
     void updateCourseProfession(@Param("ids") List<String> deleteList);
+
+    void deleteClassByIDs(@Param("ids") List<String> ids);
+
+    void deleteProfessionByIDs(@Param("ids") List<String> ids);
+
+    @Select("SELECT obsid AS id,proname,procode,reachpercent,remark FROM cm_profession")
+    List<ProfessionResponse> getAllProfessionListA();
 }

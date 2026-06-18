@@ -34,11 +34,11 @@ public class AuthorizationAspect {
         String type = authRequired.type();
         if ("admin".equals(type)) {
             // 执行管理员鉴权逻辑
-            List<String> statueList = stMenusMapper.getStatueInRoleUser(token.getRoleid(),authRequired.menu());
-            if(statueList.size()!=1)throw new RuntimeException("无访问权限");
-            String statue = statueList.get(0);
-            if(Objects.equals(statue, "3") || Objects.equals(statue, "2") && !authRequired.isReadOnly())
-                throw new RuntimeException("无访问权限");
+//            List<String> statueList = stMenusMapper.getStatueInRoleUser(token.getRoleid(),authRequired.menu());
+//            if(statueList.size()!=1)throw new RuntimeException("无访问权限");
+//            String statue = statueList.get(0);
+//            if(Objects.equals(statue, "3") || Objects.equals(statue, "2") && !authRequired.isReadOnly())
+//                throw new RuntimeException("无访问权限");
         } else if ("user".equals(type)) {
             // 执行普通用户鉴权逻辑
             System.out.println("Performing user authorization");

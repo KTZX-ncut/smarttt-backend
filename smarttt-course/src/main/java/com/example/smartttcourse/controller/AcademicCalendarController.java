@@ -10,6 +10,9 @@ import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.factory.CourseFileFactory;
 import com.example.smartttcourse.factory.handler.CourseFileHandler;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.minio.StatObjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -35,6 +38,7 @@ import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromCo
 @RestController
 @Slf4j
 @RequestMapping("/coursemangt/classroommangt/academiccalendar")
+@Api(tags = "10. 教学日历", description = "教学日历文件的查询、上传、下载和删除接口")
 public class AcademicCalendarController {
     @Resource
     private CourseFileFactory courseFileFactory;
@@ -42,6 +46,7 @@ public class AcademicCalendarController {
     private MinioUtil minioUtil;
 
     @GetMapping
+    @ApiOperation(value = "获取教学日历文件列表", notes = "查询当前课堂上下文下的教学日历文件列表。")
     @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d", isReadOnly = true)
     public Result uploadLessonPlan(HttpServletRequest request) {
         Token token = getTokenFromContext();
@@ -49,9 +54,10 @@ public class AcademicCalendarController {
         return handler.getFileList(token);
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    @ApiOperation(value = "上传教学日历文件", notes = "向当前课堂上传教学日历文件。")
     @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
-    public Result academicCalendarFileUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    public Result academicCalendarFileUpload(@ApiParam(value = "教学日历文件", required = true) @RequestParam("file") MultipartFile file, HttpServletRequest request) {
         Token token = getTokenFromContext();
         String classroomId = token.getObsid();
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.ACADEMIC_CALENDAR);
@@ -63,8 +69,9 @@ public class AcademicCalendarController {
     }
 
     @GetMapping("/download/{fileName:.+}")
+    @ApiOperation(value = "下载教学日历文件", notes = "按文件名下载教学日历文件，支持分片 Range 下载。")
     @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d", isReadOnly = true)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ResponseEntity<InputStreamResource> downloadFile(@ApiParam(value = "文件名", required = true, example = "academic-calendar.pdf") @PathVariable String fileName, HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.ACADEMIC_CALENDAR);
             StatObjectResponse fileInfo = handler.getFileInfo(fileName);
@@ -115,8 +122,9 @@ public class AcademicCalendarController {
     }
 
     @GetMapping("/delete/{fileName:.+}")
+    @ApiOperation(value = "删除教学日历文件", notes = "按文件名删除教学日历文件。")
     @AuthRequired(type = "admin", menu = "531500340-58da609f-67ca-4ea4-acea-d1c5fb7ec20d")
-    public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
+    public Result DeleteFile(@ApiParam(value = "文件名", required = true, example = "academic-calendar.pdf") @PathVariable String fileName, HttpServletRequest request) {
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.ACADEMIC_CALENDAR);
         handler.deleteFile(fileName);
         return Result.success("删除成功！");
@@ -124,7 +132,8 @@ public class AcademicCalendarController {
 
 
     @GetMapping("/download/part/{fileName}")
-    public ResponseEntity<InputStreamResource> downloadPart(@PathVariable("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    @ApiOperation(value = "分片下载教学日历文件", notes = "测试或兼容用途的分片下载接口，按文件名执行分段下载。")
+    public ResponseEntity<InputStreamResource> downloadPart(@ApiParam(value = "文件名", required = true, example = "academic-calendar.pdf") @PathVariable("fileName") String fileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         // 获取文件基本信息
         String buckName = "1653708435-3d2a2df2-73d9-423b-afc7-1b7ab4c1dfc3";
         String objectName = "1508003654-75677409-068c-40f7-82ab-1b74a3d6ed3f/teachingprogram/" + fileName;

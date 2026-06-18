@@ -49,6 +49,7 @@ public class CmTermServicelmpl implements CmTermService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result deleteTermsByID(List<String> ids) {
         cmTermMapper.deleteTermsByIDs(ids);
         cmTermMapper.deleteObsTermByIDs(ids);

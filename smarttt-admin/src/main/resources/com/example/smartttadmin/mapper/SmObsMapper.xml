@@ -91,8 +91,23 @@
     <delete id="deleteObsByPid" parameterType="string">
         DELETE FROM sm_obs WHERE pid = #{id}
     </delete>
-    <delete id="deleteObsByIDs">
-        delete from sm_obs where id in
+    <delete id="deleteObsByIDs" parameterType="list">
+        <!-- 3. 最后删除机构本身 -->
+        DELETE FROM sm_obs WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteClassByIDs">
+        <!-- 2. 再删除班级表中关联的数据 -->
+        DELETE FROM cm_class WHERE obsid IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteProfessionByIDs">
+        <!-- 1. 先删除专业表中关联的数据 -->
+        DELETE FROM cm_profession WHERE obsid IN
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>

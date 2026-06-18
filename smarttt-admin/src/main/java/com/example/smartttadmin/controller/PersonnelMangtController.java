@@ -1,20 +1,18 @@
 package com.example.smartttadmin.controller;
 
 import com.alibaba.excel.EasyExcel;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.smartttadmin.Utils.AuthRequired;
 import com.example.smartttadmin.dto.PersonnelRoster;
 import com.example.smartttadmin.dto.Result;
 import com.example.smartttadmin.dto.Token;
-import com.example.smartttadmin.enums.CateLogEnum;
 import com.example.smartttadmin.listeners.PersonnelListenerExcel;
-import com.example.smartttadmin.mapper.SmObsMapper;
 import com.example.smartttadmin.pojo.PersonnelExcel;
-import com.example.smartttadmin.pojo.SmObs;
-import com.example.smartttadmin.pojo.StLevel;
 import com.example.smartttadmin.service.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +21,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromContext;
 
@@ -33,13 +29,12 @@ import static com.example.smartttadmin.Utils.AuthorizationAspect.getTokenFromCon
  */
 @RestController
 @RequestMapping("/sysmangt/personnelmangt")
+@Api(tags = "9. 人员管理", description = "教师、学生名单查询、维护、导入和搜索接口")
 public class PersonnelMangtController {
     @Autowired
     private SmObsService smObsService;
     @Autowired
     private StUsersService stUsersService;
-    @Autowired
-    private SmObsMapper smObsMapper;
 
     @Resource
     private StudentService studentService;
@@ -47,12 +42,12 @@ public class PersonnelMangtController {
     private TeacherService teacherService;
     @Resource
     private StLevelService levelService;
-    
     @GetMapping
+    @ApiOperation(value = "获取组织树", notes = "查询人员管理模块使用的组织结构树。")
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998",isReadOnly = true)
     public Result getSmObsTree(HttpServletRequest request){
         Token token = getTokenFromContext();
-        return smObsService.getObsTree(token.getTermid());
+        return smObsService.getObsTree();
     }
 
     /**
@@ -62,17 +57,19 @@ public class PersonnelMangtController {
      * @return
      */
     @GetMapping("/person")
+    @ApiOperation(value = "查询教师/学生名单", notes = "按组织节点和人员类别查询人员列表；catelog=1 通常表示学生，其他值通常表示教师。")
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998",isReadOnly = true)
-    public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid, @RequestParam(name = "catelog")String catelog,HttpServletRequest request){
+    public Result getPersonnelRoster(@ApiParam(value = "组织节点 ID", required = true, example = "531500340-obs") @RequestParam(name = "obsid")String obsid, @ApiParam(value = "人员类别", required = true, example = "0") @RequestParam(name = "catelog")String catelog,HttpServletRequest request){
         Token token  = getTokenFromContext();
-        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,catelog,token.getTermid());
+        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,catelog);
     }
 
     @GetMapping("/student")
+    @ApiOperation(value = "查询学生名单", notes = "按组织节点 ID 直接查询学生名单。")
     @AuthRequired(type = "admin",menu = "531500340-e7149e74-4856-4440-8d94-99f915731842",isReadOnly = true)
-    public Result getPersonnelRoster(@RequestParam(name = "obsid")String obsid,HttpServletRequest request){
+    public Result getPersonnelRoster(@ApiParam(value = "组织节点 ID", required = true, example = "531500340-obs") @RequestParam(name = "obsid")String obsid,HttpServletRequest request){
         Token token  = getTokenFromContext();
-        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,"1",token.getTermid());
+        return smObsService.getPersonnelRosterByObsIDAndCatelog(obsid,"1");
     }
 
 
@@ -80,129 +77,36 @@ public class PersonnelMangtController {
      * 新建教师/学生
      * @param personnelRoster
      * @return
+     * 暂定不用修改，因为批量导入文件是后端来处理
      */
     @PostMapping("/create")
+    @ApiOperation(value = "新建人员", notes = "新增教师或学生档案。人员类别由请求体中的 catelog 区分。")
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
-    public Result createPersonnelRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
+    public Result createPersonnelRoster(@ApiParam(value = "人员信息", required = true) @RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-
-        // 先校验数据的合法性
-        Result validateResult = stUsersService.validatePersonnelRoster(personnelRoster, token.getTermid());
-        if (!validateResult.getCode().equals(200)) {
-            return validateResult;
-        }
-
-        // 校验通过后，设置 obsid 并创建
-        // 根据 obsname 获取 obsid
-        QueryWrapper<SmObs> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("obsname", personnelRoster.getObsname())
-                .eq("termid", token.getTermid());
-
-        // 根据 obsname 和层级获取 obsid
-        CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
-        List<StLevel> levelList = levelService.list().stream()
-                .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
-                .collect(Collectors.toList());
-
-        Long teacherObsDeep = null;
-        Long studentObsDeep = null;
-        for (StLevel stLevel : levelList) {
-            if (Objects.equals(stLevel.getStudent(), "1")) {
-                studentObsDeep = stLevel.getObsdeep();
-            }
-            if (Objects.equals(stLevel.getTeacher(), "1")) {
-                teacherObsDeep = stLevel.getObsdeep();
-            }
-        }
-
-        List<SmObs> smObsList;
-        if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
-            queryWrapper.eq("obsdeep", studentObsDeep);
-        } else if (Objects.equals(CateLogEnum.TEACHER, cateLogEnum)) {
-            queryWrapper.eq("obsdeep", teacherObsDeep);
-            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, token.getTermid());
-        } else {
-            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, token.getTermid());
-        }
-
-         smObsList = smObsService.list(queryWrapper);
-        if (!smObsList.isEmpty()) {
-            personnelRoster.setObsid(smObsList.get(0).getId());
-        }
-
-        return smObsService.createOnePersonnelRoster(personnelRoster, token.getTermid());
+        return smObsService.createOnePersonnelRoster(personnelRoster);
     }
 
     @PostMapping("/delete")
-    public Result deletePersonnelRosteByIDs(@RequestBody List<String> ids) {
+    @ApiOperation(value = "删除人员", notes = "按用户 ID 列表批量删除教师或学生。")
+    public Result deletePersonnelRosteByIDs(@ApiParam(value = "用户 ID 列表", required = true) @RequestBody List<String> ids) {
         return stUsersService.deleteUsersByIDs(ids);
     }
     @PostMapping("/update")
+    @ApiOperation(value = "更新人员信息", notes = "修改教师或学生基础信息。")
     @AuthRequired(type = "admin",menu = "531500340-7f750ec8-76b9-42c2-a1ca-e41dcb57c998")
-    public Result UpdatePersonnalRoster(@RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
+    public Result UpdatePersonnalRoster(@ApiParam(value = "人员信息", required = true) @RequestBody PersonnelRoster personnelRoster,HttpServletRequest request) throws JsonProcessingException {
         Token token = getTokenFromContext();
-        
-        // 如果需要更新 obsname，则进行层级校验
-        if (personnelRoster.getObsname() != null && !personnelRoster.getObsname().isEmpty()) {
-            // 获取学生和教师的层级配置
-            List<StLevel> levelList = levelService.list().stream()
-                    .filter(t -> Objects.equals(t.getTeacher(), "1") || Objects.equals(t.getStudent(), "1"))
-                    .collect(Collectors.toList());
-            
-            Long teacherObsDeep = null;
-            Long studentObsDeep = null;
-            for (StLevel stLevel : levelList) {
-                if (Objects.equals(stLevel.getStudent(), "1")) {
-                    studentObsDeep = stLevel.getObsdeep();
-                }
-                if (Objects.equals(stLevel.getTeacher(), "1")) {
-                    teacherObsDeep = stLevel.getObsdeep();
-                }
-            }
-            
-            // 根据人员分类校验层级
-            CateLogEnum cateLogEnum = CateLogEnum.getCateLogEnumByStatus(Integer.parseInt(personnelRoster.getCatelog()));
-            List<SmObs> smObsList;
-            
-            if (Objects.equals(CateLogEnum.STUDENT, cateLogEnum)) {
-                // 学生必须挂在班级层级 (obsdeep=5)
-                smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), studentObsDeep, token.getTermid());
-                
-                // 额外校验：学生的班级必须属于某个专业（即班级的父节点必须是专业，obsdeep=4）
-                if (!smObsList.isEmpty()) {
-                    SmObs classObs = smObsList.get(0);
-                    // 检查班级的父节点是否为专业 (obsdeep=4)
-                    if (classObs.getPid() != null) {
-                        SmObs parentObs = smObsMapper.getSmObsByID(classObs.getPid());
-                        if (parentObs == null || parentObs.getObsdeep() != 4) {
-                            return Result.error("学生只能分配到专业下面的班级！");
-                        }
-                    } else {
-                        return Result.error("班级所属的专业不存在！");
-                    }
-                }
-            } else {
-                // 教师层级校验
-                smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), teacherObsDeep, token.getTermid());
-            }
-            
-            if (smObsList.isEmpty()) {
-                return Result.error("所属院系/班级不存在或者层级不匹配！");
-            }
-            
-            // 校验通过，设置 obsid
-            personnelRoster.setObsid(smObsList.get(0).getId());
-        }
-        
-        return stUsersService.updateOnePersonnelRoster(personnelRoster,token.getTermid());
+        return stUsersService.updateOnePersonnelRoster(personnelRoster);
     }
     /**
      * excel表格导入教师或者学生
      * @param file
      * @return
      */
-    @PostMapping("/import")
-    public Result importTeacherAndStudent(@RequestParam("file") MultipartFile file){
+    @PostMapping(value = "/import", consumes = "multipart/form-data")
+    @ApiOperation(value = "导入教师/学生 Excel", notes = "上传 Excel 文件，按模板批量导入教师或学生。")
+    public Result importTeacherAndStudent(@ApiParam(value = "Excel 文件", required = true) @RequestParam("file") MultipartFile file){
         PersonnelListenerExcel personnelListenerExcel = new PersonnelListenerExcel(
                 smObsService,
                 stUsersService,
@@ -220,7 +124,8 @@ public class PersonnelMangtController {
         }
     }
     @GetMapping("/search")
-    public Result searchPerson(@RequestParam("inform")String inform,@RequestParam("catelog")String catelog){
+    @ApiOperation(value = "搜索人员", notes = "按关键字和人员类别搜索教师或学生。")
+    public Result searchPerson(@ApiParam(value = "搜索关键字，可传姓名、工号或学号等", required = true, example = "张三") @RequestParam("inform")String inform,@ApiParam(value = "人员类别", required = true, example = "0") @RequestParam("catelog")String catelog){
         return stUsersService.searchPerson(inform,catelog);
     }
 

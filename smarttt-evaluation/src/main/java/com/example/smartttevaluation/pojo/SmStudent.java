@@ -25,5 +25,4 @@ public class SmStudent {
     private String submittime;
     private String isselfreg;
     private String createtime;
-    private String historyobs;
 }

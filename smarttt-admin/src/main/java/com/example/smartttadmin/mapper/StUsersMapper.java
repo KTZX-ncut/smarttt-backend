@@ -30,16 +30,16 @@ public interface StUsersMapper {
             "(#{id},#{username},#{loginname},#{pwd},#{phone},#{status},#{catelog},#{remark},#{createtime})")
     void createOneStUsersByPersonnelRoster(PersonnelRoster personnelRoster);
 
-    @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno,historyobs) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno},#{historyobs})")
-    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno,@Param("historyobs")String historyobs);
+    @Insert("insert into sm_teacher(id,obsid,usersid,createtime,jobno) values (#{id},#{obsid},#{usersid},#{createtime},#{jobno})")
+    void createOneSmTeacher(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("jobno") String jobno);
 
-    @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno,historyobs) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno},#{historyobs})")
-    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno,@Param("historyobs")String historyobs);
+    @Insert("insert into sm_student(id,obsid,usersid,createtime,stuno) values (#{id},#{obsid},#{usersid},#{createtime},#{stuno})")
+    void createOneSmStudent(@Param("id") String id, @Param("obsid") String obsid, @Param("usersid") String usersid, @Param("createtime") String createtime, @Param("stuno") String stuno);
 
     void deleteUsersByIDs(@Param("ids") List<String> ids);
 
-    //@Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
-    //        "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
+//    @Select("select cm_term.termname as currentterm , st_users.username , st_roles.rolename,st_roles.homeurl from cm_term,st_users,st_roles " +
+//            "where iscurrentterm = 1 and st_users.id = #{id} and st_roles.id = #{roleid}")
     @Select("select COALESCE(cm_term.termname, '默认学期') as currentterm , " +
             "st_users.username , " +
             "st_roles.rolename, " +
@@ -53,7 +53,7 @@ public interface StUsersMapper {
     @Delete("delete from st_roleuser where obsid = #{obsid} and userid = #{userid} and roleid = #{roleid}")
     void deletePRByObsIDAndUserID(StRoleUser stRoleUser);
 
-    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime,termid) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime},#{termid})")
+    @Insert("insert into st_roleuser(id, userid, roleid, obsid, obsdeep, createtime) values (#{id}, #{userid}, #{roleid}, #{obsid}, #{obsdeep}, #{createtime})")
     void createOneRoleUser(StRoleUser stRoleUser);
 
     @Select("SELECT u.id, u.username, o.obsname, t.obsid\n" +
@@ -95,10 +95,10 @@ public interface StUsersMapper {
     @Insert("update st_users set pwd = #{pwd} where id = #{id}")
     void updatePwd(@Param("id") String id, @Param("pwd") String pwd);
 
-    @Select("select usersid as id from sm_teacher where obsid = #{id}")
+    @Select("select usersid as id,2 as catelog from sm_teacher where obsid = #{id}")
     List<PersonnelRoster> getTeacherByObsid(String id);
 
-    @Select("select usersid as id from sm_student where obsid = #{id}")
+    @Select("select usersid as id,1 as catelog from sm_student where obsid = #{id}")
     List<PersonnelRoster> getStudentByObsid(String id);
 
     @Select("SELECT usersid AS id, stuno AS personnelno, loginname, username FROM sm_student " +
@@ -117,4 +117,7 @@ public interface StUsersMapper {
 
     void updateTeacherByObsid(@Param("ids")List<String> ids);
     void updateStudentByObsid(@Param("ids")List<String> ids);
+
+    @Select("select COUNT(1) FROM st_roleuser WHERE obsid=#{obsid} AND userid=#{userid}")
+    Integer coutRoleUserByObsidAndUserid(@Param("obsid") String obsid, @Param("userid") String userid);
 }

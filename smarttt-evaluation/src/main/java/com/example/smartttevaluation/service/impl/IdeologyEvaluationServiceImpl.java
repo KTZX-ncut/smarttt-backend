@@ -112,6 +112,8 @@ public class IdeologyEvaluationServiceImpl implements IdeologyEvaluationService 
                         Double stuScore = ideologyEvalDto.getStuScore();
                         Double fullScore = ideologyEvalDto.getFullScore();
                         if (stuScore.equals(fullScore)) vCount ++;
+                        Double rate = stuScore / fullScore;
+                        if (rate >= 0.6) vCount ++;
                     }else continue;
                 }
                 // 入库
@@ -141,6 +143,8 @@ public class IdeologyEvaluationServiceImpl implements IdeologyEvaluationService 
                     Double stuScore = ideologyEvalDto.getStuScore();
                     Double fullScore = ideologyEvalDto.getFullScore();
                     if (stuScore.equals(fullScore)) vCount ++;
+                    Double rate = stuScore / fullScore;
+                    if (rate >= 0.6) vCount ++;
                 }else continue;
             }
             // 入库
