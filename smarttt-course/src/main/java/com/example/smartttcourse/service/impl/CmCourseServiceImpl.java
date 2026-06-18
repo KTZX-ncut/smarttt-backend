@@ -298,5 +298,92 @@ public class CmCourseServiceImpl implements CmCourseService {
 
         return Result.success();
     }
+
+    @Transactional
+    @Override
+    public Result copyFormative(String pastId, String obsId) {
+        Map<String, String> keywordIdMap = new HashMap<>();
+        cmCourseMapper.deleteKeyword(obsId);
+        List<CmKeywords> keywords = cmCourseMapper.getPastKeyword(pastId);
+        for (CmKeywords keyword : keywords) {
+            String id = keyword.getId();
+            keyword.setId(generateEnhancedID("cm_keywords"));
+            keywordIdMap.put(id, keyword.getId());
+            keyword.setCourseid(obsId);
+        }
+        if (!keywords.isEmpty()) cmCourseMapper.copyKeyword(keywords);
+
+        cmCourseMapper.deleteAbility(obsId);
+        List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
+        for (CmGetability ability : abilities) ability.setCourseid(obsId);
+        if (!abilities.isEmpty()) cmCourseMapper.copyAbility(abilities);
+
+        cmCourseMapper.deleteKwa(obsId);
+        List<CmKwadict> kwas = cmCourseMapper.getPastKwa(pastId);
+        Map<String, String> kwaIdMap = new HashMap<>();
+        for (CmKwadict kwa : kwas) {
+            String id = kwa.getId();
+            kwa.setId(generateEnhancedID("cm_kwadict"));
+            kwaIdMap.put(id, kwa.getId());
+            kwa.setKeywordid(keywordIdMap.get(kwa.getKeywordid()));
+            kwa.setCourseid(obsId);
+        }
+        if (!kwas.isEmpty()) cmCourseMapper.copyKwa(kwas);
+
+        List<CmKnowledgeUnit> beforeDeleteCourseUnits = cmCourseMapper.getPastUnit(obsId);
+        cmCourseMapper.deleteUnit(obsId);
+        List<CmKnowledgeUnit> units = cmCourseMapper.getPastUnit(pastId);
+        Map<String, String> unitIdMap = new HashMap<>();
+        Map<String, List<CmKnowledgeUnit>> childrenMap = new HashMap<>();
+        for (CmKnowledgeUnit unit : units) {
+            childrenMap.computeIfAbsent(unit.getPid(), k -> new ArrayList<>()).add(unit);
+        }
+        List<CmKnowledgeUnit> roots = childrenMap.get("0");
+        if (roots != null && !roots.isEmpty()) {
+            Queue<CmKnowledgeUnit> queue = new LinkedList<>(roots);
+            while (!queue.isEmpty()) {
+                CmKnowledgeUnit current = queue.poll();
+                String oldId = current.getId();
+                String newId = generateEnhancedID("cm_course_unit");
+                current.setId(newId);
+                current.setCourseid(obsId);
+                unitIdMap.put(oldId, newId);
+                List<CmKnowledgeUnit> children = childrenMap.get(oldId);
+                if (children != null) {
+                    for (CmKnowledgeUnit child : children) {
+                        child.setPid(newId);
+                        queue.offer(child);
+                    }
+                }
+            }
+            cmCourseMapper.copyUnit(units);
+        }
+
+        for (CmKnowledgeUnit unit : beforeDeleteCourseUnits) cmCourseMapper.deleteUnitKwa(unit.getId());
+        List<CmKnowledgeUnitKwa> unitKwas = new ArrayList<>();
+        for (Map.Entry<String, String> entry : unitIdMap.entrySet()) {
+            unitKwas.addAll(cmCourseMapper.getPastUnitKwa(entry.getKey()));
+        }
+        for (CmKnowledgeUnitKwa unitKwa : unitKwas) {
+            unitKwa.setId(generateEnhancedID("cm_course_unit_kwa"));
+            unitKwa.setUnitid(unitIdMap.get(unitKwa.getUnitid()));
+            unitKwa.setKwaid(kwaIdMap.get(unitKwa.getKwaid()));
+        }
+        if (!unitKwas.isEmpty()) cmCourseMapper.copyUnitKwa(unitKwas);
+
+        cmCourseMapper.deleteLine(obsId);
+        List<CmLines> lines = cmCourseMapper.getPastLine(pastId);
+        for (CmLines line : lines) {
+            line.setId(generateEnhancedID("cm_lines"));
+            line.setStartunitid(unitIdMap.get(line.getStartunitid()));
+            line.setEndunitid(unitIdMap.get(line.getEndunitid()));
+            line.setStartkwaid(kwaIdMap.get(line.getStartkwaid()));
+            line.setEndkwaid(kwaIdMap.get(line.getEndkwaid()));
+            line.setCourseid(obsId);
+        }
+        if (!lines.isEmpty()) cmCourseMapper.copyLine(lines);
+
+        return Result.success();
+    }
 }
 

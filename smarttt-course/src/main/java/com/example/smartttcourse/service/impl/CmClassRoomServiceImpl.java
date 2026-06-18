@@ -54,12 +54,12 @@ public class CmClassRoomServiceImpl implements CmClassRoomService {
         cmClassRoomMapper.createClassroom(classroom);
         StRoleUser stRoleUser = new StRoleUser(generateEnhancedID("st_roleuser"),classroom.getTeacherId(),classroomRoleId,classroom.getId(),-1, LocalDate.now().toString(),classroom.getTermId());
         stUsersMapper.createOneRoleUser(stRoleUser);
-        //新增实验教师角色
-        stRoleUser.setRoleid(labRoleId);
-        stRoleUser.setUserid(classroom.getLabTeacherId());
-        stRoleUser.setId(generateEnhancedID("st_roleuser"));
-        stRoleUser.setCreatetime(LocalDate.now().toString());
-        stUsersMapper.createOneRoleUser(stRoleUser);
+        //新增实验教师角色（主系统不要）
+//        stRoleUser.setRoleid(labRoleId);
+//        stRoleUser.setUserid(classroom.getLabTeacherId());
+//        stRoleUser.setId(generateEnhancedID("st_roleuser"));
+//        stRoleUser.setCreatetime(LocalDate.now().toString());
+//        stUsersMapper.createOneRoleUser(stRoleUser);
         return Result.success();
     }
 

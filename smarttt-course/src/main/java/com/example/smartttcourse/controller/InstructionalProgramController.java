@@ -3,15 +3,21 @@ package com.example.smartttcourse.controller;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.smartttcourse.Utils.AuthRequired;
 import com.example.smartttcourse.enums.CourseFileManageEnum;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.dto.Token;
 import com.example.smartttcourse.factory.CourseFileFactory;
 import com.example.smartttcourse.factory.handler.CourseFileHandler;
+import com.example.smartttcourse.pojo.CmCourseFile;
 import com.example.smartttcourse.service.CmClassRoomService;
 import com.example.smartttcourse.service.CmCourseService;
 import com.example.smartttcourse.service.FileMangtService;
+import com.example.smartttcourse.service.impl.CourseFileService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.minio.StatObjectResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +37,7 @@ import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.List;
 
 import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromContext;
 
@@ -40,6 +47,7 @@ import static com.example.smartttcourse.Utils.AuthorizationAspect.getTokenFromCo
 @RestController
 @RequestMapping("/coursemangt/instructionalprogram")
 @Slf4j
+@Api(tags = "7. 教学大纲", description = "教学大纲文件的查询、上传、下载和删除接口")
 public class InstructionalProgramController {
     @Resource
     private CourseFileFactory courseFileFactory;
@@ -50,7 +58,11 @@ public class InstructionalProgramController {
     @Resource
     private CmClassRoomService classroomService;
 
+    @Resource
+    private CourseFileService courseFileService;
+
     @GetMapping
+    @ApiOperation(value = "获取教学大纲文件列表", notes = "查询当前课程或课堂上下文下的教学大纲文件列表。")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
     public Result getInstructionalProgram(HttpServletRequest request){
         Token token = getTokenFromContext();
@@ -61,9 +73,10 @@ public class InstructionalProgramController {
     /**
      * 教学大纲上传文件
      */
-    @PostMapping("/upload")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    @ApiOperation(value = "上传教学大纲文件", notes = "向当前课程或课堂上下文上传教学大纲文件。")
     @AuthRequired(type = "admin",menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
-    public Result TeachingProgramFileUpload(@RequestParam("file") MultipartFile file , HttpServletRequest request){
+    public Result TeachingProgramFileUpload(@ApiParam(value = "教学大纲文件", required = true) @RequestParam("file") MultipartFile file , HttpServletRequest request){
         Token token = getTokenFromContext();
         String courseIdOrClassroomId = token.getObsid();
         String courseId = this.confirmCourseId(courseIdOrClassroomId);
@@ -93,8 +106,9 @@ public class InstructionalProgramController {
      * 下载
      */
     @GetMapping("/download/{fileName:.+}")
+    @ApiOperation(value = "下载教学大纲文件", notes = "按文件名下载教学大纲文件，支持分片 Range 下载。")
     @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3",isReadOnly = true)
-    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public ResponseEntity<InputStreamResource> downloadFile(@ApiParam(value = "文件名", required = true, example = "teaching-program.pdf") @PathVariable String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception {
         try {
             CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.TEACHING_PROGRAM);
             StatObjectResponse fileInfo = handler.getFileInfo(fileName);
@@ -150,11 +164,42 @@ public class InstructionalProgramController {
      * @return
      */
     @GetMapping("/delete/{fileName:.+}")
+    @ApiOperation(value = "删除教学大纲文件", notes = "按文件名删除教学大纲文件。")
     @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
-    public Result DeleteFile(@PathVariable String fileName, HttpServletRequest request) {
+    public Result DeleteFile(@ApiParam(value = "文件名", required = true, example = "teaching-program.pdf") @PathVariable String fileName, HttpServletRequest request) {
         CourseFileHandler handler = courseFileFactory.getHandler(CourseFileManageEnum.TEACHING_PROGRAM);
         handler.deleteFile(fileName);
         return Result.success("删除成功！");
+    }
+
+    @PostMapping("/copy")
+    @ApiOperation(value = "复制历史课程教学大纲", notes = "将历史课程的教学大纲文件记录引用复制到当前课程（共享同一文件）。")
+    @AuthRequired(type = "admin", menu = "531500340-439363cf-9c16-4b9e-8840-64bb093cbbd3")
+    public Result copyFromPastCourse(@ApiParam(value = "历史课程 ID", required = true) @RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        String currentCourseId = this.confirmCourseId(token.getObsid());
+        LambdaQueryWrapper<CmCourseFile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CmCourseFile::getObsid, pastCourseId)
+               .eq(CmCourseFile::getType, CourseFileManageEnum.TEACHING_PROGRAM.getFileName());
+        List<CmCourseFile> pastFiles = courseFileService.list(wrapper);
+        if (pastFiles.isEmpty()) return Result.success("历史课程无教学大纲文件");
+        LambdaQueryWrapper<CmCourseFile> delWrapper = new LambdaQueryWrapper<>();
+        delWrapper.eq(CmCourseFile::getObsid, currentCourseId)
+                  .eq(CmCourseFile::getType, CourseFileManageEnum.TEACHING_PROGRAM.getFileName());
+        courseFileService.remove(delWrapper);
+        for (CmCourseFile f : pastFiles) {
+            CmCourseFile newFile = new CmCourseFile();
+            newFile.setObsid(currentCourseId);
+            newFile.setFilename(f.getFilename());
+            newFile.setSize(f.getSize());
+            newFile.setType(f.getType());
+            newFile.setCreatetime(java.time.LocalDateTime.now().toString());
+            newFile.setRemark(f.getRemark());
+            newFile.setObjectName(f.getObjectName());
+            newFile.setBucketName(f.getBucketName());
+            courseFileService.save(newFile);
+        }
+        return Result.success("复制成功！");
     }
 
 }

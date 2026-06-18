@@ -55,4 +55,16 @@
         ORDER BY id ASC
     </select>
 
+    <insert id="batchInsert">
+        INSERT INTO v_ideology_value (id, vname, remark, course_id, parent_id, leaf, level, create_time, update_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.vname}, #{item.remark}, #{item.courseId}, #{item.parentId}, #{item.leaf}, #{item.level}, NOW(), NOW())
+        </foreach>
+    </insert>
+
+    <delete id="deleteByCourseId">
+        DELETE FROM v_ideology_value WHERE course_id = #{courseId}
+    </delete>
+
 </mapper>

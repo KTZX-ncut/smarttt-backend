@@ -40,8 +40,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public Result getAllCollageList(String termid) {
-        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList(termid);
+    public Result getAllCollageList() {
+        List<ObsResponse> obsResponseList = smObsMapper.getAllCollegeList();
         for( ObsResponse obsResponse : obsResponseList){
             obsResponse.setResponsiblePersonList(stUsersMapper.getRPByObsID(obsResponse.getId()));
         }
@@ -61,7 +61,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
         long orderNoMax = smObsMapper.getSmObsListByPid(smObs.getPid()).stream().mapToLong(Long::valueOf).max().orElse(0);
         smObs.setOrderno(orderNoMax+1);
         smObs.setCreatetime(LocalDateTime.now().toString());
-        List<SmObs> smObsList = smObsMapper.getAllSmObsList(smObs.getTermid());
+        List<SmObs> smObsList = smObsMapper.getAllSmObsList();
         smObsList.add(smObs);
         if(smObs.getLevelcode()==null){
             List<TreeStructure> treeStructureList = smObsList.stream()
@@ -123,9 +123,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getObsTree(String termid) {
+    public Result getObsTree() {
 //        String currentTerm = stUsersMapper.getCurrentTerm();
-        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(termid);
+        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree();
         return Result.success(buildObsTreeByPid(allObsTree,"0"));
     }
     private List<SmObsTree> buildObsTreeByPid(List<SmObsTree> allObsTree,String pid){
@@ -145,8 +145,8 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getPersonnelRosterByObsIDAndCatelog(String obsid, String catelog,String termid) {
-        List<SmObs> AllObs = smObsMapper.getAllSmObsList(termid);
+    public Result getPersonnelRosterByObsIDAndCatelog(String obsid, String catelog) {
+        List<SmObs> AllObs = smObsMapper.getAllSmObsList();
         Map<String, List<SmObs>> obsMap = AllObs.stream()
                 .collect(Collectors.groupingBy(SmObs::getPid));
         List<SmObs> rootObs = obsMap.get(obsid);
@@ -170,44 +170,26 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException {
+    public Result createOnePersonnelRoster(PersonnelRoster personnelRoster) throws JsonProcessingException {
         int loginNameLen = personnelRoster.getLoginname().length();
         if(loginNameLen<3 || loginNameLen>15)
             return Result.error("用户名长度在3-15个字符之间");
-
-        List<SmObs> smObsList;
-        if (Objects.equals(personnelRoster.getCatelog(), "1")) { // 学生
-            List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname(), termid);
-            if (obsIDList.isEmpty()) {
-                return Result.error("所属院系/班级输入错误");
-            }
-            personnelRoster.setObsid(obsIDList.get(0));
-        } else { // 教师
-            // 教师只能在系下新增，控制 obsdeep=3
-            smObsList = smObsMapper.getObsByObsNameAndDeep(personnelRoster.getObsname(), 3L, termid);
-            if (smObsList.isEmpty()) {
-                return Result.error("教师只能在系下新增(层级不匹配)！");
-            }
-            personnelRoster.setObsid(smObsList.get(0).getId());
-        }
-
+        List<String> obsIDList = smObsMapper.getObsIDByObsName(personnelRoster.getObsname());
+        if(obsIDList.isEmpty())
+            return Result.error("所属院系/班级输入错误");
         List<String> stUsersList  = stUsersMapper.getStUsersByloginName(personnelRoster.getLoginname());
         if(!stUsersList.isEmpty())return Result.error("登录名已存在");
         String usersId = generateEnhancedID("st_users");
         personnelRoster.setId(usersId);
         personnelRoster.setCreatetime(LocalDateTime.now().toString());
         stUsersMapper.createOneStUsersByPersonnelRoster(personnelRoster);
-//        String currentTerm = stUsersMapper.getCurrentTerm();
-        HistoryObs historyObs = new HistoryObs(termid,personnelRoster.getObsid());
-        List<HistoryObs> historyObsList  = new ArrayList<>();
-        historyObsList.add(historyObs);
         if(Objects.equals(personnelRoster.getCatelog(), "1")){
             stUsersMapper.createOneSmStudent(generateEnhancedID("sm_student"),
-                    personnelRoster.getObsid(),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
         }
         else {
             stUsersMapper.createOneSmTeacher(generateEnhancedID("sm_teacher"),
-                    personnelRoster.getObsid(),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno(),listToJsonArray(historyObsList));
+                    obsIDList.get(0),usersId,LocalDateTime.now().toString(),personnelRoster.getPersonnelno());
         }
         return Result.success();
     }
@@ -295,9 +277,9 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     }
 
     @Override
-    public Result getObsRPList(String termid,String obsid) {
+    public Result getObsRPList(String obsid) {
         long teacherDeep = stLevelMapper.getTeacherLevel();
-        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(termid,teacherDeep);
+        List<ObsRPTree> allObsTree = smObsMapper.getRPTree(teacherDeep);
         Map<String, List<ObsRPTree>> obsMap = allObsTree.stream()
                 .collect(Collectors.groupingBy(ObsRPTree::getPid,
                         Collectors.collectingAndThen(
@@ -382,10 +364,21 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
     public Result copyHistoryObs(String copyTerm,String termid) throws JsonProcessingException {
 //        String currentTerm = stUsersMapper.getCurrentTerm();
 //        String historyTerm = getPreTerm(currentTerm);
-        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(copyTerm);
-        List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");
-        change(smObsTrees,"0",termid);
+//        List<SmObsTree> allObsTree = smObsMapper.getAllSmObsTree(copyTerm);
+//        List<SmObsTree> smObsTrees = buildObsTreeByPid(allObsTree,"0");
+//        change(smObsTrees,"0",termid);
         return Result.success();
+    }
+
+    @Override
+    public String getPisById(String obsid) {
+        SmObs obs = smObsMapper.selectById(obsid);
+        return obs.getPid();
+    }
+
+    @Override
+    public List<ProfessionResponse> getAllProfessionListA() {
+        return smObsMapper.getAllProfessionListA();
     }
 
     @Transactional
@@ -422,7 +415,6 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
 
                 smObs.setId(newId);
                 smObs.setPid(pid);
-                smObs.setTermid(termid);
                 smObs.setObsname(smObs.getObsname());
 
                 // 1. 创建新机构记录
@@ -471,7 +463,7 @@ public class SmObsServiceImpl extends ServiceImpl<SmObsMapper,SmObs> implements 
                 int successCount = 0;
                 for (PersonnelRoster personnelRoster : personnelRosterList) {
                     personnelRoster.setObsid(newId);
-                    stUsersService.updateOnePersonnelRoster(personnelRoster, termid);
+                    stUsersService.updateOnePersonnelRoster(personnelRoster);
 
                 }
                 log.debug("人员关联更新完成，共更新" + personnelRosterList.size() + "条，成功验证" + successCount + "条");

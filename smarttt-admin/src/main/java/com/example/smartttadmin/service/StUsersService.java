@@ -38,7 +38,7 @@ public interface StUsersService{
 
     Result deleteRP(StRoleUser stRoleUser);
 
-    Result updateOnePersonnelRoster(PersonnelRoster personnelRoster,String termid) throws JsonProcessingException;
+    Result updateOnePersonnelRoster(PersonnelRoster personnelRoster);
 
     Result getStudentByClassID(String id);
 
@@ -58,11 +58,5 @@ public interface StUsersService{
 
     String getCurrentTerm();
 
-    /**
-     * 校验单个人员数据的合法性
-     * @param personnelRoster 人员数据
-     * @param termid 学期 ID
-     * @return 校验结果
-     */
-    Result validatePersonnelRoster(PersonnelRoster personnelRoster, String termid);
+    Integer coutRoleUserByObsidAndUserid(String obsid, String userid);
 }

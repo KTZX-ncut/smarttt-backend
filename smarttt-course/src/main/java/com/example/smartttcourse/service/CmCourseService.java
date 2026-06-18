@@ -30,5 +30,7 @@ public interface CmCourseService {
     Result getPreCourseByCode(String termId, String obsId);
 
     Result copyInfo(String pastId, String obsId);
+
+    Result copyFormative(String pastId, String obsId);
 }
 
