@@ -75,6 +75,13 @@ public interface CmCourseMapper {
             "from cm_course where schooltermId = #{termId} and courseCode = #{courseCode}")
     List<SimpleCourse> getPreCourseByCode(@Param("termId") String termId, @Param("courseCode") String courseCode);
 
+    /**
+     * 获取当前专业下的所有课程（不按学期过滤）
+     */
+    @Select("SELECT id, courseChineseName, courseEnglishName, courseCode, professionName, professionId " +
+            "FROM cm_course WHERE id != #{obsid} ORDER BY schooltermId DESC")
+    List<SimpleCourse> getAllCourses(@Param("obsid") String obsid);
+
     @Select("select * from cm_keywords where courseid = #{pastId}")
     List<CmKeywords> getPastKeyword(String pastId);
 

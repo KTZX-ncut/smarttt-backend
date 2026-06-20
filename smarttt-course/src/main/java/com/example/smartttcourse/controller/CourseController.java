@@ -143,12 +143,23 @@ public class CourseController {
     }
 
     // 根据课程号获取历史课程
-    @GetMapping("getPreCourseByCode")
+    @GetMapping("/getPreCourseByCode")
     @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
     @ApiOperation(value = "根据课程号获取历史课程", notes = "根据当前课程上下文和指定学期 ID 查询历史课程。")
     public Result getPreCourseByCode(@ApiParam(value = "历史学期 ID", required = true, example = "term-2025-1") @RequestParam("termId") String termId, HttpServletRequest request) {
         Token token = getTokenFromContext();
         return cmCourseService.getPreCourseByCode(termId, token.getObsid());
+    }
+
+    /**
+     * 获取当前专业下的所有课程（不按学期过滤）
+     */
+    @GetMapping("/getAllCourses")
+    @AuthRequired(type = "admin", menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
+    @ApiOperation(value = "获取所有课程", notes = "获取当前专业下的所有课程，不按学期过滤，用于复制关键字和能力功能。")
+    public Result getAllCourses(HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmCourseService.getAllCourses(token);
     }
 
     // 复制历史课程的具体内容

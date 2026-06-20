@@ -125,6 +125,14 @@ public class CmCourseServiceImpl implements CmCourseService {
         return Result.success(cmCourseMapper.getPreCourseByCode(termId, courseCode));
     }
 
+    /**
+     * 获取当前专业下的所有课程（不按学期过滤）
+     */
+    @Override
+    public Result getAllCourses(Token token) {
+        return Result.success(cmCourseMapper.getAllCourses(token.getObsid()));
+    }
+
     @Transactional
     @Override
     public Result copyInfo(String pastId, String obsId) {
@@ -145,22 +153,28 @@ public class CmCourseServiceImpl implements CmCourseService {
         // 复制能力
         cmCourseMapper.deleteAbility(obsId);
         List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
-        for (CmGetability ability : abilities) ability.setCourseid(obsId);
-        cmCourseMapper.copyAbility(abilities);
+        Map<String, String> abilityIdMap = new HashMap<>();
+        for (CmGetability ability : abilities) {
+            String oldAbilityId = ability.getId();
+            ability.setId(generateEnhancedID("cm_getability"));
+            abilityIdMap.put(oldAbilityId, ability.getId());
+            ability.setCourseid(obsId);
+        }
+        if (!abilities.isEmpty()) cmCourseMapper.copyAbility(abilities);
 
         // 复制kwa
         cmCourseMapper.deleteKwa(obsId);
         List<CmKwadict> kwas = cmCourseMapper.getPastKwa(pastId);
-        // 旧-新kwaId映射
         Map<String, String> kwaIdMap = new HashMap<>();
         for (CmKwadict kwa : kwas) {
             String id = kwa.getId();
             kwa.setId(generateEnhancedID("cm_kwadict"));
             kwaIdMap.put(id, kwa.getId());
             kwa.setKeywordid(keywordIdMap.get(kwa.getKeywordid()));
+            kwa.setAbilityid(abilityIdMap.get(kwa.getAbilityid()));
             kwa.setCourseid(obsId);
         }
-        cmCourseMapper.copyKwa(kwas);
+        if (!kwas.isEmpty()) cmCourseMapper.copyKwa(kwas);
 
         // 先存下来未进行删除操作前的当前课程的知识单元，用于后续删除与这些知识单元挂钩的kwa条目
         // （因为cm_course_unit_kwa表无courseId标识）
@@ -315,73 +329,14 @@ public class CmCourseServiceImpl implements CmCourseService {
 
         cmCourseMapper.deleteAbility(obsId);
         List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
-        for (CmGetability ability : abilities) ability.setCourseid(obsId);
+        Map<String, String> abilityIdMap = new HashMap<>();
+        for (CmGetability ability : abilities) {
+            String oldAbilityId = ability.getId();
+            ability.setId(generateEnhancedID("cm_getability"));
+            abilityIdMap.put(oldAbilityId, ability.getId());
+            ability.setCourseid(obsId);
+        }
         if (!abilities.isEmpty()) cmCourseMapper.copyAbility(abilities);
-
-        cmCourseMapper.deleteKwa(obsId);
-        List<CmKwadict> kwas = cmCourseMapper.getPastKwa(pastId);
-        Map<String, String> kwaIdMap = new HashMap<>();
-        for (CmKwadict kwa : kwas) {
-            String id = kwa.getId();
-            kwa.setId(generateEnhancedID("cm_kwadict"));
-            kwaIdMap.put(id, kwa.getId());
-            kwa.setKeywordid(keywordIdMap.get(kwa.getKeywordid()));
-            kwa.setCourseid(obsId);
-        }
-        if (!kwas.isEmpty()) cmCourseMapper.copyKwa(kwas);
-
-        List<CmKnowledgeUnit> beforeDeleteCourseUnits = cmCourseMapper.getPastUnit(obsId);
-        cmCourseMapper.deleteUnit(obsId);
-        List<CmKnowledgeUnit> units = cmCourseMapper.getPastUnit(pastId);
-        Map<String, String> unitIdMap = new HashMap<>();
-        Map<String, List<CmKnowledgeUnit>> childrenMap = new HashMap<>();
-        for (CmKnowledgeUnit unit : units) {
-            childrenMap.computeIfAbsent(unit.getPid(), k -> new ArrayList<>()).add(unit);
-        }
-        List<CmKnowledgeUnit> roots = childrenMap.get("0");
-        if (roots != null && !roots.isEmpty()) {
-            Queue<CmKnowledgeUnit> queue = new LinkedList<>(roots);
-            while (!queue.isEmpty()) {
-                CmKnowledgeUnit current = queue.poll();
-                String oldId = current.getId();
-                String newId = generateEnhancedID("cm_course_unit");
-                current.setId(newId);
-                current.setCourseid(obsId);
-                unitIdMap.put(oldId, newId);
-                List<CmKnowledgeUnit> children = childrenMap.get(oldId);
-                if (children != null) {
-                    for (CmKnowledgeUnit child : children) {
-                        child.setPid(newId);
-                        queue.offer(child);
-                    }
-                }
-            }
-            cmCourseMapper.copyUnit(units);
-        }
-
-        for (CmKnowledgeUnit unit : beforeDeleteCourseUnits) cmCourseMapper.deleteUnitKwa(unit.getId());
-        List<CmKnowledgeUnitKwa> unitKwas = new ArrayList<>();
-        for (Map.Entry<String, String> entry : unitIdMap.entrySet()) {
-            unitKwas.addAll(cmCourseMapper.getPastUnitKwa(entry.getKey()));
-        }
-        for (CmKnowledgeUnitKwa unitKwa : unitKwas) {
-            unitKwa.setId(generateEnhancedID("cm_course_unit_kwa"));
-            unitKwa.setUnitid(unitIdMap.get(unitKwa.getUnitid()));
-            unitKwa.setKwaid(kwaIdMap.get(unitKwa.getKwaid()));
-        }
-        if (!unitKwas.isEmpty()) cmCourseMapper.copyUnitKwa(unitKwas);
-
-        cmCourseMapper.deleteLine(obsId);
-        List<CmLines> lines = cmCourseMapper.getPastLine(pastId);
-        for (CmLines line : lines) {
-            line.setId(generateEnhancedID("cm_lines"));
-            line.setStartunitid(unitIdMap.get(line.getStartunitid()));
-            line.setEndunitid(unitIdMap.get(line.getEndunitid()));
-            line.setStartkwaid(kwaIdMap.get(line.getStartkwaid()));
-            line.setEndkwaid(kwaIdMap.get(line.getEndkwaid()));
-            line.setCourseid(obsId);
-        }
-        if (!lines.isEmpty()) cmCourseMapper.copyLine(lines);
 
         return Result.success();
     }
