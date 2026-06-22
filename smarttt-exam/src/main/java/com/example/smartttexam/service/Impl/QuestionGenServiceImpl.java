@@ -3,6 +3,7 @@ package com.example.smartttexam.service.Impl;
 import com.example.smartttexam.Utils.CommonFunctions;
 import com.example.smartttexam.Utils.PythonRunner;
 import com.example.smartttexam.dto.KwaContextDTO;
+import com.example.smartttexam.dto.PageResult;
 import com.example.smartttexam.dto.QuestionGenRequest;
 import com.example.smartttexam.dto.Result;
 import com.example.smartttexam.mapper.CmKwadictMapper;
@@ -178,8 +179,12 @@ public class QuestionGenServiceImpl implements QuestionGenService {
 
 
     @Override
-    public Result getQuestionsByCourse(String courseId) {
-        return Result.success(tmTestquelibExtMapper.getQuestionsByCourseId(courseId));
+    public Result getQuestionsByCourse(String courseId, int pageIndex, int pageSize) {
+        int offset = (pageIndex - 1) * pageSize;
+        List<TmTestquelib> list = tmTestquelibExtMapper.getQuestionsByCourseIdPaged(courseId, offset, pageSize);
+        long total = tmTestquelibExtMapper.countByCourseId(courseId);
+        PageResult<TmTestquelib> result = new PageResult<>(list, total, pageIndex, pageSize);
+        return Result.success(result);
     }
 
     @Override

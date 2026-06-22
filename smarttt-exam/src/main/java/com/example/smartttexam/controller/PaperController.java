@@ -2,10 +2,8 @@ package com.example.smartttexam.controller;
 
 import com.example.smartttexam.Utils.AuthRequired;
 import com.example.smartttexam.Utils.CommonFunctions;
-import com.example.smartttexam.dto.PaperAutoGenerateRequest;
-import com.example.smartttexam.dto.PaperManualGenerateRequest;
-import com.example.smartttexam.dto.Result;
-import com.example.smartttexam.dto.Token;
+import com.example.smartttexam.dto.*;
+import com.example.smartttexam.mapper.CmClassroomMapper;
 import com.example.smartttexam.service.PaperService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * 组卷控制器
- * 基础路径: /exam/paper
- */
 @Api(tags = "组卷管理")
 @RestController
 @RequestMapping("/exam/paper")
@@ -25,6 +19,18 @@ public class PaperController {
     @Autowired
     private PaperService paperService;
 
+    @Autowired
+    private CmClassroomMapper classroomMapper;
+
+    private String resolveCourseId(HttpServletRequest request) {
+        Token token = CommonFunctions.getToken(request);
+        if (token == null || token.getObsid() == null) return "";
+        String obsid = token.getObsid();
+        if (classroomMapper.isCourse(obsid) > 0) return obsid;
+        String cid = classroomMapper.getCourseIdByClassroomId(obsid);
+        return cid != null ? cid : obsid;
+    }
+
     @PostMapping("/autoGenerate")
     @AuthRequired(type = "admin", menu = "", isReadOnly = false)
     public Result autoGenerate(HttpServletRequest httpRequest,
@@ -32,6 +38,8 @@ public class PaperController {
         Token token = CommonFunctions.getToken(httpRequest);
         if (token != null) {
             request.setCreatorId(token.getId());
+            if (request.getCourseId() == null || request.getCourseId().isEmpty())
+                request.setCourseId(resolveCourseId(httpRequest));
         }
         return paperService.autoGenerate(request);
     }
@@ -43,14 +51,18 @@ public class PaperController {
         Token token = CommonFunctions.getToken(httpRequest);
         if (token != null) {
             request.setCreatorId(token.getId());
+            if (request.getCourseId() == null || request.getCourseId().isEmpty())
+                request.setCourseId(resolveCourseId(httpRequest));
         }
         return paperService.manualGenerate(request);
     }
 
     @GetMapping("/list")
     @AuthRequired(type = "admin", menu = "", isReadOnly = true)
-    public Result getPaperList(@RequestParam String courseId) {
-        return paperService.getPaperList(courseId);
+    public Result getPaperList(HttpServletRequest request,
+                                @RequestParam(required = false) String courseId) {
+        if (courseId == null || courseId.isEmpty()) courseId = resolveCourseId(request);
+        return paperService.getPaperList(courseId != null ? courseId : "");
     }
 
     @GetMapping("/questions")

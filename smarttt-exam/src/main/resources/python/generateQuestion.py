@@ -168,6 +168,19 @@ if __name__ == "__main__":
         if results and isinstance(results, list):
             print(f"生成 {len(results)} 道题目，耗时 {duration:.1f} 秒")
 
+            # 动态分配分值，总分严格=100（客观题权重1，主观题权重2）
+            total_weight = sum(1 if q.get('type') == 1 else 2 for q in results)
+            cumulative = 0
+            for i, q in enumerate(results):
+                weight = 1 if q.get('type') == 1 else 2
+                if i == len(results) - 1:
+                    score = 100 - cumulative  # 最后一道题凑满100
+                else:
+                    score = max(1, round(100.0 * weight / total_weight))
+                q['score'] = score
+                cumulative += score
+            print(f"总分已分配: {cumulative}/100")
+
             # 保存为 JSON（主输出，Java从此读取，文件名带唯一前缀防并发冲突）
             json_path = os.path.join(output_dir, f"{output_name}.json")
             with open(json_path, 'w', encoding='utf-8') as f:

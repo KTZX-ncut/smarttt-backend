@@ -24,6 +24,19 @@
         </foreach>
     </select>
 
+    <!-- 分页查询题目列表 -->
+    <select id="getQuestionsByCourseIdPaged" resultType="com.example.smartttexam.pojo.TmTestquelib">
+        SELECT * FROM tm_testquelib
+        WHERE courseId = #{courseId} AND status != 3
+        ORDER BY createTime DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <!-- 统计题目总数 -->
+    <select id="countByCourseId" resultType="long">
+        SELECT count(1) FROM tm_testquelib WHERE courseId = #{courseId} AND status != 3
+    </select>
+
     <!-- 软删除题目（状态改为3=弃用） -->
     <update id="softDeleteByIds">
         UPDATE tm_testquelib SET status = 3 WHERE id IN
