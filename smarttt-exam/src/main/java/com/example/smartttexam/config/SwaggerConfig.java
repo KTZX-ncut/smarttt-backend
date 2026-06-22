@@ -21,7 +21,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com"))//告诉要扫描哪个包，com包下的所有API都交给Swagger2管理
+                .apis(RequestHandlerSelectors.basePackage("com.example.smartttexam"))//告诉要扫描哪个包，com包下的所有API都交给Swagger2管理
                 .paths(PathSelectors.any()).build();
 
     }

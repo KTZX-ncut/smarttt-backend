@@ -1,8 +1,12 @@
 package com.example.smartttexam.Utils;
 
+import com.example.smartttexam.dto.Token;
 import com.example.smartttexam.dto.TreeStructure;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+
+import static com.example.smartttexam.Utils.JwtTokenUtils.parseToken;
 
 
 public class CommonFunctions {
@@ -59,6 +63,18 @@ public class CommonFunctions {
         }
         levelCode.deleteCharAt(levelCode.length() - 1);
         return levelCode.toString();
+    }
+
+    // 从请求中解析Token
+    public static Token getToken(HttpServletRequest request){
+        String tokenStr = request.getHeader("token");
+        if (tokenStr == null || tokenStr.isEmpty()) {
+            tokenStr = request.getParameter("token");
+        }
+        if (tokenStr == null || tokenStr.isEmpty()) {
+            return null;
+        }
+        return parseToken(tokenStr, TokenSK);
     }
 
 }
