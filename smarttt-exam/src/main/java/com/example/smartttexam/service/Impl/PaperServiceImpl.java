@@ -94,12 +94,21 @@ public class PaperServiceImpl implements PaperService {
         paper.setLocked(0);
         paperMapper.insert(paper);
 
-        // 6. 创建试卷-题目关联
+        // 6. 动态分配分值，总分严格=100（客观题权重1，主观题权重2）
         List<PmTestpaperQuestions> links = new ArrayList<>();
+        int totalWeight = 0;
+        for (TmTestquelib q : allSelected) {
+            totalWeight += "0204".equals(q.getQuestionTypeId()) ? 1 : 2;
+        }
         long totalScore = 0;
         for (int i = 0; i < allSelected.size(); i++) {
             TmTestquelib q = allSelected.get(i);
-            int score = "0204".equals(q.getQuestionTypeId()) ? 5 : 10;  // 客观5分，主观10分
+            int weight = "0204".equals(q.getQuestionTypeId()) ? 1 : 2;
+            // 按权重比例分配，最后一道题修正为凑满100
+            int score = (i == allSelected.size() - 1)
+                    ? 100 - (int) totalScore
+                    : (int) Math.round(100.0 * weight / totalWeight);
+            if (score < 1) score = 1;
 
             PmTestpaperQuestions link = new PmTestpaperQuestions();
             link.setId(CommonFunctions.generateEnhancedID("pm_testpaper_questions"));

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ScoreSimulationServiceImpl implements ScoreSimulationService {
@@ -34,6 +35,9 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
 
     @Autowired
     private AiInStuAnsInfoMapper aiInStuAnsInfoMapper;
+
+    @Autowired
+    private StUsersMapper stUsersMapper;
 
     @Autowired
     private CmClassroomMypracticelistMapper mypracticelistMapper;
@@ -180,10 +184,53 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
     }
 
     @Override
-    public Result getSimulatedScores(String testId, String stuId) {
-        if (stuId != null) {
-            return Result.success(aiInStuAnsInfoMapper.getByTestIdAndStuId(testId, stuId));
+    public Result getSimulatedScores(String testId, String paperId, String stuId) {
+        if (testId == null && paperId != null) {
+            PmTest test = testMapper.getByPaperId(paperId);
+            if (test != null) testId = test.getId();
         }
-        return Result.success(aiInStuAnsInfoMapper.getByTestId(testId));
+        if (testId == null) return Result.error("未找到考试记录");
+
+        List<AiInStuAnsInfo> details;
+        if (stuId != null) {
+            details = aiInStuAnsInfoMapper.getByTestIdAndStuId(testId, stuId);
+        } else {
+            details = aiInStuAnsInfoMapper.getByTestId(testId);
+        }
+
+        // 收集所有stuId，批量查姓名
+        Map<String, String> nameMap = new HashMap<>();
+        if (!details.isEmpty()) {
+            List<String> ids = details.stream().map(AiInStuAnsInfo::getStuId).distinct().collect(Collectors.toList());
+            List<Map<String, String>> users = stUsersMapper.getNamesByIds(ids);
+            for (Map<String, String> u : users) {
+                nameMap.put(u.get("id"), u.getOrDefault("username", u.get("id")));
+            }
+        }
+
+        // 按学生分组：stuId → { name, questions[], totalScore }
+        Map<String, Map<String, Object>> grouped = new LinkedHashMap<>();
+        for (AiInStuAnsInfo d : details) {
+            String sid = d.getStuId();
+            grouped.putIfAbsent(sid, new HashMap<>());
+            Map<String, Object> stu = grouped.get(sid);
+            stu.putIfAbsent("stuId", sid);
+            stu.putIfAbsent("stuName", nameMap.getOrDefault(sid, sid));
+            stu.putIfAbsent("totalScore", 0L);
+            stu.put("totalScore", (Long) stu.get("totalScore") + d.getLibStuScore());
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> qs = (List<Map<String, Object>>) stu.computeIfAbsent("questions", k -> new ArrayList<>());
+            Map<String, Object> q = new HashMap<>();
+            q.put("libId", d.getLibId());
+            q.put("content", d.getQuestionContent());
+            q.put("libScore", d.getLibScore());
+            q.put("libStuScore", d.getLibStuScore());
+            qs.add(q);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("students", new ArrayList<>(grouped.values()));
+        result.put("totalCount", details.size());
+        return Result.success(result);
     }
 }

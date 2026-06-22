@@ -30,6 +30,13 @@ public interface TmTestquelibExtMapper {
      */
     List<TmTestquelib> getQuestionsByIds(@Param("ids") List<String> ids);
 
+    /** 分页查询 */
+    List<TmTestquelib> getQuestionsByCourseIdPaged(@Param("courseId") String courseId,
+                                                    @Param("offset") int offset,
+                                                    @Param("pageSize") int pageSize);
+    /** 统计总数 */
+    long countByCourseId(@Param("courseId") String courseId);
+
     /**
      * 软删除题目（状态改为3=弃用）
      */
