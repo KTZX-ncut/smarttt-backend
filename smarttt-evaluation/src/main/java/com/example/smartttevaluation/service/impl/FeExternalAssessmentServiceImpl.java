@@ -73,7 +73,7 @@ public class FeExternalAssessmentServiceImpl implements FeExternalAssessmentServ
                 // 校验学号，姓名，班级的一致性
                 CmClassroomStudent classroomStudent = classroomStudentList.get(0);
                 if (!Objects.equals(classroomStudent.getUserName(), studentName) || !Objects.equals(classroomStudent.getObsName(), className)){
-                    throw new BusinessException("学号"+stuNo+"的姓名或班级有误！");
+                    throw new BusinessException("学号"+stuNo+"的姓名或专业有误！");
                 }
                 // 插入数据
                 FeExternalAssessmentTaskDetail detail = new FeExternalAssessmentTaskDetail();
@@ -81,6 +81,7 @@ public class FeExternalAssessmentServiceImpl implements FeExternalAssessmentServ
                 detail.setStuno(stuNo);
                 detail.setStudentName(studentName);
                 detail.setStuScore(po.getAssessmentMap().get(externalAssessmentName));
+                detail.setFullScore(100.0); // 总分默认为100分
                 detailMapper.insert(detail);
             }
         }
