@@ -15,6 +15,7 @@ import com.example.smartttexam.pojo.TmTestquelibKwa;
 import com.example.smartttexam.service.QuestionGenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -33,6 +34,15 @@ public class QuestionGenServiceImpl implements QuestionGenService {
 
     @Autowired
     private TmTestquelibKwaMapper tmTestquelibKwaMapper;
+
+    @Value("${llm.api.url}")
+    private String llmApiUrl;
+
+    @Value("${llm.api.key}")
+    private String llmApiKey;
+
+    @Value("${llm.api.model:qwen3-235b}")
+    private String llmModel;
 
     //获取kwa列表
     @Override
@@ -73,6 +83,9 @@ public class QuestionGenServiceImpl implements QuestionGenService {
         Map<String, Object> kwaJson = new HashMap<>();
         kwaJson.put("kwaList", kwaMapList);
         kwaJson.put("questionCount", questionCount);
+        kwaJson.put("apiKey", llmApiKey);
+        kwaJson.put("apiUrl", llmApiUrl);
+        kwaJson.put("model", llmModel);
 
         String kwaJsonStr;
         try {
@@ -126,7 +139,9 @@ public class QuestionGenServiceImpl implements QuestionGenService {
             String title = questionText != null && questionText.length() > 50
                     ? questionText.substring(0, 50) : questionText;
             q.setTitle(title);
-            q.setQuestionTypeId(type == 1 ? "0204" : "0205");
+            // type映射: 1=单选→0201, 2=多选→0202, 3=判断→0203, 4=填空→0204, 5=简答→0205
+            String[] typeMap = {"", "0201", "0202", "0203", "0204", "0205"};
+            q.setQuestionTypeId(type >= 1 && type <= 5 ? typeMap[type] : "0204");
             q.setDifficultyLevel((double) level);
             q.setDifferenceLevel(0.0);
             q.setGuesssLevel(0.0);

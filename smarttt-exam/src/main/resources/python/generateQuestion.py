@@ -41,25 +41,37 @@ def generate_questions_json(client, kwa_list_str, seeds, question_count, max_ret
     - 难度 1（基础概念）：{d1_obj} 道**客观题**，{d1_sub} 道**主观题**
     - 难度 2（综合分析）：{d2_obj} 道**客观题**，{d2_sub} 道**主观题**
     - 难度 3（原理应用）：{d3_obj} 道**客观题**，{d3_sub} 道**主观题**
-3. **题型**：**客观题**要求为填空题，**主观题**问法需灵活多变（简答、分析、设计等）。
-4. **语言风格**：严谨、专业，符合高校考试规范。
-5. **题目分数**：客观题 5 分，主观题 10 分。
+3. **题型说明**：
+    - type=1 **单选题**：4个选项(A/B/C/D)，只有一个正确答案，题干中列出选项
+    - type=2 **多选题**：4个以上选项，至少2个正确答案，题干中列出选项
+    - type=3 **判断题**：题干为陈述句，要求判断正确或错误
+    - type=4 **填空题**：题干中留空(用______表示)，要求填入关键词或计算结果
+    - type=5 **简答题**：问法需灵活多变（简答、分析、设计等），不设选项
+4. **客观题**指type=1/2/3/4，**主观题**指type=5
+5. **语言风格**：严谨、专业，符合高校考试规范。
 
 # 输出要求
 1. **严格 JSON 格式**：必须严格以 JSON 数组格式输出，不得包含任何 Markdown 代码块标识或解释文字。
 2. **字段规格**：
-    - `question`: 题目文本内容。
+    - `question`: 题目文本内容（选择题和判断题需在题干中包含选项）。
     - `level`: 难度分级，必须为整数：1, 2, 3。
-    - `type`: 题型标签，必须为整数：**1 代表客观题，2 代表主观题**。
-    - `score`: 题目分值，必须为整数
+    - `type`: 题型标签，整数：**1=单选, 2=多选, 3=判断, 4=填空, 5=简答**。
+    - `score`: 题目分值，客观题3-5分，主观题8-15分
     - `KWA`: 字符串数组，如 ["KWA1", "KWA2"],严格保证这里的KWA是从我前面给出的KWA中挑选的。
 3. **JSON 结构示例**：
 [
   {{
-    "question": "学生和课程之间的联系类型是（）A. 一对一 B. 一对多 C. 多对多 D. 无关联",
+    "question": "学生和课程之间的联系类型是（）\\nA. 一对一  B. 一对多  C. 多对多  D. 无关联",
     "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": ["数据库-基础知识"]
+  }},
+  {{
+    "question": "以下哪些是数据库的ACID特性（）\\nA. 原子性  B. 一致性  C. 隔离性  D. 持久性  E. 分布性",
+    "level": 2,
     "type": 2,
-    "score": 10,
+    "score": 4,
     "KWA": ["数据库-基础知识"]
   }}
 ]
@@ -69,8 +81,12 @@ def generate_questions_json(client, kwa_list_str, seeds, question_count, max_ret
         try:
             print(f"正在进行第 {attempt + 1} 次 AI 请求...")
             response = client.chat.completions.create(
-                model="doubao-seed-2-0-mini-260215",
-                reasoning_effort="minimal",
+                temperature=1,
+                top_p=1,
+                max_tokens=16384,
+                frequency_penalty=0,
+                presence_penalty=0,
+                model=model,
                 messages=[
                     {"role": "system", "content": "你是一个只输出 JSON 格式数据的命题助手。"},
                     {"role": "user", "content": prompt}
@@ -142,11 +158,12 @@ if __name__ == "__main__":
         print(f"解析KWA JSON失败: {e}", file=sys.stderr)
         sys.exit(1)
 
-    # 5. 初始化 OpenAI 客户端（豆包）
-    client = OpenAI(
-        api_key="87dc4438-4847-49e2-a63b-7b1607cecae7",
-        base_url="https://ark.cn-beijing.volces.com/api/v3"
-    )
+    # 5. 初始化 OpenAI 客户端（配置由Java端传入）
+    api_key = kwa_data.get("apiKey", "")
+    api_url = kwa_data.get("apiUrl", "")
+    model = kwa_data.get("model", "qwen3-235b")
+    client = OpenAI(api_key=api_key, base_url=api_url)
+    print(f"LLM配置: url={api_url}, model={model}")
 
     try:
         # 加载种子题目
@@ -167,19 +184,6 @@ if __name__ == "__main__":
 
         if results and isinstance(results, list):
             print(f"生成 {len(results)} 道题目，耗时 {duration:.1f} 秒")
-
-            # 动态分配分值，总分严格=100（客观题权重1，主观题权重2）
-            total_weight = sum(1 if q.get('type') == 1 else 2 for q in results)
-            cumulative = 0
-            for i, q in enumerate(results):
-                weight = 1 if q.get('type') == 1 else 2
-                if i == len(results) - 1:
-                    score = 100 - cumulative  # 最后一道题凑满100
-                else:
-                    score = max(1, round(100.0 * weight / total_weight))
-                q['score'] = score
-                cumulative += score
-            print(f"总分已分配: {cumulative}/100")
 
             # 保存为 JSON（主输出，Java从此读取，文件名带唯一前缀防并发冲突）
             json_path = os.path.join(output_dir, f"{output_name}.json")

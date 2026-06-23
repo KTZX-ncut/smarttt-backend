@@ -1,0 +1,182 @@
+[
+  {
+    "question": "函数 f(x) = x^2 的导数是（）。",
+    "level": 1,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f(x) = 3x^3 - 2x + 1，则 f'(x) =（）。",
+    "level": 1,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "导数的几何意义表示函数在某一点的（）。",
+    "level": 1,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若函数在某点可导，则该点一定（）（连续/不连续）。",
+    "level": 1,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = sin(x) 的导数是（）。",
+    "level": 1,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "常数函数的导数是（）。",
+    "level": 1,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "简述导数的物理意义。",
+    "level": 1,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "解释为什么 |x| 在 x=0 处不可导。",
+    "level": 1,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f(x) = e^x · ln(x)，则 f'(x) =（）。",
+    "level": 2,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "设 y = f(u)，u = g(x)，则 dy/dx =（）。",
+    "level": 2,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f(x) = (x^2 + 1)^3，则 f'(x) =（）。",
+    "level": 2,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = x^(1/3) 在 x=0 处的导数（存在/不存在），因为（）。",
+    "level": 2,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "分析函数 f(x) = |x^2 - 1| 在 x = 1 处的可导性。",
+    "level": 2,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "使用导数定义求 f(x) = 1/x 在 x = a (a ≠ 0) 处的导数。",
+    "level": 2,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "求函数 f(x) = tan(2x) 的导数，并判断其在 x = π/4 处是否存在。",
+    "level": 2,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "设隐函数由方程 x^2 + y^2 = 1 确定，则 dy/dx =（）。",
+    "level": 2,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = x^x（x > 0）的导数表达式为（）。",
+    "level": 3,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "参数方程 x = t + 1, y = t^2，则 dy/dx =（）。",
+    "level": 3,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "设计一个应用实例，说明高阶导数在物理运动中的意义。",
+    "level": 3,
+    "type": 2,
+    "score": 7,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "已知 f(x) 三次可导，且满足 f(x + h) = f(x) + h f'(x) + (h^2 / 2) f''(x) + (h^3 / 6) f'''(ξ)，说明该表达式涉及的数学原理，并简要解释导数在其中的作用。",
+    "level": 3,
+    "type": 2,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  }
+]
