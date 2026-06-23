@@ -92,8 +92,8 @@ public class PersonnelListenerExcel implements ReadListener<PersonnelExcel> {
      * 提前校验数据的合法性，这样就可以不用事务
      */
     private List<PersonnelRoster> validate(List<PersonnelExcel> personnelExcelList) {
-        // 拿到当前学期
-        String currentTerm = usersService.getCurrentTerm();
+        // TODO: 判断当前数据是否有重复的登录名称
+        // TODO: 判断当前数据是否有重复的学号/工号
         List<PersonnelRoster> list = new LinkedList<>();
         // 判断老师（学生）的层级是够合法
         List<StLevel> levelList = levelService.list().stream()

@@ -1,5 +1,5 @@
 # 基础镜像: Java 8 JRE + Python 3
-FROM openjdk:8-jre-slim
+FROM openjdk:8-jre
 
 # 安装 Python3 和 pip
 RUN apt-get update && \
