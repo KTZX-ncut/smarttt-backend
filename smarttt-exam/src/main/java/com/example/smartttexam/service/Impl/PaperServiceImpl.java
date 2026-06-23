@@ -98,12 +98,14 @@ public class PaperServiceImpl implements PaperService {
         List<PmTestpaperQuestions> links = new ArrayList<>();
         int totalWeight = 0;
         for (TmTestquelib q : allSelected) {
-            totalWeight += "0204".equals(q.getQuestionTypeId()) ? 1 : 2;
+            totalWeight += "0205".equals(q.getQuestionTypeId()) ? 2 : 1;
         }
         long totalScore = 0;
         for (int i = 0; i < allSelected.size(); i++) {
             TmTestquelib q = allSelected.get(i);
-            int weight = "0204".equals(q.getQuestionTypeId()) ? 1 : 2;
+            // 客观题(0201单选/0202多选/0203判断/0204填空)权重1，主观题(0205简答)权重2
+            boolean isObj = !"0205".equals(q.getQuestionTypeId());
+            int weight = isObj ? 1 : 2;
             // 按权重比例分配，最后一道题修正为凑满100
             int score = (i == allSelected.size() - 1)
                     ? 100 - (int) totalScore
