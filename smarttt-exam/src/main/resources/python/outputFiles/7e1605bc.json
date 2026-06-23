@@ -1,0 +1,272 @@
+[
+  {
+    "question": "函数 f(x) = x^2 的导数是（ ）\nA. 2x  B. x  C. 2  D. x^2",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f(x) = 3x^3，则 f'(x) 的表达式为（ ）\nA. 9x^2  B. 6x^2  C. 3x^2  D. 9x^3",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "导数的几何意义表示函数在某点的（ ）\nA. 平均变化率  B. 极限值  C. 瞬时变化率  D. 函数值",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "下列函数中，导数为常数的是（ ）\nA. f(x) = 2x + 1  B. f(x) = x^3  C. f(x) = sin x  D. f(x) = e^x",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = 5 的导数是（ ）\nA. 5  B. 1  C. 0  D. 不存在",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "导数为零的点可能对应函数的（ ）\nA. 极值点  B. 拐点  C. 零点  D. 连续点",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若函数在某点可导，则在该点必定（ ）\nA. 连续  B. 可积  C. 有拐点  D. 单调",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = e^x 的导数是（ ）\nA. e^x  B. x  C. 1  D. ln x",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = ln x 的导数是（ ）\nA. 1/x  B. x  C. e^x  D. 0",
+    "level": 1,
+    "type": 1,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "以下关于导数的说法正确的是（ ）\nA. 导数表示函数增减性\nB. 可导函数一定连续\nC. 连续函数一定可导\nD. 导数等于切线斜率\nE. 导数是平均变化率",
+    "level": 1,
+    "type": 2,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "以下函数中，导数等于其自身的是（ ）\nA. f(x) = e^x  B. f(x) = sin x  C. f(x) = x^2  D. f(x) = ln x  E. f(x) = cos x",
+    "level": 1,
+    "type": 2,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f'(a) = 0，则 f(a) 一定为极值（ ）\n正确  错误",
+    "level": 1,
+    "type": 3,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "导数为负表示函数在该区间单调递减（ ）\n正确  错误",
+    "level": 1,
+    "type": 3,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若函数在某点导数存在，则其极限一定存在（ ）\n正确  错误",
+    "level": 1,
+    "type": 3,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = 4x^3 的导数在 x = 1 处的值是______",
+    "level": 1,
+    "type": 4,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = sin x 在 x = 0 处的导数值为______",
+    "level": 1,
+    "type": 4,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = e^x 在任意点的导数是______",
+    "level": 1,
+    "type": 4,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = 7 的导数在任意点的值是______",
+    "level": 1,
+    "type": 4,
+    "score": 3,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) 在 x = a 处的导数定义为______（填写极限表达式）",
+    "level": 1,
+    "type": 4,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "简述导数的物理意义，并举例说明",
+    "level": 1,
+    "type": 5,
+    "score": 8,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "简述导数的几何意义，并结合图像说明导数与切线的关系",
+    "level": 1,
+    "type": 5,
+    "score": 8,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "分析函数 f(x) = x^2 和 f(x) = x^3 在 x = 0 处的导数是否存在，并解释原因",
+    "level": 2,
+    "type": 5,
+    "score": 10,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f(x) = 2x^2 + 3x - 5，求 f'(x)，并计算 f'(2) 的值",
+    "level": 2,
+    "type": 4,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = cos x 在 x = π 处的导数值为______",
+    "level": 2,
+    "type": 4,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = ax^2 + bx + c 的导数是（ ）\nA. 2ax + b  B. ax + b  C. 2a  D. 2ax",
+    "level": 2,
+    "type": 1,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "已知 f(x) = x^3 - 3x^2 + 2，则 f'(x) = 0 的解可能是（ ）\nA. x = 0  B. x = 1  C. x = 2  D. x = 3",
+    "level": 2,
+    "type": 2,
+    "score": 5,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "函数 f(x) = |x| 在 x = 0 处可导（ ）\n正确  错误",
+    "level": 2,
+    "type": 3,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "若 f'(x) > 0 在区间 [a, b] 上恒成立，则函数在该区间单调递增（ ）\n正确  错误",
+    "level": 2,
+    "type": 3,
+    "score": 4,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "以下选项中，符合导数定义的表示为（ ）\nA. lim(h→0) (f(a+h) - f(a)) / h\nB. lim(x→a) f(x)\nC. f(a+h) - f(a)\nD. lim(h→0) (f(a) - f(a-h)) / h",
+    "level": 2,
+    "type": 2,
+    "score": 5,
+    "KWA": [
+      "求导-能力1"
+    ]
+  },
+  {
+    "question": "解释为什么函数 f(x) = |x| 在 x = 0 处不可导，并用左导数与右导数分析",
+    "level": 2,
+    "type": 5,
+    "score": 10,
+    "KWA": [
+      "求导-能力1"
+    ]
+  }
+]

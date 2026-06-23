@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.smartttexam.mapper.AiInStuAnsInfoMapper">
+
+    <!-- 批量插入作答详情，IGNORE防止(testId, libId, stuId)唯一键冲突 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT IGNORE INTO ai_in_stu_ans_info (id, logId, courseId, classroomId, testId, paperId,
+                                               libId, stuId, questionTypeId, questionContent,
+                                               difficultLevel, libScore, libStuScore, createTime)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id}, #{item.logId}, #{item.courseId}, #{item.classroomId}, #{item.testId}, #{item.paperId},
+             #{item.libId}, #{item.stuId}, #{item.questionTypeId}, #{item.questionContent},
+             #{item.difficultLevel}, #{item.libScore}, #{item.libStuScore}, #{item.createTime})
+        </foreach>
+    </insert>
+
+</mapper>

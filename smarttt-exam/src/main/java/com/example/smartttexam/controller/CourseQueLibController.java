@@ -4,6 +4,7 @@ import com.example.smartttexam.Utils.AuthRequired;
 import com.example.smartttexam.dto.Result;
 import com.example.smartttexam.dto.Token;
 import com.example.smartttexam.service.TestQueLibService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.example.smartttexam.Utils.AuthorizationAspect.getTokenFromContext;
 
+@Api(tags = "课程题库")
 @RestController
 @RequestMapping("/exam/coursequelib")
 public class CourseQueLibController {
