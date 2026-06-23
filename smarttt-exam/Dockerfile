@@ -1,11 +1,14 @@
 # 基础镜像: Java 8 JRE + Python 3
 FROM openjdk:8-jre
 
-# 安装 Python3 和 pip
-RUN apt-get update && \
+# 安装 Python3 和 pip（已优化镜像源）
+RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
+    apt-get update && \
     apt-get install -y --no-install-recommends python3 python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    pip3 install --no-cache-dir openai pandas openpyxl && \
+    # 核心优化：pip 下载加入清华源，加快 pandas 和 openai 的安装速度
+    pip3 install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple openai pandas openpyxl && \
     rm -rf /var/lib/apt/lists/*
 
 # 指定工作目录
