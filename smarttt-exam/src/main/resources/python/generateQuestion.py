@@ -27,16 +27,16 @@ def generate_questions_json(client, kwa_list_str, seeds, question_count, max_ret
     d2_obj, d2_sub = max(1, d2 // 2), d2 - max(1, d2 // 2)
     d3_obj, d3_sub = max(1, d3 // 2), d3 - max(1, d3 // 2)
 
-    prompt = f"""你是一位计算机教学命题专家。请根据提供的 **KWA（知识-能力）组合**，参考 **种子题目** 的风格，生成 {question_count} 道高质量的题目。
+    prompt = f"""你是一位计算机教学命题专家。请**严格围绕**下面提供的 KWA（知识-能力）组合命题，种子题目仅作题型和难度参考。
 
-# 参考种子题目
-{seeds_formatted}
-
-# 本次命题 KWA 组合
+# 本次命题 KWA（必须围绕这些知识点出题，不得偏离）
 {kwa_list_str}
 
+# 种子题目（仅参考题型格式和难度分布，不参考内容领域）
+{seeds_formatted}
+
 # 命题规则
-1. **KWA 覆盖**：每道题目需围绕给定的KWA进行命题。
+1. **主题约束**：所有题目必须围绕上面的KWA知识点，不得使用KWA未涵盖的知识点。
 2. **难度与题型分配**：
     - 难度 1（基础概念）：{d1_obj} 道**客观题**，{d1_sub} 道**主观题**
     - 难度 2（综合分析）：{d2_obj} 道**客观题**，{d2_sub} 道**主观题**
