@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttexam.mapper.TmTestquelibKwaMapper">
 
-    <!-- 批量插入题目-KWA关联 -->
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT IGNORE INTO tm_testquelib_kwa (id, libId, kwaId, dataValue, kwaName)
         VALUES
@@ -10,5 +9,14 @@
             (#{item.id}, #{item.libId}, #{item.kwaId}, #{item.dataValue}, #{item.kwaName})
         </foreach>
     </insert>
+
+    <select id="getByLibIds" resultType="com.example.smartttexam.pojo.TmTestquelibKwa">
+        SELECT id, libId, kwaId, dataValue, kwaName
+        FROM tm_testquelib_kwa
+        WHERE libId IN
+        <foreach collection="libIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 
 </mapper>

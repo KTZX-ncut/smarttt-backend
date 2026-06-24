@@ -198,6 +198,32 @@ public class QuestionGenServiceImpl implements QuestionGenService {
         int offset = (pageIndex - 1) * pageSize;
         List<TmTestquelib> list = tmTestquelibExtMapper.getQuestionsByCourseIdPaged(courseId, offset, pageSize);
         long total = tmTestquelibExtMapper.countByCourseId(courseId);
+
+        // 批量查KWA并附加到每道题
+        if (!list.isEmpty()) {
+            List<String> libIds = new ArrayList<>();
+            for (TmTestquelib q : list) libIds.add(q.getId());
+            List<TmTestquelibKwa> allKwas = tmTestquelibKwaMapper.getByLibIds(libIds);
+            // 按libId分组
+            Map<String, List<String>> kwaMap = new HashMap<>();
+            for (TmTestquelibKwa kwa : allKwas) {
+                kwaMap.computeIfAbsent(kwa.getLibId(), k -> new ArrayList<>()).add(kwa.getKwaName());
+            }
+            // 转为带kwas字段的Map返回
+            List<Map<String, Object>> enriched = new ArrayList<>();
+            for (TmTestquelib q : list) {
+                Map<String, Object> item = new ObjectMapper().convertValue(q, Map.class);
+                item.put("kwas", kwaMap.getOrDefault(q.getId(), Collections.emptyList()));
+                enriched.add(item);
+            }
+            Map<String, Object> pageResult = new HashMap<>();
+            pageResult.put("data", enriched);
+            pageResult.put("recordSize", total);
+            pageResult.put("pageIndex", pageIndex);
+            pageResult.put("pageSize", pageSize);
+            return Result.success(pageResult);
+        }
+
         PageResult<TmTestquelib> result = new PageResult<>(list, total, pageIndex, pageSize);
         return Result.success(result);
     }
