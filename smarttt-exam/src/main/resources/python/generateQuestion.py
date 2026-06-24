@@ -183,7 +183,10 @@ if __name__ == "__main__":
         duration = time.time() - start_time
 
         if results and isinstance(results, list):
-            print(f"生成 {len(results)} 道题目，耗时 {duration:.1f} 秒")
+            # 截断到目标数量（AI有时会多生成）
+            if len(results) > question_count:
+                results = results[:question_count]
+            print(f"生成 {len(results)} 道题目（目标{question_count}），耗时 {duration:.1f} 秒")
 
             # 保存为 JSON（主输出，Java从此读取，文件名带唯一前缀防并发冲突）
             json_path = os.path.join(output_dir, f"{output_name}.json")
