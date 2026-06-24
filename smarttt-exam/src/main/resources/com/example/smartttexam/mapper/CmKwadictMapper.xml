@@ -2,40 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.smartttexam.mapper.CmKwadictMapper">
 
-    <!-- 根据课程ID查询KWA，JOIN关键字表和能力表 -->
     <select id="getKwaByCourseId" resultType="com.example.smartttexam.pojo.CmKwadict">
-        SELECT d.id,
-               d.name,
-               d.keywordid,
-               d.abilityid,
-               d.courseid,
-               d.datavalue,
-               d.status,
-               d.createTime,
-               k.name AS keywordName,
-               a.name AS abilityName
+        SELECT DISTINCT d.id, d.name, d.keywordid, d.abilityid, d.courseid, d.datavalue,
+               d.status, d.createTime, k.name AS keywordName, a.name AS abilityName
         FROM cm_kwadict d
-                 LEFT JOIN cm_keywords k ON d.keywordid = k.id
-                 LEFT JOIN cm_getability a ON d.abilityid = a.id
+        LEFT JOIN cm_keywords k ON d.keywordid = k.id
+        LEFT JOIN cm_getability a ON d.abilityid = a.id
         WHERE d.courseid = #{courseId}
         ORDER BY d.createTime DESC
     </select>
 
-    <!-- 根据KWA ID列表批量查询 -->
     <select id="getKwaByIds" resultType="com.example.smartttexam.pojo.CmKwadict">
-        SELECT d.id,
-               d.name,
-               d.keywordid,
-               d.abilityid,
-               d.courseid,
-               d.datavalue,
-               d.status,
-               d.createTime,
-               k.name AS keywordName,
-               a.name AS abilityName
+        SELECT DISTINCT d.id, d.name, d.keywordid, d.abilityid, d.courseid, d.datavalue,
+               d.status, d.createTime, k.name AS keywordName, a.name AS abilityName
         FROM cm_kwadict d
-                 LEFT JOIN cm_keywords k ON d.keywordid = k.id
-                 LEFT JOIN cm_getability a ON d.abilityid = a.id
+        LEFT JOIN cm_keywords k ON d.keywordid = k.id
+        LEFT JOIN cm_getability a ON d.abilityid = a.id
         WHERE d.id IN
         <foreach collection="kwaIds" item="id" open="(" separator="," close=")">
             #{id}
