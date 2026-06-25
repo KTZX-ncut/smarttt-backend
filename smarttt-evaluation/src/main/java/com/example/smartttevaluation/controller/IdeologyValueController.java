@@ -12,7 +12,9 @@ import com.example.smartttevaluation.exception.res.ResponseEnum;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.exception.utils.SmartAssert;
 import com.example.smartttevaluation.mapper.CmCourseUnitVValueMapper;
+import com.example.smartttevaluation.mapper.CmKnowledgeUnitMapper;
 import com.example.smartttevaluation.pojo.CmCourseUnitVValue;
+import com.example.smartttevaluation.pojo.CmKnowledgeUnit;
 import com.example.smartttevaluation.pojo.IdeologyValue;
 import com.example.smartttevaluation.service.IdeologyValueService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,9 @@ public class IdeologyValueController {
 
     @Resource
     private CmCourseUnitVValueMapper cmCourseUnitVValueMapper;
+
+    @Resource
+    private CmKnowledgeUnitMapper cmKnowledgeUnitMapper;
 
     /**
      * 新增一级节点
@@ -210,5 +215,108 @@ public class IdeologyValueController {
         }
 
         return Result.ok().msg("思政价值评价建模复制成功");
+    }
+
+    /**
+     * 复制价值标签：仅复制历史课程的价值标签树到当前课程，不影响思政知识单元关联。
+     */
+    @PostMapping("/copyValues")
+    @AuthRequired
+    @Transactional(rollbackFor = Exception.class)
+    public Result copyValues(@RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        String currentCourseId = token.getObsid();
+        Map<String, String> valueIdMap = ideologyValueService.copyIdeologyValues(pastCourseId, currentCourseId);
+        return Result.ok().msg("价值标签复制成功(" + valueIdMap.size() + ")");
+    }
+
+    /**
+     * 复制思政知识单元：将历史课程的知识单元（章节/小节，cm_course_unit）整棵复制到当前课程，
+     * 并一并复制其价值标签绑定（cm_course_unit_v_values）。绑定的价值标签按名称（vname）匹配当前课程已有价值标签。
+     * 注意：知识单元表为全课程共用（形成性评价建模也使用），复制将覆盖当前课程已有知识单元。
+     */
+    @PostMapping("/copyKnowledgeUnit")
+    @AuthRequired
+    @Transactional(rollbackFor = Exception.class)
+    public Result copyKnowledgeUnit(@RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        String currentCourseId = token.getObsid();
+
+        // 1. 读取源课程知识单元
+        List<CmKnowledgeUnit> pastUnits = cmKnowledgeUnitMapper.selectAllUnitsByCourseId(pastCourseId);
+
+        // 2. 清空当前课程的知识单元及其关联（绑定值、kwa、连线）
+        cmCourseUnitVValueMapper.deleteByCourseId(currentCourseId);
+        List<CmKnowledgeUnit> currentUnits = cmKnowledgeUnitMapper.selectAllUnitsByCourseId(currentCourseId);
+        if (!currentUnits.isEmpty()) {
+            List<String> currentUnitIds = currentUnits.stream()
+                    .map(CmKnowledgeUnit::getId).collect(Collectors.toList());
+            cmKnowledgeUnitMapper.deleteKnowledgeUnitKwaByUnitids(currentUnitIds);
+            cmKnowledgeUnitMapper.deleteLineByUnitIds(currentUnitIds);
+            cmKnowledgeUnitMapper.deleteUnitsByCourseId(currentCourseId);
+        }
+
+        if (pastUnits.isEmpty()) {
+            return Result.ok().msg("思政知识单元复制成功(0)");
+        }
+
+        // 3. 复制知识单元（保留章节->小节层级，旧 id -> 新 id 映射）
+        Map<String, String> unitIdMap = new HashMap<>();
+        for (CmKnowledgeUnit u : pastUnits) {
+            unitIdMap.put(u.getId(), IdUtil.fastSimpleUUID());
+        }
+        List<CmKnowledgeUnit> toInsertUnits = new ArrayList<>();
+        for (CmKnowledgeUnit u : pastUnits) {
+            CmKnowledgeUnit nu = new CmKnowledgeUnit();
+            nu.setId(unitIdMap.get(u.getId()));
+            String pid = u.getPid();
+            if (pid == null || "0".equals(pid)) {
+                nu.setPid("0");
+            } else {
+                nu.setPid(unitIdMap.getOrDefault(pid, "0"));
+            }
+            nu.setName(u.getName());
+            nu.setType(u.getType());          // nodeType
+            nu.setDatavalue(u.getDatavalue());
+            nu.setCourseid(currentCourseId);
+            nu.setOrdernum(u.getOrdernum());
+            toInsertUnits.add(nu);
+        }
+        cmKnowledgeUnitMapper.batchInsertUnits(toInsertUnits);
+
+        // 4. 复制绑定值（cm_course_unit_v_values）：旧 unitId -> 新 unitId，vid 按价值标签名称匹配当前课程
+        List<CmCourseUnitVValue> pastLinks = cmCourseUnitVValueMapper.selectByCourseId(pastCourseId);
+        int linkCount = 0;
+        if (!pastLinks.isEmpty()) {
+            Map<String, String> pastVidToName = new HashMap<>();
+            for (IdeologyValue v : ideologyValueService.selectAllNode(pastCourseId)) {
+                pastVidToName.put(v.getId(), v.getVname());
+            }
+            Map<String, String> currentNameToVid = new HashMap<>();
+            for (IdeologyValue v : ideologyValueService.selectAllNode(currentCourseId)) {
+                currentNameToVid.put(v.getVname(), v.getId());
+            }
+            List<CmCourseUnitVValue> toInsertLinks = new ArrayList<>();
+            for (CmCourseUnitVValue link : pastLinks) {
+                String newUnitId = unitIdMap.get(link.getUnitid());
+                if (newUnitId == null) continue;
+                String vname = pastVidToName.get(link.getVid());
+                if (vname == null) continue;
+                String newVid = currentNameToVid.get(vname);
+                if (newVid == null) continue;
+                CmCourseUnitVValue nl = new CmCourseUnitVValue();
+                nl.setId(IdUtil.fastSimpleUUID());
+                nl.setUnitid(newUnitId);
+                nl.setVid(newVid);
+                nl.setStatus(link.getStatus());
+                toInsertLinks.add(nl);
+            }
+            if (!toInsertLinks.isEmpty()) {
+                cmCourseUnitVValueMapper.batchInsert(toInsertLinks);
+                linkCount = toInsertLinks.size();
+            }
+        }
+
+        return Result.ok().msg("思政知识单元复制成功(单元" + toInsertUnits.size() + ",绑定" + linkCount + ")");
     }
 }
