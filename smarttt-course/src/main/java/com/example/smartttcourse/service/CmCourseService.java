@@ -37,4 +37,8 @@ public interface CmCourseService {
     Result copyInfo(String pastId, String obsId);
 
     Result copyFormative(String pastId, String obsId);
+
+    Result copyKeyword(String pastId, String obsId);
+
+    Result copyAbility(String pastId, String obsId);
 }

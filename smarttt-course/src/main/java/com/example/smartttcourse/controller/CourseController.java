@@ -178,4 +178,20 @@ public class CourseController {
         Token token = getTokenFromContext();
         return cmCourseService.copyFormative(pastId, token.getObsid());
     }
+
+    @PostMapping("/copyKeyword")
+    @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
+    @ApiOperation(value = "复制关键字", notes = "仅将历史课程的关键字复制到当前课程，不影响能力。")
+    public Result copyKeyword(@ApiParam(value = "历史课程 ID", required = true) @RequestParam("pastId") String pastId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmCourseService.copyKeyword(pastId, token.getObsid());
+    }
+
+    @PostMapping("/copyAbility")
+    @AuthRequired(type = "admin",menu = "531500340-536f98a8-b11f-480a-a511-0c4d2f51fc35")
+    @ApiOperation(value = "复制能力", notes = "仅将历史课程的能力复制到当前课程，不影响关键字。")
+    public Result copyAbility(@ApiParam(value = "历史课程 ID", required = true) @RequestParam("pastId") String pastId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmCourseService.copyAbility(pastId, token.getObsid());
+    }
 }

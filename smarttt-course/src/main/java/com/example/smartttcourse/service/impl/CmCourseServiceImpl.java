@@ -365,5 +365,63 @@ public class CmCourseServiceImpl implements CmCourseService {
 
         return Result.success("复制成功：关键字(" + keywordCount + ")，能力(" + abilityCount + ")。目标课程 ID: " + obsId);
     }
+
+    @Transactional
+    @Override
+    public Result copyKeyword(String pastId, String obsId) {
+        if (pastId == null || pastId.isEmpty()) {
+            return Result.error("源课程 ID 不能为空");
+        }
+        if (obsId == null || obsId.isEmpty()) {
+            return Result.error("目标课程 ID 不能为空，请检查 Token 是否有效");
+        }
+        if (pastId.equals(obsId)) {
+            return Result.error("源课程与目标课程不能相同");
+        }
+        // 仅复制关键字（覆盖当前课程已有关键字，不影响能力）
+        cmCourseMapper.deleteKeyword(obsId);
+        List<CmKeywords> keywords = cmCourseMapper.getPastKeyword(pastId);
+        int keywordCount = 0;
+        if (keywords != null) {
+            keywordCount = keywords.size();
+            for (CmKeywords keyword : keywords) {
+                keyword.setId(generateEnhancedID("cm_keywords"));
+                keyword.setCourseid(obsId);
+            }
+            if (!keywords.isEmpty()) {
+                cmCourseMapper.copyKeyword(keywords);
+            }
+        }
+        return Result.success("关键字复制成功(" + keywordCount + ")。目标课程 ID: " + obsId);
+    }
+
+    @Transactional
+    @Override
+    public Result copyAbility(String pastId, String obsId) {
+        if (pastId == null || pastId.isEmpty()) {
+            return Result.error("源课程 ID 不能为空");
+        }
+        if (obsId == null || obsId.isEmpty()) {
+            return Result.error("目标课程 ID 不能为空，请检查 Token 是否有效");
+        }
+        if (pastId.equals(obsId)) {
+            return Result.error("源课程与目标课程不能相同");
+        }
+        // 仅复制能力（覆盖当前课程已有能力，不影响关键字）
+        cmCourseMapper.deleteAbility(obsId);
+        List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
+        int abilityCount = 0;
+        if (abilities != null) {
+            abilityCount = abilities.size();
+            for (CmGetability ability : abilities) {
+                // 不生成新ID，保持与能力字典一致（evaluation 模块需通过 ID join cm_ability 获取层级）
+                ability.setCourseid(obsId);
+            }
+            if (!abilities.isEmpty()) {
+                cmCourseMapper.copyAbility(abilities);
+            }
+        }
+        return Result.success("能力复制成功(" + abilityCount + ")。目标课程 ID: " + obsId);
+    }
 }
 
