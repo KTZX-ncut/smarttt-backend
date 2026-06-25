@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
@@ -120,7 +121,7 @@ public class FeAssessmentCategoriesController {
     @PostMapping("/copy")
     @AuthRequired
     @Transactional(rollbackFor = Exception.class)
-    public Result copyAssessmentCategories(@RequestParam("pastCourseId") String pastCourseId) {
+    public Result copyAssessmentCategories(@RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
         Token token = getTokenFromContext();
         String currentCourseId = token.getObsid();
         feAssessmentCategoriesService.copyCategories(pastCourseId, currentCourseId);
