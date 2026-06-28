@@ -1,5 +1,6 @@
 package com.example.smartttevaluation.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.example.smartttevaluation.mapper.IdeologyValueMapper;
@@ -7,8 +8,14 @@ import com.example.smartttevaluation.pojo.IdeologyValue;
 import com.example.smartttevaluation.service.IdeologyValueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 @Service
 @RequiredArgsConstructor
@@ -57,4 +64,77 @@ public class IdeologyValueServiceImpl implements IdeologyValueService {
         return ideologyValueMapper.selectById(id);
     }
 
+    @Override
+    public List<IdeologyValue> selectValueTypes(String courseId) {
+        return ideologyValueMapper.selectValueTypes(courseId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, String> copyIdeologyValues(String pastCourseId, String currentCourseId) {
+        System.out.println("开始复制思政价值标签: pastCourseId=" + pastCourseId + ", currentCourseId=" + currentCourseId);
+        
+        ideologyValueMapper.deleteByCourseId(currentCourseId);
+
+        List<IdeologyValue> pastList = ideologyValueMapper.selectAllNode(pastCourseId);
+        System.out.println("历史课程数据量: " + pastList.size());
+        if (pastList.isEmpty()) {
+            System.out.println("历史课程无数据，返回空映射");
+            return new HashMap<>();
+        }
+        
+        // 打印第一条数据用于调试
+        IdeologyValue first = pastList.get(0);
+        System.out.println("第一条数据: id=" + first.getId() + ", parentId=" + first.getParentId() + ", vname=" + first.getVname());
+
+        Map<String, String> idMap = new HashMap<>();
+        // 父id -> 子节点列表
+        Map<String, List<IdeologyValue>> childrenMap = new HashMap<>();
+        for (IdeologyValue v : pastList) {
+            // 关键修复：同时处理 null 和 "0" 作为根节点标识
+            String parentId = v.getParentId() == null || "0".equals(v.getParentId()) ? "ROOT" : v.getParentId();
+            childrenMap.computeIfAbsent(parentId, k -> new ArrayList<>()).add(v);
+        }
+        
+        System.out.println("childrenMap keys: " + childrenMap.keySet());
+
+        List<IdeologyValue> toInsert = new ArrayList<>();
+        Queue<IdeologyValue> queue = new LinkedList<>(childrenMap.getOrDefault("ROOT", new ArrayList<>()));
+        System.out.println("根节点数量: " + queue.size());
+        
+        while (!queue.isEmpty()) {
+            IdeologyValue current = queue.poll();
+            String oldId = current.getId();
+            String newId = IdUtil.fastSimpleUUID();
+            idMap.put(oldId, newId);
+
+            IdeologyValue newNode = new IdeologyValue();
+            newNode.setId(newId);
+            newNode.setVname(current.getVname());
+            newNode.setRemark(current.getRemark());
+            newNode.setCourseId(currentCourseId);
+            newNode.setLeaf(current.getLeaf());
+            newNode.setLevel(current.getLevel());
+            // parentId: 若有父节点，使用已映射的新 parentId
+            if (current.getParentId() == null || "0".equals(current.getParentId())) {
+                newNode.setParentId(null);
+            } else {
+                newNode.setParentId(idMap.get(current.getParentId()));
+            }
+            toInsert.add(newNode);
+
+            List<IdeologyValue> children = childrenMap.get(oldId);
+            if (children != null) queue.addAll(children);
+        }
+        
+        System.out.println("待插入数据量: " + toInsert.size());
+        System.out.println("ID映射数量: " + idMap.size());
+
+        if (!toInsert.isEmpty()) {
+            ideologyValueMapper.batchInsert(toInsert);
+            System.out.println("批量插入成功");
+        }
+        
+        return idMap;
+    }
 }

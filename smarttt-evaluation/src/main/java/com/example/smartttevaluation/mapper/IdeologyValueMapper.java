@@ -22,4 +22,13 @@ public interface IdeologyValueMapper {
     List<IdeologyValue> selectAllNode(@Param("courseId")  String courseId);
 
     IdeologyValue selectById(@Param("id") String id);
+
+    /**
+     * 获取 V 类型列表（一级节点）
+     */
+    List<IdeologyValue> selectValueTypes(@Param("courseId") String courseId);
+
+    void batchInsert(@Param("list") List<IdeologyValue> list);
+
+    void deleteByCourseId(@Param("courseId") String courseId);
 }
