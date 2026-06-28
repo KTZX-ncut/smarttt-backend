@@ -54,17 +54,31 @@ public interface StRolesMapper {
             " and userid = #{id};")
     List<UserInforReq> getRoleList(String id);
 
-    @Select("select DISTINCT termid as id,if(termname is NULL,'全部',termname) as termName from st_roleuser\n" +
-            "left join cm_term\n" +
-            "on cm_term.id = st_roleuser.termid\n" +
-            "where userid = #{id} and iscurrentterm!=1;")
+    /**
+     * 获取用户的历史学期列表（通过课程关联查询）
+     * @param id 用户ID
+     * @return 学期列表
+     */
+    @Select("SELECT DISTINCT cm_term.id as id, IF(cm_term.termname IS NULL,'全部',cm_term.termname) as termName " +
+            "FROM st_roleuser " +
+            "INNER JOIN cm_course ON cm_course.professionId = st_roleuser.obsid " +
+            "INNER JOIN cm_term ON cm_term.id = cm_course.schooltermId " +
+            "WHERE st_roleuser.userid = #{id} AND cm_term.iscurrentterm != '1'")
     List<TermRoles> getTermList(String id);
 
 
-    @Select("select st_roleuser.id,roleid,rolename,obsid,obsdeep \n" +
-            "from st_roleuser,st_roles \n" +
-            "where st_roleuser.roleid =st_roles.id and userid = #{userid}\n" +
-            "and st_roleuser.termid = #{termid}")
+    /**
+     * 获取指定学期的历史角色列表
+     * @param userid 用户ID
+     * @param termid 学期ID
+     * @return 角色列表
+     */
+    @Select("SELECT st_roleuser.id, st_roleuser.roleid, st_roles.rolename, st_roleuser.obsid, st_roleuser.obsdeep " +
+            "FROM st_roleuser " +
+            "INNER JOIN st_roles ON st_roleuser.roleid = st_roles.id " +
+            "INNER JOIN cm_course ON cm_course.professionId = st_roleuser.obsid " +
+            "WHERE st_roleuser.userid = #{userid} " +
+            "AND cm_course.schooltermId = #{termid}")
     List<SimpleRole> getHistoryRoles(@Param("userid") String userid, @Param("termid") String termid);
 
     void deleteRolesByObsid(@Param("ids")List<String> deleteList);
