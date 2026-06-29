@@ -36,7 +36,7 @@ def generate_questions_json(client, kwa_list_str, seeds, question_count, max_ret
 {seeds_formatted}
 
 # 命题规则
-1. **主题约束**：所有题目必须围绕上面的KWA知识点，不得使用KWA未涵盖的知识点。
+1. **主题约束**：每道题从上面的KWA列表中随机选取1-5个，围绕它们命题，不得使用列表外的知识点。
 2. **难度与题型分配**：
     - 难度 1（基础概念）：{d1_obj} 道**客观题**，{d1_sub} 道**主观题**
     - 难度 2（综合分析）：{d2_obj} 道**客观题**，{d2_sub} 道**主观题**
@@ -57,7 +57,7 @@ def generate_questions_json(client, kwa_list_str, seeds, question_count, max_ret
     - `level`: 难度分级，必须为整数：1, 2, 3。
     - `type`: 题型标签，整数：**1=单选, 2=多选, 3=判断, 4=填空, 5=简答**。
     - `score`: 题目分值，客观题3-5分，主观题8-15分
-    - `KWA`: 字符串数组，如 ["KWA1", "KWA2"],严格保证这里的KWA是从我前面给出的KWA中挑选的。
+    - `KWA`: 字符串数组，1-5个，必须从我前面给出的KWA列表中随机挑选。
 3. **JSON 结构示例**：
 [
   {{

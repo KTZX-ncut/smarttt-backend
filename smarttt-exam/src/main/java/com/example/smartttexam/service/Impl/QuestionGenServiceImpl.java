@@ -2,16 +2,14 @@ package com.example.smartttexam.service.Impl;
 
 import com.example.smartttexam.Utils.CommonFunctions;
 import com.example.smartttexam.Utils.PythonRunner;
-import com.example.smartttexam.dto.KwaContextDTO;
-import com.example.smartttexam.dto.PageResult;
-import com.example.smartttexam.dto.QuestionGenRequest;
-import com.example.smartttexam.dto.Result;
+import com.example.smartttexam.dto.*;
 import com.example.smartttexam.mapper.CmKwadictMapper;
 import com.example.smartttexam.mapper.TmTestquelibExtMapper;
 import com.example.smartttexam.mapper.TmTestquelibKwaMapper;
 import com.example.smartttexam.pojo.CmKwadict;
 import com.example.smartttexam.pojo.TmTestquelib;
 import com.example.smartttexam.pojo.TmTestquelibKwa;
+import com.example.smartttexam.service.ProgressManager;
 import com.example.smartttexam.service.QuestionGenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,50 +24,43 @@ import java.util.*;
 @Service
 public class QuestionGenServiceImpl implements QuestionGenService {
 
-    @Autowired
-    private CmKwadictMapper cmKwadictMapper;
+    @Autowired private CmKwadictMapper cmKwadictMapper;
+    @Autowired private TmTestquelibExtMapper tmTestquelibExtMapper;
+    @Autowired private TmTestquelibKwaMapper tmTestquelibKwaMapper;
+    @Autowired private ProgressManager progressManager;
 
-    @Autowired
-    private TmTestquelibExtMapper tmTestquelibExtMapper;
+    @Value("${llm.api.url}") private String llmApiUrl;
+    @Value("${llm.api.key}") private String llmApiKey;
+    @Value("${llm.api.model:qwen3-235b}") private String llmModel;
 
-    @Autowired
-    private TmTestquelibKwaMapper tmTestquelibKwaMapper;
-
-    @Value("${llm.api.url}")
-    private String llmApiUrl;
-
-    @Value("${llm.api.key}")
-    private String llmApiKey;
-
-    @Value("${llm.api.model:qwen3-235b}")
-    private String llmModel;
-
-    //获取kwa列表
     @Override
     public Result getCourseKwa(String courseId) {
         List<CmKwadict> kwaList = cmKwadictMapper.getKwaByCourseId(courseId);
-        // 转换为DTO返回
         List<KwaContextDTO> result = new ArrayList<>();
         for (CmKwadict k : kwaList) {
             result.add(new KwaContextDTO(
                     k.getKeywordid(), k.getKeywordName(),
                     k.getAbilityid(), k.getAbilityName(),
-                    k.getId(), k.getName()
-            ));
+                    k.getId(), k.getName()));
         }
         return Result.success(result);
     }
 
-    //AI出题核心流程
     @Override
     public Result generateQuestions(QuestionGenRequest request) {
-        // 1. 查询KWA数据，构建上下文
-        List<CmKwadict> kwaList = cmKwadictMapper.getKwaByIds(request.getSelectedKwaIds());
-        if (kwaList.isEmpty()) {
-            return Result.error("未找到选中的KWA数据");
-        }
+        // 同步校验
+        final List<CmKwadict> kwaList = cmKwadictMapper.getKwaByIds(request.getSelectedKwaIds());
+        if (kwaList.isEmpty()) return Result.error("未找到选中的KWA数据");
 
-        // 2. 构建传给Python的JSON参数
+        final String taskId = UUID.randomUUID().toString().substring(0, 8);
+        final int questionCount = request.getQuestionCount() != null ? request.getQuestionCount() : 20;
+        final String courseId = request.getCourseId();
+        final String classroomId = request.getClassroomId();
+        final String unitId = request.getUnitId();
+        final String creatorId = request.getCreatorId();
+        final String creator = request.getCreator();
+
+        // 构建JSON
         List<Map<String, String>> kwaMapList = new ArrayList<>();
         for (CmKwadict k : kwaList) {
             Map<String, String> item = new HashMap<>();
@@ -78,120 +69,93 @@ public class QuestionGenServiceImpl implements QuestionGenService {
             item.put("kwaName", k.getName() != null ? k.getName() : "");
             kwaMapList.add(item);
         }
-        int questionCount = request.getQuestionCount() != null ? request.getQuestionCount() : 20;
-
         Map<String, Object> kwaJson = new HashMap<>();
         kwaJson.put("kwaList", kwaMapList);
         kwaJson.put("questionCount", questionCount);
         kwaJson.put("apiKey", llmApiKey);
         kwaJson.put("apiUrl", llmApiUrl);
         kwaJson.put("model", llmModel);
+        final String kwaJsonStr;
+        try { kwaJsonStr = new ObjectMapper().writeValueAsString(kwaJson); }
+        catch (Exception e) { return Result.error("构建KWA JSON失败: " + e.getMessage()); }
 
-        String kwaJsonStr;
-        try {
-            kwaJsonStr = new ObjectMapper().writeValueAsString(kwaJson);
-        } catch (Exception e) {
-            return Result.error("构建KWA JSON失败: " + e.getMessage());
-        }
+        // 初始化进度
+        progressManager.create(taskId);
 
-        // 3. 调用Python脚本（传入唯一输出ID，防止并发冲突）
-        String outputId = UUID.randomUUID().toString().substring(0, 8);
-        PythonRunner.PythonResult pyResult = PythonRunner.run("generateQuestion.py", kwaJsonStr, outputId);
-        if (!pyResult.isSuccess()) {
-            return Result.error("AI出题失败: " + pyResult.getErrOutput());
-        }
+        // 异步执行
+        new Thread(() -> {
+            try {
+                progressManager.update(taskId, 10, "正在调用AI模型...");
+                PythonRunner.PythonResult pyResult = PythonRunner.run("generateQuestion.py", kwaJsonStr, taskId);
+                if (!pyResult.isSuccess()) { progressManager.fail(taskId, pyResult.getErrOutput()); return; }
 
-        // 4. 读取Python输出的JSON
-        String jsonPath = "src/main/resources/python/outputFiles/" + outputId + ".json";
-        File jsonFile = new File(jsonPath);
-        if (!jsonFile.exists()) {
-            return Result.error("AI出题输出文件未生成: " + jsonPath);
-        }
+                progressManager.update(taskId, 70, "正在解析生成结果...");
+                File jsonFile = new File("src/main/resources/python/outputFiles/" + taskId + ".json");
+                if (!jsonFile.exists()) { progressManager.fail(taskId, "输出文件未生成"); return; }
 
-        List<Map<String, Object>> questionData;
-        try {
-            questionData = new ObjectMapper().readValue(jsonFile,
-                    new com.fasterxml.jackson.core.type.TypeReference<List<Map<String, Object>>>() {});
-        } catch (Exception e) {
-            return Result.error("解析AI出题JSON失败: " + e.getMessage());
-        }
+                List<Map<String, Object>> questionData;
+                try { questionData = new ObjectMapper().readValue(jsonFile, new com.fasterxml.jackson.core.type.TypeReference<List<Map<String, Object>>>() {}); }
+                catch (Exception e) { progressManager.fail(taskId, "解析失败: " + e.getMessage()); return; }
+                if (questionData.isEmpty()) { progressManager.fail(taskId, "AI未生成题目"); return; }
 
-        if (questionData.isEmpty()) {
-            return Result.error("AI未生成任何题目");
-        }
+                progressManager.update(taskId, 85, "正在存入题库...");
+                String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                List<TmTestquelib> questions = new ArrayList<>();
+                List<TmTestquelibKwa> kwaLinks = new ArrayList<>();
+                Map<String, CmKwadict> nameMap = new HashMap<>();
+                for (CmKwadict k : kwaList) if (k.getName() != null) nameMap.put(k.getName(), k);
 
-        // 5. 转换为tm_testquelib实体，保存到数据库
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        List<TmTestquelib> questions = new ArrayList<>();
-        List<TmTestquelibKwa> kwaLinks = new ArrayList<>();
+                for (Map<String, Object> dto : questionData) {
+                    String libId = CommonFunctions.generateEnhancedID("tm_testquelib");
+                    String questionText = (String) dto.getOrDefault("question", "");
+                    int level = dto.get("level") instanceof Number ? ((Number) dto.get("level")).intValue() : 1;
+                    int type = dto.get("type") instanceof Number ? ((Number) dto.get("type")).intValue() : 1;
+                    Object kwaObj = dto.get("KWA");
 
-        for (Map<String, Object> dto : questionData) {
-            String libId = CommonFunctions.generateEnhancedID("tm_testquelib");
+                    TmTestquelib q = new TmTestquelib();
+                    q.setId(libId); q.setContent(questionText);
+                    q.setTitle(questionText != null && questionText.length() > 50 ? questionText.substring(0, 50) : questionText);
+                    q.setQuestionTypeId(type >= 1 && type <= 5 ? new String[]{"","0201","0202","0203","0204","0205"}[type] : "0204");
+                    q.setDifficultyLevel((double) level); q.setDifferenceLevel(0.0); q.setGuesssLevel(0.0);
+                    q.setCourseId(courseId); q.setClassroomId(classroomId); q.setUnitId(unitId);
+                    q.setCreatorId(creatorId); q.setCreator(creator); q.setCreateTime(now);
+                    q.setStatus(0); q.setCodelang("zh");
+                    questions.add(q);
 
-            String questionText = (String) dto.getOrDefault("question", "");
-            int level = dto.get("level") instanceof Number ? ((Number) dto.get("level")).intValue() : 1;
-            int type = dto.get("type") instanceof Number ? ((Number) dto.get("type")).intValue() : 1;
-            Object kwaObj = dto.get("KWA");
-
-            TmTestquelib q = new TmTestquelib();
-            q.setId(libId);
-            q.setContent(questionText);
-            String title = questionText != null && questionText.length() > 50
-                    ? questionText.substring(0, 50) : questionText;
-            q.setTitle(title);
-            // type映射: 1=单选→0201, 2=多选→0202, 3=判断→0203, 4=填空→0204, 5=简答→0205
-            String[] typeMap = {"", "0201", "0202", "0203", "0204", "0205"};
-            q.setQuestionTypeId(type >= 1 && type <= 5 ? typeMap[type] : "0204");
-            q.setDifficultyLevel((double) level);
-            q.setDifferenceLevel(0.0);
-            q.setGuesssLevel(0.0);
-            q.setCourseId(request.getCourseId());
-            q.setClassroomId(request.getClassroomId());
-            q.setUnitId(request.getUnitId());
-            q.setCreatorId(request.getCreatorId());
-            q.setCreator(request.getCreator());
-            q.setCreateTime(now);
-            q.setStatus(0);
-            q.setCodelang("zh");
-            questions.add(q);
-
-            // 处理KWA关联：模糊匹配
-            if (kwaObj instanceof List) {
-                @SuppressWarnings("unchecked")
-                List<String> kwaNames = (List<String>) kwaObj;
-                for (String kwaName : kwaNames) {
-                    for (CmKwadict kwa : kwaList) {
-                        String dbKwaName = kwa.getName();
-                        if (dbKwaName != null && !dbKwaName.isEmpty()
-                                && (kwaName.contains(dbKwaName) || dbKwaName.contains(kwaName))) {
-                            TmTestquelibKwa link = new TmTestquelibKwa();
-                            link.setId(CommonFunctions.generateEnhancedID("tm_testquelib_kwa"));
-                            link.setLibId(libId);
-                            link.setKwaId(kwa.getId());
-                            link.setKwaName(dbKwaName);
-                            link.setDataValue(1.0);
-                            kwaLinks.add(link);
-                            break;
+                    if (kwaObj instanceof List) {
+                        @SuppressWarnings("unchecked") List<String> kwaNames = (List<String>) kwaObj;
+                        for (String kwaName : kwaNames) {
+                            CmKwadict matched = nameMap.get(kwaName);
+                            if (matched == null) {
+                                for (CmKwadict k : kwaList) {
+                                    String dbName = k.getName();
+                                    if (dbName != null && !dbName.isEmpty() && (kwaName.contains(dbName) || dbName.contains(kwaName)))
+                                    { matched = k; break; }
+                                }
+                            }
+                            if (matched != null) {
+                                TmTestquelibKwa link = new TmTestquelibKwa();
+                                link.setId(CommonFunctions.generateEnhancedID("tm_testquelib_kwa"));
+                                link.setLibId(libId); link.setKwaId(matched.getId());
+                                link.setKwaName(matched.getName()); link.setDataValue(1.0);
+                                kwaLinks.add(link);
+                            }
                         }
                     }
                 }
+                tmTestquelibExtMapper.batchInsert(questions);
+                if (!kwaLinks.isEmpty()) tmTestquelibKwaMapper.batchInsert(kwaLinks);
+
+                jsonFile.delete();
+                new File("src/main/resources/python/outputFiles/" + taskId + ".xlsx").delete();
+                progressManager.done(taskId, questions.size());
+            } catch (Exception e) {
+                progressManager.fail(taskId, e.getMessage());
             }
-        }
+        }).start();
 
-        // 6. 批量插入
-        tmTestquelibExtMapper.batchInsert(questions);
-        if (!kwaLinks.isEmpty()) {
-            tmTestquelibKwaMapper.batchInsert(kwaLinks);
-        }
-
-        // 7. 清理临时文件
-        jsonFile.delete();
-        File excelFile2 = new File("src/main/resources/python/outputFiles/" + outputId + ".xlsx");
-        excelFile2.delete();
-
-        return Result.success("成功生成 " + questions.size() + " 道题目");
+        return Result.success(taskId);
     }
-
 
     @Override
     public Result getQuestionsByCourse(String courseId, int pageIndex, int pageSize) {
@@ -199,17 +163,13 @@ public class QuestionGenServiceImpl implements QuestionGenService {
         List<TmTestquelib> list = tmTestquelibExtMapper.getQuestionsByCourseIdPaged(courseId, offset, pageSize);
         long total = tmTestquelibExtMapper.countByCourseId(courseId);
 
-        // 批量查KWA并附加到每道题
         if (!list.isEmpty()) {
             List<String> libIds = new ArrayList<>();
             for (TmTestquelib q : list) libIds.add(q.getId());
             List<TmTestquelibKwa> allKwas = tmTestquelibKwaMapper.getByLibIds(libIds);
-            // 按libId分组
             Map<String, List<String>> kwaMap = new HashMap<>();
-            for (TmTestquelibKwa kwa : allKwas) {
-                kwaMap.computeIfAbsent(kwa.getLibId(), k -> new ArrayList<>()).add(kwa.getKwaName());
-            }
-            // 转为带kwas字段的Map返回
+            for (TmTestquelibKwa kwa : allKwas) kwaMap.computeIfAbsent(kwa.getLibId(), k -> new ArrayList<>()).add(kwa.getKwaName());
+
             List<Map<String, Object>> enriched = new ArrayList<>();
             for (TmTestquelib q : list) {
                 Map<String, Object> item = new ObjectMapper().convertValue(q, Map.class);
@@ -217,22 +177,23 @@ public class QuestionGenServiceImpl implements QuestionGenService {
                 enriched.add(item);
             }
             Map<String, Object> pageResult = new HashMap<>();
-            pageResult.put("data", enriched);
-            pageResult.put("recordSize", total);
-            pageResult.put("pageIndex", pageIndex);
-            pageResult.put("pageSize", pageSize);
+            pageResult.put("data", enriched); pageResult.put("recordSize", total);
+            pageResult.put("pageIndex", pageIndex); pageResult.put("pageSize", pageSize);
             return Result.success(pageResult);
         }
-
-        PageResult<TmTestquelib> result = new PageResult<>(list, total, pageIndex, pageSize);
-        return Result.success(result);
+        return Result.success(new PageResult<>(list, total, pageIndex, pageSize));
     }
 
     @Override
     public Result deleteQuestions(List<String> libIds) {
-        if (libIds != null && !libIds.isEmpty()) {
-            tmTestquelibExtMapper.softDeleteByIds(libIds);
-        }
+        if (libIds != null && !libIds.isEmpty()) tmTestquelibExtMapper.softDeleteByIds(libIds);
         return Result.success();
+    }
+
+    /** 查询任务进度 */
+    public Result getProgress(String taskId) {
+        TaskProgress p = progressManager.get(taskId);
+        if (p == null) return Result.error("任务不存在");
+        return Result.success(p);
     }
 }

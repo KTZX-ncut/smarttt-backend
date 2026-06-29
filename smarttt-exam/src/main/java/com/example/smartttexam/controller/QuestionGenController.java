@@ -68,6 +68,11 @@ public class QuestionGenController {
         return questionGenService.getQuestionsByCourse(courseId != null ? courseId : "", pageIndex, pageSize);
     }
 
+    @GetMapping("/generate/progress")
+    public Result getProgress(@RequestParam String taskId) {
+        return questionGenService.getProgress(taskId);
+    }
+
     @PostMapping("/delete")
     @AuthRequired(type = "admin", menu = "", isReadOnly = false)
     public Result deleteQuestions(@RequestBody List<String> libIds) {
