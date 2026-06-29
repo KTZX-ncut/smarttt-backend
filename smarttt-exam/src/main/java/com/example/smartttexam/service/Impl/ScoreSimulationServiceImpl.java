@@ -69,6 +69,11 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
         if (paper == null) return Result.error("试卷不存在");
         if (testId == null) return Result.error("试卷尚未发布，请先发布后再模拟作答");
 
+        // 检查是否已有作答记录
+        if (!aiInStuAnsInfoMapper.getByTestId(testId).isEmpty()) {
+            return Result.error("该试卷已有学生作答记录，不允许重复模拟");
+        }
+
         String classroomId = request.getClassroomId();
         if (classroomId == null) {
             classroomId = paper.getClassroomId();
