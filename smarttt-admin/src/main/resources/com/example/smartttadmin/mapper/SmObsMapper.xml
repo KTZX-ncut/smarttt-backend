@@ -112,12 +112,4 @@
             #{id}
         </foreach>
     </delete>
-
-    <!-- List<SmObs> getObsByObsNameAndDeep(@Param("obsname") String obsname, @Param("obsdeep") Long obsdeep, @Param("termid") String termid);-->
-    <select id="getObsByObsNameAndDeep" resultType="com.example.smartttadmin.pojo.SmObs">
-        SELECT * FROM sm_obs 
-        WHERE obsname = #{obsname} 
-        AND obsdeep = #{obsdeep}
-        AND (termid = #{termid} OR termid = 0)
-    </select>
 </mapper>

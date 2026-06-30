@@ -1,20 +1,14 @@
 package com.example.smartttevaluation.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.smartttevaluation.Utils.AuthRequired;
 import com.example.smartttevaluation.dto.AssessmentCategorySearchReq;
-import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.exception.res.Result;
 import com.example.smartttevaluation.pojo.FeAssessmentCategories;
 import com.example.smartttevaluation.service.FeAssessmentCategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-
-import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFromContext;
 
 /**
  * 考核项类别表 Controller
@@ -111,21 +105,6 @@ public class FeAssessmentCategoriesController {
     public Result searchAssessmentCategories(@RequestBody AssessmentCategorySearchReq searchReq) {
         Page<FeAssessmentCategories> page = feAssessmentCategoriesService.searchAssessmentCategories(searchReq);
         return Result.success(page);
-    }
-
-    /**
-     * 从其他课程复制考核项设计（考核项类别）到当前课程（覆盖当前课程已有考核项类别）
-     * @param pastCourseId 来源课程ID
-     * @return 复制结果
-     */
-    @PostMapping("/copy")
-    @AuthRequired
-    @Transactional(rollbackFor = Exception.class)
-    public Result copyAssessmentCategories(@RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
-        Token token = getTokenFromContext();
-        String currentCourseId = token.getObsid();
-        feAssessmentCategoriesService.copyCategories(pastCourseId, currentCourseId);
-        return Result.success("考核项设计复制成功");
     }
 
 }

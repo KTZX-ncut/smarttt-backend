@@ -6,8 +6,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -25,11 +23,8 @@ public class AuthorizationAspect {
     private static final ThreadLocal<Token> tokenThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<String> logIdThreadLocal = new ThreadLocal<>();
 
-    @Before("@annotation(authRequired)")
-    public void beforeMethodWithAuthRequired(AuthRequired authRequired) {
-        // 通过 RequestContextHolder 获取 HttpServletRequest，不依赖参数位置
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        
+    @Before("@annotation(authRequired) && args(.., request)")
+    public void beforeMethodWithAuthRequired(AuthRequired authRequired, HttpServletRequest request) {
         String stringToken = extractTokenFromRequest(request);
         String logId = extractLogIdFromRequest(request);
         Token token = parseToken(stringToken,TokenSK);

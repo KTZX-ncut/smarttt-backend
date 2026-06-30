@@ -55,9 +55,4 @@ public interface FeAssessmentCategoriesService extends IService<FeAssessmentCate
      * @return 分页结果
      */
     Page<FeAssessmentCategories> searchAssessmentCategories(AssessmentCategorySearchReq searchReq);
-
-    /**
-     * 复制历史课程考核项类别到当前课程，返回 oldId->newId 映射
-     */
-    java.util.Map<String, String> copyCategories(String pastCourseId, String currentCourseId);
 }

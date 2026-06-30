@@ -5,13 +5,9 @@ import com.example.smartttcourse.dto.CreateStudent;
 import com.example.smartttcourse.exception.res.ResponseEnum;
 import com.example.smartttcourse.exception.res.Result;
 import com.example.smartttcourse.exception.utils.SmartAssert;
-import com.example.smartttcourse.mapper.CmTermMapper;
-import com.example.smartttcourse.mapper.StLevelMapper;
 import com.example.smartttcourse.pojo.CmClassroomClassroommenu;
 import com.example.smartttcourse.pojo.CmClassroomHomeworkinfo;
 import com.example.smartttcourse.pojo.CmClassroomStudent;
-import com.example.smartttcourse.pojo.SmObs;
-import com.example.smartttcourse.pojo.StLevel;
 import com.example.smartttcourse.service.CmClassroomClassroommenuService;
 import com.example.smartttcourse.service.CmClassroomHomeworkinfoService;
 import com.example.smartttcourse.service.CmClassroomStudentService;
@@ -27,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -48,22 +43,13 @@ public class CourseStudentMangtController {
     private final CmClassroomClassroommenuService classroommenuService;
 
     private final CmClassroomHomeworkinfoService classroomHomeworkinfoService;
-    
-    private final StLevelMapper stLevelMapper;
-    
-    private final com.example.smartttcourse.mapper.SmObsMapper smObsMapper;
-    
-    private final CmTermMapper cmTermMapper;
 
 
-    public CourseStudentMangtController(CmClassroomStudentService cmClassroomStudentService, SmObsService smObsService, CmClassroomClassroommenuService classroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomHomeworkinfoService classroomHomeworkinfoService, StLevelMapper stLevelMapper, com.example.smartttcourse.mapper.SmObsMapper smObsMapper, CmTermMapper cmTermMapper) {
+    public CourseStudentMangtController(CmClassroomStudentService cmClassroomStudentService, SmObsService smObsService, CmClassroomClassroommenuService classroommenuService, CmClassroomHomeworkinfoService cmClassroomHomeworkinfoService, CmClassroomHomeworkinfoService classroomHomeworkinfoService) {
         this.cmClassroomStudentService = cmClassroomStudentService;
         this.smObsService = smObsService;
         this.classroommenuService = classroommenuService;
         this.classroomHomeworkinfoService = classroomHomeworkinfoService;
-        this.stLevelMapper = stLevelMapper;
-        this.smObsMapper = smObsMapper;
-        this.cmTermMapper = cmTermMapper;
     }
 
     /**
@@ -101,13 +87,6 @@ public class CourseStudentMangtController {
             CmClassroomStudent classroomStudent = new CmClassroomStudent();
             // 校验字段
             validateCreateStudentClassRoom(createStudent, classroomStudent);
-            
-            // 新增：校验所属院系和层级的合法性
-            Result validateResult = validateObsnameAndLevel(createStudent.getObsname(), createStudent.getUsersid());
-            if (!validateResult.getCode().equals(200)) {
-                return validateResult;
-            }
-            
             // 这个学生有没有在课堂中
             LambdaQueryWrapper<CmClassroomStudent> wrapper =
                     new LambdaQueryWrapper<>();
@@ -213,7 +192,7 @@ public class CourseStudentMangtController {
 
     private static void validateCreateStudentClassRoom(CreateStudent createStudent, CmClassroomStudent classroomStudent) {
         // 校验参数
-        // 课堂 ID，userID，专业名称，班级，班级 ID，姓名，登录名称
+        // 课堂ID，userID，专业名称，班级，班级ID，姓名，登录名称
         SmartAssert.notEmpty(createStudent.getClassRoomId(), ResponseEnum.CLASSROOM_ID_NOT_NULL);
         SmartAssert.notEmpty(createStudent.getUsersid(), ResponseEnum.USER_ID_NOT_NULL);
         SmartAssert.notEmpty(createStudent.getProname(), ResponseEnum.PRONAME_NOT_NULL);
@@ -232,41 +211,9 @@ public class CourseStudentMangtController {
         classroomStudent.setRowNo(createStudent.getRowNo());
         classroomStudent.setCourseScore(createStudent.getCourseScore());
     }
-        
-    /**
-     * 校验所属院系和层级的合法性
-     * @param obsname 组织名称
-     * @param userId 用户 ID
-     * @return 校验结果
-     */
-    private Result validateObsnameAndLevel(String obsname, String userId) {
-        // 1. 获取当前学期 ID
-        String currentTermId = cmTermMapper.getCurrentTerm();
-        if (currentTermId == null) {
-            return Result.error("系统错误：未找到当前学期！");
-        }
-            
-        // 2. 根据 obsname 查询组织信息（不限制层级深度）
-        List<SmObs> smObsList = smObsMapper.selectList(new LambdaQueryWrapper<SmObs>()
-                .eq(SmObs::getObsname, obsname)
-                .eq(SmObs::getTermid, currentTermId));
-            
-        if (smObsList.isEmpty()) {
-            return Result.error("所属院系不存在：'" + obsname + "'");
-        }
-        
-        // 3. 校验组织的 obsdeep 必须等于 5
-        SmObs matchedObs = smObsList.get(0);
-        if (!Objects.equals(matchedObs.getObsdeep(), 5)) {
-            return Result.error("学生只能创建在 obsdeep=5 的组织下！当前组织 '" + obsname + "' 的层级深度为 " + matchedObs.getObsdeep() + "。");
-        }
-            
-        // 所有校验通过
-        return Result.success();
-    }
 
     /**
-     * 获取学生所属层级 (班级/专业/系/院)
+     * 获取学生所属层级(班级/专业/系/院)
      */
     @GetMapping("/getStudentLevel")
     @ApiOperation(value = "获取学生所属层级", notes = "返回学生在组织结构中的层级名称，例如班级、专业、系或学院。")

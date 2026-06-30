@@ -12,12 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import cn.hutool.core.util.IdUtil;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 课程目标表 Service 实现类
@@ -185,31 +182,7 @@ public class FeCourseObjectivesServiceImpl extends ServiceImpl<FeCourseObjective
             page.setSize(searchReq.getSize());
             page.setPages((total + searchReq.getSize() - 1) / searchReq.getSize());
         }
-
+        
         return page;
-    }
-
-    @Override
-    public Map<String, String> copyCourseObjectives(String pastCourseId, String currentCourseId) {
-        LambdaQueryWrapper<FeCourseObjectives> delWrapper = new LambdaQueryWrapper<>();
-        delWrapper.eq(FeCourseObjectives::getCourseId, currentCourseId);
-        remove(delWrapper);
-
-        LambdaQueryWrapper<FeCourseObjectives> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(FeCourseObjectives::getCourseId, pastCourseId);
-        List<FeCourseObjectives> pastList = list(queryWrapper);
-
-        Map<String, String> idMap = new HashMap<>();
-        for (FeCourseObjectives obj : pastList) {
-            String oldId = obj.getId();
-            String newId = IdUtil.fastSimpleUUID();
-            idMap.put(oldId, newId);
-            obj.setId(newId);
-            obj.setCourseId(currentCourseId);
-            obj.setCreatedAt(LocalDateTime.now());
-            obj.setUpdatedAt(LocalDateTime.now());
-            save(obj);
-        }
-        return idMap;
     }
 }

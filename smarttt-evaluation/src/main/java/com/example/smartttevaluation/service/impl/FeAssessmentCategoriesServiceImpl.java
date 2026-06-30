@@ -1,7 +1,5 @@
 package com.example.smartttevaluation.service.impl;
 
-import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.smartttevaluation.dto.AssessmentCategorySearchReq;
@@ -14,9 +12,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 考核项类别表 Service 实现类
@@ -187,38 +183,14 @@ public class FeAssessmentCategoriesServiceImpl extends ServiceImpl<FeAssessmentC
             Long offset = (searchReq.getCurrent() - 1) * searchReq.getSize(); // 计算偏移量
             List<FeAssessmentCategories> list = feAssessmentCategoriesMapper.searchAssessmentCategories(searchReq, offset);
             Long total = feAssessmentCategoriesMapper.countSearchAssessmentCategories(searchReq);
-
+            
             page.setRecords(list);
             page.setTotal(total);
             page.setCurrent(searchReq.getCurrent());
             page.setSize(searchReq.getSize());
             page.setPages((total + searchReq.getSize() - 1) / searchReq.getSize());
         }
-
+        
         return page;
-    }
-
-    @Override
-    public Map<String, String> copyCategories(String pastCourseId, String currentCourseId) {
-        LambdaQueryWrapper<FeAssessmentCategories> delWrapper = new LambdaQueryWrapper<>();
-        delWrapper.eq(FeAssessmentCategories::getCourseId, currentCourseId);
-        remove(delWrapper);
-
-        LambdaQueryWrapper<FeAssessmentCategories> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(FeAssessmentCategories::getCourseId, pastCourseId);
-        List<FeAssessmentCategories> pastList = list(queryWrapper);
-
-        Map<String, String> idMap = new HashMap<>();
-        for (FeAssessmentCategories cat : pastList) {
-            String oldId = cat.getId();
-            String newId = IdUtil.fastSimpleUUID();
-            idMap.put(oldId, newId);
-            cat.setId(newId);
-            cat.setCourseId(currentCourseId);
-            cat.setCreatedAt(LocalDateTime.now());
-            cat.setUpdatedAt(LocalDateTime.now());
-            save(cat);
-        }
-        return idMap;
     }
 }

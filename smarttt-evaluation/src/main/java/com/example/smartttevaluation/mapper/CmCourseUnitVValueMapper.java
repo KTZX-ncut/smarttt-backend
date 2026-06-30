@@ -26,31 +26,5 @@ public interface CmCourseUnitVValueMapper {
     // 检查v值是否已存在
     @Select("select count(*) from cm_course_unit_v_values where vId=#{vid} and unitId=#{unitid}")
     long getUnitVValueCount(CmCourseUnitVValue cmCourseUnitVValue);
-
-    // 查询历史课程下所有思政知识单元关联（通过 cm_course_unit 关联 courseId）
-    @Select("SELECT uv.id, uv.unitId as unitid, uv.vId as vid, uv.status " +
-            "FROM cm_course_unit_v_values uv " +
-            "INNER JOIN cm_course_unit u ON uv.unitId = u.id " +
-            "WHERE u.courseid = #{courseId}")
-    List<CmCourseUnitVValue> selectByCourseId(@Param("courseId") String courseId);
-
-    // 查询当前课程的知识单元（name+ordernum），用于匹配复制
-    @Select("SELECT id, name, ordernum FROM cm_course_unit WHERE courseid = #{courseId}")
-    List<java.util.Map<String, Object>> selectUnitBasicByCourseId(@Param("courseId") String courseId);
-
-    // 删除当前课程下所有思政知识单元关联
-    @Delete("DELETE uv FROM cm_course_unit_v_values uv " +
-            "INNER JOIN cm_course_unit u ON uv.unitId = u.id " +
-            "WHERE u.courseid = #{courseId}")
-    void deleteByCourseId(@Param("courseId") String courseId);
-
-    // 批量插入
-    @Insert("<script>" +
-            "INSERT INTO cm_course_unit_v_values(id, unitId, vId, status) VALUES " +
-            "<foreach collection='list' item='item' separator=','>" +
-            "(#{item.id}, #{item.unitid}, #{item.vid}, #{item.status})" +
-            "</foreach>" +
-            "</script>")
-    void batchInsert(@Param("list") List<CmCourseUnitVValue> list);
 }
 

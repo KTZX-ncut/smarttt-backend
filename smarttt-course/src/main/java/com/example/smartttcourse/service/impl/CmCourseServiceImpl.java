@@ -125,14 +125,6 @@ public class CmCourseServiceImpl implements CmCourseService {
         return Result.success(cmCourseMapper.getPreCourseByCode(termId, courseCode));
     }
 
-    /**
-     * 获取当前专业下的所有课程（不按学期过滤）
-     */
-    @Override
-    public Result getAllCourses(Token token) {
-        return Result.success(cmCourseMapper.getAllCourses(token.getObsid()));
-    }
-
     @Transactional
     @Override
     public Result copyInfo(String pastId, String obsId) {
@@ -153,29 +145,22 @@ public class CmCourseServiceImpl implements CmCourseService {
         // 复制能力
         cmCourseMapper.deleteAbility(obsId);
         List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
-        Map<String, String> abilityIdMap = new HashMap<>();
-        for (CmGetability ability : abilities) {
-            String oldAbilityId = ability.getId();
-            // 不再生成新的ID，保持与能力字典一致，否则 evaluation 模块无法通过 ID join cm_ability 获取层级信息
-            // ability.setId(generateEnhancedID("cm_getability"));
-            abilityIdMap.put(oldAbilityId, ability.getId());
-            ability.setCourseid(obsId);
-        }
-        if (!abilities.isEmpty()) cmCourseMapper.copyAbility(abilities);
+        for (CmGetability ability : abilities) ability.setCourseid(obsId);
+        cmCourseMapper.copyAbility(abilities);
 
         // 复制kwa
         cmCourseMapper.deleteKwa(obsId);
         List<CmKwadict> kwas = cmCourseMapper.getPastKwa(pastId);
+        // 旧-新kwaId映射
         Map<String, String> kwaIdMap = new HashMap<>();
         for (CmKwadict kwa : kwas) {
             String id = kwa.getId();
             kwa.setId(generateEnhancedID("cm_kwadict"));
             kwaIdMap.put(id, kwa.getId());
             kwa.setKeywordid(keywordIdMap.get(kwa.getKeywordid()));
-            kwa.setAbilityid(abilityIdMap.get(kwa.getAbilityid()));
             kwa.setCourseid(obsId);
         }
-        if (!kwas.isEmpty()) cmCourseMapper.copyKwa(kwas);
+        cmCourseMapper.copyKwa(kwas);
 
         // 先存下来未进行删除操作前的当前课程的知识单元，用于后续删除与这些知识单元挂钩的kwa条目
         // （因为cm_course_unit_kwa表无courseId标识）
@@ -312,116 +297,6 @@ public class CmCourseServiceImpl implements CmCourseService {
         cmCourseMapper.copyAssessment(assessments);
 
         return Result.success();
-    }
-
-    @Transactional
-    @Override
-    public Result copyFormative(String pastId, String obsId) {
-        if (pastId == null || pastId.isEmpty()) {
-            return Result.error("源课程 ID 不能为空");
-        }
-        if (obsId == null || obsId.isEmpty()) {
-            return Result.error("目标课程 ID 不能为空，请检查 Token 是否有效");
-        }
-        if (pastId.equals(obsId)) {
-            return Result.error("源课程与目标课程不能相同");
-        }
-        Map<String, String> keywordIdMap = new HashMap<>();
-        // 1. 复制关键字
-        cmCourseMapper.deleteKeyword(obsId);
-        List<CmKeywords> keywords = cmCourseMapper.getPastKeyword(pastId);
-        int keywordCount = 0;
-        if (keywords != null) {
-            keywordCount = keywords.size();
-            for (CmKeywords keyword : keywords) {
-                String id = keyword.getId();
-                keyword.setId(generateEnhancedID("cm_keywords"));
-                keywordIdMap.put(id, keyword.getId());
-                keyword.setCourseid(obsId);
-            }
-            if (!keywords.isEmpty()) {
-                cmCourseMapper.copyKeyword(keywords);
-            }
-        }
-
-        // 2. 复制能力
-        cmCourseMapper.deleteAbility(obsId);
-        List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
-        Map<String, String> abilityIdMap = new HashMap<>();
-        int abilityCount = 0;
-        if (abilities != null) {
-            abilityCount = abilities.size();
-            for (CmGetability ability : abilities) {
-                String oldAbilityId = ability.getId();
-                // 不再生成新的ID，保持与能力字典一致，否则 evaluation 模块无法通过 ID join cm_ability 获取层级信息
-                // ability.setId(generateEnhancedID("cm_getability"));
-                abilityIdMap.put(oldAbilityId, ability.getId());
-                ability.setCourseid(obsId);
-            }
-            if (!abilities.isEmpty()) {
-                cmCourseMapper.copyAbility(abilities);
-            }
-        }
-
-        return Result.success("复制成功：关键字(" + keywordCount + ")，能力(" + abilityCount + ")。目标课程 ID: " + obsId);
-    }
-
-    @Transactional
-    @Override
-    public Result copyKeyword(String pastId, String obsId) {
-        if (pastId == null || pastId.isEmpty()) {
-            return Result.error("源课程 ID 不能为空");
-        }
-        if (obsId == null || obsId.isEmpty()) {
-            return Result.error("目标课程 ID 不能为空，请检查 Token 是否有效");
-        }
-        if (pastId.equals(obsId)) {
-            return Result.error("源课程与目标课程不能相同");
-        }
-        // 仅复制关键字（覆盖当前课程已有关键字，不影响能力）
-        cmCourseMapper.deleteKeyword(obsId);
-        List<CmKeywords> keywords = cmCourseMapper.getPastKeyword(pastId);
-        int keywordCount = 0;
-        if (keywords != null) {
-            keywordCount = keywords.size();
-            for (CmKeywords keyword : keywords) {
-                keyword.setId(generateEnhancedID("cm_keywords"));
-                keyword.setCourseid(obsId);
-            }
-            if (!keywords.isEmpty()) {
-                cmCourseMapper.copyKeyword(keywords);
-            }
-        }
-        return Result.success("关键字复制成功(" + keywordCount + ")。目标课程 ID: " + obsId);
-    }
-
-    @Transactional
-    @Override
-    public Result copyAbility(String pastId, String obsId) {
-        if (pastId == null || pastId.isEmpty()) {
-            return Result.error("源课程 ID 不能为空");
-        }
-        if (obsId == null || obsId.isEmpty()) {
-            return Result.error("目标课程 ID 不能为空，请检查 Token 是否有效");
-        }
-        if (pastId.equals(obsId)) {
-            return Result.error("源课程与目标课程不能相同");
-        }
-        // 仅复制能力（覆盖当前课程已有能力，不影响关键字）
-        cmCourseMapper.deleteAbility(obsId);
-        List<CmGetability> abilities = cmCourseMapper.getPastAbility(pastId);
-        int abilityCount = 0;
-        if (abilities != null) {
-            abilityCount = abilities.size();
-            for (CmGetability ability : abilities) {
-                // 不生成新ID，保持与能力字典一致（evaluation 模块需通过 ID join cm_ability 获取层级）
-                ability.setCourseid(obsId);
-            }
-            if (!abilities.isEmpty()) {
-                cmCourseMapper.copyAbility(abilities);
-            }
-        }
-        return Result.success("能力复制成功(" + abilityCount + ")。目标课程 ID: " + obsId);
     }
 }
 
