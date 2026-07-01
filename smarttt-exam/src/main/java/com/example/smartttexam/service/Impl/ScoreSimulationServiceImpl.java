@@ -43,6 +43,9 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
     private CmClassroomMypracticelistMapper mypracticelistMapper;
 
     @Autowired
+    private TmTestquelibKwaMapper tmTestquelibKwaMapper;
+
+    @Autowired
     private NormalDistributionUtil normalDistributionUtil;
 
     @Override
@@ -93,6 +96,15 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
             libScoreMap.put(l.getLibId(), l.getScore());
         }
 
+        // 建立 libId → kwaId 映射
+        List<TmTestquelibKwa> kwaList = tmTestquelibKwaMapper.getByLibIds(libIds);
+        Map<String, String> libKwaMap = new HashMap<>();
+        for (TmTestquelibKwa kwa : kwaList) {
+            if (!libKwaMap.containsKey(kwa.getLibId())) {
+                libKwaMap.put(kwa.getLibId(), kwa.getKwaId());
+            }
+        }
+
         // 3. 获取课堂学生
         List<CmClassroomStudent> students = classroomStudentMapper.getStudentsByClassroomId(classroomId);
         if (students.isEmpty()) return Result.error("课堂中没有学生");
@@ -129,6 +141,7 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
                 ans.setDifficultLevel(question.getDifficultyLevel());
                 ans.setLibScore(maxScore);
                 ans.setLibStuScore(scores[i]);
+                ans.setKwaId(libKwaMap.get(question.getId()));
                 ans.setCreateTime(now);
                 answerList.add(ans);
             }

@@ -35,6 +35,9 @@ public class PaperServiceImpl implements PaperService {
     @Autowired
     private CmClassroomStudentMapper classroomStudentMapper;
 
+    @Autowired
+    private CmClassroomMapper classroomMapper;
+
 
     @Override
     public Result autoGenerate(PaperAutoGenerateRequest request) {
@@ -87,6 +90,8 @@ public class PaperServiceImpl implements PaperService {
         paper.setCatelog(request.getCatelog());
         paper.setCourseId(request.getCourseId());
         paper.setClassroomId(request.getClassroomId());
+        paper.setCourseName(classroomMapper.getCourseNameById(request.getCourseId()));
+        paper.setClassroomName(classroomMapper.getClassroomNameById(request.getClassroomId()));
         paper.setCreatorId(request.getCreatorId());
         paper.setCreator(request.getCreator());
         paper.setCreateTime(now);
@@ -179,6 +184,8 @@ public class PaperServiceImpl implements PaperService {
         paper.setCatelog(request.getCatelog());
         paper.setCourseId(request.getCourseId());
         paper.setClassroomId(request.getClassroomId());
+        paper.setCourseName(classroomMapper.getCourseNameById(request.getCourseId()));
+        paper.setClassroomName(classroomMapper.getClassroomNameById(request.getClassroomId()));
         paper.setCreatorId(request.getCreatorId());
         paper.setCreator(request.getCreator());
         paper.setCreateTime(now);
@@ -212,8 +219,8 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public Result getPaperList(String courseId) {
-        return Result.success(paperMapper.getListByCourseId(courseId));
+    public Result getPaperList(String courseId, String classroomId) {
+        return Result.success(paperMapper.getListByCourseId(courseId, classroomId));
     }
 
     @Override

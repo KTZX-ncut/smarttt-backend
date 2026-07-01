@@ -17,4 +17,12 @@ public interface CmClassroomMapper {
     /** 判断ID是否为课程（查cm_course表） */
     @Select("SELECT count(1) FROM cm_course WHERE id = #{id}")
     int isCourse(@Param("id") String id);
+
+    /** 根据课程ID查课程名称 */
+    @Select("SELECT courseChineseName FROM cm_course WHERE id = #{courseId} LIMIT 1")
+    String getCourseNameById(@Param("courseId") String courseId);
+
+    /** 根据课堂ID查课堂名称 */
+    @Select("SELECT classroomName FROM cm_classroom WHERE id = #{classroomId} LIMIT 1")
+    String getClassroomNameById(@Param("classroomId") String classroomId);
 }

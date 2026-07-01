@@ -6,12 +6,12 @@
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT IGNORE INTO ai_in_stu_ans_info (id, logId, courseId, classroomId, testId, paperId,
                                                libId, stuId, questionTypeId, questionContent,
-                                               difficultLevel, libScore, libStuScore, createTime)
+                                               difficultLevel, libScore, libStuScore, createTime, kwaId)
         VALUES
         <foreach collection="list" item="item" separator=",">
             (#{item.id}, #{item.logId}, #{item.courseId}, #{item.classroomId}, #{item.testId}, #{item.paperId},
              #{item.libId}, #{item.stuId}, #{item.questionTypeId}, #{item.questionContent},
-             #{item.difficultLevel}, #{item.libScore}, #{item.libStuScore}, #{item.createTime})
+             #{item.difficultLevel}, #{item.libScore}, #{item.libStuScore}, #{item.createTime}, #{item.kwaId})
         </foreach>
     </insert>
 
