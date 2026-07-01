@@ -22,8 +22,10 @@ public interface PmTestpaperMapper {
     @Select("SELECT * FROM pm_testpaper WHERE id = #{id}")
     PmTestpaper getById(@Param("id") String id);
 
-    @Select("SELECT * FROM pm_testpaper WHERE courseId = #{courseId} AND status != 3 ORDER BY createTime DESC")
-    List<PmTestpaper> getListByCourseId(@Param("courseId") String courseId);
+    @Select("<script>SELECT * FROM pm_testpaper WHERE courseId = #{courseId} AND status != 3 " +
+            "<if test='classroomId != null and classroomId != \"\"'>AND classroomId = #{classroomId} </if>" +
+            "ORDER BY createTime DESC</script>")
+    List<PmTestpaper> getListByCourseId(@Param("courseId") String courseId, @Param("classroomId") String classroomId);
 
     @Update("UPDATE pm_testpaper SET name = #{name}, questionsCount = #{questionsCount}, " +
             "totalScore = #{totalScore} WHERE id = #{id}")

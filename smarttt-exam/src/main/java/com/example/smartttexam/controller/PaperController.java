@@ -31,6 +31,17 @@ public class PaperController {
         return cid != null ? cid : obsid;
     }
 
+    /** 从token推断classroomId：如果obsid是课堂则直接返回，否则返回null */
+    private String resolveClassroomId(HttpServletRequest request) {
+        Token token = CommonFunctions.getToken(request);
+        if (token == null || token.getObsid() == null) return null;
+        String obsid = token.getObsid();
+        // obsid是课程 → 不是课堂，返回null
+        if (classroomMapper.isCourse(obsid) > 0) return null;
+        // obsid不是课程 → 是课堂ID
+        return obsid;
+    }
+
     @PostMapping("/autoGenerate")
     @AuthRequired(type = "admin", menu = "", isReadOnly = false)
     public Result autoGenerate(HttpServletRequest httpRequest,
@@ -40,6 +51,8 @@ public class PaperController {
             request.setCreatorId(token.getId());
             if (request.getCourseId() == null || request.getCourseId().isEmpty())
                 request.setCourseId(resolveCourseId(httpRequest));
+            if (request.getClassroomId() == null || request.getClassroomId().isEmpty())
+                request.setClassroomId(resolveClassroomId(httpRequest));
         }
         return paperService.autoGenerate(request);
     }
@@ -53,6 +66,8 @@ public class PaperController {
             request.setCreatorId(token.getId());
             if (request.getCourseId() == null || request.getCourseId().isEmpty())
                 request.setCourseId(resolveCourseId(httpRequest));
+            if (request.getClassroomId() == null || request.getClassroomId().isEmpty())
+                request.setClassroomId(resolveClassroomId(httpRequest));
         }
         return paperService.manualGenerate(request);
     }
@@ -60,9 +75,11 @@ public class PaperController {
     @GetMapping("/list")
     @AuthRequired(type = "admin", menu = "", isReadOnly = true)
     public Result getPaperList(HttpServletRequest request,
-                                @RequestParam(required = false) String courseId) {
+                                @RequestParam(required = false) String courseId,
+                                @RequestParam(required = false) String classroomId) {
         if (courseId == null || courseId.isEmpty()) courseId = resolveCourseId(request);
-        return paperService.getPaperList(courseId != null ? courseId : "");
+        if (classroomId == null || classroomId.isEmpty()) classroomId = resolveClassroomId(request);
+        return paperService.getPaperList(courseId != null ? courseId : "", classroomId);
     }
 
     @GetMapping("/questions")
