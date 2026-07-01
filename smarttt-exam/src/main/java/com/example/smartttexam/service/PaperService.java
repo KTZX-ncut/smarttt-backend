@@ -15,8 +15,8 @@ public interface PaperService {
     /** 手动组卷 */
     Result manualGenerate(PaperManualGenerateRequest request);
 
-    /** 获取课程下所有试卷 */
-    Result getPaperList(String courseId);
+    /** 获取课堂下的试卷（classroomId可选，为空则查课程下所有） */
+    Result getPaperList(String courseId, String classroomId);
 
     /** 获取试卷中的题目列表 */
     Result getPaperQuestions(String paperId);
