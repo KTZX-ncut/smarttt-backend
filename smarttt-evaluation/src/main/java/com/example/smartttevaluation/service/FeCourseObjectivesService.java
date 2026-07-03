@@ -55,4 +55,9 @@ public interface FeCourseObjectivesService extends IService<FeCourseObjectives> 
      * @return 分页结果
      */
     Page<FeCourseObjectives> searchCourseObjectives(CourseObjectiveSearchReq searchReq);
+
+    /**
+     * 复制历史课程目标到当前课程，返回 oldId->newId 映射
+     */
+    java.util.Map<String, String> copyCourseObjectives(String pastCourseId, String currentCourseId);
 }

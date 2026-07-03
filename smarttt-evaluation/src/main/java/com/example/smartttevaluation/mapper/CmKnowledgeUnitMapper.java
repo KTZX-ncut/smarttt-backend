@@ -58,6 +58,24 @@ public interface CmKnowledgeUnitMapper {
     @Select("select count(*) from cm_course where id=#{id}")
     long getCourseCountByid(@Param("id") String id);
 
+    // 查询某课程下所有知识单元（完整字段，用于复制）
+    @Select("select id, pId as pid, name, nodeType as type, dataValue as datavalue, courseId as courseid, orderNum as ordernum " +
+            "from cm_course_unit where courseId=#{courseId} order by orderNum asc")
+    List<CmKnowledgeUnit> selectAllUnitsByCourseId(@Param("courseId") String courseId);
+
+    // 删除某课程下所有知识单元
+    @Delete("delete from cm_course_unit where courseId=#{courseId}")
+    void deleteUnitsByCourseId(@Param("courseId") String courseId);
+
+    // 批量插入知识单元
+    @Insert("<script>" +
+            "insert into cm_course_unit(id, courseId, pId, orderNum, name, nodeType, dataValue) values " +
+            "<foreach collection='list' item='item' separator=','>" +
+            "(#{item.id}, #{item.courseid}, #{item.pid}, #{item.ordernum}, #{item.name}, #{item.type}, #{item.datavalue})" +
+            "</foreach>" +
+            "</script>")
+    void batchInsertUnits(@Param("list") List<CmKnowledgeUnit> list);
+
     void flashKnowledgeUnitOrdernum(@Param("unitid") String unitid,@Param("courseid") String courseid,@Param("preOrdernum") long preOrdernum,@Param("beginOrdernum") long beginOdernum,@Param("endOrdernum") long endOrdernum);
 
     void updateKnowledgeUnitOrdernum(@Param("id") String id,@Param("newOrdernum") long newOrdernum);

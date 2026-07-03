@@ -29,6 +29,15 @@ public interface CmCourseService {
 
     Result getPreCourseByCode(String termId, String obsId);
 
+    /**
+     * 获取当前专业下的所有课程（不按学期过滤）
+     */
+    Result getAllCourses(Token token);
+
     Result copyInfo(String pastId, String obsId);
+
+    Result copyKeyword(String pastId, String obsId);
+
+    Result copyAbility(String pastId, String obsId);
 }
 
