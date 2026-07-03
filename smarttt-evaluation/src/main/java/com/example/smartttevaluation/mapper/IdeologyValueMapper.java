@@ -22,4 +22,8 @@ public interface IdeologyValueMapper {
     List<IdeologyValue> selectAllNode(@Param("courseId")  String courseId);
 
     IdeologyValue selectById(@Param("id") String id);
+
+    void batchInsert(@Param("list") List<IdeologyValue> list);
+
+    void deleteByCourseId(@Param("courseId") String courseId);
 }
