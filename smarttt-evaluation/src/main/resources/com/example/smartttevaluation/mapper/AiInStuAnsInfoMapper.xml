@@ -222,7 +222,7 @@
     </select>
 
     <select id="getKeyWordIdByPaperId" resultType="com.example.smartttevaluation.vo.KeywordVO">
-        SELECT b.id AS id,
+        SELECT DISTINCT b.id AS id,
         b.name AS keywordName,
         b.importantlevelid as importLevel,
         b.datavalue as dataValue
@@ -241,7 +241,7 @@
     </select>
 
     <select id="getAbilityByPaperId" resultType="com.example.smartttevaluation.vo.AbilityVO">
-        SELECT b.id as id,
+        SELECT DISTINCT b.id as id,
         b.name as abilityName,
         b.importantlevel as importLevel,
         b.datavalue as dataValue
