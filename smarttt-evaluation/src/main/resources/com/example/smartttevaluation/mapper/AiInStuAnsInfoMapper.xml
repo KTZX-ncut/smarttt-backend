@@ -260,7 +260,7 @@
     </select>
 
     <select id="getPaperKwaList" resultType="com.example.smartttevaluation.vo.KwaVO">
-        SELECT kwaId as id, datavalue AS dataValue, kwaName FROM tm_testquelib_kwa
+        SELECT DISTINCT kwaId as id, datavalue AS dataValue, kwaName FROM tm_testquelib_kwa
         WHERE libId IN (
         SELECT libId FROM pm_testpaper_questions
         WHERE paperId IN
