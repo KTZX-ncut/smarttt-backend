@@ -48,6 +48,9 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
     @Autowired
     private NormalDistributionUtil normalDistributionUtil;
 
+    @Autowired
+    private VIdeologyValueMapper vIdeologyValueMapper;
+
     @Override
     public Result simulateScores(ScoreSimulationRequest request) {
         // 1. 确定 testId：如果传了paperId，找它的pm_test
@@ -109,6 +112,12 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
         List<CmClassroomStudent> students = classroomStudentMapper.getStudentsByClassroomId(classroomId);
         if (students.isEmpty()) return Result.error("课堂中没有学生");
 
+        // 获取当前课程随机一个思政价值ID
+        String vid = vIdeologyValueMapper.getRandomVIdByCourseId(paper.getCourseId());
+        if (vid == null) {
+            return Result.error("当前课程尚未配置思政价值体系，请先在课程思政价值管理中添加叶子节点（具体价值）后再模拟作答");
+        }
+
         // 4. 为每道题生成每个学生的分数
         List<AiInStuAnsInfo> answerList = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -143,6 +152,7 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
                 ans.setLibStuScore(scores[i]);
                 ans.setKwaId(libKwaMap.get(question.getId()));
                 ans.setCreateTime(now);
+                ans.setVId(vid);
                 answerList.add(ans);
             }
         }
