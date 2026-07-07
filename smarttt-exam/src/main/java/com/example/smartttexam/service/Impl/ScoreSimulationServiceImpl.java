@@ -112,11 +112,6 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
         List<CmClassroomStudent> students = classroomStudentMapper.getStudentsByClassroomId(classroomId);
         if (students.isEmpty()) return Result.error("课堂中没有学生");
 
-        // 获取当前课程随机一个思政价值ID
-        String vid = vIdeologyValueMapper.getRandomVIdByCourseId(paper.getCourseId());
-        if (vid == null) {
-            return Result.error("当前课程尚未配置思政价值体系，请先在课程思政价值管理中添加叶子节点（具体价值）后再模拟作答");
-        }
 
         // 4. 为每道题生成每个学生的分数
         List<AiInStuAnsInfo> answerList = new ArrayList<>();
@@ -132,6 +127,12 @@ public class ScoreSimulationServiceImpl implements ScoreSimulationService {
 
             // 正态分布生成全班学生在这道题上的分数
             int[] scores = normalDistributionUtil.generateBatchScores(difficulty, maxScore, students.size());
+
+            // 获取当前课程随机一个思政价值ID
+            String vid = vIdeologyValueMapper.getRandomVIdByCourseId(paper.getCourseId());
+            if (vid == null) {
+                return Result.error("当前课程尚未配置思政价值体系，请先在课程思政价值管理中添加叶子节点（具体价值）后再模拟作答");
+            }
 
             for (int i = 0; i < students.size(); i++) {
                 CmClassroomStudent stu = students.get(i);
