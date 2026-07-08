@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -30,4 +31,8 @@ public interface PmTestMapper {
 
     @Select("SELECT * FROM pm_test WHERE courseId = #{courseId} AND status = 1 ORDER BY creatTime DESC")
     List<PmTest> getListByCourseId(@Param("courseId") String courseId);
+
+    /** 根据paperId软删除考试发布记录（status=3） */
+    @Update("UPDATE pm_test SET status = 3 WHERE paperId = #{paperId}")
+    int deleteByPaperId(@Param("paperId") String paperId);
 }

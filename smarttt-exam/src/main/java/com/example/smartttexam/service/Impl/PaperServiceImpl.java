@@ -293,7 +293,8 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     public Result deletePaper(String paperId) {
-        paperMapper.deleteById(paperId);  // 软删除 status=3
+        paperMapper.deleteById(paperId);   // 软删除试卷 status=3
+        testMapper.deleteByPaperId(paperId); // 同步软删除考试发布记录 status=3
         return Result.success();
     }
 }
