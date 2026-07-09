@@ -118,5 +118,15 @@ public class CourseAssessmentController {
     Result disassociate(@RequestBody Map<String, Object> data) {
         return cmAssessmentPlanService.disassociate(data);
     }
-    
+
+    /**
+     * 从历史课程复制考核方案（课程目标 + 考核项 + 考核方案矩阵整套复制）
+     */
+    @PostMapping("/copy")
+    @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
+    Result copyAssessmentTable(@RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
+        Token token = getTokenFromContext();
+        return cmAssessmentPlanService.copyAssessmentTable(pastCourseId, token.getObsid());
+    }
+
 }

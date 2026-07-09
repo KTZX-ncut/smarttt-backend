@@ -19,4 +19,9 @@ public interface CmCourseAssessmentService {
     Result deleteFile(CmCourseCheckitemFile cmCourseCheckitemFile);
     Result associate(Map<String, Object> data, String obsId);
     Result disassociate(Map<String, Object> data);
+
+    /**
+     * 从历史课程复制考核方案（课程目标 + 考核项 + 考核方案矩阵整套复制）
+     */
+    Result copyAssessmentTable(String pastCourseId, String currentCourseId);
 }

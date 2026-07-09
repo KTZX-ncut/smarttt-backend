@@ -81,4 +81,23 @@ public interface CmCourseAssessmentMapper {
      * 根据课程目标id删除考核项分数条目
      */
     void deleteStandardScoreByTargetId(@Param("ids") List<String> ids);
+
+    /* ============ 考核方案整套复制 ============ */
+
+    @Delete("delete from cm_course_target where courseid=#{courseid}")
+    void deleteTargetsByCourse(@Param("courseid") String courseid);
+
+    @Delete("delete from cm_course_checkitem where courseid=#{courseid}")
+    void deleteCheckitemsByCourse(@Param("courseid") String courseid);
+
+    @Delete("delete from cm_course_assessment where courseId=#{courseid}")
+    void deleteAssessmentsByCourse(@Param("courseid") String courseid);
+
+    @Insert("insert into cm_course_target(id,code,name,unitid,unitname,remark,courseid,createTime) " +
+            "values(#{id},#{code},#{name},#{unitid},#{unitname},#{remark},#{courseid},NOW())")
+    void insertTarget(CmCoursetarget target);
+
+    @Insert("insert into cm_course_checkitem(id,pid,orderno,itemName,itemCode,remark,checkitemdeep,task,courseid,percent) " +
+            "values(#{id},#{pid},#{orderno},#{itemName},#{itemCode},#{remark},#{checkitemdeep},#{task},#{courseid},#{percent})")
+    void insertCheckitem(CmCheckitem checkitem);
 }
