@@ -123,6 +123,15 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
             return Result.error("不能复制当前课程自身");
         }
 
+        // 先取源课程三张表数据；若都为空，说明该历史课程没有配过考核方案，
+        // 直接返回提示、且不清空当前课程——避免“空数据却提示复制成功”，也避免把当前课程已有数据误删
+        List<CmCoursetarget> pastTargets = cmCourseAssessmentMapper.getCourseTarget(pastCourseId);
+        List<CmCheckitem> pastCheckitems = cmCourseAssessmentMapper.getCourseCheckItem(pastCourseId);
+        List<CmCourseAssessment> pastAssessments = cmCourseAssessmentMapper.selectCourseAssessment(pastCourseId);
+        if (pastTargets.isEmpty() && pastCheckitems.isEmpty() && pastAssessments.isEmpty()) {
+            return Result.error("所选历史课程没有可复制的考核方案数据");
+        }
+
         // 1) 清空当前课程已有的考核方案相关数据
         cmCourseAssessmentMapper.deleteAssessmentsByCourse(currentCourseId);
         cmCourseAssessmentMapper.deleteCheckitemsByCourse(currentCourseId);
@@ -130,7 +139,6 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
 
         // 2) 复制课程目标，建立 旧目标ID -> 新目标ID 映射
         Map<String, String> targetIdMap = new HashMap<>();
-        List<CmCoursetarget> pastTargets = cmCourseAssessmentMapper.getCourseTarget(pastCourseId);
         for (CmCoursetarget target : pastTargets) {
             String newId = generateEnhancedID("cm_course_target");
             targetIdMap.put(target.getId(), newId);
@@ -141,7 +149,6 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
 
         // 3) 复制考核项（树形）：先给所有节点生成新ID，再按新ID重建父子关系后插入
         Map<String, String> checkitemIdMap = new HashMap<>();
-        List<CmCheckitem> pastCheckitems = cmCourseAssessmentMapper.getCourseCheckItem(pastCourseId);
         for (CmCheckitem item : pastCheckitems) {
             checkitemIdMap.put(item.getId(), generateEnhancedID("cm_course_checkitem"));
         }
@@ -157,7 +164,6 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
         }
 
         // 4) 复制考核方案矩阵，把目标/考核项外键映射到新ID
-        List<CmCourseAssessment> pastAssessments = cmCourseAssessmentMapper.selectCourseAssessment(pastCourseId);
         for (CmCourseAssessment a : pastAssessments) {
             String newTargetId = targetIdMap.get(a.getCoursetargetId());
             String newCheckitemId = checkitemIdMap.get(a.getCheckitemId());

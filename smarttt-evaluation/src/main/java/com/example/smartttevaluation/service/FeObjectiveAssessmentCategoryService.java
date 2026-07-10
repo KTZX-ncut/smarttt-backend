@@ -12,4 +12,10 @@ public interface FeObjectiveAssessmentCategoryService {
      * ✅ 根据条件查询分数
      */
     List<FeObjectiveAssessmentCategory> listByCondition(String categoryId, String objectiveId);
+
+    /**
+     * 整套复制考核方案：把源课程的 课程目标 + 考核类别 + 目标×类别分数矩阵 复制到当前课程
+     * @return 各表复制条数统计
+     */
+    Map<String, Object> copyAssessmentPlan(String pastCourseId, String currentCourseId);
 }

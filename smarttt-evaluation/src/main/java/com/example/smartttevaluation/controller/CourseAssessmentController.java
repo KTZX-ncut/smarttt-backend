@@ -6,6 +6,7 @@ import com.example.smartttevaluation.dto.Token;
 import com.example.smartttevaluation.pojo.CmCheckitem;
 import com.example.smartttevaluation.pojo.CmCourseCheckitemFile;
 import com.example.smartttevaluation.service.CmCourseAssessmentService;
+import com.example.smartttevaluation.service.FeObjectiveAssessmentCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,8 @@ import static com.example.smartttevaluation.Utils.AuthorizationAspect.getTokenFr
 public class CourseAssessmentController {
     @Autowired
     private CmCourseAssessmentService cmAssessmentPlanService;
+    @Autowired
+    private FeObjectiveAssessmentCategoryService feObjectiveAssessmentCategoryService;
 
     /**
      * 获取考核方案表格
@@ -126,7 +129,12 @@ public class CourseAssessmentController {
     @AuthRequired(type = "admin", menu = "531500340-dc11e4e7-6e9f-4975-a6b7-5f97ba1c46d3")
     Result copyAssessmentTable(@RequestParam("pastCourseId") String pastCourseId, HttpServletRequest request) {
         Token token = getTokenFromContext();
-        return cmAssessmentPlanService.copyAssessmentTable(pastCourseId, token.getObsid());
+        try {
+            Map<String, Object> stat = feObjectiveAssessmentCategoryService.copyAssessmentPlan(pastCourseId, token.getObsid());
+            return Result.success(stat);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
     }
 
 }
