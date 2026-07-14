@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +107,78 @@ public class CmCourseAssessmentImpl implements CmCourseAssessmentService {
         }
 
         return Result.success(cmCourseAssessmentTable);
+    }
+
+    /**
+     * 从历史课程整套复制考核方案：课程目标(cm_course_target) + 考核项(cm_course_checkitem,树形) + 考核方案矩阵(cm_course_assessment)。
+     * 会先清空当前课程这三张表的已有数据，再复制，并把矩阵里的目标/考核项外键映射到新生成的ID。
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result copyAssessmentTable(String pastCourseId, String currentCourseId) {
+        if (pastCourseId == null || pastCourseId.isEmpty()) {
+            return Result.error("源课程ID不能为空");
+        }
+        if (Objects.equals(pastCourseId, currentCourseId)) {
+            return Result.error("不能复制当前课程自身");
+        }
+
+        // 先取源课程三张表数据；若都为空，说明该历史课程没有配过考核方案，
+        // 直接返回提示、且不清空当前课程——避免“空数据却提示复制成功”，也避免把当前课程已有数据误删
+        List<CmCoursetarget> pastTargets = cmCourseAssessmentMapper.getCourseTarget(pastCourseId);
+        List<CmCheckitem> pastCheckitems = cmCourseAssessmentMapper.getCourseCheckItem(pastCourseId);
+        List<CmCourseAssessment> pastAssessments = cmCourseAssessmentMapper.selectCourseAssessment(pastCourseId);
+        if (pastTargets.isEmpty() && pastCheckitems.isEmpty() && pastAssessments.isEmpty()) {
+            return Result.error("所选历史课程没有可复制的考核方案数据");
+        }
+
+        // 1) 清空当前课程已有的考核方案相关数据
+        cmCourseAssessmentMapper.deleteAssessmentsByCourse(currentCourseId);
+        cmCourseAssessmentMapper.deleteCheckitemsByCourse(currentCourseId);
+        cmCourseAssessmentMapper.deleteTargetsByCourse(currentCourseId);
+
+        // 2) 复制课程目标，建立 旧目标ID -> 新目标ID 映射
+        Map<String, String> targetIdMap = new HashMap<>();
+        for (CmCoursetarget target : pastTargets) {
+            String newId = generateEnhancedID("cm_course_target");
+            targetIdMap.put(target.getId(), newId);
+            target.setId(newId);
+            target.setCourseid(currentCourseId);
+            cmCourseAssessmentMapper.insertTarget(target);
+        }
+
+        // 3) 复制考核项（树形）：先给所有节点生成新ID，再按新ID重建父子关系后插入
+        Map<String, String> checkitemIdMap = new HashMap<>();
+        for (CmCheckitem item : pastCheckitems) {
+            checkitemIdMap.put(item.getId(), generateEnhancedID("cm_course_checkitem"));
+        }
+        for (CmCheckitem item : pastCheckitems) {
+            String oldPid = item.getPid();
+            item.setId(checkitemIdMap.get(item.getId()));
+            item.setCourseid(currentCourseId);
+            if (oldPid != null && !"0".equals(oldPid)) {
+                // 非根节点：父ID映射为新ID；万一找不到父则挂到根
+                item.setPid(checkitemIdMap.getOrDefault(oldPid, "0"));
+            }
+            cmCourseAssessmentMapper.insertCheckitem(item);
+        }
+
+        // 4) 复制考核方案矩阵，把目标/考核项外键映射到新ID
+        for (CmCourseAssessment a : pastAssessments) {
+            String newTargetId = targetIdMap.get(a.getCoursetargetId());
+            String newCheckitemId = checkitemIdMap.get(a.getCheckitemId());
+            // 目标或考核项映射缺失则跳过该条，避免脏数据
+            if (newTargetId == null || newCheckitemId == null) {
+                continue;
+            }
+            a.setId(generateEnhancedID("cm_course_assessment"));
+            a.setCourseid(currentCourseId);
+            a.setCoursetargetId(newTargetId);
+            a.setCheckitemId(newCheckitemId);
+            cmCourseAssessmentMapper.insertAssessment(a);
+        }
+
+        return Result.success("考核方案复制成功");
     }
 
     @Override

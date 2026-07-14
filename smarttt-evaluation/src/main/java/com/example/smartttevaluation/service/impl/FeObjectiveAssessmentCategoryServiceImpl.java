@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.smartttevaluation.mapper.FeAssessmentCategoriesMapper;
 import com.example.smartttevaluation.mapper.FeObjectiveAssessmentCategoryMapper;
 import com.example.smartttevaluation.pojo.FeAssessmentCategories;
+import com.example.smartttevaluation.pojo.FeCourseObjectives;
 import com.example.smartttevaluation.pojo.FeObjectiveAssessmentCategory;
+import com.example.smartttevaluation.service.FeAssessmentCategoriesService;
+import com.example.smartttevaluation.service.FeCourseObjectivesService;
 import com.example.smartttevaluation.service.FeObjectiveAssessmentCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,8 @@ public class FeObjectiveAssessmentCategoryServiceImpl implements FeObjectiveAsse
 
     private final FeObjectiveAssessmentCategoryMapper mapper;
     private final FeAssessmentCategoriesMapper categoryMapper;
+    private final FeCourseObjectivesService feCourseObjectivesService;
+    private final FeAssessmentCategoriesService feAssessmentCategoriesService;
 
     /**
      * 批量保存：支持多类别数据一次性导入，每个类别单独事务与校验
@@ -144,6 +149,67 @@ public class FeObjectiveAssessmentCategoryServiceImpl implements FeObjectiveAsse
             wrapper.eq("objective_id", objectiveId);
         }
         return mapper.selectList(wrapper);
+    }
+
+    /**
+     * 整套复制考核方案：课程目标(fe_course_objectives) + 考核类别(fe_assessment_categories)
+     * + 目标×类别分数矩阵(fe_objective_assessment_category)。
+     * 复制前覆盖当前课程这三部分已有数据；矩阵表无 course_id，靠 objectiveId 集合定位，
+     * 并用 旧->新 的 目标ID / 类别ID 映射重建外键。
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> copyAssessmentPlan(String pastCourseId, String currentCourseId) {
+        if (pastCourseId == null || pastCourseId.isEmpty()) {
+            throw new RuntimeException("源课程ID不能为空");
+        }
+        if (Objects.equals(pastCourseId, currentCourseId)) {
+            throw new RuntimeException("不能复制当前课程自身");
+        }
+
+        // 源课程没有考核方案数据则直接提示，不清空当前课程
+        List<FeCourseObjectives> pastObjectives = feCourseObjectivesService.getByCourseId(pastCourseId);
+        if (pastObjectives == null || pastObjectives.isEmpty()) {
+            throw new RuntimeException("所选历史课程没有可复制的考核方案数据");
+        }
+
+        // 1) 先清理当前课程的矩阵（该表无 course_id，只能按当前课程的 objectiveId 集合删）
+        List<FeCourseObjectives> currentObjectives = feCourseObjectivesService.getByCourseId(currentCourseId);
+        List<String> currentObjIds = currentObjectives.stream()
+                .map(FeCourseObjectives::getId).collect(Collectors.toList());
+        if (!currentObjIds.isEmpty()) {
+            mapper.delete(new QueryWrapper<FeObjectiveAssessmentCategory>().in("objective_id", currentObjIds));
+        }
+
+        // 2) 复制课程目标、考核类别（各自内部覆盖当前课程已有数据，并返回 旧ID->新ID 映射）
+        Map<String, String> objIdMap = feCourseObjectivesService.copyCourseObjectives(pastCourseId, currentCourseId);
+        Map<String, String> catIdMap = feAssessmentCategoriesService.copyCategories(pastCourseId, currentCourseId);
+
+        // 3) 复制矩阵：取源课程矩阵（按源目标ID集合），用两张映射把外键改写成新ID
+        int matrixCopied = 0;
+        if (!objIdMap.isEmpty()) {
+            List<FeObjectiveAssessmentCategory> pastMatrix = mapper.selectList(
+                    new QueryWrapper<FeObjectiveAssessmentCategory>().in("objective_id", objIdMap.keySet()));
+            for (FeObjectiveAssessmentCategory m : pastMatrix) {
+                String newObjId = objIdMap.get(m.getObjectiveId());
+                String newCatId = catIdMap.get(m.getCategoryId());
+                if (newObjId == null || newCatId == null) {
+                    continue; // 映射缺失（脏数据/跨课程引用）跳过
+                }
+                FeObjectiveAssessmentCategory row = new FeObjectiveAssessmentCategory();
+                row.setObjectiveId(newObjId);
+                row.setCategoryId(newCatId);
+                row.setScore(m.getScore());
+                mapper.upsert(row);
+                matrixCopied++;
+            }
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("objectives", objIdMap.size());
+        result.put("categories", catIdMap.size());
+        result.put("matrix", matrixCopied);
+        return result;
     }
 
 }
