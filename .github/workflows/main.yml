@@ -48,7 +48,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY120 }}
           port: 22
           source: "smarttt-backend.tar.gz"
-          target: "/vdbdata/smarttt-backend-scp/"  # 上传目标路径
+          target: "/vdbdata/smarttt-backend/"  # 上传目标路径
           tar_tmp_path: "/vdbdata/smarttt-backend-scp-tmp/"
 
       # 5️⃣ 登录服务器执行解压与部署脚本
@@ -61,7 +61,7 @@ jobs:
           port: 22
           script: |
             set -e
-            cd /vdbdata/smarttt-backend-scp
+            cd /vdbdata/smarttt-backend
             echo "解压新版本..."
             tar -xzf ./smarttt-backend.tar.gz --overwrite
             docker-compose -f docker-compose.service.yml down
