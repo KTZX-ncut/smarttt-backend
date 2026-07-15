@@ -64,10 +64,8 @@ jobs:
             cd /vdbdata/smarttt-backend
             echo "解压新版本..."
             tar -xzf ./smarttt-backend.tar.gz --overwrite
-            docker-compose -f docker-compose.service.yml down --remove-orphans
             rm -rf ./smarttt-backend.tar.gz
             echo "运行部署脚本..."
             cd /home/pro
             ./smarttt-backend.sh
-            docker restart nginx-ui
             
