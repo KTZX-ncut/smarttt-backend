@@ -62,9 +62,9 @@ jobs:
           script: |
             set -e
             cd /vdbdata/smarttt-backend-scp
-            docker-compose -f docker-compose.service.yml down
             echo "解压新版本..."
             tar -xzf ./smarttt-backend.tar.gz --overwrite
+            docker-compose -f docker-compose.service.yml down
             rm -rf ./smarttt-backend.tar.gz
             echo "运行部署脚本..."
             cd /home/pro
