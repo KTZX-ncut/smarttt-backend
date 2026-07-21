@@ -6,9 +6,11 @@ import com.example.smartttexam.dto.PaperManualGenerateRequest;
 import com.example.smartttexam.dto.Result;
 import com.example.smartttexam.mapper.*;
 import com.example.smartttexam.pojo.*;
+import com.example.smartttexam.schedule.entity.EduMessage;
 import com.example.smartttexam.service.PaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +40,14 @@ public class PaperServiceImpl implements PaperService {
     @Autowired
     private CmClassroomMapper classroomMapper;
 
+    @Autowired
+    private GlobalMsgWriteMapper globalMsgWriteMapper;
+
+    @Autowired
+    private AiInStuAnsInfoMapper aiInStuAnsInfoMapper;
+
+    @Autowired
+    private CmClassroomMypracticelistMapper mypracticelistMapper;
 
     @Override
     public Result autoGenerate(PaperAutoGenerateRequest request) {
@@ -237,6 +247,7 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result publishPaper(String paperId, String classroomId) {
         // 1. 获取试卷
         PmTestpaper paper = paperMapper.getById(paperId);
@@ -292,9 +303,33 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result deletePaper(String paperId) {
-        paperMapper.deleteById(paperId);   // 软删除试卷 status=3
-        testMapper.deleteByPaperId(paperId); // 同步软删除考试发布记录 status=3
+        // 先查出关联的考试记录，用于写消息
+        PmTest test = testMapper.getByPaperId(paperId);
+        String testId = test != null ? test.getId() : null;
+
+        // 删除exam模块自己的表
+        paperMapper.deleteById(paperId); // status = 3
+        if(testId != null) {
+            testMapper.deleteByPaperId(paperId);                   // status = 3
+            testStudentsMapper.deleteByTestId(testId);             // 删除学生绑定
+            paperQuestionsMapper.deleteByPaperId(paperId);          // 删除题目关联
+            aiInStuAnsInfoMapper.deleteByTestId(testId);            // 删除作答详情
+            mypracticelistMapper.deleteByTestId(testId);            // 删除练习记录
+        }
+
+        // 写消息通知evaluation模块清理快照表
+        if(testId != null) {
+            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            EduMessage msg = new EduMessage();
+            msg.setType("test_delete");
+            msg.setIndexId(testId);
+            msg.setState("ready");
+            msg.setCreateTime(now);
+            globalMsgWriteMapper.insert(msg);
+        }
+
         return Result.success();
     }
 }

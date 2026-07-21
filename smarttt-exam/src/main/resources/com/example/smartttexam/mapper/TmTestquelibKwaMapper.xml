@@ -19,4 +19,11 @@
         </foreach>
     </select>
 
+    <delete id="deleteByLibIds">
+        DELETE FROM tm_testquelib_kwa WHERE libId IN
+        <foreach collection="libIds" item="libId" open="(" separator="," close=")">
+            #{libId}
+        </foreach>
+    </delete>
+
 </mapper>
