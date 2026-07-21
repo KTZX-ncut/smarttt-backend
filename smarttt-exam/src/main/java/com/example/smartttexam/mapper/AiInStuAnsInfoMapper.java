@@ -29,4 +29,7 @@ public interface AiInStuAnsInfoMapper {
      */
     @Select("SELECT * FROM ai_in_stu_ans_info WHERE testId = #{testId} AND stuId = #{stuId}")
     List<AiInStuAnsInfo> getByTestIdAndStuId(@Param("testId") String testId, @Param("stuId") String stuId);
+
+    /** 根据 testId 物理删除作答详情 */
+    int deleteByTestId(@Param("testId") String testId);
 }

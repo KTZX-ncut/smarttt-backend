@@ -23,4 +23,8 @@ public interface CmClassroomMypracticelistMapper {
             "</foreach>" +
             "</script>")
     int batchInsert(@Param("list") List<CmClassroomMypracticelist> list);
+
+    /** 根据 testId 物理删除学生练习记录 */
+    @org.apache.ibatis.annotations.Delete("DELETE FROM cm_classroom_mypracticelist WHERE testId = #{testId}")
+    int deleteByTestId(@Param("testId") String testId);
 }

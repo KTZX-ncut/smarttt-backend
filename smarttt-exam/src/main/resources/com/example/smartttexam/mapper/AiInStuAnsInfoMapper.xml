@@ -15,4 +15,8 @@
         </foreach>
     </insert>
 
+    <delete id="deleteByTestId">
+        DELETE FROM ai_in_stu_ans_info WHERE testId = #{testId}
+    </delete>
+
 </mapper>

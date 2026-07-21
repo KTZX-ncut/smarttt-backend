@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -185,8 +186,12 @@ public class QuestionGenServiceImpl implements QuestionGenService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Result deleteQuestions(List<String> libIds) {
-        if (libIds != null && !libIds.isEmpty()) tmTestquelibExtMapper.softDeleteByIds(libIds);
+        if (libIds != null && !libIds.isEmpty()) {
+            tmTestquelibExtMapper.softDeleteByIds(libIds);
+            tmTestquelibKwaMapper.deleteByLibIds(libIds);
+        }
         return Result.success();
     }
 

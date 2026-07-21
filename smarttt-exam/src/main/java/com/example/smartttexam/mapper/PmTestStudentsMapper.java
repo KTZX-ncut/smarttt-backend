@@ -24,4 +24,8 @@ public interface PmTestStudentsMapper {
 
     @Select("SELECT * FROM pm_test_students WHERE testId = #{testId}")
     List<PmTestStudents> getByTestId(@Param("testId") String testId);
+
+    /** 根据 testId 删除学生绑定 */
+    @org.apache.ibatis.annotations.Delete("DELETE FROM pm_test_students WHERE testId = #{testId}")
+    int deleteByTestId(@Param("testId") String testId);
 }

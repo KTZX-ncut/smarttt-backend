@@ -13,4 +13,7 @@ public interface TmTestquelibKwaMapper {
 
     /** 根据题目ID列表批量查KWA */
     List<TmTestquelibKwa> getByLibIds(@Param("libIds") List<String> libIds);
+
+    /** 根据题目ID列表批量删除KWA关联 */
+    int deleteByLibIds(@Param("libIds") List<String> libIds);
 }
