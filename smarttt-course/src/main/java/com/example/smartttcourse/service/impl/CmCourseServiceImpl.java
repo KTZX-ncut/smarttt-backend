@@ -300,11 +300,11 @@ public class CmCourseServiceImpl implements CmCourseService {
     }
 
     /**
-     * 获取当前用户负责的课程（不按学期过滤），按用户 ID 数据库层面过滤
+     * 获取当前专业下的所有课程（不按学期过滤）
      */
     @Override
     public Result getAllCourses(Token token) {
-        return Result.success(cmCourseMapper.getAllCourses(token));
+        return Result.success(cmCourseMapper.getAllCourses(token.getObsid()));
     }
 
     @Transactional

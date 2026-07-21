@@ -76,14 +76,11 @@ public interface CmCourseMapper {
     List<SimpleCourse> getPreCourseByCode(@Param("termId") String termId, @Param("courseCode") String courseCode);
 
     /**
-     * 获取当前用户负责的课程（不按学期过滤），用于复制关键字和能力功能
-     * 通过 st_roleuser 表按当前用户 ID 过滤，只返回该用户负责的课程
+     * 获取当前专业下的所有课程（不按学期过滤），用于复制关键字和能力功能
      */
     @Select("SELECT id, courseChineseName, courseEnglishName, courseCode, professionName, professionId " +
-            "FROM cm_course WHERE id != #{obsid} " +
-            "AND id IN (SELECT obsid FROM st_roleuser WHERE userid = #{id}) " +
-            "ORDER BY schooltermId DESC")
-    List<SimpleCourse> getAllCourses(Token token);
+            "FROM cm_course WHERE id != #{obsid} ORDER BY schooltermId DESC")
+    List<SimpleCourse> getAllCourses(@Param("obsid") String obsid);
 
     @Select("select * from cm_keywords where courseid = #{pastId}")
     List<CmKeywords> getPastKeyword(String pastId);
