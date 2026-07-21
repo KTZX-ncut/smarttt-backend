@@ -35,7 +35,8 @@ jobs:
           script: |
             set -e
             mkdir -p /vdbdata/smarttt-backend-scp-tmp
-            rm -f /vdbdata/smarttt-backend-scp-tmp/*.tar.gz
+            cd /vdbdata/smarttt-backend-scp-tmp
+            rm -rf ./*
             df -h /vdbdata/smarttt-backend-scp-tmp
 
       # 4️⃣ 上传到服务器（使用 SSH 私钥）
@@ -47,7 +48,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY120 }}
           port: 22
           source: "smarttt-backend.tar.gz"
-          target: "/home/smarttt/"  # 上传目标路径
+          target: "/vdbdata/smarttt-backend/"  # 上传目标路径
           tar_tmp_path: "/vdbdata/smarttt-backend-scp-tmp/"
 
       # 5️⃣ 登录服务器执行解压与部署脚本
@@ -59,16 +60,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY120 }}
           port: 22
           script: |
-            cd /home/smarttt/smarttt-backend
-            docker-compose -f docker-compose.service.yml down
-            cd ..
-            rm -rf ./smarttt-backend/
+            set -e
+            cd /vdbdata/smarttt-backend
             echo "解压新版本..."
-            mkdir smarttt-backend
-            tar -xzf ./smarttt-backend.tar.gz -C ./smarttt-backend/ --overwrite
+            tar -xzf ./smarttt-backend.tar.gz --overwrite
             rm -rf ./smarttt-backend.tar.gz
             echo "运行部署脚本..."
             cd /home/pro
             ./smarttt-backend.sh
-            docker restart nginx-ui
             
